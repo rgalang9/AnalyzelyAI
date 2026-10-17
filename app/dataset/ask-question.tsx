@@ -8,25 +8,20 @@ import {
   computeStat,
   profileColumns,
   rowsForPrompt,
-  type ChartData,
-  type StatResult,
 } from "@/lib/dataset-stats";
+import { saveAnswer, type Answer } from "@/lib/history";
+import { useDataset } from "../dataset-context";
 import AnalysisChart from "./analysis-chart";
-
-type Answer = {
-  question: string;
-  analysis: string;
-  stats: StatResult[];
-  charts: ChartData[];
-};
 
 // Question box shown under the dataset table. Sends the question to the AI,
 // then computes the AI's requested stats and charts from the full dataset.
+// Every question and answer stays listed above the box (and is saved for logged-in users).
 export default function AskQuestion({ dataset }: { dataset: Dataset }) {
+  const { analysisId, answers, addAnswer } = useDataset();
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [answer, setAnswer] = useState<Answer | null>(null);
+  const [saveError, setSaveError] = useState("");
 
   // Column summary + rows for the AI. Computed once per dataset, not per question.
   const promptData = useMemo(
@@ -41,6 +36,7 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
 
     setLoading(true);
     setError("");
+    setSaveError("");
 
     const body: AskRequest = {
       question: trimmed,
@@ -66,7 +62,7 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
       // Turn the AI's chart/stat requests into real numbers from every row.
       // Anything that doesn't match the data (e.g. a wrong column name) is skipped.
       const ai = result as Analysis;
-      setAnswer({
+      const answer: Answer = {
         question: trimmed,
         analysis: ai.analysis,
         stats: ai.stats.map((s) => computeStat(dataset, s)).filter((s) => s !== null),
@@ -74,8 +70,17 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
           .slice(0, 2)
           .map((c) => buildChartData(dataset, c))
           .filter((c) => c !== null),
-      });
+      };
+      addAnswer(answer);
       setQuestion(""); // clear the box, ready for the next question
+
+      // Save to history in the background (only when this analysis is saved, i.e. logged in)
+      if (analysisId) {
+        saveAnswer(analysisId, answer).catch((err) => {
+          console.error("Couldn't save answer:", err);
+          setSaveError("We couldn't save that answer to your history, but it's still here for now.");
+        });
+      }
     } catch {
       setError("I couldn't reach the server. Please check your connection and try again.");
     } finally {
@@ -93,7 +98,36 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
         category sold the most?&rdquo;
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
+      {/* Every question asked so far, oldest first */}
+      {answers.length > 0 && (
+        <div className="mt-8 flex flex-col gap-10">
+          {answers.map((answer, i) => (
+            <AnswerView key={i} answer={answer} />
+          ))}
+        </div>
+      )}
+
+      <div aria-live="polite">
+        {loading && (
+          <p className="mt-6 animate-pulse text-zinc-600 dark:text-zinc-400">
+            Looking through your data… this usually takes a few seconds. ✨
+          </p>
+        )}
+
+        {error && !loading && (
+          <p role="alert" className="mt-6 text-sm text-red-600 dark:text-red-400">
+            {error}
+          </p>
+        )}
+
+        {saveError && (
+          <p role="status" className="mt-4 text-sm text-amber-700 dark:text-amber-400">
+            {saveError}
+          </p>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 sm:flex-row">
         <input
           type="text"
           value={question}
@@ -120,50 +154,38 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
           {dataset.rows.length.toLocaleString()} rows.
         </p>
       )}
-
-      <div aria-live="polite">
-        {loading && (
-          <p className="mt-6 animate-pulse text-zinc-600 dark:text-zinc-400">
-            Looking through your data… this usually takes a few seconds. ✨
-          </p>
-        )}
-
-        {error && !loading && (
-          <p role="alert" className="mt-6 text-sm text-red-600 dark:text-red-400">
-            {error}
-          </p>
-        )}
-
-        {answer && !loading && (
-          <div className="mt-6 flex flex-col gap-6">
-            <div className="rounded-2xl bg-zinc-100 p-5 dark:bg-zinc-900">
-              <p className="text-sm text-zinc-500">You asked</p>
-              <p className="mt-1 text-lg font-medium">{answer.question}</p>
-              <div className="mt-4 flex flex-col gap-3 leading-7">
-                {answer.analysis.split(/\n\s*\n/).map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
-              </div>
-            </div>
-
-            {answer.stats.length > 0 && (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {answer.stats.map((stat, i) => (
-                  <div key={i} className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{stat.label}</p>
-                    <p className="mt-1 text-2xl font-semibold">{stat.value}</p>
-                    {stat.detail && <p className="mt-1 text-xs text-zinc-500">{stat.detail}</p>}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {answer.charts.map((chart, i) => (
-              <AnalysisChart key={i} chart={chart} />
-            ))}
-          </div>
-        )}
-      </div>
     </section>
+  );
+}
+
+function AnswerView({ answer }: { answer: Answer }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="rounded-2xl bg-zinc-100 p-5 dark:bg-zinc-900">
+        <p className="text-sm text-zinc-500">You asked</p>
+        <p className="mt-1 text-lg font-medium">{answer.question}</p>
+        <div className="mt-4 flex flex-col gap-3 leading-7">
+          {answer.analysis.split(/\n\s*\n/).map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+
+      {answer.stats.length > 0 && (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {answer.stats.map((stat, i) => (
+            <div key={i} className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{stat.label}</p>
+              <p className="mt-1 text-2xl font-semibold">{stat.value}</p>
+              {stat.detail && <p className="mt-1 text-xs text-zinc-500">{stat.detail}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {answer.charts.map((chart, i) => (
+        <AnalysisChart key={i} chart={chart} />
+      ))}
+    </div>
   );
 }

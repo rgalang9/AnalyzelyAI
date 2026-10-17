@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseDataset } from "@/lib/parse-dataset";
+import { saveNewAnalysis } from "@/lib/history";
 import { useDataset } from "../dataset-context";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
@@ -18,7 +19,7 @@ export default function UploadPage() {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
-  const { setDataset } = useDataset();
+  const { openDataset } = useDataset();
 
   // Called when the user picks a file
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -68,15 +69,30 @@ export default function UploadPage() {
       return;
     }
 
-    // Upload accepted: read the file into rows, then go to the dataset screen
+    // Upload accepted: read the file into rows
+    let dataset;
     try {
-      setDataset(await parseDataset(file));
-      router.push("/dataset");
+      dataset = await parseDataset(file);
     } catch (err) {
       const reason = err instanceof Error ? err.message : "";
       setError(`We couldn't read "${file.name}". ${reason}`.trim());
       setUploading(false);
+      return;
     }
+
+    // Logged in? Save it to their history (guests get null, nothing saved).
+    // If saving fails, they can still work with the file; we just let them know.
+    let analysisId: string | null = null;
+    let saveFailed = false;
+    try {
+      analysisId = await saveNewAnalysis(dataset);
+    } catch (err) {
+      console.error("Couldn't save analysis:", err);
+      saveFailed = true;
+    }
+
+    openDataset(dataset, { analysisId, saveFailed });
+    router.push("/dataset");
   }
 
   return (

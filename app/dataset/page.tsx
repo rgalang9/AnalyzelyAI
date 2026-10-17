@@ -2,15 +2,14 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import type { Dataset } from "@/lib/parse-dataset";
 import { useDataset } from "../dataset-context";
 import AskQuestion from "./ask-question";
 
 const ROWS_PER_PAGE = 250;
 
 export default function DatasetPage() {
-  const { dataset } = useDataset();
-  const [page, setPage] = useState(1);
-  const tableBoxRef = useRef<HTMLDivElement>(null);
+  const { dataset, openCount } = useDataset();
 
   // No dataset in memory (e.g. the page was refreshed): send them back to upload
   if (!dataset) {
@@ -28,6 +27,15 @@ export default function DatasetPage() {
       </main>
     );
   }
+
+  // The key gives each opened dataset a fresh screen (back to page 1, empty question box)
+  return <DatasetView key={openCount} dataset={dataset} />;
+}
+
+function DatasetView({ dataset }: { dataset: Dataset }) {
+  const { saveFailed } = useDataset();
+  const [page, setPage] = useState(1);
+  const tableBoxRef = useRef<HTMLDivElement>(null);
 
   const { fileName, headers, rows } = dataset;
   const totalPages = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
@@ -49,6 +57,13 @@ export default function DatasetPage() {
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {rows.length.toLocaleString()} rows · {headers.length} columns
       </p>
+
+      {saveFailed && (
+        <p role="status" className="mt-3 text-sm text-amber-700 dark:text-amber-400">
+          Heads up: we couldn&rsquo;t save this one to your history, but you can
+          still explore it and ask questions.
+        </p>
+      )}
 
       {/* Scroll box: scrolls down for many rows and sideways for many columns */}
       <div
