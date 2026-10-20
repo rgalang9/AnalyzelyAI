@@ -87,7 +87,7 @@ function groupBy(
 }
 
 // Picks `count` rows spread evenly through the list
-function evenlySpaced<T>(items: T[], count: number): T[] {
+export function evenlySpaced<T>(items: T[], count: number): T[] {
   if (items.length <= count) return items;
   const step = items.length / count;
   return Array.from({ length: count }, (_, i) => items[Math.floor(i * step)]);

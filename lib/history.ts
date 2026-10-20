@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Dataset } from "./parse-dataset";
 import type { ChartData, StatResult } from "./dataset-stats";
+import type { Cleaning, Issue } from "./cleaning";
 
 // One question and the AI's answer, with stats and charts already calculated
 export type Answer = {
@@ -67,8 +68,30 @@ export async function listAnalyses(): Promise<AnalysisSummary[]> {
   return data;
 }
 
-// Loads a saved analysis back: the dataset plus every past question and answer
-export async function loadAnalysis(id: string): Promise<{ dataset: Dataset; answers: Answer[] }> {
+// Saves the data-cleaning results (issues found + which fixes are applied).
+// Saves run one after another, so a quick Fix then Undo can't arrive out of order.
+let cleaningSaves = Promise.resolve();
+
+export function saveCleaning(analysisId: string, cleaning: Cleaning): Promise<void> {
+  const save = cleaningSaves.then(async () => {
+    const { error } = await createClient().from("analysis_cleanings").upsert({
+      analysis_id: analysisId,
+      issues: cleaning.issues,
+      fixed_issue_ids: cleaning.fixedIds,
+      ai_reviewed: cleaning.aiReviewed,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+  });
+  cleaningSaves = save.catch(() => {}); // a failed save shouldn't block the next one
+  return save;
+}
+
+// Loads a saved analysis back: the dataset, every past question and answer,
+// and the cleaning results (null for analyses saved before cleaning existed)
+export async function loadAnalysis(
+  id: string
+): Promise<{ dataset: Dataset; answers: Answer[]; cleaning: Cleaning | null }> {
   const supabase = createClient();
 
   const { data: analysis, error } = await supabase
@@ -78,20 +101,31 @@ export async function loadAnalysis(id: string): Promise<{ dataset: Dataset; answ
     .single();
   if (error) throw error;
 
-  const [file, messages] = await Promise.all([
+  const [file, messages, cleaning] = await Promise.all([
     supabase.storage.from(BUCKET).download(analysis.dataset_path),
     supabase
       .from("analysis_messages")
       .select("question, analysis, stats, charts")
       .eq("analysis_id", id)
       .order("created_at", { ascending: true }),
+    supabase
+      .from("analysis_cleanings")
+      .select("issues, fixed_issue_ids, ai_reviewed")
+      .eq("analysis_id", id)
+      .maybeSingle(),
   ]);
   if (file.error) throw file.error;
   if (messages.error) throw messages.error;
+  if (cleaning.error) throw cleaning.error;
 
   const { headers, rows } = JSON.parse(await file.data.text());
   return {
     dataset: { fileName: analysis.file_name, headers, rows },
     answers: messages.data as Answer[],
+    cleaning: cleaning.data && {
+      issues: cleaning.data.issues as Issue[],
+      fixedIds: cleaning.data.fixed_issue_ids,
+      aiReviewed: cleaning.data.ai_reviewed,
+    },
   };
 }

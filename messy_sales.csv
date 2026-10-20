@@ -1,0 +1,13 @@
+order_id,date,customer,city,product,quantity,price,age
+1001,2026-01-05,Maria Lopez,New York,Laptop,2,999.99,34
+1002,01/07/2026,john smith,new york,Mouse,5,19.99,28
+1003,2026-01-09,Aisha Khan,NY,Keyboard,,49.99,41
+1004,2026-01-10,  Ben Carter ,Boston,Laptop,1,999.99,-5
+1005,2026-01-12,Lena Park,Boston,Monitor,three,199.99,39
+1006,2026-01-12,Lena Park,Boston,Monitor,three,199.99,39
+1007,Jan 15 2026,Carlos Diaz,Chicago,Mouse,3,$19.99,52
+1008,2026-01-16,Priya Patel,chicago,Laptop,1,9999.99,30
+1009,2026-01-18,Tom Nguyen,Chicago,keyboard,2,49.99,
+1010,2026-01-20,Sara Kim,Boston ,Monitor,1,199.99,27
+1011,2026-01-21,Mike Brown,New York,Mouse,4,19.99,250
+1012,2026-01-22,Emma Wilson,Boston,Laptop,1,,45

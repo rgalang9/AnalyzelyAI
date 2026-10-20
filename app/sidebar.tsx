@@ -51,8 +51,8 @@ export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
     setOpeningId(id);
     setOpenError("");
     try {
-      const { dataset, answers } = await loadAnalysis(id);
-      openDataset(dataset, { analysisId: id, answers });
+      const { dataset, answers, cleaning } = await loadAnalysis(id);
+      openDataset(dataset, { analysisId: id, answers, cleaning });
       router.push("/dataset");
       onNavigate();
     } catch (err) {

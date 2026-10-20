@@ -1,10 +1,13 @@
 "use client"; // reads the dataset from shared browser memory and handles page clicks
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Dataset } from "@/lib/parse-dataset";
+import { applyFixes, type Issue } from "@/lib/cleaning";
 import { useDataset } from "../dataset-context";
 import AskQuestion from "./ask-question";
+import CleaningPanel from "./cleaning-panel";
+import { IssueCard, IssueTooltip } from "./issue-card";
 
 const ROWS_PER_PAGE = 250;
 
@@ -32,9 +35,15 @@ export default function DatasetPage() {
   return <DatasetView key={openCount} dataset={dataset} />;
 }
 
+// Highlight colors for problem cells (red) and fixed cells (green)
+const RED = "cursor-help bg-red-100 text-red-900 dark:bg-red-950/60 dark:text-red-200";
+const GREEN = "cursor-help bg-green-100 text-green-900 dark:bg-green-950/60 dark:text-green-200";
+
 function DatasetView({ dataset }: { dataset: Dataset }) {
-  const { saveFailed } = useDataset();
+  const { saveFailed, cleaning, cleaningStatus, setFixed } = useDataset();
   const [page, setPage] = useState(1);
+  const [tip, setTip] = useState<{ issueId: string; anchor: DOMRect } | null>(null);
+  const closeTimer = useRef<number | undefined>(undefined);
   const tableBoxRef = useRef<HTMLDivElement>(null);
 
   const { fileName, headers, rows } = dataset;
@@ -42,10 +51,68 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
   const start = (page - 1) * ROWS_PER_PAGE;
   const pageRows = rows.slice(start, start + ROWS_PER_PAGE);
 
+  // The original with the applied fixes. AI questions use this.
+  const cleaned = useMemo(() => applyFixes(dataset, cleaning), [dataset, cleaning]);
+  const fixedIds = useMemo(() => new Set(cleaning?.fixedIds), [cleaning]);
+
+  // Lookups so each table cell can find its issue quickly
+  const { cellIssues, rowIssues, issueById } = useMemo(() => {
+    const cellIssues = new Map<string, Issue>(); // "row:col" → issue
+    const rowIssues = new Map<number, Issue>(); // whole-row issues (duplicates)
+    const issueById = new Map<string, Issue>();
+    for (const issue of cleaning?.issues ?? []) {
+      issueById.set(issue.id, issue);
+      if (issue.col === null) rowIssues.set(issue.row, issue);
+      else cellIssues.set(`${issue.row}:${issue.col}`, issue);
+    }
+    return { cellIssues, rowIssues, issueById };
+  }, [cleaning]);
+
+  // Close the tooltip when anything scrolls (it would be in the wrong place)
+  useEffect(() => {
+    const close = () => setTip(null);
+    window.addEventListener("scroll", close, true);
+    return () => {
+      window.removeEventListener("scroll", close, true);
+      clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  function openTip(issueId: string, cell: HTMLElement) {
+    clearTimeout(closeTimer.current);
+    setTip({ issueId, anchor: cell.getBoundingClientRect() });
+  }
+
+  // A short delay lets the mouse move from the cell into the tooltip to click Fix
+  function closeTipSoon() {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setTip(null), 150);
+  }
+
+  const tipProps = (issue: Issue) => ({
+    tabIndex: 0,
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => openTip(issue.id, e.currentTarget),
+    onFocus: (e: React.FocusEvent<HTMLElement>) => openTip(issue.id, e.currentTarget),
+    onMouseLeave: closeTipSoon,
+    onBlur: closeTipSoon,
+  });
+
   function goToPage(newPage: number) {
     setPage(newPage);
     tableBoxRef.current?.scrollTo({ top: 0 }); // start the new page at the top
   }
+
+  // "Show in table" from the issue list: go to the right page and scroll to the row
+  function showIssue(issue: Issue) {
+    goToPage(Math.floor(issue.row / ROWS_PER_PAGE) + 1);
+    requestAnimationFrame(() =>
+      document
+        .getElementById(`data-row-${issue.row}`)
+        ?.scrollIntoView({ block: "center", behavior: "smooth" })
+    );
+  }
+
+  const tipIssue = tip ? issueById.get(tip.issueId) : undefined;
 
   return (
     <main className="flex flex-1 flex-col px-6 py-10">
@@ -64,6 +131,8 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
           still explore it and ask questions.
         </p>
       )}
+
+      <CleaningPanel dataset={dataset} cleaned={cleaned} onShowIssue={showIssue} />
 
       {/* Scroll box: scrolls down for many rows and sideways for many columns */}
       <div
@@ -88,25 +157,55 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
             </tr>
           </thead>
           <tbody>
-            {pageRows.map((row, rowIndex) => (
-              <tr
-                key={start + rowIndex}
-                className="even:bg-zinc-50 dark:even:bg-zinc-900/40"
-              >
-                <td className="px-3 py-1.5 text-right text-zinc-400">
-                  {start + rowIndex + 1}
-                </td>
-                {row.map((cell, i) => (
+            {pageRows.map((row, rowIndex) => {
+              const r = start + rowIndex;
+              const rowIssue = rowIssues.get(r);
+              const rowFixed = rowIssue && fixedIds.has(rowIssue.id);
+              return (
+                <tr
+                  key={r}
+                  id={`data-row-${r}`}
+                  className={
+                    !rowIssue
+                      ? "even:bg-zinc-50 dark:even:bg-zinc-900/40"
+                      : rowFixed
+                        ? `${GREEN} line-through`
+                        : RED
+                  }
+                >
                   <td
-                    key={i}
-                    title={cell}
-                    className="max-w-xs truncate whitespace-nowrap px-3 py-1.5"
+                    {...(rowIssue && tipProps(rowIssue))}
+                    className={`px-3 py-1.5 text-right ${rowIssue ? "font-medium" : "text-zinc-400"}`}
                   >
-                    {cell}
+                    {r + 1}
                   </td>
-                ))}
-              </tr>
-            ))}
+                  {row.map((cell, i) => {
+                    const issue = cellIssues.get(`${r}:${i}`);
+                    if (!issue) {
+                      return (
+                        <td
+                          key={i}
+                          title={cell}
+                          className="max-w-xs truncate whitespace-nowrap px-3 py-1.5"
+                        >
+                          {cell}
+                        </td>
+                      );
+                    }
+                    const isFixed = fixedIds.has(issue.id);
+                    return (
+                      <td
+                        key={i}
+                        {...tipProps(issue)}
+                        className={`max-w-xs truncate whitespace-nowrap px-3 py-1.5 ${isFixed ? GREEN : RED}`}
+                      >
+                        {isFixed && issue.fix?.type === "set" ? issue.fix.value : cell}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
@@ -138,7 +237,23 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
         </button>
       </div>
 
-      <AskQuestion dataset={dataset} />
+      <AskQuestion dataset={cleaned} />
+
+      {tip && tipIssue && (
+        <IssueTooltip
+          anchor={tip.anchor}
+          onMouseEnter={() => clearTimeout(closeTimer.current)}
+          onMouseLeave={closeTipSoon}
+        >
+          <IssueCard
+            issue={tipIssue}
+            original={tipIssue.col === null ? "" : rows[tipIssue.row][tipIssue.col]}
+            fixed={fixedIds.has(tipIssue.id)}
+            canFix={cleaningStatus === "done"}
+            onToggle={() => setFixed([tipIssue.id], !fixedIds.has(tipIssue.id))}
+          />
+        </IssueTooltip>
+      )}
     </main>
   );
 }
