@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DatasetProvider } from "./dataset-context";
 import AppShell from "./app-shell";
+import TopBar from "./top-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <DatasetProvider>
+          <TopBar />
           <AppShell>{children}</AppShell>
         </DatasetProvider>
       </body>

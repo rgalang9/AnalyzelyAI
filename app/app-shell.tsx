@@ -30,7 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 shrink-0 border-r border-zinc-200 bg-background transition-transform md:sticky md:top-0 md:h-screen md:translate-x-0 dark:border-zinc-800 ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 shrink-0 border-r border-zinc-200 bg-background transition-transform md:sticky md:top-14 md:h-[calc(100vh-3.5rem)] md:translate-x-0 dark:border-zinc-800 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
