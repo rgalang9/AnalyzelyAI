@@ -13,31 +13,41 @@ const tabClass = (active: boolean) =>
   }`;
 
 const barClass =
-  "sticky top-0 z-20 flex h-14 shrink-0 items-center gap-1 border-b border-zinc-200 bg-background px-4 dark:border-zinc-800";
+  "sticky top-0 flex h-14 shrink-0 items-center gap-1 border-b border-zinc-200 bg-background px-4 dark:border-zinc-800";
 
 // Same size as the bar, shown for a moment if the page address isn't known yet
 export function TopBarPlaceholder() {
-  return <header className={barClass} />;
+  return <header className={`${barClass} z-20`} />;
 }
 
 // Bar across the top of every page: "Home" (the AI analyzer) and the "Learn" menu
 export default function TopBar() {
   const pathname = usePathname();
   const inLearn = pathname.startsWith("/learn");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className={barClass}>
+    // While the Learn menu is open, the bar (and so the menu) sits above everything, sidebar
+    // included. It drops back afterwards so the mobile History drawer can cover it.
+    <header className={`${barClass} ${menuOpen ? "z-50" : "z-20"}`}>
       <Link href="/" className={tabClass(!inLearn)}>
         Home
       </Link>
-      <LearnMenu active={inLearn} />
+      <LearnMenu active={inLearn} open={menuOpen} setOpen={setMenuOpen} />
     </header>
   );
 }
 
 // Opens on hover with a mouse, and on tap on phones and tablets
-function LearnMenu({ active }: { active: boolean }) {
-  const [open, setOpen] = useState(false);
+function LearnMenu({
+  active,
+  open,
+  setOpen,
+}: {
+  active: boolean;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
   const lastPointer = useRef("mouse");
 
@@ -56,7 +66,7 @@ function LearnMenu({ active }: { active: boolean }) {
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [open, setOpen]);
 
   return (
     <div
