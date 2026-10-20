@@ -1,0 +1,85 @@
+{
+  "id": "sql-20",
+  "level": 5,
+  "title": "Final Case Study: The Campus Merch Shop",
+  "tables": ["customers", "products", "orders"],
+  "explanation": "You've been hired as the data analyst for a small campus merch shop. There are three tables: customers (who shops), products (what's for sale), and orders (who bought what, and how many). Each order row links a customer_id to a product_id. No new commands in this lesson — your job is to combine everything you've learned to answer real business questions. Read each question slowly, decide which tables you need, then build your query one piece at a time.",
+  "example": {
+    "code": "SELECT c.name, SUM(o.quantity * p.price) AS spent\nFROM orders o\nJOIN customers c ON o.customer_id = c.customer_id\nJOIN products p ON o.product_id = p.product_id\nGROUP BY c.name\nORDER BY spent DESC;",
+    "lines": [
+      {"line": "SELECT c.name, SUM(o.quantity * p.price) AS spent", "explain": "Show each customer's name and the total money they spent (quantity times price, added up)."},
+      {"line": "FROM orders o", "explain": "Start from the orders table and call it o for short."},
+      {"line": "JOIN customers c ON o.customer_id = c.customer_id", "explain": "Bring in the customer's name by matching customer IDs."},
+      {"line": "JOIN products p ON o.product_id = p.product_id", "explain": "Bring in each product's price by matching product IDs."},
+      {"line": "GROUP BY c.name", "explain": "Make one group per customer so SUM adds up their orders."},
+      {"line": "ORDER BY spent DESC;", "explain": "Put the biggest spender at the top."}
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "The owner wants to know how many items were sold in each product category. Show category and total quantity sold (call it items_sold), biggest first.",
+      "type": "write",
+      "answer": "SELECT p.category, SUM(o.quantity) AS items_sold FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY p.category ORDER BY items_sold DESC;",
+      "hints": ["You need orders (for quantity) and products (for category). Join them on product_id.", "GROUP BY p.category, then SUM(o.quantity). Finish with ORDER BY items_sold DESC."],
+      "solution_lines": [
+        {"line": "SELECT p.category, SUM(o.quantity) AS items_sold", "explain": "Show each category and how many items it sold."},
+        {"line": "FROM orders o JOIN products p ON o.product_id = p.product_id", "explain": "Link each order to its product."},
+        {"line": "GROUP BY p.category", "explain": "One row per category."},
+        {"line": "ORDER BY items_sold DESC;", "explain": "Biggest seller first."}
+      ]
+    },
+    {
+      "prompt": "Which products have never been ordered? Show just their names.",
+      "type": "write",
+      "answer": "SELECT p.name FROM products p LEFT JOIN orders o ON p.product_id = o.product_id WHERE o.order_id IS NULL;",
+      "hints": ["Start from products and LEFT JOIN orders, so products with no orders still show up.", "Products with no match have NULL in the orders columns — filter with WHERE o.order_id IS NULL."],
+      "solution_lines": [
+        {"line": "SELECT p.name", "explain": "Show the product name."},
+        {"line": "FROM products p LEFT JOIN orders o ON p.product_id = o.product_id", "explain": "Keep every product, even ones with no orders."},
+        {"line": "WHERE o.order_id IS NULL;", "explain": "Keep only products that never matched an order."}
+      ]
+    },
+    {
+      "prompt": "Show each city and its total revenue (quantity times price, call it revenue). Only show cities with more than $100 in revenue.",
+      "type": "write",
+      "answer": "SELECT c.city, SUM(o.quantity * p.price) AS revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN products p ON o.product_id = p.product_id GROUP BY c.city HAVING SUM(o.quantity * p.price) > 100;",
+      "hints": ["You need all three tables: orders, customers (for city), and products (for price).", "GROUP BY c.city, then use HAVING (not WHERE) to keep only revenue over 100."],
+      "solution_lines": [
+        {"line": "SELECT c.city, SUM(o.quantity * p.price) AS revenue", "explain": "Show each city and the money it brought in."},
+        {"line": "FROM orders o", "explain": "Start from orders."},
+        {"line": "JOIN customers c ON o.customer_id = c.customer_id", "explain": "Get each order's city."},
+        {"line": "JOIN products p ON o.product_id = p.product_id", "explain": "Get each order's price."},
+        {"line": "GROUP BY c.city", "explain": "One row per city."},
+        {"line": "HAVING SUM(o.quantity * p.price) > 100;", "explain": "Keep only cities over $100 — HAVING filters groups."}
+      ]
+    },
+    {
+      "prompt": "Predict: how many rows will this query return?",
+      "type": "predict",
+      "code": "SELECT DISTINCT customer_id FROM orders;",
+      "options": ["12", "6", "8", "5"],
+      "answer": "SELECT DISTINCT customer_id FROM orders;",
+      "hints": ["DISTINCT removes repeats. Count how many different customers placed orders.", "Look at customer_id in orders: 1 to 6 show up. Customers 7 and 8 never ordered."],
+      "solution_lines": [
+        {"line": "SELECT DISTINCT customer_id FROM orders;", "explain": "Lists each customer who ordered, once each — 6 people."}
+      ]
+    },
+    {
+      "prompt": "Final challenge: label each customer as a 'Big Spender' (spent $80 or more) or 'Regular' (less). Use a WITH block to work out each customer's total first, then show name, spent, and the label (call it tier). Biggest spender first.",
+      "type": "write",
+      "answer": "WITH totals AS (SELECT o.customer_id, SUM(o.quantity * p.price) AS spent FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY o.customer_id) SELECT c.name, t.spent, CASE WHEN t.spent >= 80 THEN 'Big Spender' ELSE 'Regular' END AS tier FROM totals t JOIN customers c ON t.customer_id = c.customer_id ORDER BY t.spent DESC;",
+      "hints": ["Step 1: in a WITH block called totals, join orders and products and SUM(quantity * price) per customer_id.", "Step 2: join totals to customers for the name, and use CASE WHEN spent >= 80 THEN 'Big Spender' ELSE 'Regular' END AS tier."],
+      "solution_lines": [
+        {"line": "WITH totals AS (", "explain": "Make a temporary table called totals."},
+        {"line": "  SELECT o.customer_id, SUM(o.quantity * p.price) AS spent", "explain": "Work out how much each customer spent."},
+        {"line": "  FROM orders o JOIN products p ON o.product_id = p.product_id", "explain": "Prices come from products."},
+        {"line": "  GROUP BY o.customer_id)", "explain": "One total per customer."},
+        {"line": "SELECT c.name, t.spent,", "explain": "Show the name and total."},
+        {"line": "  CASE WHEN t.spent >= 80 THEN 'Big Spender' ELSE 'Regular' END AS tier", "explain": "Label each customer by how much they spent."},
+        {"line": "FROM totals t JOIN customers c ON t.customer_id = c.customer_id", "explain": "Bring in names."},
+        {"line": "ORDER BY t.spent DESC;", "explain": "Biggest spender first."}
+      ]
+    }
+  ],
+  "recap": "You just did a real analyst's job: joining three tables, grouping, filtering groups with HAVING, finding missing data with LEFT JOIN, and building a step-by-step answer with WITH and CASE. That's the core of everyday SQL — congratulations on finishing the course!"
+}
