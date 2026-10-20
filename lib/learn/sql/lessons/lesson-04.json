@@ -1,0 +1,76 @@
+{
+  "id": "sql-04",
+  "level": 1,
+  "title": "Review: The Sneaker Store",
+  "tables": ["sneakers"],
+  "explanation": "Time to test everything from Level 1 on a brand-new table! This is a sneaker store. Take a minute to look at the data first: each row is one shoe, with its brand, category, price, and how many are in stock. No new ideas here, just SELECT, DISTINCT, WHERE, AND, OR, BETWEEN, LIKE, IN, ORDER BY, and LIMIT. You've got this.",
+  "example": {
+    "code": "SELECT name, stock\nFROM sneakers\nWHERE brand = 'Vans' OR stock > 40;",
+    "lines": [
+      { "line": "SELECT name, stock", "explain": "Show me the name and stock columns." },
+      { "line": "FROM sneakers", "explain": "From the new sneakers table." },
+      { "line": "WHERE brand = 'Vans' OR stock > 40;", "explain": "Keep a shoe if EITHER is true: the brand is Vans, or there are more than 40 in stock." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show each brand only once.",
+      "type": "write",
+      "answer": "SELECT DISTINCT brand FROM sneakers;",
+      "hints": ["This is from Lesson 1. Which word removes repeats?", "SELECT DISTINCT brand FROM sneakers;"],
+      "solution_lines": [
+        { "line": "SELECT DISTINCT brand", "explain": "Show me the brand column, with no repeats." },
+        { "line": "FROM sneakers;", "explain": "From the sneakers table." }
+      ]
+    },
+    {
+      "prompt": "Show the name and price of sneakers that cost from 100 to 150 (including both).",
+      "type": "write",
+      "answer": "SELECT name, price FROM sneakers WHERE price BETWEEN 100 AND 150;",
+      "hints": ["This is from Lesson 2. There's a shortcut for a range of numbers.", "WHERE price BETWEEN 100 AND 150"],
+      "solution_lines": [
+        { "line": "SELECT name, price", "explain": "Show me the name and price columns." },
+        { "line": "FROM sneakers", "explain": "From the sneakers table." },
+        { "line": "WHERE price BETWEEN 100 AND 150;", "explain": "Keep shoes priced from 100 up to 150. BETWEEN includes both ends." }
+      ]
+    },
+    {
+      "prompt": "Show the name and brand of every sneaker with 'Air' in its name.",
+      "type": "write",
+      "answer": "SELECT name, brand FROM sneakers WHERE name LIKE '%Air%';",
+      "hints": ["This is from Lesson 3. Use a pattern with the % sign.", "WHERE name LIKE '%Air%'"],
+      "solution_lines": [
+        { "line": "SELECT name, brand", "explain": "Show me the name and brand columns." },
+        { "line": "FROM sneakers", "explain": "From the sneakers table." },
+        { "line": "WHERE name LIKE '%Air%';", "explain": "Keep names with Air anywhere in them." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT name FROM sneakers WHERE brand IN ('Nike', 'Adidas') AND price < 120;",
+      "options": ["4", "6", "7"],
+      "answer": "4",
+      "hints": ["Both things must be true: the brand is Nike or Adidas, AND the price is under 120.", "Check the Nike and Adidas shoes one by one. Air Max 90 costs 140, so it doesn't count."],
+      "solution_lines": [
+        { "line": "SELECT name", "explain": "Show me the name column." },
+        { "line": "FROM sneakers", "explain": "From the sneakers table." },
+        { "line": "WHERE brand IN ('Nike', 'Adidas') AND price < 120;", "explain": "Keep Nike or Adidas shoes that ALSO cost less than 120: Air Force 1, Stan Smith, Samba OG, and Dunk Low." }
+      ]
+    },
+    {
+      "prompt": "Show the name and price of the 3 most expensive Running or Basketball sneakers, most expensive first.",
+      "type": "write",
+      "answer": "SELECT name, price FROM sneakers WHERE category IN ('Running', 'Basketball') ORDER BY price DESC LIMIT 3;",
+      "hints": ["You need three steps: filter the categories with IN, sort by price, then keep the top 3.", "WHERE category IN ('Running', 'Basketball') ORDER BY price DESC LIMIT 3"],
+      "solution_lines": [
+        { "line": "SELECT name, price", "explain": "Show me the name and price columns." },
+        { "line": "FROM sneakers", "explain": "From the sneakers table." },
+        { "line": "WHERE category IN ('Running', 'Basketball')", "explain": "Keep only Running or Basketball shoes." },
+        { "line": "ORDER BY price DESC", "explain": "Sort by price, most expensive first." },
+        { "line": "LIMIT 3;", "explain": "Only show the top 3." }
+      ]
+    }
+  ],
+  "recap": "Level 1 complete! You can now pick columns, filter rows, search text, sort results, and grab the top few, on any table."
+}

@@ -1,0 +1,87 @@
+{
+  "id": "sql-14",
+  "level": 4,
+  "title": "JOINs with filters and grouping",
+  "tables": ["games", "studios"],
+  "explanation": "Here's the cool part: once two tables are joined, it's just one big table. That means everything you've learned still works on it: WHERE, GROUP BY, HAVING, ORDER BY, COUNT, all of it. The order you write it in stays the same: SELECT, FROM, JOIN ... ON, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT.",
+  "example": {
+    "code": "SELECT s.studio_name, MAX(g.rating) AS best_rating\nFROM games AS g\nINNER JOIN studios AS s\n  ON g.studio_id = s.studio_id\nGROUP BY s.studio_name;",
+    "lines": [
+      { "line": "SELECT s.studio_name, MAX(g.rating) AS best_rating", "explain": "Show each studio's name and its highest-rated game's rating." },
+      { "line": "FROM games AS g", "explain": "Start with games." },
+      { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+      { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+      { "line": "GROUP BY s.studio_name;", "explain": "Make one group per studio, so MAX works on each studio's games." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show each studio's name and how many games it made (call it num_games).",
+      "type": "write",
+      "answer": "SELECT s.studio_name, COUNT(*) AS num_games FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id GROUP BY s.studio_name;",
+      "hints": ["Join the tables, then GROUP BY the studio name and COUNT.", "... ON g.studio_id = s.studio_id GROUP BY s.studio_name"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, COUNT(*) AS num_games", "explain": "Show each studio and how many games it has." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "GROUP BY s.studio_name;", "explain": "Make one group per studio." }
+      ]
+    },
+    {
+      "prompt": "Show only the studios that made more than 1 game, with their count (call it num_games).",
+      "type": "write",
+      "answer": "SELECT s.studio_name, COUNT(*) AS num_games FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id GROUP BY s.studio_name HAVING COUNT(*) > 1;",
+      "hints": ["Same as task 1, plus HAVING to filter the groups.", "... GROUP BY s.studio_name HAVING COUNT(*) > 1"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, COUNT(*) AS num_games", "explain": "Show each studio and its count." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "GROUP BY s.studio_name", "explain": "Make one group per studio." },
+        { "line": "HAVING COUNT(*) > 1;", "explain": "Only keep studios with more than 1 game." }
+      ]
+    },
+    {
+      "prompt": "For each studio country, show how many games come from there (call it num_games) and the best rating (call it best_rating).",
+      "type": "write",
+      "answer": "SELECT s.country, COUNT(*) AS num_games, MAX(g.rating) AS best_rating FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id GROUP BY s.country;",
+      "hints": ["Group by the country from the studios table. You can use two aggregate functions at once.", "SELECT s.country, COUNT(*) AS num_games, MAX(g.rating) AS best_rating ... GROUP BY s.country"],
+      "solution_lines": [
+        { "line": "SELECT s.country, COUNT(*) AS num_games, MAX(g.rating) AS best_rating", "explain": "Show each country, how many games, and the highest rating." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "GROUP BY s.country;", "explain": "Make one group per studio country." }
+      ]
+    },
+    {
+      "prompt": "For studios founded before 2000, show the studio name and how many games it made (call it num_games), sorted by studio name A to Z.",
+      "type": "write",
+      "answer": "SELECT s.studio_name, COUNT(*) AS num_games FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id WHERE s.founded_year < 2000 GROUP BY s.studio_name ORDER BY s.studio_name ASC;",
+      "hints": ["Filter rows with WHERE before grouping, then sort at the end.", "... WHERE s.founded_year < 2000 GROUP BY s.studio_name ORDER BY s.studio_name ASC"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, COUNT(*) AS num_games", "explain": "Show each studio and its count." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "WHERE s.founded_year < 2000", "explain": "Only keep games from studios founded before 2000." },
+        { "line": "GROUP BY s.studio_name", "explain": "Make one group per studio." },
+        { "line": "ORDER BY s.studio_name ASC;", "explain": "Sort by studio name, A to Z." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT s.studio_name, COUNT(*)\nFROM games AS g\nINNER JOIN studios AS s\n  ON g.studio_id = s.studio_id\nWHERE g.price = 0\nGROUP BY s.studio_name;",
+      "options": ["3", "2", "1"],
+      "answer": "2",
+      "hints": ["First find the free games, then see which studios made them.", "The free games are Fortnite, League of Legends, and Valorant. Two of them come from the same studio."],
+      "solution_lines": [
+        { "line": "WHERE g.price = 0", "explain": "Keep only the 3 free games: Fortnite, League of Legends, and Valorant." },
+        { "line": "GROUP BY s.studio_name;", "explain": "Group them by studio: Epic Games made 1, and Riot Games made 2. That's 2 groups, so 2 rows." }
+      ]
+    }
+  ],
+  "recap": "You just learned that a JOIN makes one big table, so WHERE, GROUP BY, HAVING, and ORDER BY all work on it just like before."
+}

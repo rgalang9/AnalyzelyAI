@@ -10,6 +10,9 @@ const WriteTaskSchema = z.object({
   type: z.literal("write"),
   prompt: z.string(),
   answer: z.string(), // the query whose result the learner's result must match
+  // Optional SELECT for tasks that change data (INSERT/UPDATE/DELETE): it runs after the
+  // learner's code and after the answer, each on fresh data, and the two results are compared
+  check: z.string().optional(),
   hints: z.array(z.string()),
   solution_lines: z.array(CodeLineSchema),
 });
@@ -20,6 +23,7 @@ const PredictTaskSchema = z.object({
   code: z.string(),
   options: z.array(z.string()),
   answer: z.string(), // the correct option
+  check: z.string().optional(), // optional SELECT shown after running the code (for code that changes data)
   hints: z.array(z.string()),
   solution_lines: z.array(CodeLineSchema),
 });

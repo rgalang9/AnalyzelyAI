@@ -1,0 +1,76 @@
+{
+  "id": "sql-18",
+  "level": 5,
+  "title": "Subqueries: a query inside a query",
+  "tables": ["games", "studios", "sales"],
+  "explanation": "Welcome to Level 5: pro skills! A subquery is a query inside another query, wrapped in brackets ( ). The inner query runs FIRST, then the outer query uses its answer. For example, 'which games are rated above average?' needs two steps: first find the average, then compare each game to it. A subquery does both in one go. You can also use IN with a subquery to check against a whole list, and NOT IN to find what's NOT on the list.",
+  "example": {
+    "code": "SELECT title, price\nFROM games\nWHERE price < (SELECT AVG(price) FROM games);",
+    "lines": [
+      { "line": "SELECT title, price", "explain": "Show the title and price." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "WHERE price < (SELECT AVG(price) FROM games);", "explain": "The part in brackets runs first and finds the average price. Then we keep games cheaper than that average." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the title and rating of every game rated above the average rating.",
+      "type": "write",
+      "answer": "SELECT title, rating FROM games WHERE rating > (SELECT AVG(rating) FROM games);",
+      "hints": ["Put a query that finds the average rating inside brackets.", "WHERE rating > (SELECT AVG(rating) FROM games)"],
+      "solution_lines": [
+        { "line": "SELECT title, rating", "explain": "Show the title and rating." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE rating > (SELECT AVG(rating) FROM games);", "explain": "First find the average rating (about 9.08), then keep games rated higher than it." }
+      ]
+    },
+    {
+      "prompt": "Show the title and price of the most expensive game, using a subquery.",
+      "type": "write",
+      "answer": "SELECT title, price FROM games WHERE price = (SELECT MAX(price) FROM games);",
+      "hints": ["Find the biggest price in a subquery, then keep the game that matches it.", "WHERE price = (SELECT MAX(price) FROM games)"],
+      "solution_lines": [
+        { "line": "SELECT title, price", "explain": "Show the title and price." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price = (SELECT MAX(price) FROM games);", "explain": "First find the highest price, then keep the game with that exact price." }
+      ]
+    },
+    {
+      "prompt": "Without using a JOIN, show the title of every game made by a studio from Japan.",
+      "type": "write",
+      "answer": "SELECT title FROM games WHERE studio_id IN (SELECT studio_id FROM studios WHERE country = 'Japan');",
+      "hints": ["The subquery can give back a list of studio IDs. Then use IN to check against that list.", "WHERE studio_id IN (SELECT studio_id FROM studios WHERE country = 'Japan')"],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show the game title." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE studio_id IN (SELECT studio_id FROM studios WHERE country = 'Japan');", "explain": "The subquery lists the IDs of Japanese studios. Then we keep games whose studio_id is in that list." }
+      ]
+    },
+    {
+      "prompt": "Find the games that have never been sold, using NOT IN instead of a LEFT JOIN. Show the title, sorted A to Z.",
+      "type": "write",
+      "answer": "SELECT title FROM games WHERE game_id NOT IN (SELECT game_id FROM sales) ORDER BY title ASC;",
+      "hints": ["The subquery lists every game_id that appears in sales. You want games NOT in that list.", "WHERE game_id NOT IN (SELECT game_id FROM sales) ORDER BY title ASC"],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show the game title." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE game_id NOT IN (SELECT game_id FROM sales)", "explain": "The subquery lists every game that was sold. Keep games NOT on that list. Same answer as the LEFT JOIN trick, a different way to get there!" },
+        { "line": "ORDER BY title ASC;", "explain": "Sort by title, A to Z." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what number will this return?",
+      "type": "predict",
+      "code": "SELECT COUNT(*)\nFROM games\nWHERE price > (SELECT AVG(price) FROM games);",
+      "options": ["8", "6", "7"],
+      "answer": "8",
+      "hints": ["The average price is about 36.66. How many games cost more than that?", "Six games cost 59.99. Don't forget The Witcher 3 at 39.99 and EA Sports FC 24 at 69.99."],
+      "solution_lines": [
+        { "line": "SELECT COUNT(*)", "explain": "Count the rows that are left." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price > (SELECT AVG(price) FROM games);", "explain": "The average price is about 36.66. Six games at 59.99, plus The Witcher 3 and EA Sports FC 24, are above it. That's 8." }
+      ]
+    }
+  ],
+  "recap": "You just learned subqueries: put a query in brackets, it runs first, and the outer query uses its answer. IN and NOT IN let you check against a whole list."
+}

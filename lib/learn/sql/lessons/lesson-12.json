@@ -1,0 +1,82 @@
+{
+  "id": "sql-12",
+  "level": 3,
+  "title": "Review: The Player Report",
+  "tables": ["players"],
+  "explanation": "Level 3 review! Remember the players table from Lesson 6? Imagine your boss wants a report on the players: how many there are, how much they play, and where they're from. Use everything from Level 3: COUNT, SUM, AVG, GROUP BY, and HAVING. Some tasks also mix in older skills like CASE WHEN and dates.",
+  "example": {
+    "code": "SELECT country, MAX(hours_played) AS top_hours\nFROM players\nGROUP BY country;",
+    "lines": [
+      { "line": "SELECT country, MAX(hours_played) AS top_hours", "explain": "Show each country, plus the most hours any player there has played." },
+      { "line": "FROM players", "explain": "From the players table." },
+      { "line": "GROUP BY country;", "explain": "Make one group per country." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the total number of players (call it total_players) and the total hours they've played together (call it total_hours).",
+      "type": "write",
+      "answer": "SELECT COUNT(*) AS total_players, SUM(hours_played) AS total_hours FROM players;",
+      "hints": ["Two aggregate functions in one SELECT: one to count, one to add up.", "SELECT COUNT(*) AS total_players, SUM(hours_played) AS total_hours"],
+      "solution_lines": [
+        { "line": "SELECT COUNT(*) AS total_players,", "explain": "Count every player." },
+        { "line": "SUM(hours_played) AS total_hours", "explain": "Add up everyone's hours." },
+        { "line": "FROM players;", "explain": "From the players table." }
+      ]
+    },
+    {
+      "prompt": "Label players 'Casual' (under 100 hours), 'Regular' (under 300 hours), or 'Hardcore' (everyone else) in a column called player_type. Then count how many are in each type (call it num_players).",
+      "type": "write",
+      "answer": "SELECT CASE WHEN hours_played < 100 THEN 'Casual' WHEN hours_played < 300 THEN 'Regular' ELSE 'Hardcore' END AS player_type, COUNT(*) AS num_players FROM players GROUP BY player_type;",
+      "hints": ["Build the label with CASE WHEN, then GROUP BY the label, just like Lesson 10.", "SELECT CASE WHEN hours_played < 100 THEN 'Casual' WHEN hours_played < 300 THEN 'Regular' ELSE 'Hardcore' END AS player_type, COUNT(*) AS num_players ... GROUP BY player_type"],
+      "solution_lines": [
+        { "line": "SELECT CASE WHEN hours_played < 100 THEN 'Casual'", "explain": "Under 100 hours is Casual." },
+        { "line": "WHEN hours_played < 300 THEN 'Regular'", "explain": "Under 300 (but 100 or more) is Regular." },
+        { "line": "ELSE 'Hardcore' END AS player_type,", "explain": "Everyone else is Hardcore. Name the label player_type." },
+        { "line": "COUNT(*) AS num_players", "explain": "Count the players in each group." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "GROUP BY player_type;", "explain": "Make one group per label." }
+      ]
+    },
+    {
+      "prompt": "Show each country with more than 1 player, and the total hours played there (call it total_hours).",
+      "type": "write",
+      "answer": "SELECT country, SUM(hours_played) AS total_hours FROM players GROUP BY country HAVING COUNT(*) > 1;",
+      "hints": ["Group by country. The 'more than 1 player' part is about groups, so it goes in HAVING.", "GROUP BY country HAVING COUNT(*) > 1"],
+      "solution_lines": [
+        { "line": "SELECT country, SUM(hours_played) AS total_hours", "explain": "Show each country and its total hours." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "GROUP BY country", "explain": "Make one group per country." },
+        { "line": "HAVING COUNT(*) > 1;", "explain": "Only keep countries with more than 1 player. You can filter on a count even if it's not in the SELECT." }
+      ]
+    },
+    {
+      "prompt": "Show how many players signed up each year. Call the year signup_year and the count new_players, oldest year first.",
+      "type": "write",
+      "answer": "SELECT strftime('%Y', signup_date) AS signup_year, COUNT(*) AS new_players FROM players GROUP BY signup_year ORDER BY signup_year ASC;",
+      "hints": ["Pull the year out with strftime() from Lesson 6, then group by it.", "SELECT strftime('%Y', signup_date) AS signup_year, COUNT(*) AS new_players ... GROUP BY signup_year ORDER BY signup_year ASC"],
+      "solution_lines": [
+        { "line": "SELECT strftime('%Y', signup_date) AS signup_year,", "explain": "Pull the year out of each sign-up date." },
+        { "line": "COUNT(*) AS new_players", "explain": "Count the players in each year." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "GROUP BY signup_year", "explain": "Make one group per year." },
+        { "line": "ORDER BY signup_year ASC;", "explain": "Sort the years, oldest first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT country\nFROM players\nGROUP BY country\nHAVING AVG(hours_played) > 200;",
+      "options": ["2", "3", "1"],
+      "answer": "2",
+      "hints": ["Work out the AVERAGE hours for each country, not the single biggest player.", "USA averages 477 and the UK averages 275. The Philippines is close, at 198, but that's not over 200."],
+      "solution_lines": [
+        { "line": "SELECT country", "explain": "Show the country." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "GROUP BY country", "explain": "Make one group per country." },
+        { "line": "HAVING AVG(hours_played) > 200;", "explain": "Keep countries whose average is over 200: just the USA (477) and the UK (275). The Philippines just misses at 198." }
+      ]
+    }
+  ],
+  "recap": "Level 3 complete! You can now summarise data, group it, and filter groups. That's the core of real data analysis."
+}

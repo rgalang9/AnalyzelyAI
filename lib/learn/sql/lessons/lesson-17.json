@@ -1,0 +1,88 @@
+{
+  "id": "sql-17",
+  "level": 4,
+  "title": "Review: The Game Store Report",
+  "tables": ["sales", "players", "games", "studios"],
+  "explanation": "Level 4 review! You now have a little connected database: players buy games in the sales table, and each game comes from a studio. Your job is to answer real business questions by joining them. Use INNER JOIN when you only want matches, and LEFT JOIN when you need to find what's missing. Tip: before writing, trace the chain of IDs you need to follow.",
+  "example": {
+    "code": "SELECT g.title, st.studio_name\nFROM games AS g\nINNER JOIN studios AS st\n  ON g.studio_id = st.studio_id\nWHERE g.price = 0;",
+    "lines": [
+      { "line": "SELECT g.title, st.studio_name", "explain": "Show the game title and its studio." },
+      { "line": "FROM games AS g", "explain": "Start with games." },
+      { "line": "INNER JOIN studios AS st", "explain": "Glue on studios." },
+      { "line": "ON g.studio_id = st.studio_id", "explain": "Match on studio_id." },
+      { "line": "WHERE g.price = 0;", "explain": "Only keep free games." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Find the players who have never bought a game. Show just their username.",
+      "type": "write",
+      "answer": "SELECT p.username FROM players AS p LEFT JOIN sales AS sa ON p.player_id = sa.player_id WHERE sa.sale_id IS NULL;",
+      "hints": ["This is the 'finding what's missing' trick from Lesson 15: LEFT JOIN, then IS NULL.", "FROM players AS p LEFT JOIN sales AS sa ON p.player_id = sa.player_id WHERE sa.sale_id IS NULL"],
+      "solution_lines": [
+        { "line": "SELECT p.username", "explain": "Show the username." },
+        { "line": "FROM players AS p", "explain": "Start with ALL players." },
+        { "line": "LEFT JOIN sales AS sa", "explain": "Glue on sales, keeping players with no purchases." },
+        { "line": "ON p.player_id = sa.player_id", "explain": "Match each player to their sales." },
+        { "line": "WHERE sa.sale_id IS NULL;", "explain": "Keep only players with no matching sale." }
+      ]
+    },
+    {
+      "prompt": "Find the games that have never been sold. Show just the title.",
+      "type": "write",
+      "answer": "SELECT g.title FROM games AS g LEFT JOIN sales AS sa ON g.game_id = sa.game_id WHERE sa.sale_id IS NULL;",
+      "hints": ["Same trick as task 1, but start from games this time.", "FROM games AS g LEFT JOIN sales AS sa ON g.game_id = sa.game_id WHERE sa.sale_id IS NULL"],
+      "solution_lines": [
+        { "line": "SELECT g.title", "explain": "Show the game title." },
+        { "line": "FROM games AS g", "explain": "Start with ALL games." },
+        { "line": "LEFT JOIN sales AS sa", "explain": "Glue on sales, keeping games that were never sold." },
+        { "line": "ON g.game_id = sa.game_id", "explain": "Match each game to its sales." },
+        { "line": "WHERE sa.sale_id IS NULL;", "explain": "Keep only games with no sales." }
+      ]
+    },
+    {
+      "prompt": "Show the title of every game sold more than once, and how many times it sold (call it times_sold), most sold first.",
+      "type": "write",
+      "answer": "SELECT g.title, COUNT(sa.sale_id) AS times_sold FROM games AS g INNER JOIN sales AS sa ON g.game_id = sa.game_id GROUP BY g.title HAVING COUNT(sa.sale_id) > 1 ORDER BY times_sold DESC;",
+      "hints": ["Join games to sales, group by title, then filter the groups with HAVING.", "... GROUP BY g.title HAVING COUNT(sa.sale_id) > 1 ORDER BY times_sold DESC"],
+      "solution_lines": [
+        { "line": "SELECT g.title, COUNT(sa.sale_id) AS times_sold", "explain": "Show each game and how many sales it has." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN sales AS sa ON g.game_id = sa.game_id", "explain": "Glue on sales." },
+        { "line": "GROUP BY g.title", "explain": "Make one group per game." },
+        { "line": "HAVING COUNT(sa.sale_id) > 1", "explain": "Only keep games sold more than once." },
+        { "line": "ORDER BY times_sold DESC;", "explain": "Sort, most sold first." }
+      ]
+    },
+    {
+      "prompt": "For each player country, show the total money spent, rounded to 2 decimals (call it total_spent), biggest first.",
+      "type": "write",
+      "answer": "SELECT p.country, ROUND(SUM(g.price), 2) AS total_spent FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id GROUP BY p.country ORDER BY total_spent DESC;",
+      "hints": ["You need three tables: sales, players (for the country), and games (for the price).", "... GROUP BY p.country ORDER BY total_spent DESC"],
+      "solution_lines": [
+        { "line": "SELECT p.country, ROUND(SUM(g.price), 2) AS total_spent", "explain": "Show each country and the total spent there." },
+        { "line": "FROM sales AS sa", "explain": "Start with sales." },
+        { "line": "INNER JOIN players AS p ON sa.player_id = p.player_id", "explain": "Bring in the buyer, who has the country." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id", "explain": "Bring in the game, which has the price." },
+        { "line": "GROUP BY p.country", "explain": "Make one group per country." },
+        { "line": "ORDER BY total_spent DESC;", "explain": "Sort, biggest total first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT DISTINCT st.studio_name\nFROM sales AS sa\nINNER JOIN games AS g\n  ON sa.game_id = g.game_id\nINNER JOIN studios AS st\n  ON g.studio_id = st.studio_id;",
+      "options": ["13", "8", "10"],
+      "answer": "8",
+      "hints": ["This finds which studios have at least one sale. DISTINCT removes repeats.", "Nintendo and Rockstar each have 2 sales, and FromSoftware has 3, but each studio only counts once."],
+      "solution_lines": [
+        { "line": "SELECT DISTINCT st.studio_name", "explain": "Show each studio name once." },
+        { "line": "FROM sales AS sa", "explain": "Start with all 13 sales." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id", "explain": "Find the game for each sale." },
+        { "line": "INNER JOIN studios AS st ON g.studio_id = st.studio_id;", "explain": "Find the studio for each game. After removing repeats, 8 different studios made a sale." }
+      ]
+    }
+  ],
+  "recap": "Level 4 complete! You can now connect tables, chain joins, and find what's missing. That's how real company databases work."
+}

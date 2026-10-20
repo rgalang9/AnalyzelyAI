@@ -51,10 +51,15 @@ export function describeTables(db: Database, tables: string[]): TableInfo[] {
   });
 }
 
+// How many rows have been added, changed, or removed since the database was created
+export function countChanges(db: Database): number {
+  return Number(runQuery(db, "SELECT total_changes()").rows[0][0]);
+}
+
 // ---------- Checking an answer ----------
 // Compares result tables, not the SQL text, so any query that gets the right
 // rows and columns counts. Column order doesn't matter; row order only matters
-// when the answer uses ORDER BY.
+// when the query that made the expected result (the answer, or the check query) uses ORDER BY.
 
 const cellKey = (v: SqlValue) => (v === null ? "\u0000NULL" : v instanceof Uint8Array ? "\u0000BLOB" : String(v));
 const rowKey = (row: SqlValue[]) => row.map(cellKey).join("\u0001");
@@ -63,7 +68,7 @@ const listNames = (names: string[]) => names.join(", ");
 export function compareResults(
   actual: QueryResult,
   expected: QueryResult,
-  answerSql: string
+  expectedSql: string
 ): { match: true } | { match: false; reason: string } {
   if (actual.columns.length !== expected.columns.length) {
     const n = expected.columns.length;
@@ -96,7 +101,7 @@ export function compareResults(
   if (!sortedMatch) {
     return { match: false, reason: "The columns look right, but some of the rows are different." };
   }
-  if (/\border\s+by\b/i.test(answerSql) && actualKeys.join("\n") !== expectedKeys.join("\n")) {
+  if (/\border\s+by\b/i.test(expectedSql) && actualKeys.join("\n") !== expectedKeys.join("\n")) {
     return { match: false, reason: "You've got the right rows, but they're in a different order." };
   }
   return { match: true };

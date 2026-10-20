@@ -1,0 +1,78 @@
+{
+  "id": "sql-08",
+  "level": 2,
+  "title": "Review: The Delivery App",
+  "tables": ["deliveries"],
+  "explanation": "Level 2 review! This is a food delivery app. Each row is one order: who ordered, from which restaurant, when, the total, the tip, and how many minutes delivery took. Some tips are missing (NULL) because those customers didn't tip. Take a look at the data first, then use everything from Level 2: NULL, math with AS, text and date functions, and CASE WHEN.",
+  "example": {
+    "code": "SELECT customer, total * 2 AS double_total\nFROM deliveries\nWHERE restaurant = 'Sushi Spot';",
+    "lines": [
+      { "line": "SELECT customer, total * 2 AS double_total", "explain": "Show the customer, plus their total times 2, nicknamed double_total." },
+      { "line": "FROM deliveries", "explain": "From the new deliveries table." },
+      { "line": "WHERE restaurant = 'Sushi Spot';", "explain": "Only keep orders from Sushi Spot." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the customer's name in capital letters (call it loud_name) and the restaurant, for orders with no tip.",
+      "type": "write",
+      "answer": "SELECT UPPER(customer) AS loud_name, restaurant FROM deliveries WHERE tip IS NULL;",
+      "hints": ["Two things from Level 2: UPPER() for capitals, and IS NULL for missing tips.", "SELECT UPPER(customer) AS loud_name, restaurant ... WHERE tip IS NULL"],
+      "solution_lines": [
+        { "line": "SELECT UPPER(customer) AS loud_name, restaurant", "explain": "Show the customer in capitals, nicknamed loud_name, plus the restaurant." },
+        { "line": "FROM deliveries", "explain": "From the deliveries table." },
+        { "line": "WHERE tip IS NULL;", "explain": "Keep only orders where the tip is missing." }
+      ]
+    },
+    {
+      "prompt": "For orders that DO have a tip, show the customer and the total plus the tip. Call that column amount_paid.",
+      "type": "write",
+      "answer": "SELECT customer, total + tip AS amount_paid FROM deliveries WHERE tip IS NOT NULL;",
+      "hints": ["Add two columns together with +, and filter out the missing tips.", "SELECT customer, total + tip AS amount_paid ... WHERE tip IS NOT NULL"],
+      "solution_lines": [
+        { "line": "SELECT customer, total + tip AS amount_paid", "explain": "Show the customer, plus total and tip added together, nicknamed amount_paid." },
+        { "line": "FROM deliveries", "explain": "From the deliveries table." },
+        { "line": "WHERE tip IS NOT NULL;", "explain": "Keep only orders with a tip. Adding a number to NULL gives NULL, so we skip those." }
+      ]
+    },
+    {
+      "prompt": "Show the customer and order date for every order placed in March.",
+      "type": "write",
+      "answer": "SELECT customer, order_date FROM deliveries WHERE strftime('%m', order_date) = '03';",
+      "hints": ["Pull the month out with strftime(). March is month 03, and it comes out as text.", "WHERE strftime('%m', order_date) = '03'"],
+      "solution_lines": [
+        { "line": "SELECT customer, order_date", "explain": "Show the customer and order date columns." },
+        { "line": "FROM deliveries", "explain": "From the deliveries table." },
+        { "line": "WHERE strftime('%m', order_date) = '03';", "explain": "Keep orders where the month is 03, meaning March. It's in quotes because strftime gives back text." }
+      ]
+    },
+    {
+      "prompt": "Show the customer, minutes, and a speed column: 'Fast' if under 20 minutes, 'Normal' if under 40, otherwise 'Slow'. Sort by minutes, quickest first.",
+      "type": "write",
+      "answer": "SELECT customer, minutes, CASE WHEN minutes < 20 THEN 'Fast' WHEN minutes < 40 THEN 'Normal' ELSE 'Slow' END AS speed FROM deliveries ORDER BY minutes ASC;",
+      "hints": ["Two WHENs plus an ELSE. Check the fastest first, then sort.", "CASE WHEN minutes < 20 THEN 'Fast' WHEN minutes < 40 THEN 'Normal' ELSE 'Slow' END AS speed ... ORDER BY minutes ASC"],
+      "solution_lines": [
+        { "line": "SELECT customer, minutes,", "explain": "Show the customer and minutes, plus a new column." },
+        { "line": "CASE WHEN minutes < 20 THEN 'Fast'", "explain": "Under 20 minutes is Fast." },
+        { "line": "WHEN minutes < 40 THEN 'Normal'", "explain": "Under 40 (but not under 20) is Normal." },
+        { "line": "ELSE 'Slow' END AS speed", "explain": "Everything else is Slow. Name the column speed." },
+        { "line": "FROM deliveries", "explain": "From the deliveries table." },
+        { "line": "ORDER BY minutes ASC;", "explain": "Sort by minutes, quickest first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT customer\nFROM deliveries\nWHERE tip < 3 OR tip IS NULL;",
+      "options": ["2", "5", "3"],
+      "answer": "5",
+      "hints": ["Count two groups: tips under 3, and missing tips. OR means either one counts.", "Tips under 3: Hiro and Jay. Missing tips: Ben, Emma, and Isla."],
+      "solution_lines": [
+        { "line": "SELECT customer", "explain": "Show me the customer column." },
+        { "line": "FROM deliveries", "explain": "From the deliveries table." },
+        { "line": "WHERE tip < 3 OR tip IS NULL;", "explain": "Keep orders with a tip under 3 (2 orders) OR no tip at all (3 orders). That's 5. Without IS NULL, the missing tips would be skipped." }
+      ]
+    }
+  ],
+  "recap": "Level 2 complete! You can now handle missing values, do math, work with text and dates, and build your own categories."
+}

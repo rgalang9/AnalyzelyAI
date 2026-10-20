@@ -1,0 +1,84 @@
+{
+  "id": "sql-13",
+  "level": 4,
+  "title": "INNER JOIN basics",
+  "tables": ["games", "studios"],
+  "explanation": "Welcome to Level 4! Real databases split information into separate tables. The games table has a studio_id column, but not the studio's name. The name lives in the studios table. A JOIN glues two tables together side by side. ON says which columns should match: games.studio_id = studios.studio_id means 'line up each game with the studio that has the same ID'. Since both tables have a studio_id column, write table.column so SQL knows which one you mean. INNER JOIN only keeps rows that match in BOTH tables. Writing just JOIN means the same thing. Tip: give tables short nicknames with AS, like games AS g, to save typing.",
+  "example": {
+    "code": "SELECT g.title, s.studio_name\nFROM games AS g\nINNER JOIN studios AS s\n  ON g.studio_id = s.studio_id;",
+    "lines": [
+      { "line": "SELECT g.title, s.studio_name", "explain": "Show the title from games (g) and the studio name from studios (s)." },
+      { "line": "FROM games AS g", "explain": "Start with the games table, nicknamed g." },
+      { "line": "INNER JOIN studios AS s", "explain": "Glue on the studios table, nicknamed s." },
+      { "line": "ON g.studio_id = s.studio_id;", "explain": "Match each game to the studio with the same studio_id." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show every game's title with the name of the studio that made it.",
+      "type": "write",
+      "answer": "SELECT games.title, studios.studio_name FROM games INNER JOIN studios ON games.studio_id = studios.studio_id;",
+      "hints": ["Join games to studios, matching on studio_id.", "FROM games INNER JOIN studios ON games.studio_id = studios.studio_id"],
+      "solution_lines": [
+        { "line": "SELECT games.title, studios.studio_name", "explain": "Show the title from games and the studio name from studios." },
+        { "line": "FROM games", "explain": "Start with the games table." },
+        { "line": "INNER JOIN studios", "explain": "Glue on the studios table." },
+        { "line": "ON games.studio_id = studios.studio_id;", "explain": "Match rows where the studio IDs are the same." }
+      ]
+    },
+    {
+      "prompt": "Using nicknames g and s, show each game's title and the country its studio is from.",
+      "type": "write",
+      "answer": "SELECT g.title, s.country FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id;",
+      "hints": ["Write games AS g and studios AS s, then use g. and s. in front of the columns.", "SELECT g.title, s.country FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id;"],
+      "solution_lines": [
+        { "line": "SELECT g.title, s.country", "explain": "Show the title from g (games) and the country from s (studios)." },
+        { "line": "FROM games AS g", "explain": "Start with games, nicknamed g." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios, nicknamed s." },
+        { "line": "ON g.studio_id = s.studio_id;", "explain": "Match on studio_id." }
+      ]
+    },
+    {
+      "prompt": "Show the title and studio name of every game made by a studio from Japan.",
+      "type": "write",
+      "answer": "SELECT g.title, s.studio_name FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id WHERE s.country = 'Japan';",
+      "hints": ["Join first, then filter with WHERE. The country is in the studios table.", "... ON g.studio_id = s.studio_id WHERE s.country = 'Japan'"],
+      "solution_lines": [
+        { "line": "SELECT g.title, s.studio_name", "explain": "Show the game title and studio name." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "WHERE s.country = 'Japan';", "explain": "Only keep games whose studio is from Japan." }
+      ]
+    },
+    {
+      "prompt": "Show the title, studio name, and release year of every game made by a USA studio, sorted by title A to Z.",
+      "type": "write",
+      "answer": "SELECT g.title, s.studio_name, g.release_year FROM games AS g INNER JOIN studios AS s ON g.studio_id = s.studio_id WHERE s.country = 'USA' ORDER BY g.title ASC;",
+      "hints": ["Same as the last task, plus one more column and a sort.", "... WHERE s.country = 'USA' ORDER BY g.title ASC"],
+      "solution_lines": [
+        { "line": "SELECT g.title, s.studio_name, g.release_year", "explain": "Show the title, studio name, and release year." },
+        { "line": "FROM games AS g", "explain": "Start with games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios." },
+        { "line": "ON g.studio_id = s.studio_id", "explain": "Match on studio_id." },
+        { "line": "WHERE s.country = 'USA'", "explain": "Only keep games from USA studios." },
+        { "line": "ORDER BY g.title ASC;", "explain": "Sort by title, A to Z." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return? (There are 15 games and 12 studios.)",
+      "type": "predict",
+      "code": "SELECT s.studio_name\nFROM games AS g\nINNER JOIN studios AS s\n  ON g.studio_id = s.studio_id;",
+      "options": ["15", "12", "10"],
+      "answer": "15",
+      "hints": ["Every game has exactly one matching studio. Nintendo made 4 games, so how many times does Nintendo show up?", "One row per matching game. Studios with no games, like Valve and Ubisoft, don't show up at all with INNER JOIN."],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name", "explain": "Show the studio name for each matched row." },
+        { "line": "FROM games AS g", "explain": "Start with all 15 games." },
+        { "line": "INNER JOIN studios AS s", "explain": "Glue on studios. Each game finds its one studio, so Nintendo appears 4 times." },
+        { "line": "ON g.studio_id = s.studio_id;", "explain": "Valve and Ubisoft have no matching games, so INNER JOIN leaves them out. That's 15 rows." }
+      ]
+    }
+  ],
+  "recap": "You just learned INNER JOIN: glue two tables together with ON, use table.column to be clear, and remember that only rows matching in both tables are kept."
+}

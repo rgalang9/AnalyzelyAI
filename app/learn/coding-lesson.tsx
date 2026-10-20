@@ -5,6 +5,7 @@ import type { Database } from "sql.js";
 import type { CodingLesson, LessonSummary } from "@/lib/learn/lesson-types";
 import {
   compareResults,
+  countChanges,
   createDatabase,
   describeTables,
   readTable,
@@ -77,6 +78,7 @@ export default function CodingLessonPlayer({
   const [viewing, setViewing] = useState<string | null>(null); // table open in the preview pop-up
   const [loadError, setLoadError] = useState("");
   const dbRef = useRef<Database | null>(null);
+  const running = useRef(false); // stops double runs while a fresh copy is being made
   const timer = useRef<number | undefined>(undefined);
 
   const task = lesson.tasks[taskIndex];
@@ -104,13 +106,18 @@ export default function CodingLessonPlayer({
     };
   }, [lesson, setupSql]);
 
-  // Every task starts with a fresh copy of the data, plus the expected result
+  // Every task starts with a fresh copy of the data, plus the expected result.
+  // Tasks with a "check" query (code that changes data): run the answer, then the check.
   async function openTask(index: number) {
     const t = lesson.tasks[index];
     const [db, answerDb] = await Promise.all([createDatabase(setupSql), createDatabase(setupSql)]);
     dbRef.current?.close();
     dbRef.current = db;
-    setExpected(t.type === "write" ? runQuery(answerDb, t.answer) : null);
+    if (t.type !== "write") setExpected(null);
+    else if (t.check) {
+      runQuery(answerDb, t.answer);
+      setExpected(runQuery(answerDb, t.check));
+    } else setExpected(runQuery(answerDb, t.answer));
     answerDb.close();
 
     clearTimeout(timer.current);
@@ -162,36 +169,66 @@ export default function CodingLessonPlayer({
     }, HINT_PAUSE_MS);
   }
 
-  function handleRun() {
+  // Runs code that changes data on a brand-new copy, then shows the check query's result.
+  // `peek` is true when the code didn't change anything and returned its own table (a SELECT).
+  async function runWithCheck(sql: string, checkSql: string): Promise<{ result: QueryResult; peek: boolean }> {
+    const db = await createDatabase(setupSql);
+    try {
+      const before = countChanges(db);
+      const own = runQuery(db, sql);
+      if (countChanges(db) === before && own.columns.length > 0) return { result: own, peek: true };
+      return { result: runQuery(db, checkSql), peek: false };
+    } finally {
+      db.close();
+    }
+  }
+
+  async function handleRun() {
     const db = dbRef.current;
-    if (!started || !db || cooling) return;
+    if (!started || !db || cooling || running.current) return;
     if (!code.trim()) {
       setTs((s) => ({ ...s, feedback: { tone: "try", text: "Type a query first, then press Run." } }));
       return;
     }
 
     let res: QueryResult | null = null;
+    let peek = false;
     let error = "";
+    running.current = true;
     try {
-      res = runQuery(db, code);
+      if (task.check) ({ result: res, peek } = await runWithCheck(code, task.check));
+      else res = runQuery(db, code);
     } catch (err) {
       error = friendlyError(err instanceof Error ? err.message : String(err));
+    } finally {
+      running.current = false;
     }
     setResult(res);
     setSqlError(error);
 
     // Only an unsolved "write" task is checked; otherwise the learner is just exploring
     if (finished || task.type !== "write" || ts.solved) return;
+    if (peek) {
+      // Looking before changing is what the lesson recommends, so it doesn't count as a try
+      setTs((s) => ({
+        ...s,
+        feedback: {
+          tone: "try",
+          text: "That only looked at the data, so nothing changed yet. Good idea to check first! Now write the code that makes the change.",
+        },
+      }));
+      return;
+    }
     if (!res) return miss(error);
-    const check = compareResults(res, expected!, task.answer);
+    const check = compareResults(res, expected!, task.check ?? task.answer);
     if (check.match) solve("Nice work! Your result matches exactly. 🎉");
     else miss(check.reason);
   }
 
-  function handlePick(option: string) {
+  async function handlePick(option: string) {
     if (task.type !== "predict" || ts.solved || cooling || !dbRef.current) return;
     if (option === task.answer) {
-      setResult(runQuery(dbRef.current, task.code));
+      setResult(task.check ? (await runWithCheck(task.code, task.check)).result : runQuery(dbRef.current, task.code));
       solve(`Yes! The answer is ${option}. Here's the result so you can see for yourself.`);
     } else {
       setTs((s) => ({ ...s, wrongPicks: [...s.wrongPicks, option] }));
@@ -355,7 +392,7 @@ export default function CodingLessonPlayer({
             </div>
 
             <div className={`grid min-h-64 flex-1 ${!isPredict ? "lg:grid-cols-2" : ""}`}>
-              <ResultPane title={isPredict ? "Result" : "Your result"}>
+              <ResultPane title={isPredict ? "Result" : task.check ? "Table after your code" : "Your result"}>
                 {sqlError ? (
                   <p className="p-4 text-sm text-amber-800 dark:text-amber-300">{sqlError}</p>
                 ) : result ? (
@@ -367,7 +404,7 @@ export default function CodingLessonPlayer({
                 )}
               </ResultPane>
               {!isPredict && started && expected && (
-                <ResultPane title="Expected result" className="border-t lg:border-l lg:border-t-0">
+                <ResultPane title={task.check ? "Expected table" : "Expected result"} className="border-t lg:border-l lg:border-t-0">
                   <ResultsGrid result={expected} />
                 </ResultPane>
               )}

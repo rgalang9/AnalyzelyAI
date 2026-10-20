@@ -1,0 +1,87 @@
+{
+  "id": "sql-16",
+  "level": 4,
+  "title": "Joining three tables",
+  "tables": ["sales", "players", "games", "studios"],
+  "explanation": "Meet the sales table: each row is one purchase. It only stores IDs: player_id says who bought it, and game_id says which game. To see real names, you join it to players AND games. You can chain as many JOINs as you need. Each JOIN gets its own ON line saying how it connects. Think of it like a chain: sales links to players, and sales links to games. Games also links to studios, so you can keep going!",
+  "example": {
+    "code": "SELECT sa.sale_date, g.title\nFROM sales AS sa\nINNER JOIN games AS g\n  ON sa.game_id = g.game_id;",
+    "lines": [
+      { "line": "SELECT sa.sale_date, g.title", "explain": "Show the sale date from sales and the title from games." },
+      { "line": "FROM sales AS sa", "explain": "Start with the sales table, nicknamed sa." },
+      { "line": "INNER JOIN games AS g", "explain": "Glue on games, nicknamed g." },
+      { "line": "ON sa.game_id = g.game_id;", "explain": "Match each sale to the game with the same game_id. Add another JOIN line to bring in a third table." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the username of the buyer and the title of the game for every sale.",
+      "type": "write",
+      "answer": "SELECT p.username, g.title FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id;",
+      "hints": ["Start FROM sales, then JOIN players, then JOIN games. Each JOIN needs its own ON.", "FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id"],
+      "solution_lines": [
+        { "line": "SELECT p.username, g.title", "explain": "Show the username from players and the title from games." },
+        { "line": "FROM sales AS sa", "explain": "Start with sales, the table that connects everything." },
+        { "line": "INNER JOIN players AS p", "explain": "Glue on players." },
+        { "line": "ON sa.player_id = p.player_id", "explain": "Match each sale to its buyer." },
+        { "line": "INNER JOIN games AS g", "explain": "Glue on games too." },
+        { "line": "ON sa.game_id = g.game_id;", "explain": "Match each sale to its game." }
+      ]
+    },
+    {
+      "prompt": "Show the username and sale date of everyone who bought Elden Ring.",
+      "type": "write",
+      "answer": "SELECT p.username, sa.sale_date FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id WHERE g.title = 'Elden Ring';",
+      "hints": ["Same three-table join as task 1, then filter with WHERE.", "... WHERE g.title = 'Elden Ring'"],
+      "solution_lines": [
+        { "line": "SELECT p.username, sa.sale_date", "explain": "Show the buyer and when they bought it." },
+        { "line": "FROM sales AS sa", "explain": "Start with sales." },
+        { "line": "INNER JOIN players AS p ON sa.player_id = p.player_id", "explain": "Bring in the buyer's info." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id", "explain": "Bring in the game's info." },
+        { "line": "WHERE g.title = 'Elden Ring';", "explain": "Only keep Elden Ring sales." }
+      ]
+    },
+    {
+      "prompt": "Show the sale date, game title, and studio name for every sale of a Nintendo game, oldest sale first.",
+      "type": "write",
+      "answer": "SELECT sa.sale_date, g.title, st.studio_name FROM sales AS sa INNER JOIN games AS g ON sa.game_id = g.game_id INNER JOIN studios AS st ON g.studio_id = st.studio_id WHERE st.studio_name = 'Nintendo' ORDER BY sa.sale_date ASC;",
+      "hints": ["This chain is different: sales links to games, and games links to studios.", "FROM sales AS sa INNER JOIN games AS g ON sa.game_id = g.game_id INNER JOIN studios AS st ON g.studio_id = st.studio_id WHERE st.studio_name = 'Nintendo' ORDER BY sa.sale_date ASC"],
+      "solution_lines": [
+        { "line": "SELECT sa.sale_date, g.title, st.studio_name", "explain": "Show the date, game, and studio." },
+        { "line": "FROM sales AS sa", "explain": "Start with sales." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id", "explain": "Link each sale to its game." },
+        { "line": "INNER JOIN studios AS st ON g.studio_id = st.studio_id", "explain": "Then link each game to its studio. Notice this ON connects games to studios, not sales." },
+        { "line": "WHERE st.studio_name = 'Nintendo'", "explain": "Only keep Nintendo games." },
+        { "line": "ORDER BY sa.sale_date ASC;", "explain": "Sort by sale date, oldest first." }
+      ]
+    },
+    {
+      "prompt": "Show each buyer's username and how much they spent in total, rounded to 2 decimals (call it total_spent). Biggest spender first.",
+      "type": "write",
+      "answer": "SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id GROUP BY p.username ORDER BY total_spent DESC;",
+      "hints": ["The price is in the games table. Join all three, then GROUP BY the username and SUM the price.", "SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent ... GROUP BY p.username ORDER BY total_spent DESC"],
+      "solution_lines": [
+        { "line": "SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent", "explain": "Show each buyer and the total of the prices of games they bought." },
+        { "line": "FROM sales AS sa", "explain": "Start with sales." },
+        { "line": "INNER JOIN players AS p ON sa.player_id = p.player_id", "explain": "Bring in the buyer." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id", "explain": "Bring in the game, which has the price." },
+        { "line": "GROUP BY p.username", "explain": "Make one group per buyer." },
+        { "line": "ORDER BY total_spent DESC;", "explain": "Sort by total, biggest spender first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return? (There are 10 players and 13 sales.)",
+      "type": "predict",
+      "code": "SELECT p.username\nFROM players AS p\nINNER JOIN sales AS sa\n  ON p.player_id = sa.player_id;",
+      "options": ["10", "13", "8"],
+      "answer": "13",
+      "hints": ["You get one row for every match. A player who bought 3 games matches 3 times.", "Every sale has a buyer, so every sale makes a row. Players who never bought anything don't appear at all."],
+      "solution_lines": [
+        { "line": "FROM players AS p", "explain": "Start with the 10 players." },
+        { "line": "INNER JOIN sales AS sa", "explain": "Glue on sales. A player who bought 3 games, like xXDragonXx, shows up 3 times." },
+        { "line": "ON p.player_id = sa.player_id;", "explain": "One row per sale, so 13 rows. speedy_g and mochi never bought anything, so INNER JOIN drops them." }
+      ]
+    }
+  ],
+  "recap": "You just learned to chain JOINs across three or more tables. Each JOIN gets its own ON, and you follow the IDs like links in a chain."
+}

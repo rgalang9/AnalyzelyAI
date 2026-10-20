@@ -1,0 +1,72 @@
+{
+  "id": "sql-09",
+  "level": 3,
+  "title": "COUNT, SUM, AVG, MIN, MAX",
+  "tables": ["games"],
+  "explanation": "Welcome to Level 3: summarising! So far, every query gave back many rows. Aggregate functions squash a whole column into ONE answer. COUNT(*) counts rows. COUNT(column) counts only the values that aren't NULL. SUM() adds everything up, AVG() finds the average, MIN() finds the smallest, and MAX() finds the biggest. SUM and AVG skip NULLs too. Averages can have long decimals, so ROUND(value, 2) rounds to 2 decimal places.",
+  "example": {
+    "code": "SELECT ROUND(SUM(price), 2) AS total_cost\nFROM games\nWHERE genre = 'RPG';",
+    "lines": [
+      { "line": "SELECT ROUND(SUM(price), 2) AS total_cost", "explain": "Add up all the prices, round to 2 decimal places, and name it total_cost." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "WHERE genre = 'RPG';", "explain": "Only include RPG games. The filter happens first, then the adding up." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Count how many games are in the table. Call the column total_games.",
+      "type": "write",
+      "answer": "SELECT COUNT(*) AS total_games FROM games;",
+      "hints": ["COUNT(*) counts every row.", "SELECT COUNT(*) AS total_games FROM games;"],
+      "solution_lines": [
+        { "line": "SELECT COUNT(*) AS total_games", "explain": "Count every row, and name the answer total_games." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Count how many games have a rating, using COUNT on the rating column. Call it rated_games.",
+      "type": "write",
+      "answer": "SELECT COUNT(rating) AS rated_games FROM games;",
+      "hints": ["COUNT(column) skips NULL values automatically.", "SELECT COUNT(rating) AS rated_games FROM games;"],
+      "solution_lines": [
+        { "line": "SELECT COUNT(rating) AS rated_games", "explain": "Count only the ratings that aren't NULL. The 2 missing ratings are skipped, so you get 13, not 15." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show the cheapest price (call it cheapest) and the most expensive price (call it priciest).",
+      "type": "write",
+      "answer": "SELECT MIN(price) AS cheapest, MAX(price) AS priciest FROM games;",
+      "hints": ["You can put two aggregate functions in one SELECT, separated by a comma.", "SELECT MIN(price) AS cheapest, MAX(price) AS priciest"],
+      "solution_lines": [
+        { "line": "SELECT MIN(price) AS cheapest,", "explain": "Find the smallest price, named cheapest." },
+        { "line": "MAX(price) AS priciest", "explain": "Find the biggest price, named priciest." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Find the average rating of games that cost less than 30, rounded to 1 decimal place. Call it avg_rating.",
+      "type": "write",
+      "answer": "SELECT ROUND(AVG(rating), 1) AS avg_rating FROM games WHERE price < 30;",
+      "hints": ["Filter with WHERE first, then wrap AVG() inside ROUND().", "SELECT ROUND(AVG(rating), 1) AS avg_rating ... WHERE price < 30"],
+      "solution_lines": [
+        { "line": "SELECT ROUND(AVG(rating), 1) AS avg_rating", "explain": "Average the ratings, round to 1 decimal place, and name it avg_rating." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price < 30;", "explain": "Only include games under 30. Valorant's missing rating is skipped by AVG." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what number will this return?",
+      "type": "predict",
+      "code": "SELECT COUNT(DISTINCT genre)\nFROM games;",
+      "options": ["15", "11", "9"],
+      "answer": "11",
+      "hints": ["DISTINCT from Lesson 1 removes repeats BEFORE counting.", "Shooter, Action, RPG, and Simulation each appear twice, but each counts only once."],
+      "solution_lines": [
+        { "line": "SELECT COUNT(DISTINCT genre)", "explain": "Remove repeat genres first, then count what's left: 11 different genres." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    }
+  ],
+  "recap": "You just learned to summarise a whole column into one answer with COUNT, SUM, AVG, MIN, and MAX, and to tidy up decimals with ROUND."
+}

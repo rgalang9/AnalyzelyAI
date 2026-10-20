@@ -1,0 +1,78 @@
+{
+  "id": "sql-10",
+  "level": 3,
+  "title": "GROUP BY: summarising each group",
+  "tables": ["games"],
+  "explanation": "In Lesson 9, COUNT and AVG squashed the whole table into one answer. GROUP BY splits the table into groups first, then gives one answer PER group. For example, GROUP BY genre makes a pile for each genre, then COUNT(*) counts each pile. The golden rule: every column in your SELECT must either be in the GROUP BY, or be inside an aggregate function like COUNT or AVG.",
+  "example": {
+    "code": "SELECT genre, MAX(rating) AS best_rating\nFROM games\nGROUP BY genre;",
+    "lines": [
+      { "line": "SELECT genre, MAX(rating) AS best_rating", "explain": "Show each genre, plus the highest rating in that genre, named best_rating." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "GROUP BY genre;", "explain": "Split the games into one pile per genre. MAX works on each pile separately, so you get one row per genre." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show each genre and how many games it has. Call the count num_games.",
+      "type": "write",
+      "answer": "SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre;",
+      "hints": ["Group by genre, then count each group.", "SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre;"],
+      "solution_lines": [
+        { "line": "SELECT genre, COUNT(*) AS num_games", "explain": "Show each genre, plus how many rows are in its group." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY genre;", "explain": "Make one group per genre." }
+      ]
+    },
+    {
+      "prompt": "Show each genre and its cheapest price. Call it cheapest.",
+      "type": "write",
+      "answer": "SELECT genre, MIN(price) AS cheapest FROM games GROUP BY genre;",
+      "hints": ["Same pattern as the last task, but with MIN instead of COUNT.", "SELECT genre, MIN(price) AS cheapest ... GROUP BY genre"],
+      "solution_lines": [
+        { "line": "SELECT genre, MIN(price) AS cheapest", "explain": "Show each genre, plus the lowest price in that genre." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY genre;", "explain": "Make one group per genre." }
+      ]
+    },
+    {
+      "prompt": "Show each release year and how many games came out that year (call it num_games), newest year first.",
+      "type": "write",
+      "answer": "SELECT release_year, COUNT(*) AS num_games FROM games GROUP BY release_year ORDER BY release_year DESC;",
+      "hints": ["Group by release_year this time. ORDER BY goes after GROUP BY.", "GROUP BY release_year ORDER BY release_year DESC"],
+      "solution_lines": [
+        { "line": "SELECT release_year, COUNT(*) AS num_games", "explain": "Show each year, plus how many games came out that year." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY release_year", "explain": "Make one group per year." },
+        { "line": "ORDER BY release_year DESC;", "explain": "Sort the groups, newest year first." }
+      ]
+    },
+    {
+      "prompt": "Label each game 'Free' (price 0) or 'Paid' in a column called price_type, then count how many games are in each (call it num_games).",
+      "type": "write",
+      "answer": "SELECT CASE WHEN price = 0 THEN 'Free' ELSE 'Paid' END AS price_type, COUNT(*) AS num_games FROM games GROUP BY price_type;",
+      "hints": ["Build the label with CASE WHEN from Lesson 7, then group by that label's name.", "SELECT CASE WHEN price = 0 THEN 'Free' ELSE 'Paid' END AS price_type, COUNT(*) AS num_games ... GROUP BY price_type"],
+      "solution_lines": [
+        { "line": "SELECT CASE WHEN price = 0 THEN 'Free' ELSE 'Paid' END AS price_type,", "explain": "Make a label: Free if the price is 0, otherwise Paid. Name it price_type." },
+        { "line": "COUNT(*) AS num_games", "explain": "Count the rows in each group." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY price_type;", "explain": "Make one group per label, so you get one row for Free and one for Paid. Analysts do this all the time!" }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT genre, COUNT(*)\nFROM games\nWHERE release_year = 2017\nGROUP BY genre;",
+      "options": ["4", "1", "2"],
+      "answer": "4",
+      "hints": ["WHERE runs first, keeping only the 2017 games. Then GROUP BY makes one row per genre.", "Look at the 2017 games: Fortnite, Super Mario Odyssey, Mario Kart 8 Deluxe, and Zelda. How many different genres?"],
+      "solution_lines": [
+        { "line": "SELECT genre, COUNT(*)", "explain": "Show each genre and its count." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE release_year = 2017", "explain": "First, keep only the 4 games from 2017." },
+        { "line": "GROUP BY genre;", "explain": "Then group them. They're all different genres (Shooter, Platformer, Racing, Adventure), so you get 4 rows." }
+      ]
+    }
+  ],
+  "recap": "You just learned GROUP BY: split rows into groups, then summarise each one. Remember the golden rule: every SELECT column is either grouped or inside an aggregate."
+}

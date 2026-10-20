@@ -1,0 +1,75 @@
+{
+  "id": "sql-05",
+  "level": 2,
+  "title": "NULL values, calculations, AS",
+  "tables": ["games"],
+  "explanation": "Welcome to Level 2! Remember NULL from Lesson 0? It means a value is missing. NULL is tricky: you can't find it with = NULL. Instead, use IS NULL to find missing values, and IS NOT NULL to find values that exist. You can also do math in SQL with + (add), - (subtract), * (multiply), and / (divide). When you make a new column with math, give it a nickname with AS, so it has a clear name in your results.",
+  "example": {
+    "code": "SELECT title, price, price * 2 AS two_copies\nFROM games\nWHERE rating IS NOT NULL;",
+    "lines": [
+      { "line": "SELECT title, price, price * 2 AS two_copies", "explain": "Show the title and price, plus a new column: the price times 2, nicknamed two_copies." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "WHERE rating IS NOT NULL;", "explain": "Only keep games that have a rating. Games with a missing (NULL) rating are filtered out." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the title of every game that has no rating.",
+      "type": "write",
+      "answer": "SELECT title FROM games WHERE rating IS NULL;",
+      "hints": ["A missing value is NULL. Remember, = NULL doesn't work.", "WHERE rating IS NULL"],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show me the title column." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE rating IS NULL;", "explain": "Keep only games where the rating is missing." }
+      ]
+    },
+    {
+      "prompt": "Show the title and rating of every game that DOES have a rating.",
+      "type": "write",
+      "answer": "SELECT title, rating FROM games WHERE rating IS NOT NULL;",
+      "hints": ["This is the opposite of the last task.", "WHERE rating IS NOT NULL"],
+      "solution_lines": [
+        { "line": "SELECT title, rating", "explain": "Show me the title and rating columns." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE rating IS NOT NULL;", "explain": "Keep only games where the rating is not missing." }
+      ]
+    },
+    {
+      "prompt": "Show the title of every game, plus how old it is in 2026. Name that new column age.",
+      "type": "write",
+      "answer": "SELECT title, 2026 - release_year AS age FROM games;",
+      "hints": ["How old is a game? Subtract its release year from 2026.", "SELECT title, 2026 - release_year AS age"],
+      "solution_lines": [
+        { "line": "SELECT title, 2026 - release_year AS age", "explain": "Show the title, plus a new column: 2026 minus the release year, nicknamed age." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show the title and age (in 2026) of games older than 10 years, oldest first.",
+      "type": "write",
+      "answer": "SELECT title, 2026 - release_year AS age FROM games WHERE 2026 - release_year > 10 ORDER BY age DESC;",
+      "hints": ["Use the same age calculation in your WHERE line, then sort it from Lesson 3.", "WHERE 2026 - release_year > 10 ORDER BY age DESC"],
+      "solution_lines": [
+        { "line": "SELECT title, 2026 - release_year AS age", "explain": "Show the title and the age of each game." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE 2026 - release_year > 10", "explain": "Keep games where the age is more than 10." },
+        { "line": "ORDER BY age DESC;", "explain": "Sort by age, oldest first. You can sort by a nickname you made with AS." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return?",
+      "type": "predict",
+      "code": "SELECT title FROM games WHERE rating < 9;",
+      "options": ["4", "6", "2"],
+      "answer": "4",
+      "hints": ["Look at the rating column. What happens to the games with a NULL rating?", "A missing value isn't less than 9, or more than 9. NULL rows never match a comparison, so they're left out."],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show me the title column." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE rating < 9;", "explain": "Keep games rated under 9: Fortnite, Stardew Valley, Among Us, and League of Legends. The two NULL ratings are skipped, because missing isn't a number." }
+      ]
+    }
+  ],
+  "recap": "You just learned to find missing values with IS NULL and IS NOT NULL, do math in your queries, and name new columns with AS. Bonus: NULL never matches a comparison like < or >."
+}

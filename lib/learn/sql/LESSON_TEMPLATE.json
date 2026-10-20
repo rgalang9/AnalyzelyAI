@@ -16,6 +16,8 @@
       "prompt": "Show the title of every game.",
       "type": "write",
       "answer": "SELECT title FROM games;",
+      "check": "SELECT * FROM games;",
+      "check_note": "Optional, only for code that changes data (INSERT/UPDATE/DELETE): this SELECT runs after the learner's code and after the answer, each on fresh data, and the two results must match. Leave out \"check\" for normal SELECT tasks.",
       "hints": ["Which column do you need?", "Start with SELECT title ..."],
       "solution_lines": [
         { "line": "SELECT title", "explain": "Pick the title column." },

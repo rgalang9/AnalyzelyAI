@@ -1,0 +1,89 @@
+{
+  "id": "sql-19",
+  "level": 5,
+  "title": "WITH (CTEs): breaking big queries into steps",
+  "tables": ["games", "sales", "players"],
+  "explanation": "As queries get bigger, they get hard to read. WITH lets you build them in steps. You give a mini query a name, then use that name like a table. This is called a CTE (Common Table Expression), but think of it as a 'temporary table with a name'. The pattern is: WITH name AS ( your query ), then your main query uses FROM name. Real analysts use CTEs constantly because they make long queries easy to follow, step by step. You can even make several, separated by commas.",
+  "example": {
+    "code": "WITH free_games AS (\n  SELECT title, genre\n  FROM games\n  WHERE price = 0\n)\nSELECT title\nFROM free_games\nWHERE genre = 'Shooter';",
+    "lines": [
+      { "line": "WITH free_games AS (", "explain": "Start a named step called free_games." },
+      { "line": "SELECT title, genre", "explain": "Inside the step: pick the title and genre..." },
+      { "line": "FROM games", "explain": "...from the games table..." },
+      { "line": "WHERE price = 0", "explain": "...keeping only free games." },
+      { "line": ")", "explain": "Close the step. Now free_games works like a small table." },
+      { "line": "SELECT title", "explain": "The main query: show the title..." },
+      { "line": "FROM free_games", "explain": "...from our named step, as if it were a real table." },
+      { "line": "WHERE genre = 'Shooter';", "explain": "...keeping only Shooters." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Make a CTE called cheap_games with the title and price of games under 30. Then show everything from cheap_games.",
+      "type": "write",
+      "answer": "WITH cheap_games AS (SELECT title, price FROM games WHERE price < 30) SELECT * FROM cheap_games;",
+      "hints": ["Start with WITH cheap_games AS ( ... ), then write SELECT * FROM cheap_games.", "WITH cheap_games AS (SELECT title, price FROM games WHERE price < 30) SELECT * FROM cheap_games;"],
+      "solution_lines": [
+        { "line": "WITH cheap_games AS (", "explain": "Start a named step called cheap_games." },
+        { "line": "SELECT title, price FROM games WHERE price < 30", "explain": "Inside it: games under 30, with their title and price." },
+        { "line": ")", "explain": "Close the step." },
+        { "line": "SELECT * FROM cheap_games;", "explain": "Show everything from the named step." }
+      ]
+    },
+    {
+      "prompt": "Make a CTE called genre_counts that counts games per genre (call the count num_games). Then show only the genres with 2 or more games.",
+      "type": "write",
+      "answer": "WITH genre_counts AS (SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre) SELECT genre, num_games FROM genre_counts WHERE num_games >= 2;",
+      "hints": ["Do the GROUP BY inside the CTE. Then, outside, num_games is just a normal column, so plain WHERE works!", "WITH genre_counts AS (SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre) SELECT genre, num_games FROM genre_counts WHERE num_games >= 2;"],
+      "solution_lines": [
+        { "line": "WITH genre_counts AS (", "explain": "Start a named step called genre_counts." },
+        { "line": "SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre", "explain": "Inside it: count the games in each genre." },
+        { "line": ")", "explain": "Close the step." },
+        { "line": "SELECT genre, num_games FROM genre_counts", "explain": "Use the step like a table." },
+        { "line": "WHERE num_games >= 2;", "explain": "Since the counting already happened, WHERE works here instead of HAVING." }
+      ]
+    },
+    {
+      "prompt": "Make a CTE called spending that shows each buyer's username and total spent, rounded to 2 decimals (call it total_spent). Then show buyers who spent more than 60, biggest first.",
+      "type": "write",
+      "answer": "WITH spending AS (SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id GROUP BY p.username) SELECT username, total_spent FROM spending WHERE total_spent > 60 ORDER BY total_spent DESC;",
+      "hints": ["Put the three-table join from Lesson 16 inside the CTE. Then filter and sort outside it.", "WITH spending AS ( ...join and GROUP BY p.username... ) SELECT username, total_spent FROM spending WHERE total_spent > 60 ORDER BY total_spent DESC;"],
+      "solution_lines": [
+        { "line": "WITH spending AS (", "explain": "Start a named step called spending." },
+        { "line": "SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent", "explain": "Inside it: each buyer and what they spent." },
+        { "line": "FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id", "explain": "Join sales to players..." },
+        { "line": "INNER JOIN games AS g ON sa.game_id = g.game_id GROUP BY p.username", "explain": "...and to games for the price, then group by buyer." },
+        { "line": ")", "explain": "Close the step." },
+        { "line": "SELECT username, total_spent FROM spending", "explain": "Use the step like a table." },
+        { "line": "WHERE total_spent > 60 ORDER BY total_spent DESC;", "explain": "Keep big spenders, biggest first." }
+      ]
+    },
+    {
+      "prompt": "Using the same spending CTE, show the buyers who spent MORE than the average buyer, biggest first.",
+      "type": "write",
+      "answer": "WITH spending AS (SELECT p.username, ROUND(SUM(g.price), 2) AS total_spent FROM sales AS sa INNER JOIN players AS p ON sa.player_id = p.player_id INNER JOIN games AS g ON sa.game_id = g.game_id GROUP BY p.username) SELECT username, total_spent FROM spending WHERE total_spent > (SELECT AVG(total_spent) FROM spending) ORDER BY total_spent DESC;",
+      "hints": ["Mix in a subquery from Lesson 18. You can use the CTE's name inside it.", "... FROM spending WHERE total_spent > (SELECT AVG(total_spent) FROM spending) ORDER BY total_spent DESC;"],
+      "solution_lines": [
+        { "line": "WITH spending AS ( ...same as task 3... )", "explain": "Build the spending step again." },
+        { "line": "SELECT username, total_spent FROM spending", "explain": "Use the step like a table." },
+        { "line": "WHERE total_spent > (SELECT AVG(total_spent) FROM spending)", "explain": "The subquery finds the average buyer's total (about 69.36), then we keep buyers above it." },
+        { "line": "ORDER BY total_spent DESC;", "explain": "Sort, biggest first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what number will this return? (There are 13 sales and 15 games.)",
+      "type": "predict",
+      "code": "WITH sold AS (\n  SELECT DISTINCT game_id\n  FROM sales\n)\nSELECT COUNT(*)\nFROM sold;",
+      "options": ["13", "10", "15"],
+      "answer": "10",
+      "hints": ["The CTE lists each sold game only once, thanks to DISTINCT.", "Elden Ring sold 3 times and Among Us sold twice, but each counts once."],
+      "solution_lines": [
+        { "line": "WITH sold AS (", "explain": "Start a named step called sold." },
+        { "line": "SELECT DISTINCT game_id FROM sales", "explain": "List every game that was sold, each one only once." },
+        { "line": ")", "explain": "Close the step." },
+        { "line": "SELECT COUNT(*) FROM sold;", "explain": "Count the rows in the step: 10 different games were sold." }
+      ]
+    }
+  ],
+  "recap": "You just learned WITH: give a mini query a name, then use it like a table. It turns big, messy queries into clear steps."
+}

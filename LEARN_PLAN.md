@@ -28,6 +28,8 @@ Release order: SQL, then Python, then R, then Stata.
   - R and Stata: decided later
 - Folder layout: a learn section in the app, one folder per language,
   each holding its lessons, datasets, and runner.
+  - SQL lessons go in lib/learn/sql/lessons/
+  - SQL datasets go in lib/learn/sql/datasets/
 
 ## Progress
 - Logged-in users: progress saved in Supabase (migration files, row-level security).

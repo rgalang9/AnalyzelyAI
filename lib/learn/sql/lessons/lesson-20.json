@@ -1,0 +1,75 @@
+{
+  "id": "sql-20",
+  "level": 5,
+  "title": "Changing data: INSERT, UPDATE, DELETE",
+  "tables": ["players", "games", "sales"],
+  "explanation": "So far you've only READ data. Now you'll change it! INSERT INTO adds new rows. UPDATE changes values in rows that already exist. DELETE FROM removes rows. Important: UPDATE and DELETE almost always need a WHERE. Without it, they change EVERY row in the table, and there's no undo button! Pro tip: before you UPDATE or DELETE, run a SELECT with the same WHERE first, to see exactly which rows you'll hit. Don't worry, practice data here resets for every task.",
+  "example": {
+    "code": "INSERT INTO studios (studio_id, studio_name, country, founded_year)\nVALUES (13, 'Team Cherry', 'Australia', 2014);",
+    "lines": [
+      { "line": "INSERT INTO studios (studio_id, studio_name, country, founded_year)", "explain": "Add a new row to the studios table. The brackets list which columns you're filling in, in order." },
+      { "line": "VALUES (13, 'Team Cherry', 'Australia', 2014);", "explain": "The values for the new row, in the same order as the columns. Text goes in single quotes." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Add a new player: ID 11, username NovaStar, from Australia, signed up on 2026-10-20, with 0 hours played.",
+      "type": "write",
+      "answer": "INSERT INTO players VALUES (11, 'NovaStar', 'Australia', '2026-10-20', 0);",
+      "check": "SELECT * FROM players;",
+      "hints": ["Use INSERT INTO players VALUES ( ... ), with the values in the same order as the table's columns.", "INSERT INTO players VALUES (11, 'NovaStar', 'Australia', '2026-10-20', 0);"],
+      "solution_lines": [
+        { "line": "INSERT INTO players", "explain": "Add a new row to the players table." },
+        { "line": "VALUES (11, 'NovaStar', 'Australia', '2026-10-20', 0);", "explain": "Fill in every column, in the table's order: ID, username, country, sign-up date, hours. Text and dates go in quotes." }
+      ]
+    },
+    {
+      "prompt": "Stardew Valley is on sale! Change its price to 9.99.",
+      "type": "write",
+      "answer": "UPDATE games SET price = 9.99 WHERE title = 'Stardew Valley';",
+      "check": "SELECT title, price FROM games;",
+      "hints": ["UPDATE the table, SET the new value, and use WHERE so only Stardew Valley changes.", "UPDATE games SET price = 9.99 WHERE title = 'Stardew Valley';"],
+      "solution_lines": [
+        { "line": "UPDATE games", "explain": "Change data in the games table." },
+        { "line": "SET price = 9.99", "explain": "Set the price to 9.99." },
+        { "line": "WHERE title = 'Stardew Valley';", "explain": "Only for Stardew Valley. Without this line, EVERY game would become 9.99!" }
+      ]
+    },
+    {
+      "prompt": "Give every game that has no rating a rating of 8.5.",
+      "type": "write",
+      "answer": "UPDATE games SET rating = 8.5 WHERE rating IS NULL;",
+      "check": "SELECT title, rating FROM games;",
+      "hints": ["Remember Lesson 5: missing values are found with IS NULL, not = NULL.", "UPDATE games SET rating = 8.5 WHERE rating IS NULL;"],
+      "solution_lines": [
+        { "line": "UPDATE games", "explain": "Change data in the games table." },
+        { "line": "SET rating = 8.5", "explain": "Set the rating to 8.5." },
+        { "line": "WHERE rating IS NULL;", "explain": "Only for games whose rating is missing. That's EA Sports FC 24 and Valorant." }
+      ]
+    },
+    {
+      "prompt": "Delete every sale that happened before 2022.",
+      "type": "write",
+      "answer": "DELETE FROM sales WHERE sale_date < '2022-01-01';",
+      "check": "SELECT * FROM sales;",
+      "hints": ["Dates are text in year-month-day order, so you can compare them with < just like numbers.", "DELETE FROM sales WHERE sale_date < '2022-01-01';"],
+      "solution_lines": [
+        { "line": "DELETE FROM sales", "explain": "Remove rows from the sales table." },
+        { "line": "WHERE sale_date < '2022-01-01';", "explain": "Only rows with a sale date before January 1st, 2022. That removes 3 sales from 2021." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what happens when you run this? (There's no WHERE!)",
+      "type": "predict",
+      "code": "DELETE FROM sales;",
+      "check": "SELECT * FROM sales;",
+      "options": ["Nothing is deleted", "Every row is deleted", "SQL shows an error"],
+      "answer": "Every row is deleted",
+      "hints": ["WHERE is what picks which rows to delete. What if nothing picks?", "With no WHERE, DELETE doesn't ask questions. It hits every row."],
+      "solution_lines": [
+        { "line": "DELETE FROM sales;", "explain": "No WHERE means no filter, so ALL 13 sales are wiped. In a real company database, this is how disasters happen. Always double-check your WHERE!" }
+      ]
+    }
+  ],
+  "recap": "You just learned to add rows with INSERT, change them with UPDATE, and remove them with DELETE. Golden rule: UPDATE and DELETE always need a WHERE, and SELECT first to check."
+}

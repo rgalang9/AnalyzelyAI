@@ -1,0 +1,86 @@
+{
+  "id": "sql-07",
+  "level": 2,
+  "title": "CASE WHEN: making categories",
+  "tables": ["games"],
+  "explanation": "CASE WHEN lets you make your own labels, like an 'if this, then that' rule. It checks each WHEN in order, top to bottom, and uses the FIRST one that's true. ELSE is the backup if none are true. END closes it, and AS names the new column. So order matters: put your most specific rules first!",
+  "example": {
+    "code": "SELECT title,\n  CASE\n    WHEN release_year < 2015 THEN 'Classic'\n    ELSE 'Modern'\n  END AS era\nFROM games;",
+    "lines": [
+      { "line": "SELECT title,", "explain": "Show the title column, plus a new column we're about to build." },
+      { "line": "CASE", "explain": "Start a set of if-then rules." },
+      { "line": "WHEN release_year < 2015 THEN 'Classic'", "explain": "If the game came out before 2015, label it Classic." },
+      { "line": "ELSE 'Modern'", "explain": "Otherwise, label it Modern." },
+      { "line": "END AS era", "explain": "Close the rules, and name the new column era." },
+      { "line": "FROM games;", "explain": "From the games table." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show each title, plus a column called price_type that says 'Free' if the price is 0, otherwise 'Paid'.",
+      "type": "write",
+      "answer": "SELECT title, CASE WHEN price = 0 THEN 'Free' ELSE 'Paid' END AS price_type FROM games;",
+      "hints": ["One WHEN for free games, and ELSE for everything else.", "CASE WHEN price = 0 THEN 'Free' ELSE 'Paid' END AS price_type"],
+      "solution_lines": [
+        { "line": "SELECT title,", "explain": "Show the title, plus a new column." },
+        { "line": "CASE WHEN price = 0 THEN 'Free'", "explain": "If the price is 0, label it Free." },
+        { "line": "ELSE 'Paid' END AS price_type", "explain": "Otherwise label it Paid. Close the rules and name the column price_type." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show each title and price, plus a column called price_band: 'Free' if the price is 0, 'Budget' if under 30, otherwise 'Full price'.",
+      "type": "write",
+      "answer": "SELECT title, price, CASE WHEN price = 0 THEN 'Free' WHEN price < 30 THEN 'Budget' ELSE 'Full price' END AS price_band FROM games;",
+      "hints": ["You need two WHENs this time. Check for Free first, since 0 is also under 30!", "CASE WHEN price = 0 THEN 'Free' WHEN price < 30 THEN 'Budget' ELSE 'Full price' END AS price_band"],
+      "solution_lines": [
+        { "line": "SELECT title, price,", "explain": "Show the title and price, plus a new column." },
+        { "line": "CASE WHEN price = 0 THEN 'Free'", "explain": "First rule: price is 0, so Free." },
+        { "line": "WHEN price < 30 THEN 'Budget'", "explain": "Second rule: under 30, so Budget. Free games never reach here, because the first rule already caught them." },
+        { "line": "ELSE 'Full price' END AS price_band", "explain": "Everything else is Full price. Name the column price_band." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show each title, plus a column called verdict: 'Not rated' if the rating is NULL, 'Masterpiece' if 9.5 or more, 'Great' if 9 or more, otherwise 'Good'.",
+      "type": "write",
+      "answer": "SELECT title, CASE WHEN rating IS NULL THEN 'Not rated' WHEN rating >= 9.5 THEN 'Masterpiece' WHEN rating >= 9 THEN 'Great' ELSE 'Good' END AS verdict FROM games;",
+      "hints": ["Remember Lesson 5: check for NULL with IS NULL, and put it first.", "CASE WHEN rating IS NULL THEN 'Not rated' WHEN rating >= 9.5 THEN 'Masterpiece' WHEN rating >= 9 THEN 'Great' ELSE 'Good' END AS verdict"],
+      "solution_lines": [
+        { "line": "SELECT title,", "explain": "Show the title, plus a new column." },
+        { "line": "CASE WHEN rating IS NULL THEN 'Not rated'", "explain": "First, catch missing ratings. Without this, they'd fall all the way to ELSE and wrongly be called Good." },
+        { "line": "WHEN rating >= 9.5 THEN 'Masterpiece'", "explain": "9.5 or higher is a Masterpiece." },
+        { "line": "WHEN rating >= 9 THEN 'Great'", "explain": "9 or higher (but under 9.5) is Great." },
+        { "line": "ELSE 'Good' END AS verdict", "explain": "Everything else is Good. Name the column verdict." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "For Action or Simulation games only, show the title, release year, and an era column: 'Classic' if released before 2015, otherwise 'Modern'. Sort by release year, oldest first.",
+      "type": "write",
+      "answer": "SELECT title, release_year, CASE WHEN release_year < 2015 THEN 'Classic' ELSE 'Modern' END AS era FROM games WHERE genre IN ('Action', 'Simulation') ORDER BY release_year ASC;",
+      "hints": ["Build the CASE like the example, then filter with IN and sort with ORDER BY.", "... END AS era FROM games WHERE genre IN ('Action', 'Simulation') ORDER BY release_year ASC"],
+      "solution_lines": [
+        { "line": "SELECT title, release_year,", "explain": "Show the title and release year, plus a new column." },
+        { "line": "CASE WHEN release_year < 2015 THEN 'Classic' ELSE 'Modern' END AS era", "explain": "Before 2015 is Classic, otherwise Modern. Name it era." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE genre IN ('Action', 'Simulation')", "explain": "Keep only Action or Simulation games." },
+        { "line": "ORDER BY release_year ASC;", "explain": "Sort by release year, oldest first." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what label will Fortnite get? (Its price is 0.)",
+      "type": "predict",
+      "code": "SELECT title,\n  CASE\n    WHEN price < 30 THEN 'Cheap'\n    WHEN price = 0 THEN 'Free'\n    ELSE 'Pricey'\n  END AS label\nFROM games\nWHERE title = 'Fortnite';",
+      "options": ["Cheap", "Free", "Pricey"],
+      "answer": "Cheap",
+      "hints": ["CASE uses the FIRST rule that's true, then stops checking.", "Is 0 less than 30? If yes, the first rule wins, and the second never gets checked."],
+      "solution_lines": [
+        { "line": "WHEN price < 30 THEN 'Cheap'", "explain": "0 is less than 30, so this rule is true first, and Fortnite gets Cheap." },
+        { "line": "WHEN price = 0 THEN 'Free'", "explain": "Never reached for Fortnite, because an earlier rule already matched. This is why order matters!" },
+        { "line": "ELSE 'Pricey'", "explain": "Only used if no rule above is true." }
+      ]
+    }
+  ],
+  "recap": "You just learned to make your own categories with CASE WHEN. Remember: the first true rule wins, so put the most specific rules first."
+}

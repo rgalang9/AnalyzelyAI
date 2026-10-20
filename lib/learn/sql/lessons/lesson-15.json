@@ -1,0 +1,86 @@
+{
+  "id": "sql-15",
+  "level": 4,
+  "title": "LEFT JOIN: finding what's missing",
+  "tables": ["games", "studios"],
+  "explanation": "Remember how Valve and Ubisoft vanished with INNER JOIN? That's because they have no matching games. LEFT JOIN fixes that: it keeps EVERY row from the first (left) table, even if there's no match. When there's no match, the columns from the other table are filled with NULL. This is super useful for finding what's missing, like customers who never ordered, or studios with no games. Which table you write first matters: that's the one that keeps all its rows.",
+  "example": {
+    "code": "SELECT s.studio_name, g.title\nFROM studios AS s\nLEFT JOIN games AS g\n  ON s.studio_id = g.studio_id;",
+    "lines": [
+      { "line": "SELECT s.studio_name, g.title", "explain": "Show the studio name and the game title." },
+      { "line": "FROM studios AS s", "explain": "Start with studios. This is the LEFT table, so every studio is kept." },
+      { "line": "LEFT JOIN games AS g", "explain": "Glue on games. If a studio has no games, the title shows as NULL." },
+      { "line": "ON s.studio_id = g.studio_id;", "explain": "Match on studio_id." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show every studio name with the titles of its games, including studios that have no games.",
+      "type": "write",
+      "answer": "SELECT s.studio_name, g.title FROM studios AS s LEFT JOIN games AS g ON s.studio_id = g.studio_id;",
+      "hints": ["Every studio must show up, so start FROM studios and LEFT JOIN games.", "FROM studios AS s LEFT JOIN games AS g ON s.studio_id = g.studio_id"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, g.title", "explain": "Show the studio name and game title." },
+        { "line": "FROM studios AS s", "explain": "Start with studios, so every studio is kept." },
+        { "line": "LEFT JOIN games AS g", "explain": "Glue on games. Valve and Ubisoft get NULL titles." },
+        { "line": "ON s.studio_id = g.studio_id;", "explain": "Match on studio_id." }
+      ]
+    },
+    {
+      "prompt": "Find the studios that have NO games in our table. Show just the studio name.",
+      "type": "write",
+      "answer": "SELECT s.studio_name FROM studios AS s LEFT JOIN games AS g ON s.studio_id = g.studio_id WHERE g.game_id IS NULL;",
+      "hints": ["After a LEFT JOIN, studios with no games have NULL in every games column. Remember IS NULL from Lesson 5.", "... LEFT JOIN games AS g ON s.studio_id = g.studio_id WHERE g.game_id IS NULL"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name", "explain": "Show the studio name." },
+        { "line": "FROM studios AS s", "explain": "Start with all studios." },
+        { "line": "LEFT JOIN games AS g", "explain": "Glue on games, keeping studios with no match." },
+        { "line": "ON s.studio_id = g.studio_id", "explain": "Match on studio_id." },
+        { "line": "WHERE g.game_id IS NULL;", "explain": "Keep only rows where no game matched. This is THE classic trick for finding what's missing." }
+      ]
+    },
+    {
+      "prompt": "Show every studio name and how many games it made (call it num_games), including studios with 0 games.",
+      "type": "write",
+      "answer": "SELECT s.studio_name, COUNT(g.game_id) AS num_games FROM studios AS s LEFT JOIN games AS g ON s.studio_id = g.studio_id GROUP BY s.studio_name;",
+      "hints": ["Remember Lesson 9: COUNT(*) counts every row, but COUNT(column) skips NULLs. Which one gives Valve a 0?", "SELECT s.studio_name, COUNT(g.game_id) AS num_games ... GROUP BY s.studio_name"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, COUNT(g.game_id) AS num_games", "explain": "Count the game IDs for each studio. NULLs are skipped, so Valve and Ubisoft get 0. COUNT(*) would wrongly give them 1." },
+        { "line": "FROM studios AS s", "explain": "Start with all studios." },
+        { "line": "LEFT JOIN games AS g", "explain": "Glue on games, keeping studios with no match." },
+        { "line": "ON s.studio_id = g.studio_id", "explain": "Match on studio_id." },
+        { "line": "GROUP BY s.studio_name;", "explain": "Make one group per studio." }
+      ]
+    },
+    {
+      "prompt": "For USA studios only, show each studio name and its number of games (call it num_games), but only studios with fewer than 2 games. Sort by studio name A to Z.",
+      "type": "write",
+      "answer": "SELECT s.studio_name, COUNT(g.game_id) AS num_games FROM studios AS s LEFT JOIN games AS g ON s.studio_id = g.studio_id WHERE s.country = 'USA' GROUP BY s.studio_name HAVING COUNT(g.game_id) < 2 ORDER BY s.studio_name ASC;",
+      "hints": ["Build on task 3: add WHERE for the country, HAVING for the count, then sort.", "... WHERE s.country = 'USA' GROUP BY s.studio_name HAVING COUNT(g.game_id) < 2 ORDER BY s.studio_name ASC"],
+      "solution_lines": [
+        { "line": "SELECT s.studio_name, COUNT(g.game_id) AS num_games", "explain": "Show each studio and how many games it has." },
+        { "line": "FROM studios AS s", "explain": "Start with all studios." },
+        { "line": "LEFT JOIN games AS g", "explain": "Glue on games, keeping studios with no match." },
+        { "line": "ON s.studio_id = g.studio_id", "explain": "Match on studio_id." },
+        { "line": "WHERE s.country = 'USA'", "explain": "Only keep USA studios." },
+        { "line": "GROUP BY s.studio_name", "explain": "Make one group per studio." },
+        { "line": "HAVING COUNT(g.game_id) < 2", "explain": "Only keep studios with 0 or 1 games." },
+        { "line": "ORDER BY s.studio_name ASC;", "explain": "Sort by name, A to Z." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return? Watch which table comes first!",
+      "type": "predict",
+      "code": "SELECT g.title, s.studio_name\nFROM games AS g\nLEFT JOIN studios AS s\n  ON g.studio_id = s.studio_id;",
+      "options": ["17", "15", "12"],
+      "answer": "15",
+      "hints": ["LEFT JOIN keeps every row from the FIRST table. Which table is first here?", "Games is first, and every game has a studio. Valve and Ubisoft are in the right table, so they don't get kept."],
+      "solution_lines": [
+        { "line": "FROM games AS g", "explain": "Games is the LEFT table, so all 15 games are kept." },
+        { "line": "LEFT JOIN studios AS s", "explain": "Studios is the right table. Studios with no games, like Valve and Ubisoft, are NOT kept." },
+        { "line": "ON g.studio_id = s.studio_id;", "explain": "Every game finds its studio, so the result is 15 rows, the same as an INNER JOIN here." }
+      ]
+    }
+  ],
+  "recap": "You just learned LEFT JOIN: keep every row from the first table, fill missing matches with NULL, and use WHERE ... IS NULL to find what's missing."
+}

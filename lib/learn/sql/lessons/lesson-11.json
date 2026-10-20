@@ -1,0 +1,85 @@
+{
+  "id": "sql-11",
+  "level": 3,
+  "title": "HAVING, and the order SQL runs things in",
+  "tables": ["games"],
+  "explanation": "WHERE filters rows BEFORE they're grouped. HAVING filters groups AFTER they're made. So if you want 'genres with more than 1 game', you need HAVING, because the count only exists after grouping. Here's the secret order SQL actually runs things in: FROM (find the table), WHERE (filter rows), GROUP BY (make groups), HAVING (filter groups), SELECT (pick columns), ORDER BY (sort), LIMIT (cut). That's why you can't use COUNT() inside WHERE: the groups don't exist yet!",
+  "example": {
+    "code": "SELECT genre, COUNT(*) AS num_games\nFROM games\nGROUP BY genre\nHAVING COUNT(*) >= 2;",
+    "lines": [
+      { "line": "SELECT genre, COUNT(*) AS num_games", "explain": "Show each genre and how many games it has." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "GROUP BY genre", "explain": "Make one group per genre." },
+      { "line": "HAVING COUNT(*) >= 2;", "explain": "Only keep groups with 2 or more games. HAVING is like WHERE, but for groups." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show each genre with more than 1 game, and its count (call it num_games).",
+      "type": "write",
+      "answer": "SELECT genre, COUNT(*) AS num_games FROM games GROUP BY genre HAVING COUNT(*) > 1;",
+      "hints": ["Group by genre, then filter the groups with HAVING.", "GROUP BY genre HAVING COUNT(*) > 1"],
+      "solution_lines": [
+        { "line": "SELECT genre, COUNT(*) AS num_games", "explain": "Show each genre and its count." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY genre", "explain": "Make one group per genre." },
+        { "line": "HAVING COUNT(*) > 1;", "explain": "Only keep genres with more than 1 game." }
+      ]
+    },
+    {
+      "prompt": "Show each genre whose cheapest game costs more than 30, with that cheapest price (call it cheapest).",
+      "type": "write",
+      "answer": "SELECT genre, MIN(price) AS cheapest FROM games GROUP BY genre HAVING MIN(price) > 30;",
+      "hints": ["Use MIN(price) in both the SELECT and the HAVING.", "GROUP BY genre HAVING MIN(price) > 30"],
+      "solution_lines": [
+        { "line": "SELECT genre, MIN(price) AS cheapest", "explain": "Show each genre and its lowest price." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY genre", "explain": "Make one group per genre." },
+        { "line": "HAVING MIN(price) > 30;", "explain": "Only keep genres where even the cheapest game costs more than 30." }
+      ]
+    },
+    {
+      "prompt": "Looking only at games released in 2015 or later, show each release year that has 2 or more games, with the count (call it num_games).",
+      "type": "write",
+      "answer": "SELECT release_year, COUNT(*) AS num_games FROM games WHERE release_year >= 2015 GROUP BY release_year HAVING COUNT(*) >= 2;",
+      "hints": ["You need BOTH: WHERE to filter the rows first, and HAVING to filter the groups after.", "WHERE release_year >= 2015 GROUP BY release_year HAVING COUNT(*) >= 2"],
+      "solution_lines": [
+        { "line": "SELECT release_year, COUNT(*) AS num_games", "explain": "Show each year and its count." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE release_year >= 2015", "explain": "Step 1: throw away rows for games before 2015." },
+        { "line": "GROUP BY release_year", "explain": "Step 2: group what's left by year." },
+        { "line": "HAVING COUNT(*) >= 2;", "explain": "Step 3: only keep years with 2 or more games." }
+      ]
+    },
+    {
+      "prompt": "Show each genre where all its games together cost more than 70. Show the total rounded to 2 decimals (call it total_cost), biggest total first.",
+      "type": "write",
+      "answer": "SELECT genre, ROUND(SUM(price), 2) AS total_cost FROM games GROUP BY genre HAVING SUM(price) > 70 ORDER BY total_cost DESC;",
+      "hints": ["Use SUM in the SELECT and the HAVING, then sort. ROUND is from Lesson 9.", "SELECT genre, ROUND(SUM(price), 2) AS total_cost ... GROUP BY genre HAVING SUM(price) > 70 ORDER BY total_cost DESC"],
+      "solution_lines": [
+        { "line": "SELECT genre, ROUND(SUM(price), 2) AS total_cost", "explain": "Show each genre and the total of its prices, rounded." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "GROUP BY genre", "explain": "Make one group per genre." },
+        { "line": "HAVING SUM(price) > 70", "explain": "Only keep genres whose prices add up to more than 70." },
+        { "line": "ORDER BY total_cost DESC;", "explain": "Sort by the total, biggest first. ORDER BY runs after SELECT, so the nickname works here." }
+      ]
+    },
+    {
+      "prompt": "Predict first: which part of this query does SQL actually run FIRST?",
+      "type": "predict",
+      "code": "SELECT genre, COUNT(*) AS num_games\nFROM games\nWHERE price > 0\nGROUP BY genre\nHAVING COUNT(*) >= 2\nORDER BY num_games DESC;",
+      "options": ["SELECT", "FROM", "WHERE"],
+      "answer": "FROM",
+      "hints": ["You write SELECT first, but that's not the order SQL runs it in.", "Before SQL can do anything, it has to know which table to look at."],
+      "solution_lines": [
+        { "line": "FROM games", "explain": "1st: find the table." },
+        { "line": "WHERE price > 0", "explain": "2nd: throw away the free games." },
+        { "line": "GROUP BY genre", "explain": "3rd: make one group per genre." },
+        { "line": "HAVING COUNT(*) >= 2", "explain": "4th: keep only genres with 2 or more paid games." },
+        { "line": "SELECT genre, COUNT(*) AS num_games", "explain": "5th: pick the columns to show." },
+        { "line": "ORDER BY num_games DESC;", "explain": "6th: sort the results." }
+      ]
+    }
+  ],
+  "recap": "You just learned that WHERE filters rows before grouping, HAVING filters groups after, and SQL runs in this order: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT."
+}

@@ -1,0 +1,71 @@
+{
+  "id": "sql-06",
+  "level": 2,
+  "title": "Text and date functions",
+  "tables": ["players"],
+  "explanation": "Meet a new table: players, the people who play the games. A function is a mini tool that changes a value. Text functions: UPPER() makes text capital letters, LOWER() makes it small letters, and LENGTH() counts the characters. You can also glue text together with || (two straight lines). Dates are stored as text like '2021-03-14' (year-month-day). To pull out a piece of a date, use strftime(): strftime('%Y', signup_date) gives the year, and strftime('%m', signup_date) gives the month. Heads-up: other databases write this differently, like YEAR(signup_date), but the idea is the same.",
+  "example": {
+    "code": "SELECT LOWER(username) AS small_name,\n       strftime('%m', signup_date) AS signup_month\nFROM players;",
+    "lines": [
+      { "line": "SELECT LOWER(username) AS small_name,", "explain": "Turn each username into small letters, and nickname that column small_name." },
+      { "line": "strftime('%m', signup_date) AS signup_month", "explain": "Pull the month out of the sign-up date, and nickname it signup_month." },
+      { "line": "FROM players;", "explain": "From the players table." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show every username in capital letters. Name the column loud_name.",
+      "type": "write",
+      "answer": "SELECT UPPER(username) AS loud_name FROM players;",
+      "hints": ["Which function turns text into capital letters?", "SELECT UPPER(username) AS loud_name"],
+      "solution_lines": [
+        { "line": "SELECT UPPER(username) AS loud_name", "explain": "Turn each username into capitals, nicknamed loud_name." },
+        { "line": "FROM players;", "explain": "From the players table." }
+      ]
+    },
+    {
+      "prompt": "Show each username and how many characters it has. Name the new column name_length.",
+      "type": "write",
+      "answer": "SELECT username, LENGTH(username) AS name_length FROM players;",
+      "hints": ["Which function counts characters?", "SELECT username, LENGTH(username) AS name_length"],
+      "solution_lines": [
+        { "line": "SELECT username, LENGTH(username) AS name_length", "explain": "Show the username, plus how many characters it has, nicknamed name_length." },
+        { "line": "FROM players;", "explain": "From the players table." }
+      ]
+    },
+    {
+      "prompt": "Show each username and the year they signed up. Name the new column signup_year.",
+      "type": "write",
+      "answer": "SELECT username, strftime('%Y', signup_date) AS signup_year FROM players;",
+      "hints": ["Use strftime() with the code for year.", "strftime('%Y', signup_date) AS signup_year"],
+      "solution_lines": [
+        { "line": "SELECT username, strftime('%Y', signup_date) AS signup_year", "explain": "Show the username, plus the year pulled out of the sign-up date." },
+        { "line": "FROM players;", "explain": "From the players table." }
+      ]
+    },
+    {
+      "prompt": "Show the username and hours played of players who signed up in 2021, most hours first.",
+      "type": "write",
+      "answer": "SELECT username, hours_played FROM players WHERE strftime('%Y', signup_date) = '2021' ORDER BY hours_played DESC;",
+      "hints": ["Use strftime() in your WHERE line. The year comes out as text, so put 2021 in single quotes.", "WHERE strftime('%Y', signup_date) = '2021' ORDER BY hours_played DESC"],
+      "solution_lines": [
+        { "line": "SELECT username, hours_played", "explain": "Show me the username and hours played columns." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "WHERE strftime('%Y', signup_date) = '2021'", "explain": "Keep players whose sign-up year is 2021. It's in quotes because strftime gives back text." },
+        { "line": "ORDER BY hours_played DESC;", "explain": "Sort by hours played, most first." }
+      ]
+    },
+    {
+      "prompt": "Make one column called tag that looks like ShadowFox (USA), but only for usernames longer than 8 characters.",
+      "type": "write",
+      "answer": "SELECT username || ' (' || country || ')' AS tag FROM players WHERE LENGTH(username) > 8;",
+      "hints": ["Glue the pieces together with ||: the username, then ' (', then the country, then ')'. Then filter with LENGTH().", "SELECT username || ' (' || country || ')' AS tag ... WHERE LENGTH(username) > 8"],
+      "solution_lines": [
+        { "line": "SELECT username || ' (' || country || ')' AS tag", "explain": "Glue together the username, a space and bracket, the country, and a closing bracket. Nickname it tag." },
+        { "line": "FROM players", "explain": "From the players table." },
+        { "line": "WHERE LENGTH(username) > 8;", "explain": "Keep only usernames with more than 8 characters." }
+      ]
+    }
+  ],
+  "recap": "You just learned text functions (UPPER, LOWER, LENGTH), how to glue text with ||, and how to pull the year or month out of a date with strftime()."
+}
