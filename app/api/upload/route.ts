@@ -2,6 +2,8 @@
 // We check the file type again here, because browser checks can be bypassed.
 // (Saving the file to storage comes in a later step.)
 
+import { checkFileSize, limitMessage } from "@/lib/plans";
+
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
 
 export async function POST(request: Request) {
@@ -18,6 +20,11 @@ export async function POST(request: Request) {
       { error: `"${file.name}" isn't supported. Please upload a .csv or .xlsx file.` },
       { status: 400 }
     );
+  }
+
+  const sizeProblem = checkFileSize(file.size);
+  if (sizeProblem) {
+    return Response.json({ error: limitMessage(sizeProblem) }, { status: 400 });
   }
 
   return Response.json({ name: file.name, size: file.size });

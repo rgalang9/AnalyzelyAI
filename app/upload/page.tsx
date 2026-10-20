@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseDataset } from "@/lib/parse-dataset";
 import { saveNewAnalysis } from "@/lib/history";
+import { checkCellCount, checkFileSize, type LimitProblem } from "@/lib/plans";
 import { useDataset } from "../dataset-context";
+import { UpgradeModal } from "./upgrade-modal";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
 
@@ -18,6 +20,7 @@ export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [limitProblem, setLimitProblem] = useState<LimitProblem | null>(null);
   const router = useRouter();
   const { openDataset } = useDataset();
 
@@ -30,6 +33,16 @@ export default function UploadPage() {
         `"${picked.name}" isn't supported. Please upload a .csv or .xlsx file.`
       );
       event.target.value = ""; // clear the rejected file from the input
+      return;
+    }
+
+    // Too big? Stop here, before uploading or reading it
+    const sizeProblem = picked ? checkFileSize(picked.size) : null;
+    if (sizeProblem) {
+      setFile(null);
+      setError("");
+      setLimitProblem(sizeProblem);
+      event.target.value = "";
       return;
     }
 
@@ -76,6 +89,16 @@ export default function UploadPage() {
     } catch (err) {
       const reason = err instanceof Error ? err.message : "";
       setError(`We couldn't read "${file.name}". ${reason}`.trim());
+      setUploading(false);
+      return;
+    }
+
+    // Too many cells? Don't save or open it.
+    const cellProblem = checkCellCount(
+      dataset.rows.length * dataset.headers.length
+    );
+    if (cellProblem) {
+      setLimitProblem(cellProblem);
       setUploading(false);
       return;
     }
@@ -135,6 +158,13 @@ export default function UploadPage() {
           </button>
         </form>
       </div>
+
+      {limitProblem && (
+        <UpgradeModal
+          problem={limitProblem}
+          onClose={() => setLimitProblem(null)}
+        />
+      )}
     </main>
   );
 }
