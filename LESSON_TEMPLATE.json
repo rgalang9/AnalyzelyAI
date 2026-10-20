@@ -1,0 +1,27 @@
+{
+  "id": "sql-01",
+  "level": 1,
+  "title": "SELECT, columns, DISTINCT",
+  "tables": ["games"],
+  "explanation": "Short friendly intro to the new idea.",
+  "example": {
+    "code": "SELECT title FROM games;",
+    "lines": [
+      { "line": "SELECT title", "explain": "Pick the title column." },
+      { "line": "FROM games;", "explain": "Look inside the games table." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the title of every game.",
+      "type": "write",
+      "answer": "SELECT title FROM games;",
+      "hints": ["Which column do you need?", "Start with SELECT title ..."],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Pick the title column." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    }
+  ],
+  "recap": "You just learned how to pick columns with SELECT."
+}

@@ -4,6 +4,12 @@
   --background: #ffffff;
   --foreground: #171717;
   --series-1: #2a78d6; /* chart color */
+  /* SQL code colors (Learn section) */
+  --sql-keyword: #1d4ed8;
+  --sql-function: #7e22ce;
+  --sql-string: #047857;
+  --sql-number: #b45309;
+  --sql-comment: #71717a;
 }
 
 @theme inline {
@@ -18,6 +24,11 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --series-1: #3987e5;
+    --sql-keyword: #60a5fa;
+    --sql-function: #c084fc;
+    --sql-string: #34d399;
+    --sql-number: #fbbf24;
+    --sql-comment: #a1a1aa;
   }
 }
 

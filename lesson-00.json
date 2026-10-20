@@ -1,0 +1,23 @@
+{
+  "id": "sql-00",
+  "level": 0,
+  "title": "How to read a table",
+  "type": "tour",
+  "tables": ["games"],
+  "explanation": "Before we write any code, let's learn to read a table. A table is just data in a grid, like a spreadsheet. Hover over each part to see what it's called.",
+  "tour": [
+    { "target": "table", "explain": "This is a table. Its name is games. A database can hold lots of tables." },
+    { "target": "column_header", "explain": "This is a column. Each column holds one kind of information, like the title or the price." },
+    { "target": "row", "explain": "This is a row. Each row is one thing, here one game, with all its information." },
+    { "target": "cell", "explain": "This is a value: one piece of information where a row and a column meet." },
+    { "target": "null_cell", "explain": "A blank value is called NULL. It means the information is missing." }
+  ],
+  "quiz": [
+    { "prompt": "Click the row for Minecraft.", "answer": { "row": 1 } },
+    { "prompt": "Click the price column.", "answer": { "column": "price" } },
+    { "prompt": "Click the rating of Elden Ring.", "answer": { "row": 8, "column": "rating" } },
+    { "prompt": "Click a NULL value.", "answer": { "column": "rating", "rows": [13, 15] } },
+    { "prompt": "Click the column that tells you when a game came out.", "answer": { "column": "release_year" } }
+  ],
+  "recap": "You just learned that tables are made of rows and columns, and that a blank value is called NULL."
+}

@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DatasetProvider } from "./dataset-context";
 import AppShell from "./app-shell";
-import TopBar from "./top-bar";
+import { Suspense } from "react";
+import TopBar, { TopBarPlaceholder } from "./top-bar";
+import { LearnProgressProvider } from "./learn/progress-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +30,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <DatasetProvider>
-          <TopBar />
-          <AppShell>{children}</AppShell>
+          <LearnProgressProvider>
+            {/* These read the page address. Suspense lets Next.js build pages ahead of
+                time even when part of the address (like a lesson id) isn't known yet. */}
+            <Suspense fallback={<TopBarPlaceholder />}>
+              <TopBar />
+            </Suspense>
+            <Suspense>
+              <AppShell>{children}</AppShell>
+            </Suspense>
+          </LearnProgressProvider>
         </DatasetProvider>
       </body>
     </html>

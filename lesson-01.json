@@ -1,0 +1,69 @@
+{
+  "id": "sql-01",
+  "level": 1,
+  "title": "SELECT, columns, DISTINCT",
+  "tables": ["games"],
+  "explanation": "SQL is how you ask a database for data. Every question starts with SELECT, which means 'show me', followed by the columns you want. Then FROM says which table to look in. To get every column, use * (a star means 'everything'). And DISTINCT removes repeats, so each value shows only once.",
+  "example": {
+    "code": "SELECT title, genre\nFROM games;",
+    "lines": [
+      { "line": "SELECT title, genre", "explain": "Show me the title and genre columns. Commas separate the columns." },
+      { "line": "FROM games;", "explain": "Look inside the games table. The semicolon means 'I'm done'." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the title of every game.",
+      "type": "write",
+      "answer": "SELECT title FROM games;",
+      "hints": ["You only need one column. Which one has the game names?", "Start with SELECT title, then say which table it's FROM."],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show me the title column." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show the title and price of every game.",
+      "type": "write",
+      "answer": "SELECT title, price FROM games;",
+      "hints": ["You need two columns this time.", "Put a comma between title and price."],
+      "solution_lines": [
+        { "line": "SELECT title, price", "explain": "Show me two columns, separated by a comma." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show every column in the games table.",
+      "type": "write",
+      "answer": "SELECT * FROM games;",
+      "hints": ["There's a shortcut so you don't have to type every column name.", "The star symbol * means 'every column'."],
+      "solution_lines": [
+        { "line": "SELECT *", "explain": "The star means show me every column." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Show each genre only once, with no repeats.",
+      "type": "write",
+      "answer": "SELECT DISTINCT genre FROM games;",
+      "hints": ["Without help, genres like Shooter would show up more than once.", "Put DISTINCT right after SELECT."],
+      "solution_lines": [
+        { "line": "SELECT DISTINCT genre", "explain": "Show me the genre column, but remove repeats." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this return? SELECT DISTINCT release_year FROM games;",
+      "type": "predict",
+      "code": "SELECT DISTINCT release_year FROM games;",
+      "options": ["15", "10", "8"],
+      "answer": "10",
+      "hints": ["Some games came out in the same year.", "Count each year only once. 2017 has four games but counts as one."],
+      "solution_lines": [
+        { "line": "SELECT DISTINCT release_year", "explain": "Show each release year once, removing repeats." },
+        { "line": "FROM games;", "explain": "From the games table." }
+      ]
+    }
+  ],
+  "recap": "You just learned to pick columns with SELECT, get everything with *, and remove repeats with DISTINCT."
+}

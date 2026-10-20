@@ -12,13 +12,21 @@ const tabClass = (active: boolean) =>
       : "text-zinc-600 hover:bg-zinc-100 hover:text-foreground dark:text-zinc-400 dark:hover:bg-zinc-900"
   }`;
 
+const barClass =
+  "sticky top-0 z-20 flex h-14 shrink-0 items-center gap-1 border-b border-zinc-200 bg-background px-4 dark:border-zinc-800";
+
+// Same size as the bar, shown for a moment if the page address isn't known yet
+export function TopBarPlaceholder() {
+  return <header className={barClass} />;
+}
+
 // Bar across the top of every page: "Home" (the AI analyzer) and the "Learn" menu
 export default function TopBar() {
   const pathname = usePathname();
   const inLearn = pathname.startsWith("/learn");
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-1 border-b border-zinc-200 bg-background px-4 dark:border-zinc-800">
+    <header className={barClass}>
       <Link href="/" className={tabClass(!inLearn)}>
         Home
       </Link>
