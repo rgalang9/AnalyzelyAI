@@ -1,0 +1,73 @@
+{
+  "id": "sql-02",
+  "level": 1,
+  "title": "WHERE with numbers: AND, OR, BETWEEN",
+  "tables": ["games"],
+  "explanation": "So far you've shown every row. WHERE lets you keep only the rows you want, like a filter. It goes after FROM. You compare numbers with symbols: = (equals), > (more than), < (less than), >= (at least), <= (at most), and != (not equal). Use AND when BOTH things must be true, and OR when EITHER one is enough. BETWEEN 10 AND 20 is a shortcut for 'from 10 up to 20', and it includes both ends.",
+  "example": {
+    "code": "SELECT title, price\nFROM games\nWHERE price > 50;",
+    "lines": [
+      { "line": "SELECT title, price", "explain": "Show me the title and price columns." },
+      { "line": "FROM games", "explain": "From the games table." },
+      { "line": "WHERE price > 50;", "explain": "Only keep rows where the price is more than 50. Every other row is filtered out." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Show the title and price of games that cost less than 30.",
+      "type": "write",
+      "answer": "SELECT title, price FROM games WHERE price < 30;",
+      "hints": ["You need a WHERE line after FROM.", "Use the less-than symbol: WHERE price < 30"],
+      "solution_lines": [
+        { "line": "SELECT title, price", "explain": "Show me the title and price columns." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price < 30;", "explain": "Only keep games where the price is less than 30." }
+      ]
+    },
+    {
+      "prompt": "Show the title of every free game.",
+      "type": "write",
+      "answer": "SELECT title FROM games WHERE price = 0;",
+      "hints": ["What price does a free game have?", "A free game costs 0, so use WHERE price = 0"],
+      "solution_lines": [
+        { "line": "SELECT title", "explain": "Show me the title column." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price = 0;", "explain": "Only keep games where the price equals 0, meaning free." }
+      ]
+    },
+    {
+      "prompt": "Show the title and rating of games with a rating above 9.5 AND a price under 60.",
+      "type": "write",
+      "answer": "SELECT title, rating FROM games WHERE rating > 9.5 AND price < 60;",
+      "hints": ["Both conditions must be true, so join them with AND.", "WHERE rating > 9.5 AND price < 60"],
+      "solution_lines": [
+        { "line": "SELECT title, rating", "explain": "Show me the title and rating columns." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE rating > 9.5 AND price < 60;", "explain": "Keep a game only if BOTH are true: rating above 9.5, and price under 60." }
+      ]
+    },
+    {
+      "prompt": "Show the title and release year of games released from 2015 to 2018 (including both years).",
+      "type": "write",
+      "answer": "SELECT title, release_year FROM games WHERE release_year BETWEEN 2015 AND 2018;",
+      "hints": ["There's a shortcut for 'from one number to another'.", "WHERE release_year BETWEEN 2015 AND 2018"],
+      "solution_lines": [
+        { "line": "SELECT title, release_year", "explain": "Show me the title and release year columns." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE release_year BETWEEN 2015 AND 2018;", "explain": "Keep games released from 2015 up to 2018. BETWEEN includes both ends." }
+      ]
+    },
+    {
+      "prompt": "Show each genre only once for games that are free OR came out before 2012.",
+      "type": "write",
+      "answer": "SELECT DISTINCT genre FROM games WHERE price = 0 OR release_year < 2012;",
+      "hints": ["Remember DISTINCT from Lesson 1? And either condition is enough here, so use OR.", "SELECT DISTINCT genre ... WHERE price = 0 OR release_year < 2012"],
+      "solution_lines": [
+        { "line": "SELECT DISTINCT genre", "explain": "Show me the genre column, with no repeats." },
+        { "line": "FROM games", "explain": "From the games table." },
+        { "line": "WHERE price = 0 OR release_year < 2012;", "explain": "Keep a game if EITHER is true: it's free, or it came out before 2012." }
+      ]
+    }
+  ],
+  "recap": "You just learned to filter rows with WHERE, compare numbers with symbols like > and <, combine conditions with AND and OR, and use BETWEEN for ranges."
+}
