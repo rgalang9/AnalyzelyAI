@@ -1,6 +1,6 @@
 "use client"; // runs in the browser so we can react to file picks and clicks
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseDataset } from "@/lib/parse-dataset";
@@ -21,8 +21,23 @@ export default function UploadPage() {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [limitProblem, setLimitProblem] = useState<LimitProblem | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { openDataset } = useDataset();
+
+  // Next.js keeps this page alive in the background after you leave it, so it
+  // would come back with the old file and "Uploading…". Reset it when it's hidden,
+  // so it always opens fresh.
+  useLayoutEffect(() => {
+    const input = fileInputRef.current;
+    return () => {
+      setFile(null);
+      setError("");
+      setUploading(false);
+      setLimitProblem(null);
+      if (input) input.value = "";
+    };
+  }, []);
 
   // Called when the user picks a file
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -60,7 +75,17 @@ export default function UploadPage() {
 
     setUploading(true);
     setError("");
+    try {
+      await upload(file);
+    } catch (err) {
+      // Anything unexpected: never leave the button stuck on "Uploading…"
+      console.error("Upload failed:", err);
+      setError("Something went wrong while uploading. Please try again.");
+      setUploading(false);
+    }
+  }
 
+  async function upload(file: File) {
     const formData = new FormData();
     formData.append("file", file);
 
@@ -137,6 +162,7 @@ export default function UploadPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
           <input
+            ref={fileInputRef}
             type="file"
             accept=".csv,.xlsx"
             onChange={handleFileChange}
