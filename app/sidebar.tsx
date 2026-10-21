@@ -21,7 +21,7 @@ function formatDate(iso: string) {
 // `onNavigate` closes the drawer on small screens after a click.
 export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
   const { email, loading } = useUserEmail();
-  const { analysisId, openDataset, clearDataset } = useDataset();
+  const { analysisId, openDataset } = useDataset();
   const router = useRouter();
   const [items, setItems] = useState<AnalysisSummary[]>([]);
   const [listError, setListError] = useState("");
@@ -65,16 +65,16 @@ export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
 
   return (
     <nav aria-label="Analysis history" className="flex h-full flex-col gap-6 p-4">
-      <Link
+      {/* A plain link on purpose: it loads /upload fresh, like a browser refresh. An in-app
+          <Link> can bring back the old upload page (old file, stuck "Uploading…") because
+          Next.js keeps visited pages alive in the background. The reload also clears the
+          previous dataset from memory, so the next upload is a brand-new analysis. */}
+      <a
         href="/upload"
-        onClick={() => {
-          clearDataset(); // start a brand-new analysis, so the next upload gets its own history entry
-          onNavigate();
-        }}
         className="rounded-full bg-foreground px-4 py-2.5 text-center text-sm font-medium text-background transition-opacity hover:opacity-80"
       >
         + New analysis
-      </Link>
+      </a>
 
       {!loading && !email && (
         <div className="rounded-2xl bg-zinc-100 p-4 text-sm dark:bg-zinc-900">
