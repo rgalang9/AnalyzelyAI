@@ -15,8 +15,13 @@ export type Answer = {
 export type AnalysisSummary = {
   id: string;
   file_name: string;
+  title: string | null; // null = no title yet, show the file name
   created_at: string;
 };
+
+// The sidebar listens for this to refresh the list (e.g. when an AI title arrives)
+export const HISTORY_CHANGED = "analyzely:history-changed";
+const announceHistoryChange = () => window.dispatchEvent(new Event(HISTORY_CHANGED));
 
 const BUCKET = "datasets";
 
@@ -61,11 +66,73 @@ export async function saveAnswer(analysisId: string, answer: Answer) {
 export async function listAnalyses(): Promise<AnalysisSummary[]> {
   const { data, error } = await createClient()
     .from("analyses")
-    .select("id, file_name, created_at")
+    .select("id, file_name, title, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
   if (error) throw error;
   return data;
+}
+
+// Asks the AI for a short title from a small sample (file name, column names, first 5 rows)
+// and saves it. If anything fails, the entry simply keeps showing its file name.
+const TITLE_SAMPLE_ROWS = 5;
+const TITLE_MAX_COLUMNS = 100;
+const clip = (v: string) => v.slice(0, 200);
+
+export async function autoTitleAnalysis(analysisId: string, dataset: Dataset) {
+  try {
+    const response = await fetch("/api/title", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fileName: dataset.fileName.slice(0, 300),
+        headers: dataset.headers.slice(0, TITLE_MAX_COLUMNS).map(clip),
+        rows: dataset.rows
+          .slice(0, TITLE_SAMPLE_ROWS)
+          .map((row) => row.slice(0, TITLE_MAX_COLUMNS).map(clip)),
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+
+    // Only if the user hasn't renamed it in the meantime
+    const { error } = await createClient()
+      .from("analyses")
+      .update({ title: result.title })
+      .eq("id", analysisId)
+      .eq("title_is_custom", false);
+    if (error) throw error;
+    announceHistoryChange();
+  } catch (err) {
+    console.error("Couldn't create an AI title (keeping the file name):", err);
+  }
+}
+
+export async function renameAnalysis(analysisId: string, title: string) {
+  const { error } = await createClient()
+    .from("analyses")
+    .update({ title, title_is_custom: true })
+    .eq("id", analysisId);
+  if (error) throw error;
+  announceHistoryChange();
+}
+
+// Deletes an analysis. Its messages and cleaning results go with it (the database
+// cascades the delete), and then its saved dataset file is removed from Storage.
+export async function deleteAnalysis(analysisId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("analyses")
+    .delete()
+    .eq("id", analysisId)
+    .select("dataset_path")
+    .single();
+  if (error) throw error;
+
+  const removed = await supabase.storage.from(BUCKET).remove([data.dataset_path]);
+  // The entry is already gone; a leftover file is harmless, so just log it
+  if (removed.error) console.error("Couldn't remove the dataset file:", removed.error);
+  announceHistoryChange();
 }
 
 // Saves the data-cleaning results (issues found + which fixes are applied).

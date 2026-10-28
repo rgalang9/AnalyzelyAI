@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseDataset } from "@/lib/parse-dataset";
-import { saveNewAnalysis } from "@/lib/history";
+import { autoTitleAnalysis, saveNewAnalysis } from "@/lib/history";
 import { checkCellCount, checkFileSize, type LimitProblem } from "@/lib/plans";
 import { useDataset } from "../dataset-context";
 import { UpgradeModal } from "./upgrade-modal";
@@ -138,6 +138,9 @@ export default function UploadPage() {
       console.error("Couldn't save analysis:", err);
       saveFailed = true;
     }
+
+    // Saved? Ask the AI for a short title in the background (no waiting)
+    if (analysisId) void autoTitleAnalysis(analysisId, dataset);
 
     openDataset(dataset, { analysisId, saveFailed });
     router.push("/dataset");

@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { listAnalyses, loadAnalysis, type AnalysisSummary } from "@/lib/history";
+import {
+  deleteAnalysis,
+  HISTORY_CHANGED,
+  listAnalyses,
+  loadAnalysis,
+  renameAnalysis,
+  type AnalysisSummary,
+} from "@/lib/history";
+import { ConfirmDeleteDialog, ItemMenu, RenameInput } from "./history-actions";
 import { useDataset } from "./dataset-context";
 import { useUserEmail } from "./use-user-email";
 
@@ -17,16 +25,32 @@ function formatDate(iso: string) {
   });
 }
 
+const nameOf = (item: AnalysisSummary) => item.title ?? item.file_name;
+
 // Left sidebar: "New analysis" for everyone, plus saved history for logged-in users.
 // `onNavigate` closes the drawer on small screens after a click.
 export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
   const { email, loading } = useUserEmail();
-  const { analysisId, openDataset } = useDataset();
+  const { analysisId, openDataset, clearDataset } = useDataset();
   const router = useRouter();
   const [items, setItems] = useState<AnalysisSummary[]>([]);
   const [listError, setListError] = useState("");
   const [openingId, setOpeningId] = useState<string | null>(null);
   const [openError, setOpenError] = useState("");
+  const [version, setVersion] = useState(0); // goes up when a title changes or an entry is deleted
+  const [menu, setMenu] = useState<{ id: string; anchor: DOMRect } | null>(null);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<AnalysisSummary | null>(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [actionError, setActionError] = useState("");
+  const closeMenu = useCallback(() => setMenu(null), []);
+
+  // Refresh the list when an AI title arrives, or after a rename or delete
+  useEffect(() => {
+    const refresh = () => setVersion((v) => v + 1);
+    window.addEventListener(HISTORY_CHANGED, refresh);
+    return () => window.removeEventListener(HISTORY_CHANGED, refresh);
+  }, []);
 
   // Fetch the list when someone logs in, and again when a new analysis is saved
   useEffect(() => {
@@ -45,7 +69,43 @@ export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
     return () => {
       ignore = true;
     };
-  }, [email, analysisId]);
+  }, [email, analysisId, version]);
+
+  async function handleRename(id: string, title: string) {
+    setRenamingId(null);
+    setActionError("");
+    setItems((list) => list.map((it) => (it.id === id ? { ...it, title } : it))); // show it right away
+    try {
+      await renameAnalysis(id, title);
+    } catch (err) {
+      console.error("Couldn't rename analysis:", err);
+      setActionError("We couldn't rename that one. Please try again.");
+      setVersion((v) => v + 1); // reload the real names
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleting) return;
+    const id = deleting.id;
+    setDeleteBusy(true);
+    setActionError("");
+    try {
+      await deleteAnalysis(id);
+      setItems((list) => list.filter((it) => it.id !== id));
+      // Deleted the one that's open? Close it and start fresh.
+      if (id === analysisId) {
+        clearDataset();
+        router.push("/upload");
+        onNavigate();
+      }
+    } catch (err) {
+      console.error("Couldn't delete analysis:", err);
+      setActionError("We couldn't delete that one. Please try again.");
+    } finally {
+      setDeleteBusy(false);
+      setDeleting(null);
+    }
+  }
 
   async function handleOpen(id: string) {
     setOpeningId(id);
@@ -110,6 +170,7 @@ export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
 
           {listError && <p className="mt-3 px-2 text-sm text-red-600 dark:text-red-400">{listError}</p>}
           {openError && <p className="mt-3 px-2 text-sm text-red-600 dark:text-red-400">{openError}</p>}
+          {actionError && <p className="mt-3 px-2 text-sm text-red-600 dark:text-red-400">{actionError}</p>}
 
           {!listError && items.length === 0 && (
             <p className="mt-3 px-2 text-sm text-zinc-500">
@@ -119,26 +180,81 @@ export default function Sidebar({ onNavigate }: { onNavigate: () => void }) {
 
           <ul className="mt-2 flex flex-col gap-1 overflow-y-auto">
             {items.map((item) => (
-              <li key={item.id}>
+              <li
+                key={item.id}
+                className={`flex items-center gap-1 rounded-lg ${
+                  item.id === analysisId ? "bg-zinc-100 dark:bg-zinc-900" : ""
+                }`}
+              >
+                {renamingId === item.id ? (
+                  <div className="flex min-w-0 flex-1 px-1 py-1.5">
+                    <RenameInput
+                      initial={nameOf(item)}
+                      onSave={(title) => handleRename(item.id, title)}
+                      onCancel={() => setRenamingId(null)}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleOpen(item.id)}
+                    disabled={openingId !== null}
+                    aria-current={item.id === analysisId ? "page" : undefined}
+                    className="min-w-0 flex-1 rounded-lg px-2 py-2 text-left hover:bg-zinc-100 disabled:cursor-wait dark:hover:bg-zinc-900"
+                  >
+                    <span
+                      className="block truncate text-sm font-medium"
+                      title={item.title ? `${item.title} (${item.file_name})` : item.file_name}
+                    >
+                      {nameOf(item)}
+                    </span>
+                    <span className="block text-xs text-zinc-500">
+                      {openingId === item.id ? "Opening…" : formatDate(item.created_at)}
+                    </span>
+                  </button>
+                )}
                 <button
-                  onClick={() => handleOpen(item.id)}
-                  disabled={openingId !== null}
-                  aria-current={item.id === analysisId ? "page" : undefined}
-                  className={`w-full rounded-lg px-2 py-2 text-left hover:bg-zinc-100 disabled:cursor-wait dark:hover:bg-zinc-900 ${
-                    item.id === analysisId ? "bg-zinc-100 dark:bg-zinc-900" : ""
-                  }`}
+                  type="button"
+                  aria-label={`Options for ${nameOf(item)}`}
+                  aria-haspopup="menu"
+                  aria-expanded={menu?.id === item.id}
+                  // Its own menu is open: don't let the menu's "clicked outside" check close it
+                  // first, so this click can toggle it shut
+                  onPointerDown={(e) => menu?.id === item.id && e.nativeEvent.stopPropagation()}
+                  onClick={(e) => {
+                    const anchor = e.currentTarget.getBoundingClientRect();
+                    setMenu((m) => (m?.id === item.id ? null : { id: item.id, anchor }));
+                  }}
+                  className="shrink-0 rounded-lg px-2 py-2 text-zinc-500 hover:bg-zinc-200 hover:text-foreground dark:hover:bg-zinc-800"
                 >
-                  <span className="block truncate text-sm font-medium" title={item.file_name}>
-                    {item.file_name}
-                  </span>
-                  <span className="block text-xs text-zinc-500">
-                    {openingId === item.id ? "Opening…" : formatDate(item.created_at)}
-                  </span>
+                  ⋯
                 </button>
               </li>
             ))}
           </ul>
         </div>
+      )}
+
+      {menu && (
+        <ItemMenu
+          anchor={menu.anchor}
+          onClose={closeMenu}
+          onRename={() => {
+            setRenamingId(menu.id);
+            setMenu(null);
+          }}
+          onDelete={() => {
+            setDeleting(items.find((it) => it.id === menu.id) ?? null);
+            setMenu(null);
+          }}
+        />
+      )}
+      {deleting && (
+        <ConfirmDeleteDialog
+          name={nameOf(deleting)}
+          busy={deleteBusy}
+          onConfirm={handleDelete}
+          onCancel={() => setDeleting(null)}
+        />
       )}
     </nav>
   );
