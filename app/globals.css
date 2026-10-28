@@ -19,6 +19,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Brand colors. Use them as Tailwind classes, e.g. bg-purple, text-navy, border-orange-dark.
+   Rule: orange and pink never touch directly; put white or purple between them. */
+@theme {
+  --color-purple: #6d3ef0;
+  --color-purple-dark: #4a24b8; /* button bottom edges */
+  --color-purple-light: #ede5ff;
+  --color-pink: #e2457e;
+  --color-pink-light: #fde7ee;
+  --color-orange: #f7931e;
+  --color-orange-dark: #c96a06;
+  --color-orange-light: #fff0dd;
+  --color-navy: #24174f; /* headings and main text */
+  --color-grey: #4a3f6b; /* secondary text */
+  --color-white: #ffffff;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
