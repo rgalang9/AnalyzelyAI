@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown, CircleUser } from "lucide-react";
 import { LEARN_LANGUAGES } from "@/lib/learn/languages";
+import { useLogOut } from "./account-bar";
+import { useUserEmail } from "./use-user-email";
+import Logo from "./logo";
 
 const tabClass = (active: boolean) =>
   `rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
@@ -26,6 +30,9 @@ export default function TopBar() {
   const inLearn = pathname.startsWith("/learn");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // The landing page at "/" gets the new brand-style bar; other pages keep this one for now
+  if (pathname === "/") return <LandingTopBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />;
+
   return (
     // While the Learn menu is open, the bar (and so the menu) sits above everything, sidebar
     // included. It drops back afterwards so the mobile History drawer can cover it.
@@ -38,15 +45,111 @@ export default function TopBar() {
   );
 }
 
+// Brand-style tab: light purple pill when active
+const landingTabClass = (active: boolean) =>
+  `flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+    active ? "bg-purple-light text-purple" : "text-navy hover:bg-purple-light/60"
+  }`;
+
+// Small chunky button with a darker bottom edge that presses down on click
+const chunkyClass =
+  "rounded-full px-5 py-2 text-sm font-bold transition-all active:translate-y-[2px]";
+
+// Top bar on the landing page: logo, tabs, and Log in / Sign up (or the account if logged in).
+// On phones the tabs drop to their own row under the logo.
+function LandingTopBar({
+  menuOpen,
+  setMenuOpen,
+}: {
+  menuOpen: boolean;
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { email, loading } = useUserEmail();
+  const handleLogOut = useLogOut();
+
+  return (
+    <header className={`sticky top-0 bg-white ${menuOpen ? "z-50" : "z-20"}`}>
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+        <Link href="/" aria-label="Analyzely home">
+          <Logo />
+        </Link>
+
+        <nav className="order-last flex w-full justify-center gap-1 md:order-none md:w-auto">
+          <Link href="/upload" className={landingTabClass(true)}>
+            Analyze
+          </Link>
+          <LearnMenu
+            active={false}
+            open={menuOpen}
+            setOpen={setMenuOpen}
+            buttonClassName={landingTabClass(false)}
+            label={
+              <>
+                Learn <ChevronDown aria-hidden="true" className="size-4" />
+              </>
+            }
+          />
+          <Link href="/daily" className={landingTabClass(false)}>
+            Daily Case
+            <span className="rounded-full bg-pink px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+              NEW
+            </span>
+          </Link>
+        </nav>
+
+        {/* Hidden until we know if someone is logged in, so the buttons don't flicker */}
+        <div className={`flex items-center gap-2 transition-opacity ${loading ? "opacity-0" : ""}`}>
+          {email ? (
+            <>
+              <Link
+                href="/upload"
+                className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-navy hover:bg-purple-light/60"
+              >
+                <CircleUser aria-hidden="true" className="size-5 text-purple" />
+                <span className="hidden max-w-48 truncate sm:inline">{email}</span>
+              </Link>
+              <button
+                onClick={handleLogOut}
+                className={`${chunkyClass} border-2 border-navy text-navy hover:bg-purple-light/60`}
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className={`${chunkyClass} border-2 border-navy text-navy hover:bg-purple-light/60`}
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className={`${chunkyClass} bg-purple text-white shadow-[0_4px_0_var(--color-purple-dark)] active:shadow-[0_2px_0_var(--color-purple-dark)]`}
+              >
+                Sign up
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
 // Opens on hover with a mouse, and on tap on phones and tablets
 function LearnMenu({
   active,
   open,
   setOpen,
+  buttonClassName,
+  label = "Learn ▾",
 }: {
   active: boolean;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  buttonClassName?: string; // lets the landing page restyle the button
+  label?: React.ReactNode;
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const lastPointer = useRef("mouse");
@@ -82,9 +185,9 @@ function LearnMenu({
         onPointerDown={(e) => (lastPointer.current = e.pointerType)}
         // A mouse already opened it by hovering, so a click keeps it open; a tap toggles it
         onClick={() => setOpen((o) => (lastPointer.current === "mouse" ? true : !o))}
-        className={tabClass(active)}
+        className={buttonClassName ?? tabClass(active)}
       >
-        Learn ▾
+        {label}
       </button>
 
       {open && (

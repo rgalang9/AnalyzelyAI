@@ -17,6 +17,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-jakarta); /* brand headings: font-display */
 }
 
 /* Brand colors. Use them as Tailwind classes, e.g. bg-purple, text-navy, border-orange-dark.

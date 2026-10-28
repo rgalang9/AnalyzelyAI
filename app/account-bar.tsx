@@ -5,18 +5,23 @@ import { createClient } from "@/lib/supabase/client";
 import { useDataset } from "./dataset-context";
 import { useUserEmail } from "./use-user-email";
 
+// Logs out and goes back to the home page. Shared with the landing page's top bar.
+export function useLogOut() {
+  const { clearDataset } = useDataset();
+  const router = useRouter();
+
+  return async function handleLogOut() {
+    await createClient().auth.signOut();
+    clearDataset(); // don't leave their data on screen for the next person
+    router.push("/");
+  };
+}
+
 // Strip across the top: a "History" button that opens the sidebar on small
 // screens, plus who's logged in. Guests on big screens don't need it at all.
 export default function AccountBar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   const { email } = useUserEmail();
-  const { clearDataset } = useDataset();
-  const router = useRouter();
-
-  async function handleLogOut() {
-    await createClient().auth.signOut();
-    clearDataset(); // don't leave their data on screen for the next person
-    router.push("/");
-  }
+  const handleLogOut = useLogOut();
 
   return (
     <div

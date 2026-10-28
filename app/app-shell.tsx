@@ -6,7 +6,7 @@ import AccountBar from "./account-bar";
 import Sidebar from "./sidebar";
 
 // Screens that already show the sign-up / log-in choices don't need the sidebar
-const NO_SIDEBAR = ["/", "/login", "/signup"];
+const NO_SIDEBAR = ["/", "/login", "/signup", "/daily"];
 
 // Page frame: sidebar on the left, account bar + page on the right.
 // On small screens the sidebar is hidden and slides in when "History" is tapped.
