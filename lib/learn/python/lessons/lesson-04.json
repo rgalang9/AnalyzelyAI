@@ -1,0 +1,114 @@
+{
+  "id": "py-04",
+  "level": 1,
+  "title": "Picking columns",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "Usually you only need a few columns. To pick one, put its name in square brackets and quotes: df[\"title\"]. One column on its own is called a Series. To pick several, put a list of names inside: df[[\"title\", \"price\"]]. Notice the double brackets: the outer ones mean 'pick', the inner ones make the list. Several columns give you a smaller DataFrame. Column names must match exactly, capital letters included.",
+  "example": {
+    "code": "df[[\"title\", \"genre\"]].head()",
+    "lines": [
+      {
+        "line": "df[[\"title\", \"genre\"]].head()",
+        "explain": "Pick the title and genre columns, then show the first 5 rows. You can chain .head() right onto your selection."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Fill in the blank to show the genre column.",
+      "type": "fill",
+      "code": "df[___]",
+      "answer": "df[\"genre\"]",
+      "compare": "table",
+      "hints": [
+        "Column names are text. What does text need?",
+        "Type \"genre\" with the quotes."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"genre\"]",
+          "explain": "Pick one column by its name, in quotes."
+        }
+      ]
+    },
+    {
+      "prompt": "Show only the title and price columns.",
+      "type": "write",
+      "answer": "df[[\"title\", \"price\"]]",
+      "compare": "table",
+      "hints": [
+        "Several columns means a list inside the brackets: double brackets.",
+        "df[[\"title\", \"price\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[[\"title\", \"price\"]]",
+          "explain": "Outer brackets pick, inner brackets make the list of column names."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the title, genre and rating of the first 5 games.",
+      "type": "write",
+      "answer": "df[[\"title\", \"genre\", \"rating\"]].head()",
+      "compare": "table",
+      "require": [
+        "head"
+      ],
+      "hints": [
+        "Pick the three columns first, then add .head() on the end.",
+        "df[[\"title\", \"genre\", \"rating\"]].head()"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[[\"title\", \"genre\", \"rating\"]].head()",
+          "explain": "Pick 3 columns, then show the first 5 rows of that smaller table."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: what happens when you run this?",
+      "type": "predict",
+      "code": "df[\"Title\"]",
+      "options": [
+        "It shows the title column",
+        "It shows an error",
+        "It shows an empty column"
+      ],
+      "answer": "It shows an error",
+      "hints": [
+        "Look closely at the capital letter.",
+        "The column is called title, all lowercase."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"Title\"]",
+          "explain": "There's no column called Title with a capital T, so pandas raises an error (a KeyError). Names must match exactly. This is one of the most common beginner errors!"
+        }
+      ]
+    },
+    {
+      "prompt": "Show the last 4 rows of just the title and release_year columns.",
+      "type": "write",
+      "answer": "df[[\"title\", \"release_year\"]].tail(4)",
+      "compare": "table",
+      "require": [
+        "tail"
+      ],
+      "hints": [
+        "Mix this lesson with Lesson 2: pick the columns, then use tail().",
+        "df[[\"title\", \"release_year\"]].tail(4)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[[\"title\", \"release_year\"]].tail(4)",
+          "explain": "Pick two columns, then show the last 4 rows."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to pick columns: df[\"col\"] for one (a Series) and df[[\"a\", \"b\"]] for several (a DataFrame). And names must match exactly!"
+}

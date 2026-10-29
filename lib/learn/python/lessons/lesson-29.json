@@ -1,0 +1,142 @@
+{
+  "id": "py-29",
+  "level": 5,
+  "title": "Grouping numbers into ranges with pd.cut",
+  "datasets": [
+    "players"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")",
+  "explanation": "Back to the players. Often you want categories instead of raw numbers, like Casual, Regular and Hardcore players. pd.cut() sorts numbers into ranges called bins. bins=[0, 100, 300, 1000] makes three ranges: over 0 up to 100, over 100 up to 300, and over 300 up to 1000. Each range includes its top number. labels names each range, in order. It's the pandas version of CASE WHEN in SQL.",
+  "example": {
+    "code": "df[\"level\"] = pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])\ndf[[\"username\", \"hours_played\", \"level\"]]",
+    "lines": [
+      {
+        "line": "pd.cut(df[\"hours_played\"],",
+        "explain": "Sort the hours into ranges..."
+      },
+      {
+        "line": "bins=[0, 100, 300, 1000],",
+        "explain": "...0–100, 100–300 and 300–1000..."
+      },
+      {
+        "line": "labels=[\"Casual\", \"Regular\", \"Hardcore\"])",
+        "explain": "...named Casual, Regular and Hardcore."
+      },
+      {
+        "line": "df[[\"username\", \"hours_played\", \"level\"]]",
+        "explain": "See each player's level."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many players will be Regular (over 100, up to 300 hours)?",
+      "type": "predict",
+      "code": "pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"]).value_counts()",
+      "options": [
+        "3",
+        "4",
+        "5"
+      ],
+      "answer": "4",
+      "hints": [
+        "Look for hours between 101 and 300.",
+        "145, 275, 198 and 133."
+      ],
+      "solution_lines": [
+        {
+          "line": "bins=[0, 100, 300, 1000]",
+          "explain": "Regular is over 100 and up to 300: 4 players."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so Regular means over 100 and up to 300 hours.",
+      "type": "fill",
+      "code": "pd.cut(df[\"hours_played\"], bins=[0, 100, ___, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])",
+      "answer": "pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])",
+      "compare": "table",
+      "hints": [
+        "The bins list holds the edges of the ranges, in order.",
+        "300"
+      ],
+      "solution_lines": [
+        {
+          "line": "bins=[0, 100, 300, 1000]",
+          "explain": "Edges at 0, 100, 300 and 1000 make three ranges."
+        }
+      ]
+    },
+    {
+      "prompt": "Add a level column using pd.cut (Casual, Regular, Hardcore, with the bins from the example), then show username and level.",
+      "type": "write",
+      "answer": "df[\"level\"] = pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])\ndf[[\"username\", \"level\"]]",
+      "compare": "table",
+      "require": [
+        "cut"
+      ],
+      "hints": [
+        "Same as the example, but show two columns.",
+        "df[\"level\"] = pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"]), then df[[\"username\", \"level\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"level\"] = pd.cut(...)",
+          "explain": "Label every player."
+        },
+        {
+          "line": "df[[\"username\", \"level\"]]",
+          "explain": "See the result."
+        }
+      ]
+    },
+    {
+      "prompt": "Count the players in each level, in the order Casual, Regular, Hardcore.",
+      "type": "write",
+      "answer": "pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"]).value_counts().sort_index()",
+      "compare": "table",
+      "require": [
+        "cut"
+      ],
+      "hints": [
+        "value_counts() sorts by count. sort_index() puts them back in label order.",
+        "pd.cut(...).value_counts().sort_index()"
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.cut(...).value_counts()",
+          "explain": "Count each level."
+        },
+        {
+          "line": ".sort_index()",
+          "explain": "Order them Casual, Regular, Hardcore: 3, 4, 3."
+        }
+      ]
+    },
+    {
+      "prompt": "Add the level column, then show the average hours per level, rounded to 1 decimal.",
+      "type": "write",
+      "answer": "df[\"level\"] = pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])\ndf.groupby(\"level\", observed=True)[\"hours_played\"].mean().round(1)",
+      "compare": "table",
+      "require": [
+        "cut",
+        "groupby"
+      ],
+      "hints": [
+        "Make the column, then groupby it. Add observed=True inside groupby() for category columns, to avoid a warning.",
+        "df.groupby(\"level\", observed=True)[\"hours_played\"].mean().round(1)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"level\"] = pd.cut(...)",
+          "explain": "Label the players."
+        },
+        {
+          "line": "df.groupby(\"level\", observed=True)[\"hours_played\"].mean().round(1)",
+          "explain": "Average hours: Casual 46.7, Regular 187.8, Hardcore 477.3."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to turn numbers into categories with pd.cut(bins=..., labels=...), then count and summarise each category."
+}

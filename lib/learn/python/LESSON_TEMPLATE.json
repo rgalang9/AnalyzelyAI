@@ -1,0 +1,65 @@
+{
+  "id": "py-02",
+  "level": 1,
+  "title": "Loading data with pandas",
+  "datasets": ["games"],
+  "setup": "import pandas as pd",
+  "explanation": "Short friendly intro to ONE new idea. Explain every new word the first time it appears.",
+  "example": {
+    "code": "df = pd.read_csv(\"games.csv\")\ndf.head(3)",
+    "lines": [
+      { "line": "df = pd.read_csv(\"games.csv\")", "explain": "Read the games file into a table called df." },
+      { "line": "df.head(3)", "explain": "Show the first 3 rows of the table." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will this show?",
+      "type": "predict",
+      "code": "df = pd.read_csv(\"games.csv\")\ndf.head()",
+      "options": ["3", "5", "15"],
+      "answer": "5",
+      "hints": ["Nudge toward the idea.", "Bigger hint pointing at the exact part."],
+      "solution_lines": [
+        { "line": "df.head()", "explain": "With nothing in the brackets, head() shows 5 rows." }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to read games.csv into df.",
+      "type": "fill",
+      "code": "df = pd.___(\"games.csv\")\ndf.head()",
+      "answer": "df = pd.read_csv(\"games.csv\")\ndf.head()",
+      "compare": "table",
+      "hints": ["...", "..."],
+      "solution_lines": [{ "line": "...", "explain": "..." }]
+    },
+    {
+      "prompt": "Show the first 2 rows. The first line is done for you.",
+      "type": "write",
+      "starter": "df = pd.read_csv(\"games.csv\")",
+      "answer": "df = pd.read_csv(\"games.csv\")\ndf.head(2)",
+      "compare": "table",
+      "hints": ["...", "..."],
+      "solution_lines": [{ "line": "...", "explain": "..." }]
+    },
+    {
+      "prompt": "Print how many rows the table has.",
+      "type": "write",
+      "answer": "df = pd.read_csv(\"games.csv\")\nprint(len(df))",
+      "compare": "print",
+      "require": ["read_csv"],
+      "hints": ["...", "..."],
+      "solution_lines": [{ "line": "...", "explain": "..." }]
+    },
+    {
+      "prompt": "Run this code to see your first table.",
+      "type": "run",
+      "code": "df = pd.read_csv(\"games.csv\")\ndf.head()",
+      "answer": "df = pd.read_csv(\"games.csv\")\ndf.head()",
+      "compare": "table",
+      "hints": ["Press the Run button, or Cmd+Enter."],
+      "solution_lines": [{ "line": "...", "explain": "..." }]
+    }
+  ],
+  "recap": "You just learned ... (one or two sentences)."
+}

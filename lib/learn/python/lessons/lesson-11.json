@@ -1,0 +1,131 @@
+{
+  "id": "py-11",
+  "level": 2,
+  "title": "loc and iloc",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "Back to the games! Every row has a label on the left, called the index: 0, 1, 2 and so on. loc picks rows and columns by label or by condition: df.loc[rows, columns]. For example, df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]] filters and picks columns in one step. iloc picks by position number instead, like a list: df.iloc[0] is the first row, and df.iloc[:3, :2] is the first 3 rows and first 2 columns. :3 means 'from the start up to (not including) 3'.",
+  "example": {
+    "code": "df.loc[df[\"genre\"] == \"Shooter\", [\"title\", \"price\"]]",
+    "lines": [
+      {
+        "line": "df.loc[",
+        "explain": "loc: pick by label or condition. Inside: rows, then columns."
+      },
+      {
+        "line": "df[\"genre\"] == \"Shooter\",",
+        "explain": "Rows: only Shooter games."
+      },
+      {
+        "line": "[\"title\", \"price\"]]",
+        "explain": "Columns: only title and price. Result: Fortnite and Valorant."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(df.iloc[0][\"title\"])",
+      "options": [
+        "Minecraft",
+        "Fortnite",
+        "An error"
+      ],
+      "answer": "Minecraft",
+      "hints": [
+        "iloc[0] is the row in position 0.",
+        "Position 0 is the first row."
+      ],
+      "solution_lines": [
+        {
+          "line": "df.iloc[0]",
+          "explain": "The first row (position 0): Minecraft."
+        },
+        {
+          "line": "[\"title\"]",
+          "explain": "Then its title."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to show the first 5 rows and the first 3 columns.",
+      "type": "fill",
+      "code": "df.iloc[___, :3]",
+      "answer": "df.iloc[:5, :3]",
+      "compare": "table",
+      "hints": [
+        "The columns part :3 means 'up to 3'. Do the same for rows.",
+        "Type :5"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.iloc[:5, :3]",
+          "explain": "Rows from the start up to 5, columns from the start up to 3."
+        }
+      ]
+    },
+    {
+      "prompt": "Using loc, show the title and rating of RPG games.",
+      "type": "write",
+      "answer": "df.loc[df[\"genre\"] == \"RPG\", [\"title\", \"rating\"]]",
+      "compare": "table",
+      "require": [
+        "loc"
+      ],
+      "hints": [
+        "df.loc[condition, list of columns]",
+        "df.loc[df[\"genre\"] == \"RPG\", [\"title\", \"rating\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.loc[df[\"genre\"] == \"RPG\", [\"title\", \"rating\"]]",
+          "explain": "Rows: RPG games. Columns: title and rating. Elden Ring and The Witcher 3."
+        }
+      ]
+    },
+    {
+      "prompt": "Using loc, show the title and genre of every free game.",
+      "type": "write",
+      "answer": "df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]]",
+      "compare": "table",
+      "require": [
+        "loc"
+      ],
+      "hints": [
+        "A free game has a price of 0.",
+        "df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]]",
+          "explain": "Free games: Fortnite, League of Legends and Valorant."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(df.loc[2, \"title\"])",
+      "options": [
+        "Fortnite",
+        "Super Mario Odyssey",
+        "Mario Kart 8 Deluxe"
+      ],
+      "answer": "Super Mario Odyssey",
+      "hints": [
+        "loc uses the row label, and labels start at 0.",
+        "Label 0 is Minecraft, 1 is Fortnite, so 2 is..."
+      ],
+      "solution_lines": [
+        {
+          "line": "df.loc[2, \"title\"]",
+          "explain": "Row label 2 is the third game, Super Mario Odyssey. The title column gives its name."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned loc (pick by label or condition: df.loc[rows, columns]) and iloc (pick by position, like df.iloc[:3, :2])."
+}

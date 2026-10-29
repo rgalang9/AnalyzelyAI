@@ -1,0 +1,5 @@
+order_id,customer,restaurant,order_date,total,tip,minutes
+11,Kai,Sushi Spot,2026-04-05,38.00,6.00,40
+12,Lena,Pizza Palace,2026-04-09,22.00,,29
+13,Ava,Taco Town,2026-04-14,16.50,2.50,20
+14,Ben,Burger Barn,2026-04-20,14.00,1.00,33

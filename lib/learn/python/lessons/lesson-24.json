@@ -1,0 +1,122 @@
+{
+  "id": "py-24",
+  "level": 4,
+  "title": "Histograms, scatter plots and correlation",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")",
+  "explanation": "Back to the study log. A histogram (kind=\"hist\") shows how values are spread out: how many scores fall in each range. A scatter plot (kind=\"scatter\", x=..., y=...) puts one dot per row, to see if two columns move together. Correlation puts a number on it, from -1 to 1: near 1 means they rise together, near -1 means one goes down as the other goes up, and near 0 means no clear link. Use df[\"a\"].corr(df[\"b\"]). Careful: correlation doesn't prove that one causes the other!",
+  "example": {
+    "code": "df.plot(kind=\"scatter\", x=\"minutes\", y=\"score\")",
+    "lines": [
+      {
+        "line": "df.plot(kind=\"scatter\", x=\"minutes\", y=\"score\")",
+        "explain": "One dot per study session: minutes across, score up. The dots climb from left to right."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what's the correlation between minutes studied and score?",
+      "type": "predict",
+      "code": "print(round(df[\"minutes\"].corr(df[\"score\"]), 2))",
+      "options": [
+        "About 0.9",
+        "About -0.9",
+        "About 0"
+      ],
+      "answer": "About 0.9",
+      "hints": [
+        "In the scatter plot, longer sessions tend to have higher scores.",
+        "Rising together means a positive number close to 1."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"minutes\"].corr(df[\"score\"])",
+          "explain": "0.94: a strong positive link. More study minutes go with higher scores. (It doesn't prove the minutes caused the score.)"
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to plot minutes against score.",
+      "type": "fill",
+      "code": "df.plot(kind=\"scatter\", x=\"minutes\", y=___)",
+      "answer": "df.plot(kind=\"scatter\", x=\"minutes\", y=\"score\")",
+      "compare": "chart",
+      "hints": [
+        "Score goes up the side (y).",
+        "\"score\""
+      ],
+      "solution_lines": [
+        {
+          "line": "y=\"score\"",
+          "explain": "Score on the vertical axis."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a histogram of the scores.",
+      "type": "write",
+      "answer": "df[\"score\"].plot(kind=\"hist\")",
+      "compare": "chart",
+      "require": [
+        "hist"
+      ],
+      "hints": [
+        "Pick the score column, then plot with kind=\"hist\".",
+        "df[\"score\"].plot(kind=\"hist\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"score\"].plot(kind=\"hist\")",
+          "explain": "Bars show how many scores fall in each range. Most are in the 70s and 80s."
+        }
+      ]
+    },
+    {
+      "prompt": "Print the correlation between minutes and score, rounded to 2 decimals.",
+      "type": "write",
+      "answer": "print(round(df[\"minutes\"].corr(df[\"score\"]), 2))",
+      "compare": "print",
+      "require": [
+        "corr"
+      ],
+      "hints": [
+        "df[\"a\"].corr(df[\"b\"]) gives one number. Wrap it in round(..., 2).",
+        "print(round(df[\"minutes\"].corr(df[\"score\"]), 2))"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"minutes\"].corr(df[\"score\"])",
+          "explain": "The correlation."
+        },
+        {
+          "line": "round(..., 2)",
+          "explain": "0.94."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the correlation table for the minutes and score columns, rounded to 2 decimals.",
+      "type": "write",
+      "answer": "df[[\"minutes\", \"score\"]].corr().round(2)",
+      "compare": "table",
+      "hints": [
+        "corr() on a table of several columns gives a grid of correlations.",
+        "df[[\"minutes\", \"score\"]].corr().round(2)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[[\"minutes\", \"score\"]].corr()",
+          "explain": "Each column compared with each other one. The diagonal is always 1: a column vs itself."
+        },
+        {
+          "line": ".round(2)",
+          "explain": "Tidy decimals."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned histograms (spread), scatter plots (two columns together) and correlation (one number for how they move together), and that correlation isn't causation."
+}

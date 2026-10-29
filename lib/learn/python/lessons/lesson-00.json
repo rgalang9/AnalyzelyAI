@@ -1,0 +1,80 @@
+{
+  "id": "py-00",
+  "level": 0,
+  "title": "Meet Python",
+  "datasets": [],
+  "setup": "",
+  "explanation": "Python is a programming language: a way to give a computer step-by-step instructions by typing them. Data analysts use it every day. Later in this course you'll use pandas, a free Python tool for working with tables, a bit like Excel but with code. First, let's get comfortable with the screen. Hover over each part to see what it does.",
+  "tour": [
+    { "target": "lesson_list", "explain": "Your lessons. The one you're on is highlighted. Finish it to unlock the next one." },
+    { "target": "explanation", "explain": "Each lesson starts here: a short explanation and one worked example." },
+    { "target": "editor", "explain": "The code editor. This is where you type Python." },
+    { "target": "run_button", "explain": "Press Run (or Cmd+Enter / Ctrl+Enter) to run your code." },
+    { "target": "output", "explain": "Your results appear here: printed text, tables, or charts." },
+    { "target": "hint_button", "explain": "Stuck? Hints unlock after a short pause, and get more detailed each time." }
+  ],
+  "example": {
+    "code": "print(\"Hello, Analyzely!\")",
+    "lines": [
+      { "line": "print(\"Hello, Analyzely!\")", "explain": "print() shows whatever is inside the brackets in the output box. Text goes inside quotes." }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Run your first line of Python. The code is already written: just press Run.",
+      "type": "run",
+      "code": "print(\"Hello, Analyzely!\")",
+      "answer": "print(\"Hello, Analyzely!\")",
+      "compare": "print",
+      "hints": ["Look for the purple Run button next to the editor.", "Click Run, or press Cmd+Enter (Ctrl+Enter on Windows)."],
+      "solution_lines": [
+        { "line": "print(\"Hello, Analyzely!\")", "explain": "print() shows the text inside the quotes in the output box." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(2 + 3)",
+      "options": ["5", "2 + 3", "23"],
+      "answer": "5",
+      "hints": ["There are no quotes, so Python treats these as numbers.", "With numbers, + means add."],
+      "solution_lines": [
+        { "line": "print(2 + 3)", "explain": "No quotes means numbers. Python adds them and prints 5." }
+      ]
+    },
+    {
+      "prompt": "Predict first: what will this print? Look closely at the quotes.",
+      "type": "predict",
+      "code": "print(\"2\" + \"3\")",
+      "options": ["5", "23", "An error"],
+      "answer": "23",
+      "hints": ["The quotes make \"2\" and \"3\" text, not numbers.", "With text, + glues the pieces together."],
+      "solution_lines": [
+        { "line": "print(\"2\" + \"3\")", "explain": "In quotes, \"2\" and \"3\" are text. + joins text end to end, so you get 23. This mix-up causes real bugs, so watch for quotes!" }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so the code prints 20. In Python, * means multiply.",
+      "type": "fill",
+      "code": "print(10 ___ 2)",
+      "answer": "print(10 * 2)",
+      "compare": "print",
+      "hints": ["Which symbol turns 10 and 2 into 20?", "Type * (multiply) in the blank."],
+      "solution_lines": [
+        { "line": "print(10 * 2)", "explain": "* multiplies, so 10 * 2 is 20." }
+      ]
+    },
+    {
+      "prompt": "Now write your own line: print how many hours are in a week (7 days, 24 hours a day). Let Python do the maths.",
+      "type": "write",
+      "answer": "print(7 * 24)",
+      "compare": "print",
+      "require": ["print", "*"],
+      "hints": ["You need print() with a multiplication inside the brackets.", "print(7 * 24)"],
+      "solution_lines": [
+        { "line": "print(7 * 24)", "explain": "Python works out 7 * 24 first, then print() shows the answer: 168." }
+      ]
+    }
+  ],
+  "recap": "You ran your first Python code! print() shows results, numbers can do maths (+ and *), and quotes turn things into text."
+}

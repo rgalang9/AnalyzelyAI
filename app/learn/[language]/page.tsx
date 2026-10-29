@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { findReleasedLanguage, LEARN_LANGUAGES } from "@/lib/learn/languages";
-import { getLessons, summarize } from "@/lib/learn/load-lessons";
+import { findReleasedLanguage, isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
+import { getLessonSummaries } from "@/lib/learn/load-lessons";
 import LessonList from "../lesson-list";
+import PythonPreload from "../python-preload";
 
-// Build a page for each released language ahead of time
+// Build a page for each open language ahead of time
 export function generateStaticParams() {
-  return LEARN_LANGUAGES.filter((l) => l.released).map((l) => ({ language: l.slug }));
+  return LEARN_LANGUAGES.filter(isOpen).map((l) => ({ language: l.slug }));
 }
 
 // The Learn page for one language, e.g. /learn/sql: the list of lessons.
@@ -25,7 +26,7 @@ async function LessonListPage({ params }: { params: PageProps<"/learn/[language]
   const lang = findReleasedLanguage(language);
   if (!lang) notFound();
 
-  const lessons = summarize(getLessons(language));
+  const lessons = getLessonSummaries(language);
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-12">
@@ -35,6 +36,7 @@ async function LessonListPage({ params }: { params: PageProps<"/learn/[language]
       ) : (
         <LessonList language={language} lessons={lessons} />
       )}
+      {language === "python" && <PythonPreload />}
     </main>
   );
 }

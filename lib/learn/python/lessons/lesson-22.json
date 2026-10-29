@@ -1,0 +1,126 @@
+{
+  "id": "py-22",
+  "level": 4,
+  "title": "Working with dates",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf[\"order_date\"] = pd.to_datetime(df[\"order_date\"])",
+  "explanation": "Back to deliveries. The setup has already turned order_date into real dates with pd.to_datetime() (Lesson 16). Real dates come with a .dt toolbox: .dt.year, .dt.month (1 to 12), .dt.day, and .dt.day_name() for Monday, Tuesday and so on. You can filter by them (df[df[\"order_date\"].dt.month == 3]) or group by them to see trends over time.",
+  "example": {
+    "code": "df[\"month\"] = df[\"order_date\"].dt.month\ndf[[\"customer\", \"order_date\", \"month\"]]",
+    "lines": [
+      {
+        "line": "df[\"month\"] = df[\"order_date\"].dt.month",
+        "explain": "Pull the month number out of each date."
+      },
+      {
+        "line": "df[[\"customer\", \"order_date\", \"month\"]]",
+        "explain": "Show it next to the date."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many different months do these orders cover?",
+      "type": "predict",
+      "code": "print(df[\"order_date\"].dt.month.nunique())",
+      "options": [
+        "3",
+        "4",
+        "10"
+      ],
+      "answer": "4",
+      "hints": [
+        "Look at the order dates: they run from January to early April.",
+        "January, February, March and April."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"order_date\"].dt.month.nunique()",
+          "explain": "4 different months, 1 to 4."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to add a month column.",
+      "type": "fill",
+      "code": "df[\"month\"] = df[\"order_date\"].dt.___\ndf",
+      "answer": "df[\"month\"] = df[\"order_date\"].dt.month\ndf",
+      "compare": "table",
+      "hints": [
+        "The month part of a date.",
+        "month"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"order_date\"].dt.month",
+          "explain": "The month number of each date."
+        }
+      ]
+    },
+    {
+      "prompt": "Count the orders in each month, using groupby.",
+      "type": "write",
+      "answer": "df.groupby(df[\"order_date\"].dt.month)[\"order_id\"].count()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "You can group by the month directly: df.groupby(df[\"order_date\"].dt.month).",
+        "df.groupby(df[\"order_date\"].dt.month)[\"order_id\"].count()"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.groupby(df[\"order_date\"].dt.month)",
+          "explain": "One group per month."
+        },
+        {
+          "line": "[\"order_id\"].count()",
+          "explain": "Count orders: 2, 3, 4, 1. March was busiest."
+        }
+      ]
+    },
+    {
+      "prompt": "Show only the orders placed in March.",
+      "type": "write",
+      "answer": "df[df[\"order_date\"].dt.month == 3]",
+      "compare": "table",
+      "hints": [
+        "Filter (Lesson 7) using the month. March is month 3.",
+        "df[df[\"order_date\"].dt.month == 3]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"order_date\"].dt.month == 3]",
+          "explain": "Keep rows where the month is 3: 4 orders."
+        }
+      ]
+    },
+    {
+      "prompt": "Add a day column with the weekday name (like Monday), then show customer and day.",
+      "type": "write",
+      "answer": "df[\"day\"] = df[\"order_date\"].dt.day_name()\ndf[[\"customer\", \"day\"]]",
+      "compare": "table",
+      "require": [
+        "day_name"
+      ],
+      "hints": [
+        "day_name() has brackets, because it's a function.",
+        "df[\"day\"] = df[\"order_date\"].dt.day_name(), then df[[\"customer\", \"day\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"order_date\"].dt.day_name()",
+          "explain": "Turn each date into its weekday name."
+        },
+        {
+          "line": "df[[\"customer\", \"day\"]]",
+          "explain": "Show who ordered on which day."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned the .dt toolbox: year, month, day and day_name(), for filtering and grouping by time."
+}

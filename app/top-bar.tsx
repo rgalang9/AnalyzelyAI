@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, FolderOpen, LogOut } from "lucide-react";
-import { LEARN_LANGUAGES } from "@/lib/learn/languages";
+import { isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
 import { createClient } from "@/lib/supabase/client";
 import { useDataset } from "./dataset-context";
 import { useUserEmail } from "./use-user-email";
@@ -157,7 +157,7 @@ function LearnMenu({ active }: { active: boolean }) {
           <ul className={menuPanelClass}>
             {LEARN_LANGUAGES.map((lang) => (
               <li key={lang.slug}>
-                {lang.released ? (
+                {isOpen(lang) ? (
                   <Link
                     href={`/learn/${lang.slug}`}
                     onClick={() => setOpen(false)}

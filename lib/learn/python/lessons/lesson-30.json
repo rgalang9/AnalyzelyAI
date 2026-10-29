@@ -1,0 +1,158 @@
+{
+  "id": "py-30",
+  "level": 5,
+  "title": "Method chaining",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")",
+  "explanation": "You've already chained steps, like df.groupby(...).mean().round(2). Pros write whole analyses as one readable chain. Wrap it in round brackets so each step can sit on its own line. assign() adds a new column inside a chain: .assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"]). The lambda d means 'the table at this point in the chain'. Chains read top to bottom like a recipe: filter, then add, then sort, then show.",
+  "example": {
+    "code": "(\n    df.dropna(subset=[\"tip\"])\n    .assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"])\n    .sort_values(\"with_tip\", ascending=False)\n    .head(3)\n)",
+    "lines": [
+      {
+        "line": "df.dropna(subset=[\"tip\"])",
+        "explain": "Step 1: drop orders with no tip."
+      },
+      {
+        "line": ".assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"])",
+        "explain": "Step 2: add a with_tip column."
+      },
+      {
+        "line": ".sort_values(\"with_tip\", ascending=False)",
+        "explain": "Step 3: biggest first."
+      },
+      {
+        "line": ".head(3)",
+        "explain": "Step 4: the top 3. The round brackets let the chain span several lines."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will this show?",
+      "type": "predict",
+      "code": "df.dropna(subset=[\"tip\"]).head(10)",
+      "options": [
+        "3",
+        "7",
+        "10"
+      ],
+      "answer": "7",
+      "hints": [
+        "head(10) can't show more rows than there are.",
+        "3 of the 10 orders have no tip."
+      ],
+      "solution_lines": [
+        {
+          "line": "df.dropna(subset=[\"tip\"])",
+          "explain": "Only 7 orders have a tip."
+        },
+        {
+          "line": ".head(10)",
+          "explain": "Asks for up to 10, but only 7 exist."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to sort by with_tip, biggest first.",
+      "type": "fill",
+      "code": "df.assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"]).___(\"with_tip\", ascending=False)",
+      "answer": "df.assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"]).sort_values(\"with_tip\", ascending=False)",
+      "compare": "table",
+      "hints": [
+        "The sorting function from Lesson 9.",
+        "sort_values"
+      ],
+      "solution_lines": [
+        {
+          "line": ".sort_values(\"with_tip\", ascending=False)",
+          "explain": "Sort by the new column, biggest first."
+        }
+      ]
+    },
+    {
+      "prompt": "In one chain: drop orders with no tip, sort by tip (biggest first), and show customer and tip.",
+      "type": "write",
+      "answer": "df.dropna(subset=[\"tip\"]).sort_values(\"tip\", ascending=False)[[\"customer\", \"tip\"]]",
+      "compare": "table",
+      "require": [
+        "dropna",
+        "sort_values"
+      ],
+      "hints": [
+        "dropna, then sort_values, then pick columns.",
+        "df.dropna(subset=[\"tip\"]).sort_values(\"tip\", ascending=False)[[\"customer\", \"tip\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.dropna(subset=[\"tip\"])",
+          "explain": "Remove orders with no tip."
+        },
+        {
+          "line": ".sort_values(\"tip\", ascending=False)",
+          "explain": "Biggest tip first."
+        },
+        {
+          "line": "[[\"customer\", \"tip\"]]",
+          "explain": "Finn, Chloe, Diego..."
+        }
+      ]
+    },
+    {
+      "prompt": "In one chain: the average delivery minutes per restaurant, rounded to 1 decimal, fastest first.",
+      "type": "write",
+      "answer": "df.groupby(\"restaurant\")[\"minutes\"].mean().round(1).sort_values()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby, mean, round, then sort (smallest first is the default).",
+        "df.groupby(\"restaurant\")[\"minutes\"].mean().round(1).sort_values()"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.groupby(\"restaurant\")[\"minutes\"].mean()",
+          "explain": "Average minutes per restaurant."
+        },
+        {
+          "line": ".round(1).sort_values()",
+          "explain": "Taco Town is fastest at 20.0."
+        }
+      ]
+    },
+    {
+      "prompt": "In one chain: keep orders over 30 minutes, add per_minute (total ÷ minutes, rounded to 2) with assign, sort by per_minute biggest first, and show customer and per_minute.",
+      "type": "write",
+      "answer": "df[df[\"minutes\"] > 30].assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2)).sort_values(\"per_minute\", ascending=False)[[\"customer\", \"per_minute\"]]",
+      "compare": "table",
+      "require": [
+        "assign"
+      ],
+      "hints": [
+        "Filter, assign, sort, pick. Wrap it in round brackets to split it over lines if you like.",
+        "df[df[\"minutes\"] > 30].assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2)).sort_values(\"per_minute\", ascending=False)[[\"customer\", \"per_minute\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"minutes\"] > 30]",
+          "explain": "Slow-ish deliveries only."
+        },
+        {
+          "line": ".assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2))",
+          "explain": "Dollars per minute."
+        },
+        {
+          "line": ".sort_values(\"per_minute\", ascending=False)",
+          "explain": "Best value first."
+        },
+        {
+          "line": "[[\"customer\", \"per_minute\"]]",
+          "explain": "Finn leads at 1.45."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned method chaining: write a whole analysis as one readable recipe, using assign() to add columns along the way."
+}

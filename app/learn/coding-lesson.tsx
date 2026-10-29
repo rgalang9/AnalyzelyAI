@@ -15,7 +15,7 @@ import {
 } from "@/lib/learn/sql/runner";
 import ResultsGrid from "./results-grid";
 import SchemaPanel from "./schema-panel";
-import SqlEditor from "./sql-editor";
+import CodeEditor from "./code-editor";
 import { LessonDone, SolutionModal, TablePreviewModal } from "./lesson-parts";
 import {
   ExplanationRecall,
@@ -256,7 +256,7 @@ export default function CodingLessonPlayer({
 
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="relative h-56 shrink-0 overflow-auto border-b border-zinc-200">
-              <SqlEditor value={code} onChange={setCode} onRun={handleRun} readOnly={editorLocked} />
+              <CodeEditor language="sql" value={code} onChange={setCode} onRun={handleRun} readOnly={editorLocked} />
               {!started && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-6 text-center text-sm text-zinc-600">
                   🔒 Read the explanation and example, then press &ldquo;Got it&rdquo; to start.

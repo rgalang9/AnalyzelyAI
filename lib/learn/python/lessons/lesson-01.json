@@ -1,0 +1,84 @@
+{
+  "id": "py-01",
+  "level": 1,
+  "title": "Variables, numbers and text",
+  "datasets": [],
+  "setup": "",
+  "explanation": "A variable is a name that stores a value, so you can use it later. You make one with =, like price = 29.99. Here = means 'store this', not 'equals'. A value can be a number (29.99, 2017) or text, which goes in quotes (\"Minecraft\"). print() can show several things at once: separate them with commas, and Python puts a space between each one.",
+  "example": {
+    "code": "title = \"Minecraft\"\nprice = 29.99\nprint(title, \"costs\", price)",
+    "lines": [
+      { "line": "title = \"Minecraft\"", "explain": "Make a variable called title and store the text Minecraft in it. Text always goes in quotes." },
+      { "line": "price = 29.99", "explain": "Make a variable called price and store the number 29.99. Numbers don't use quotes." },
+      { "line": "print(title, \"costs\", price)", "explain": "Show three things with spaces between them: the title, the word costs, and the price. Output: Minecraft costs 29.99" }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "price = 20\nprice = price + 5\nprint(price)",
+      "options": ["20", "25", "price + 5"],
+      "answer": "25",
+      "hints": ["Python runs the lines from top to bottom.", "Line 2 takes the old price (20), adds 5, and stores the result back in price."],
+      "solution_lines": [
+        { "line": "price = 20", "explain": "price starts at 20." },
+        { "line": "price = price + 5", "explain": "Work out the right side first (20 + 5 = 25), then store it in price. The old 20 is replaced." },
+        { "line": "print(price)", "explain": "price is now 25." }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank: store the text Fortnite in a variable called game, then print it.",
+      "type": "fill",
+      "code": "game = ___\nprint(game)",
+      "answer": "game = \"Fortnite\"\nprint(game)",
+      "compare": "print",
+      "hints": ["Fortnite is text, not a number. What does text need around it?", "Type \"Fortnite\" with the quotes."],
+      "solution_lines": [
+        { "line": "game = \"Fortnite\"", "explain": "Store the text Fortnite in game. The quotes tell Python it's text." },
+        { "line": "print(game)", "explain": "Show what's stored in game. No quotes here: we want the variable, not the word game." }
+      ]
+    },
+    {
+      "prompt": "Elden Ring costs 59.99. The first line is done for you. Add a line that prints the cost of buying two copies.",
+      "type": "write",
+      "starter": "price = 59.99",
+      "answer": "price = 59.99\nprint(price * 2)",
+      "compare": "print",
+      "require": ["price"],
+      "hints": ["Use the price variable instead of typing 59.99 again.", "print(price * 2)"],
+      "solution_lines": [
+        { "line": "price = 59.99", "explain": "Store the price." },
+        { "line": "print(price * 2)", "explain": "Multiply the stored price by 2 and show it: 119.98." }
+      ]
+    },
+    {
+      "prompt": "Make a variable title set to Stardew Valley and a variable year set to 2016. Then print both so the output reads: Stardew Valley 2016",
+      "type": "write",
+      "answer": "title = \"Stardew Valley\"\nyear = 2016\nprint(title, year)",
+      "compare": "print",
+      "require": ["title", "year"],
+      "hints": ["You need three lines: two variables, then one print(). Only the title needs quotes.", "title = \"Stardew Valley\", then year = 2016, then print(title, year)"],
+      "solution_lines": [
+        { "line": "title = \"Stardew Valley\"", "explain": "Text in quotes." },
+        { "line": "year = 2016", "explain": "A number, so no quotes." },
+        { "line": "print(title, year)", "explain": "The comma shows both, with a space between them." }
+      ]
+    },
+    {
+      "prompt": "Three reviewers rated a game 9, 8 and 10. Store the three scores in variables a, b and c, then print their average. (/ means divide.)",
+      "type": "write",
+      "answer": "a = 9\nb = 8\nc = 10\nprint((a + b + c) / 3)",
+      "compare": "print",
+      "require": ["/"],
+      "hints": ["Average = add them up, then divide by how many there are. Use brackets so the adding happens first.", "print((a + b + c) / 3)"],
+      "solution_lines": [
+        { "line": "a = 9", "explain": "First score." },
+        { "line": "b = 8", "explain": "Second score." },
+        { "line": "c = 10", "explain": "Third score." },
+        { "line": "print((a + b + c) / 3)", "explain": "Brackets first: 9 + 8 + 10 = 27. Then 27 / 3 = 9.0. Dividing always gives a decimal number in Python, so you see 9.0, not 9." }
+      ]
+    }
+  ],
+  "recap": "You just learned to store values in variables with =, tell numbers from text (quotes!), do maths with + * /, and print several things at once with commas."
+}

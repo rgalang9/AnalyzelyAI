@@ -1,0 +1,131 @@
+{
+  "id": "py-25",
+  "level": 4,
+  "title": "Pivot tables",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")",
+  "explanation": "A pivot table is a summary grid, just like in Excel: one column's values go down the side (index), another's go across the top (columns), and the cells are filled with a summary (aggfunc) of a third column (values). df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\") gives each student's average score in each subject. Use aggfunc=\"sum\" to add up, or \"count\" to count.",
+  "example": {
+    "code": "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")",
+    "lines": [
+      {
+        "line": "values=\"score\"",
+        "explain": "Fill the cells with scores."
+      },
+      {
+        "line": "index=\"student\"",
+        "explain": "One row per student."
+      },
+      {
+        "line": "columns=\"subject\"",
+        "explain": "One column per subject."
+      },
+      {
+        "line": "aggfunc=\"mean\"",
+        "explain": "Average them, if there's more than one."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what shape will this pivot table have, as (rows, columns)?",
+      "type": "predict",
+      "code": "print(df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\").shape)",
+      "options": [
+        "(4, 3)",
+        "(3, 4)",
+        "(12, 5)"
+      ],
+      "answer": "(4, 3)",
+      "hints": [
+        "Rows come from index (students), columns from columns (subjects).",
+        "4 students and 3 subjects."
+      ],
+      "solution_lines": [
+        {
+          "line": "index=\"student\", columns=\"subject\"",
+          "explain": "4 students down the side, 3 subjects across: (4, 3)."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to show the TOTAL minutes per student per subject.",
+      "type": "fill",
+      "code": "df.pivot_table(values=\"minutes\", index=\"student\", columns=\"subject\", aggfunc=___)",
+      "answer": "df.pivot_table(values=\"minutes\", index=\"student\", columns=\"subject\", aggfunc=\"sum\")",
+      "compare": "table",
+      "hints": [
+        "Total means add up.",
+        "\"sum\""
+      ],
+      "solution_lines": [
+        {
+          "line": "aggfunc=\"sum\"",
+          "explain": "Add up the minutes in each cell."
+        }
+      ]
+    },
+    {
+      "prompt": "Make a pivot table of the average score, with students down the side and subjects across the top.",
+      "type": "write",
+      "answer": "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")",
+      "compare": "table",
+      "require": [
+        "pivot_table"
+      ],
+      "hints": [
+        "Same as the example.",
+        "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")",
+          "explain": "Average score for every student and subject."
+        }
+      ]
+    },
+    {
+      "prompt": "Make a pivot table of total minutes per subject (subjects down the side, no columns setting).",
+      "type": "write",
+      "answer": "df.pivot_table(values=\"minutes\", index=\"subject\", aggfunc=\"sum\")",
+      "compare": "table",
+      "require": [
+        "pivot_table"
+      ],
+      "hints": [
+        "Leave out columns= to get a single column.",
+        "df.pivot_table(values=\"minutes\", index=\"subject\", aggfunc=\"sum\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.pivot_table(values=\"minutes\", index=\"subject\", aggfunc=\"sum\")",
+          "explain": "Total minutes per subject: like a groupby, written as a pivot."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: in the average score pivot (students down, subjects across), what's Maya's Biology value?",
+      "type": "predict",
+      "code": "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")",
+      "options": [
+        "82",
+        "91",
+        "70"
+      ],
+      "answer": "91",
+      "hints": [
+        "Find Maya's Biology session in the data.",
+        "Maya only studied Biology once, scoring 91."
+      ],
+      "solution_lines": [
+        {
+          "line": "aggfunc=\"mean\"",
+          "explain": "Maya has one Biology session (91), so the average is 91. 82 is her Math score and 70 her Economics score."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned pivot tables: index down the side, columns across the top, and aggfunc to summarise the values. Excel's favourite tool, in code."
+}

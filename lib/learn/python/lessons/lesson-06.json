@@ -1,0 +1,126 @@
+{
+  "id": "py-06",
+  "level": 1,
+  "title": "Review: The Sneaker Store",
+  "datasets": [
+    "sneakers"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"sneakers.csv\")",
+  "explanation": "Level 1 review! This is a sneaker store, the same one from the SQL course. df already holds sneakers.csv: each row is one shoe, with its brand, category, release year, price and how many are in stock. No new ideas here, just everything from Level 1: loading and peeking, shape and describe(), picking columns, lists and dictionaries.",
+  "example": {
+    "code": "df[[\"name\", \"brand\"]].head(3)",
+    "lines": [
+      {
+        "line": "df[[\"name\", \"brand\"]].head(3)",
+        "explain": "Pick the name and brand columns, then show the first 3 rows."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(df.shape)",
+      "options": [
+        "(12, 7)",
+        "(7, 12)",
+        "(15, 7)"
+      ],
+      "answer": "(12, 7)",
+      "hints": [
+        "shape is (rows, columns). Count the shoes.",
+        "There are 12 shoes and 7 columns."
+      ],
+      "solution_lines": [
+        {
+          "line": "print(df.shape)",
+          "explain": "12 rows (shoes), 7 columns."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the first 4 shoes.",
+      "type": "write",
+      "answer": "df.head(4)",
+      "compare": "table",
+      "hints": [
+        "From Lesson 2.",
+        "df.head(4)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.head(4)",
+          "explain": "The first 4 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the name, brand and price of the last 3 shoes.",
+      "type": "write",
+      "answer": "df[[\"name\", \"brand\", \"price\"]].tail(3)",
+      "compare": "table",
+      "require": [
+        "tail"
+      ],
+      "hints": [
+        "Pick 3 columns (double brackets), then tail().",
+        "df[[\"name\", \"brand\", \"price\"]].tail(3)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[[\"name\", \"brand\", \"price\"]].tail(3)",
+          "explain": "Pick 3 columns, then show the last 3 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: what is the average (mean) price shown by this summary?",
+      "type": "predict",
+      "code": "df[\"price\"].describe()",
+      "options": [
+        "About 100",
+        "About 124",
+        "About 190"
+      ],
+      "answer": "About 124",
+      "hints": [
+        "The mean is the average: add all prices and divide by 12.",
+        "The prices add up to 1,485. 1,485 ÷ 12 is just under 124."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"price\"].describe()",
+          "explain": "describe() works on a single column too. The mean price is 123.75. (65 is the cheapest shoe and 190 the most expensive.)"
+        }
+      ]
+    },
+    {
+      "prompt": "Rename the stock column to in_stock, then show the name and in_stock columns for the first 5 shoes.",
+      "type": "write",
+      "answer": "df.rename(columns={\"stock\": \"in_stock\"})[[\"name\", \"in_stock\"]].head()",
+      "compare": "table",
+      "require": [
+        "rename"
+      ],
+      "hints": [
+        "Three steps chained together: rename, then pick columns, then head().",
+        "df.rename(columns={\"stock\": \"in_stock\"})[[\"name\", \"in_stock\"]].head()"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.rename(columns={\"stock\": \"in_stock\"})",
+          "explain": "Rename with a dictionary: old name to new name."
+        },
+        {
+          "line": "[[\"name\", \"in_stock\"]]",
+          "explain": "Pick two columns, using the NEW name."
+        },
+        {
+          "line": ".head()",
+          "explain": "Show the first 5 rows."
+        }
+      ]
+    }
+  ],
+  "recap": "Level 1 complete! You can load a dataset, size it up, pick the columns you need, and use lists and dictionaries, on any CSV file."
+}

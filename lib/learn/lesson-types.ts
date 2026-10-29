@@ -76,3 +76,70 @@ export type Lesson = z.infer<typeof LessonSchema>;
 
 // What the lesson list needs to know about each lesson
 export type LessonSummary = { id: string; number: number; title: string; level: number };
+
+// ---------- Python lessons (lib/learn/python/lessons/*.json) ----------
+// Answers are checked by what the code produces, never by the exact code:
+// "print" compares the printed text, "table" compares the table on the last line.
+
+const PyCompareSchema = z.enum(["print", "table"]);
+
+const pyTaskBase = {
+  prompt: z.string(),
+  hints: z.array(z.string()),
+  solution_lines: z.array(CodeLineSchema),
+};
+
+const PyWriteTaskSchema = z.object({
+  ...pyTaskBase,
+  type: z.literal("write"),
+  starter: z.string().optional(), // code already in the editor when the task opens
+  answer: z.string(), // code whose output the learner's output must match
+  compare: PyCompareSchema,
+  require: z.array(z.string()).optional(), // bits the code must contain, e.g. ["price"]
+});
+
+const PyFillTaskSchema = z.object({
+  ...pyTaskBase,
+  type: z.literal("fill"),
+  code: z.string(), // the code with ___ where each blank goes
+  answer: z.string(),
+  compare: PyCompareSchema,
+});
+
+const PyRunTaskSchema = z.object({
+  ...pyTaskBase,
+  type: z.literal("run"),
+  code: z.string(), // ready-made code: the learner just runs it
+  answer: z.string(),
+  compare: PyCompareSchema,
+});
+
+const PyPredictTaskSchema = z.object({
+  ...pyTaskBase,
+  type: z.literal("predict"),
+  code: z.string(),
+  options: z.array(z.string()),
+  answer: z.string(), // the correct option
+});
+
+export const PY_TOUR_TARGETS = ["lesson_list", "explanation", "editor", "run_button", "output", "hint_button"] as const;
+
+export const PythonLessonSchema = z.object({
+  id: z.string(),
+  level: z.number(),
+  title: z.string(),
+  datasets: z.array(z.string()), // "games" = datasets/games.csv, readable as "games.csv"
+  setup: z.string(), // runs before the learner's code (and before the answer), e.g. imports
+  explanation: z.string(),
+  tour: z.array(z.object({ target: z.enum(PY_TOUR_TARGETS), explain: z.string() })).optional(),
+  example: z.object({ code: z.string(), lines: z.array(CodeLineSchema) }),
+  tasks: z.array(
+    z.discriminatedUnion("type", [PyWriteTaskSchema, PyFillTaskSchema, PyRunTaskSchema, PyPredictTaskSchema])
+  ),
+  recap: z.string(),
+});
+
+export type PythonLesson = z.infer<typeof PythonLessonSchema>;
+export type PythonTask = PythonLesson["tasks"][number];
+export type PyCompare = z.infer<typeof PyCompareSchema>;
+export type PyTourTarget = (typeof PY_TOUR_TARGETS)[number];

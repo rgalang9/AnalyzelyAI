@@ -11,13 +11,14 @@ import {
   lineNumbers,
   placeholder,
 } from "@codemirror/view";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import { bracketMatching, HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { sql } from "@codemirror/lang-sql";
+import { python } from "@codemirror/lang-python";
 import { tags } from "@lezer/highlight";
 
-// Colors come from the --sql-* variables in globals.css
-const sqlColors = HighlightStyle.define([
+// Colors come from the --sql-* variables in globals.css (used for Python too)
+const codeColors = HighlightStyle.define([
   { tag: tags.keyword, color: "var(--sql-keyword)", fontWeight: "600" },
   { tag: [tags.function(tags.variableName), tags.standard(tags.name)], color: "var(--sql-function)" },
   { tag: tags.string, color: "var(--sql-string)" },
@@ -40,13 +41,21 @@ const editorTheme = EditorView.theme({
   ".cm-placeholder": { color: "#a1a1aa" },
 });
 
-// Code editor with line numbers and SQL colors. Ctrl/Cmd+Enter runs the query.
-export default function SqlEditor({
+// What changes per language: the colors, the empty-editor text, and Tab (Python needs it for indenting)
+const LANGUAGES = {
+  sql: { support: sql, placeholder: "Type your SQL here…", keys: [] },
+  python: { support: python, placeholder: "Type your Python here…", keys: [indentWithTab] },
+};
+
+// Code editor with line numbers and colors. Ctrl/Cmd+Enter runs the code.
+export default function CodeEditor({
+  language,
   value,
   onChange,
   onRun,
   readOnly,
 }: {
+  language: keyof typeof LANGUAGES;
   value: string;
   onChange: (value: string) => void;
   onRun: () => void;
@@ -79,12 +88,12 @@ export default function SqlEditor({
           history(),
           drawSelection(),
           bracketMatching(),
-          keymap.of([...defaultKeymap, ...historyKeymap]),
-          sql(),
-          syntaxHighlighting(sqlColors),
+          keymap.of([...defaultKeymap, ...historyKeymap, ...LANGUAGES[language].keys]),
+          LANGUAGES[language].support(),
+          syntaxHighlighting(codeColors),
           editorTheme,
           EditorView.lineWrapping,
-          placeholder("Type your SQL here…"),
+          placeholder(LANGUAGES[language].placeholder),
           editable.current.of([EditorState.readOnly.of(readOnly), EditorView.editable.of(!readOnly)]),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) onChangeRef.current(update.state.doc.toString());

@@ -1,0 +1,154 @@
+{
+  "id": "py-27",
+  "level": 5,
+  "title": "Your own functions and apply",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "Welcome to Level 5: pro skills! A function is a reusable recipe you name yourself. Start with def, then the name and an input in brackets, then a colon. The indented lines below are the recipe, and return sends back the answer. Indenting (4 spaces) is how Python knows which lines belong to the function. To run your function on every value in a column, use apply(): df[\"price\"].apply(my_function). For tiny one-line recipes, a lambda is a nameless shortcut: df[\"price\"].apply(lambda p: p * 2).",
+  "example": {
+    "code": "def to_cents(price):\n    return round(price * 100)\n\nprint(to_cents(29.99))",
+    "lines": [
+      {
+        "line": "def to_cents(price):",
+        "explain": "Start a function called to_cents that takes one input, price."
+      },
+      {
+        "line": "    return round(price * 100)",
+        "explain": "The recipe: multiply by 100, round, and send the answer back. Note the 4-space indent."
+      },
+      {
+        "line": "print(to_cents(29.99))",
+        "explain": "Use it: 2999."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "def double(x):\n    return x * 2\n\nprint(double(21))",
+      "options": [
+        "21",
+        "42",
+        "double(21)"
+      ],
+      "answer": "42",
+      "hints": [
+        "double(21) runs the recipe with x set to 21.",
+        "x * 2 where x is 21."
+      ],
+      "solution_lines": [
+        {
+          "line": "def double(x):",
+          "explain": "A function that takes x."
+        },
+        {
+          "line": "    return x * 2",
+          "explain": "Send back x times 2."
+        },
+        {
+          "line": "print(double(21))",
+          "explain": "21 * 2 = 42."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so add_tax adds 8% tax (multiply by 1.08).",
+      "type": "fill",
+      "code": "def add_tax(price):\n    return price ___ 1.08\n\nprint(round(add_tax(50), 2))",
+      "answer": "def add_tax(price):\n    return price * 1.08\n\nprint(round(add_tax(50), 2))",
+      "compare": "print",
+      "hints": [
+        "Adding 8% is the same as multiplying by 1.08.",
+        "Type *"
+      ],
+      "solution_lines": [
+        {
+          "line": "    return price * 1.08",
+          "explain": "50 * 1.08 = 54.0."
+        }
+      ]
+    },
+    {
+      "prompt": "Use the to_cents function from the example on the price column (with apply). Store it as a cents column, then show title and cents.",
+      "type": "write",
+      "answer": "def to_cents(price):\n    return round(price * 100)\n\ndf[\"cents\"] = df[\"price\"].apply(to_cents)\ndf[[\"title\", \"cents\"]]",
+      "compare": "table",
+      "require": [
+        "def",
+        "apply"
+      ],
+      "hints": [
+        "Define the function first, then df[\"cents\"] = df[\"price\"].apply(to_cents). Note: no brackets after to_cents inside apply.",
+        "def to_cents(price): / return round(price * 100), then df[\"cents\"] = df[\"price\"].apply(to_cents), then df[[\"title\", \"cents\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "def to_cents(price):",
+          "explain": "Define the recipe."
+        },
+        {
+          "line": "    return round(price * 100)",
+          "explain": "Dollars to whole cents."
+        },
+        {
+          "line": "df[\"cents\"] = df[\"price\"].apply(to_cents)",
+          "explain": "Run it on every price."
+        },
+        {
+          "line": "df[[\"title\", \"cents\"]]",
+          "explain": "Show the result."
+        }
+      ]
+    },
+    {
+      "prompt": "apply works with built-in functions too. Add a title_length column using apply(len), then show the title and title_length of the game with the longest title.",
+      "type": "write",
+      "answer": "df[\"title_length\"] = df[\"title\"].apply(len)\ndf.nlargest(1, \"title_length\")[[\"title\", \"title_length\"]]",
+      "compare": "table",
+      "require": [
+        "apply"
+      ],
+      "hints": [
+        "len counts the characters in text. Then nlargest(1, ...) finds the biggest.",
+        "df[\"title_length\"] = df[\"title\"].apply(len), then df.nlargest(1, \"title_length\")[[\"title\", \"title_length\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"title\"].apply(len)",
+          "explain": "Count the characters in every title."
+        },
+        {
+          "line": "df.nlargest(1, \"title_length\")",
+          "explain": "Animal Crossing: New Horizons, with 29 characters."
+        }
+      ]
+    },
+    {
+      "prompt": "Use a lambda to show every price with a 20% discount (price × 0.8), rounded to 2 decimals.",
+      "type": "write",
+      "answer": "df[\"price\"].apply(lambda p: round(p * 0.8, 2))",
+      "compare": "table",
+      "require": [
+        "lambda"
+      ],
+      "hints": [
+        "lambda p: ... is a one-line function where p is each price.",
+        "df[\"price\"].apply(lambda p: round(p * 0.8, 2))"
+      ],
+      "solution_lines": [
+        {
+          "line": "lambda p: round(p * 0.8, 2)",
+          "explain": "A nameless recipe: take p, return 80% of it, rounded."
+        },
+        {
+          "line": "df[\"price\"].apply(...)",
+          "explain": "Run it on every price."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to write your own functions with def and return, run them on whole columns with apply(), and use lambda for quick one-liners."
+}

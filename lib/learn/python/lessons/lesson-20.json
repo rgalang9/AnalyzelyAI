@@ -1,0 +1,136 @@
+{
+  "id": "py-20",
+  "level": 4,
+  "title": "Join types: inner vs left",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "setup": "import pandas as pd\ngames = pd.read_csv(\"games.csv\")\nstudios = pd.read_csv(\"studios.csv\")",
+  "explanation": "By default, merge() only keeps rows that match in both tables. This is called an inner join. With how=\"left\", it keeps every row from the first (left) table, even with no match. The missing columns are filled with NaN. That's how you find what's missing, like studios with no games in our table: do a left join, then look for NaN. Which table you write first matters, because that's the one that keeps all its rows.",
+  "example": {
+    "code": "studios.merge(games, on=\"studio_id\", how=\"left\")[[\"studio_name\", \"title\"]]",
+    "lines": [
+      {
+        "line": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+        "explain": "Start with ALL studios, and add their games. Valve and Ubisoft get NaN titles."
+      },
+      {
+        "line": "[[\"studio_name\", \"title\"]]",
+        "explain": "Show the studio and game names."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will this have?",
+      "type": "predict",
+      "code": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+      "options": [
+        "12",
+        "15",
+        "17"
+      ],
+      "answer": "17",
+      "hints": [
+        "Every game still finds its studio (15 rows). What happens to studios with no games?",
+        "Valve and Ubisoft are kept too, with NaN for the game columns."
+      ],
+      "solution_lines": [
+        {
+          "line": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+          "explain": "15 matched rows plus Valve and Ubisoft: 17."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to keep every studio, even ones with no games.",
+      "type": "fill",
+      "code": "studios.merge(games, on=\"studio_id\", how=___)",
+      "answer": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+      "compare": "table",
+      "hints": [
+        "studios is written first, on the left. Keep all of it.",
+        "\"left\""
+      ],
+      "solution_lines": [
+        {
+          "line": "how=\"left\"",
+          "explain": "Keep every row of the left table (studios)."
+        }
+      ]
+    },
+    {
+      "prompt": "Find the studios with no games in our table. Show just studio_name.",
+      "type": "write",
+      "answer": "m = studios.merge(games, on=\"studio_id\", how=\"left\")\nm[m[\"title\"].isna()][[\"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "isna"
+      ],
+      "hints": [
+        "Left join, then keep rows where title is missing (Lesson 15).",
+        "m = studios.merge(games, on=\"studio_id\", how=\"left\"), then m[m[\"title\"].isna()][[\"studio_name\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "m = studios.merge(games, on=\"studio_id\", how=\"left\")",
+          "explain": "Keep every studio."
+        },
+        {
+          "line": "m[m[\"title\"].isna()]",
+          "explain": "Studios with no matching game have NaN titles."
+        },
+        {
+          "line": "[[\"studio_name\"]]",
+          "explain": "Valve and Ubisoft."
+        }
+      ]
+    },
+    {
+      "prompt": "Count the games for every studio, including studios with 0 games.",
+      "type": "write",
+      "answer": "studios.merge(games, on=\"studio_id\", how=\"left\").groupby(\"studio_name\")[\"title\"].count()",
+      "compare": "table",
+      "require": [
+        "left"
+      ],
+      "hints": [
+        "count() skips NaN, so studios with no games get 0.",
+        "studios.merge(games, on=\"studio_id\", how=\"left\").groupby(\"studio_name\")[\"title\"].count()"
+      ],
+      "solution_lines": [
+        {
+          "line": "how=\"left\"",
+          "explain": "Keep studios with no games."
+        },
+        {
+          "line": ".groupby(\"studio_name\")[\"title\"].count()",
+          "explain": "Count titles per studio. Valve and Ubisoft show 0."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this have? Look at which table comes first.",
+      "type": "predict",
+      "code": "games.merge(studios, on=\"studio_id\", how=\"left\")",
+      "options": [
+        "12",
+        "15",
+        "17"
+      ],
+      "answer": "15",
+      "hints": [
+        "A left join keeps every row of the FIRST table. Which one is first here?",
+        "games is first, and every game has a studio."
+      ],
+      "solution_lines": [
+        {
+          "line": "games.merge(studios, on=\"studio_id\", how=\"left\")",
+          "explain": "games is the left table: 15 rows, and studios with no games aren't added."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned inner joins (only matches) vs left joins (keep everything on the left), and how to use a left join plus isna() to find what's missing."
+}

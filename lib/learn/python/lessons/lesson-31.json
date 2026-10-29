@@ -1,0 +1,165 @@
+{
+  "id": "py-31",
+  "level": 5,
+  "title": "Final Case Study: The Campus Merch Shop",
+  "datasets": [
+    "customers",
+    "products",
+    "orders"
+  ],
+  "setup": "import pandas as pd\ncustomers = pd.read_csv(\"customers.csv\")\nproducts = pd.read_csv(\"products.csv\")\norders = pd.read_csv(\"orders.csv\")",
+  "explanation": "You've been hired as the data analyst for a small campus merch shop. Three tables are ready: customers (who shops), products (what's for sale) and orders (who bought what, and how many). Each order links a customer_id to a product_id. No new tools here: combine everything you've learned to answer real business questions. Read each question slowly, decide which tables you need, then build your answer one step at a time.",
+  "example": {
+    "code": "orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\").assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"])[[\"name\", \"product\", \"revenue\"]].head()",
+    "lines": [
+      {
+        "line": "orders.merge(customers, on=\"customer_id\")",
+        "explain": "Add the customer's details to each order."
+      },
+      {
+        "line": ".merge(products, on=\"product_id\")",
+        "explain": "Add the product's details."
+      },
+      {
+        "line": ".assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"])",
+        "explain": "Revenue for each order."
+      },
+      {
+        "line": "[[\"name\", \"product\", \"revenue\"]].head()",
+        "explain": "Who bought what, and for how much."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "The owner asks: how many items sold in each product category? Biggest first.",
+      "type": "write",
+      "answer": "orders.merge(products, on=\"product_id\").groupby(\"category\")[\"quantity\"].sum().sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "merge",
+        "groupby"
+      ],
+      "hints": [
+        "You need orders (quantity) and products (category).",
+        "orders.merge(products, on=\"product_id\").groupby(\"category\")[\"quantity\"].sum().sort_values(ascending=False)"
+      ],
+      "solution_lines": [
+        {
+          "line": "orders.merge(products, on=\"product_id\")",
+          "explain": "Link each order to its product."
+        },
+        {
+          "line": ".groupby(\"category\")[\"quantity\"].sum()",
+          "explain": "Items per category."
+        },
+        {
+          "line": ".sort_values(ascending=False)",
+          "explain": "Clothing 12, Extras 9, Gear 5."
+        }
+      ]
+    },
+    {
+      "prompt": "Which products have never been ordered? Show just the product name.",
+      "type": "write",
+      "answer": "m = products.merge(orders, on=\"product_id\", how=\"left\")\nm[m[\"order_id\"].isna()][[\"product\"]]",
+      "compare": "table",
+      "require": [
+        "left"
+      ],
+      "hints": [
+        "Left join products to orders, then look for missing order_id.",
+        "m = products.merge(orders, on=\"product_id\", how=\"left\"), then m[m[\"order_id\"].isna()][[\"product\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "products.merge(orders, on=\"product_id\", how=\"left\")",
+          "explain": "Keep every product."
+        },
+        {
+          "line": "m[m[\"order_id\"].isna()]",
+          "explain": "No matching order: Poster and Mug."
+        }
+      ]
+    },
+    {
+      "prompt": "Show each city's total revenue (quantity × price), keeping only cities with $100 or more.",
+      "type": "write",
+      "answer": "r = orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\").assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"]).groupby(\"city\")[\"revenue\"].sum()\nr[r >= 100]",
+      "compare": "table",
+      "require": [
+        "merge",
+        "groupby"
+      ],
+      "hints": [
+        "Merge all three tables, add revenue, group by city and sum. Then filter the result like a column.",
+        "r = ... .groupby(\"city\")[\"revenue\"].sum(), then r[r >= 100]"
+      ],
+      "solution_lines": [
+        {
+          "line": "orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\")",
+          "explain": "All three tables together."
+        },
+        {
+          "line": ".assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"])",
+          "explain": "Revenue per order."
+        },
+        {
+          "line": ".groupby(\"city\")[\"revenue\"].sum()",
+          "explain": "Total per city."
+        },
+        {
+          "line": "r[r >= 100]",
+          "explain": "Boston 203, Hartford 100, New Haven 100. Providence's Hugo never ordered."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a bar chart of total revenue per customer, biggest first.",
+      "type": "write",
+      "answer": "orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\").assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"]).groupby(\"name\")[\"revenue\"].sum().sort_values(ascending=False).plot(kind=\"bar\")",
+      "compare": "chart",
+      "require": [
+        "plot"
+      ],
+      "hints": [
+        "Same chain as before, but group by name, sort, then plot.",
+        "orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\").assign(revenue=...).groupby(\"name\")[\"revenue\"].sum().sort_values(ascending=False).plot(kind=\"bar\")"
+      ],
+      "solution_lines": [
+        {
+          "line": ".groupby(\"name\")[\"revenue\"].sum()",
+          "explain": "Revenue per customer."
+        },
+        {
+          "line": ".sort_values(ascending=False).plot(kind=\"bar\")",
+          "explain": "Dev, Finn and Ava are the top customers."
+        }
+      ]
+    },
+    {
+      "prompt": "Final challenge: label each customer a \"Big Spender\" (spent $80 or more) or \"Regular\". Show the label for each customer name.",
+      "type": "write",
+      "answer": "totals = orders.merge(customers, on=\"customer_id\").merge(products, on=\"product_id\").assign(revenue=lambda d: d[\"quantity\"] * d[\"price\"]).groupby(\"name\")[\"revenue\"].sum()\ntotals.apply(lambda s: \"Big Spender\" if s >= 80 else \"Regular\")",
+      "compare": "table",
+      "require": [
+        "apply"
+      ],
+      "hints": [
+        "Work out each customer's total first. Then apply a lambda with if/else: \"Big Spender\" if s >= 80 else \"Regular\".",
+        "totals = ... .groupby(\"name\")[\"revenue\"].sum(), then totals.apply(lambda s: \"Big Spender\" if s >= 80 else \"Regular\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "totals = ... .groupby(\"name\")[\"revenue\"].sum()",
+          "explain": "Each customer's total spend."
+        },
+        {
+          "line": "totals.apply(lambda s: \"Big Spender\" if s >= 80 else \"Regular\")",
+          "explain": "A one-line if/else for every customer: Dev and Finn are Big Spenders."
+        }
+      ]
+    }
+  ],
+  "recap": "You did a real analyst's job: joined three tables, found missing data, summarised and filtered groups, drew a chart and labelled customers. That's everyday Python data analysis. Congratulations on finishing the course! 🎉"
+}

@@ -1,0 +1,138 @@
+{
+  "id": "py-05",
+  "level": 1,
+  "title": "Lists and dictionaries",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "Two Python containers show up everywhere in pandas. A list holds several items in order, inside square brackets: [\"RPG\", \"Shooter\"]. You get one item by its position, counting from 0: genres[0] is the first. len() tells you how many items there are. A dictionary (dict) stores pairs, each with a key and a value, inside curly brackets: {\"Minecraft\": 29.99}. You look up a value by its key: prices[\"Minecraft\"]. You've already used a list: df[[\"title\", \"price\"]] is a list of column names inside the picking brackets.",
+  "example": {
+    "code": "genres = [\"RPG\", \"Shooter\", \"Racing\"]\nprint(genres[0], len(genres))\nprices = {\"Minecraft\": 29.99, \"Fortnite\": 0}\nprint(prices[\"Minecraft\"])",
+    "lines": [
+      {
+        "line": "genres = [\"RPG\", \"Shooter\", \"Racing\"]",
+        "explain": "A list of 3 items, in order, inside square brackets."
+      },
+      {
+        "line": "print(genres[0], len(genres))",
+        "explain": "genres[0] is the first item (Python counts from 0). len() counts the items. Output: RPG 3"
+      },
+      {
+        "line": "prices = {\"Minecraft\": 29.99, \"Fortnite\": 0}",
+        "explain": "A dictionary: each key (a game) is paired with a value (its price), inside curly brackets."
+      },
+      {
+        "line": "print(prices[\"Minecraft\"])",
+        "explain": "Look up the value for the key Minecraft: 29.99."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "games = [\"Minecraft\", \"Fortnite\", \"Elden Ring\"]\nprint(games[1])",
+      "options": [
+        "Minecraft",
+        "Fortnite",
+        "Elden Ring"
+      ],
+      "answer": "Fortnite",
+      "hints": [
+        "Python starts counting at 0, not 1.",
+        "[0] is Minecraft, so [1] is the next one."
+      ],
+      "solution_lines": [
+        {
+          "line": "print(games[1])",
+          "explain": "Positions are 0, 1, 2. Position 1 is the second item: Fortnite."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so the list cols holds the title and price column names, then show those columns.",
+      "type": "fill",
+      "code": "cols = [\"title\", ___]\ndf[cols].head()",
+      "answer": "cols = [\"title\", \"price\"]\ndf[cols].head()",
+      "compare": "table",
+      "hints": [
+        "The second item is the name of the price column. It's text.",
+        "Type \"price\" with quotes."
+      ],
+      "solution_lines": [
+        {
+          "line": "cols = [\"title\", \"price\"]",
+          "explain": "A list of two column names."
+        },
+        {
+          "line": "df[cols].head()",
+          "explain": "Use the list to pick those columns: the same as df[[\"title\", \"price\"]]."
+        }
+      ]
+    },
+    {
+      "prompt": "Make a dictionary called prices with Minecraft at 29.99 and Elden Ring at 59.99. Then print the price of Elden Ring.",
+      "type": "write",
+      "answer": "prices = {\"Minecraft\": 29.99, \"Elden Ring\": 59.99}\nprint(prices[\"Elden Ring\"])",
+      "compare": "print",
+      "require": [
+        "{",
+        "prices["
+      ],
+      "hints": [
+        "Curly brackets, with key: value pairs separated by commas. Then look up by key with square brackets.",
+        "prices = {\"Minecraft\": 29.99, \"Elden Ring\": 59.99} then print(prices[\"Elden Ring\"])"
+      ],
+      "solution_lines": [
+        {
+          "line": "prices = {\"Minecraft\": 29.99, \"Elden Ring\": 59.99}",
+          "explain": "Two key: value pairs."
+        },
+        {
+          "line": "print(prices[\"Elden Ring\"])",
+          "explain": "Look up the Elden Ring key: 59.99."
+        }
+      ]
+    },
+    {
+      "prompt": "Dictionaries rename columns too. Rename release_year to year and show the first 3 rows.",
+      "type": "write",
+      "answer": "df.rename(columns={\"release_year\": \"year\"}).head(3)",
+      "compare": "table",
+      "require": [
+        "rename"
+      ],
+      "hints": [
+        "df.rename(columns={old name: new name}) takes a dictionary.",
+        "df.rename(columns={\"release_year\": \"year\"}).head(3)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.rename(columns={\"release_year\": \"year\"}).head(3)",
+          "explain": "The dictionary maps the old name to the new one. Then show 3 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Build your own table! Use pd.DataFrame() with a dictionary: a column game with Minecraft and Fortnite, and a column hours with 120 and 45.",
+      "type": "write",
+      "answer": "pd.DataFrame({\"game\": [\"Minecraft\", \"Fortnite\"], \"hours\": [120, 45]})",
+      "compare": "table",
+      "require": [
+        "DataFrame"
+      ],
+      "hints": [
+        "Each key is a column name, and each value is a list of that column's values.",
+        "pd.DataFrame({\"game\": [\"Minecraft\", \"Fortnite\"], \"hours\": [120, 45]})"
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.DataFrame({\"game\": [\"Minecraft\", \"Fortnite\"], \"hours\": [120, 45]})",
+          "explain": "A dictionary of lists becomes a table: keys are column names, lists are the column values."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned lists ([ ], counting from 0) and dictionaries ({key: value}), and saw how pandas uses them to pick columns, rename columns and even build tables."
+}

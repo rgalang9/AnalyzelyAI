@@ -1,0 +1,117 @@
+{
+  "id": "py-03",
+  "level": 1,
+  "title": "Looking at your data",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "From now on, the two loading lines (import pandas and read_csv) run for you automatically, so df is always ready. Before analysing anything, analysts get to know their data. df.shape tells you the size as (rows, columns). df.shape[0] is just the rows and df.shape[1] just the columns (Python counts from 0). df.columns lists the column names. df.describe() gives a summary table for the number columns: count, average (mean), smallest (min), biggest (max) and more. df.info() lists each column with its type and how many values are filled in.",
+  "example": {
+    "code": "print(df.shape)\ndf.describe()",
+    "lines": [
+      {
+        "line": "print(df.shape)",
+        "explain": "Show the size of the table as (rows, columns): (15, 7)."
+      },
+      {
+        "line": "df.describe()",
+        "explain": "Show a summary of every number column: how many values, the average, the min, the max and more."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(df.shape)",
+      "options": [
+        "(15, 7)",
+        "(7, 15)",
+        "15"
+      ],
+      "answer": "(15, 7)",
+      "hints": [
+        "shape is always (rows, columns), in that order.",
+        "There are 15 games and 7 columns."
+      ],
+      "solution_lines": [
+        {
+          "line": "print(df.shape)",
+          "explain": "15 rows (games) and 7 columns."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to print just the number of rows.",
+      "type": "fill",
+      "code": "print(df.shape[___])",
+      "answer": "print(df.shape[0])",
+      "compare": "print",
+      "hints": [
+        "Rows come first in shape. What number does Python use for 'first'?",
+        "Python counts from 0, so the first item is [0]."
+      ],
+      "solution_lines": [
+        {
+          "line": "print(df.shape[0])",
+          "explain": "[0] picks the first number in shape, the rows: 15."
+        }
+      ]
+    },
+    {
+      "prompt": "Print just the number of columns.",
+      "type": "write",
+      "answer": "print(df.shape[1])",
+      "compare": "print",
+      "hints": [
+        "Columns are the second number in shape.",
+        "print(df.shape[1])"
+      ],
+      "solution_lines": [
+        {
+          "line": "print(df.shape[1])",
+          "explain": "[1] picks the second number, the columns: 7."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the summary statistics table for the games.",
+      "type": "write",
+      "answer": "df.describe()",
+      "compare": "table",
+      "hints": [
+        "There's one function that summarises all the number columns at once.",
+        "df.describe()"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.describe()",
+          "explain": "A summary of each number column: count, mean, std, min, quartiles and max."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: in this summary, what number is in the count row under rating?",
+      "type": "predict",
+      "code": "df.describe()",
+      "options": [
+        "15",
+        "13",
+        "7"
+      ],
+      "answer": "13",
+      "hints": [
+        "count only counts values that are filled in.",
+        "Look at the data: two games have no rating."
+      ],
+      "solution_lines": [
+        {
+          "line": "df.describe()",
+          "explain": "count skips missing values. EA Sports FC 24 and Valorant have no rating, so rating's count is 13, not 15. Spotting gaps like this early is a real analyst habit."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to size up a dataset: df.shape for rows and columns, df.columns for names, and df.describe() for a quick summary that even reveals missing values."
+}

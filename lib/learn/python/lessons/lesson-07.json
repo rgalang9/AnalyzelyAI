@@ -1,0 +1,116 @@
+{
+  "id": "py-07",
+  "level": 2,
+  "title": "Filtering rows",
+  "datasets": [
+    "players"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")",
+  "explanation": "Welcome to Level 2! Meet a new dataset: players, the people who play the games. To keep only some rows, you filter. First write a condition, like df[\"hours_played\"] > 200. That checks every row and gives True or False for each. Then put the condition inside df[ ] to keep only the True rows: df[df[\"hours_played\"] > 200]. Compare with > (more than), < (less than), >= (at least), <= (at most), == (equal to) and != (not equal). Careful: == compares, while a single = stores a value.",
+  "example": {
+    "code": "df[df[\"country\"] == \"Japan\"]",
+    "lines": [
+      {
+        "line": "df[\"country\"] == \"Japan\"",
+        "explain": "Check each row: is the country Japan? This gives True or False for every row."
+      },
+      {
+        "line": "df[ ... ]",
+        "explain": "Wrapping the check in df[ ] keeps only the True rows: the two players from Japan."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will this show?",
+      "type": "predict",
+      "code": "df[df[\"hours_played\"] > 300]",
+      "options": [
+        "3",
+        "4",
+        "10"
+      ],
+      "answer": "3",
+      "hints": [
+        "Look down the hours_played column for numbers bigger than 300.",
+        "320, 610 and 502 are over 300."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"hours_played\"] > 300]",
+          "explain": "Keeps players with more than 300 hours: ShadowFox, NoScopeNate and xXDragonXx."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to show only players from the USA.",
+      "type": "fill",
+      "code": "df[df[\"country\"] ___ \"USA\"]",
+      "answer": "df[df[\"country\"] == \"USA\"]",
+      "compare": "table",
+      "hints": [
+        "You're comparing, not storing. Comparing needs two equals signs.",
+        "Type =="
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"country\"] == \"USA\"]",
+          "explain": "== checks if the country equals USA."
+        }
+      ]
+    },
+    {
+      "prompt": "Show all players from Japan.",
+      "type": "write",
+      "answer": "df[df[\"country\"] == \"Japan\"]",
+      "compare": "table",
+      "hints": [
+        "Same pattern as the last task. Text goes in quotes, with a capital J.",
+        "df[df[\"country\"] == \"Japan\"]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"country\"] == \"Japan\"]",
+          "explain": "Keep rows where country is exactly Japan."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the players with fewer than 100 hours played.",
+      "type": "write",
+      "answer": "df[df[\"hours_played\"] < 100]",
+      "compare": "table",
+      "hints": [
+        "'Fewer than' uses <.",
+        "df[df[\"hours_played\"] < 100]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"hours_played\"] < 100]",
+          "explain": "Keeps luna_plays, speedy_g and mochi."
+        }
+      ]
+    },
+    {
+      "prompt": "Show just the username and hours_played of players with more than 250 hours.",
+      "type": "write",
+      "answer": "df[df[\"hours_played\"] > 250][[\"username\", \"hours_played\"]]",
+      "compare": "table",
+      "hints": [
+        "Filter first, then pick columns like in Lesson 4.",
+        "df[df[\"hours_played\"] > 250][[\"username\", \"hours_played\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"hours_played\"] > 250]",
+          "explain": "Keep players over 250 hours."
+        },
+        {
+          "line": "[[\"username\", \"hours_played\"]]",
+          "explain": "Then pick just two columns."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to filter rows: write a True/False condition, then wrap it in df[ ]. Remember, == compares and = stores."
+}

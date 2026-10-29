@@ -1,0 +1,130 @@
+{
+  "id": "py-12",
+  "level": 2,
+  "title": "Review: The Study Log",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")",
+  "explanation": "Level 2 review! This is a study app's log. Each row is one study session: the student, the subject, how many minutes they studied, and their quiz score afterwards (out of 100). Use everything from Level 2: filtering, several conditions, sorting, new columns and loc.",
+  "example": {
+    "code": "df[df[\"subject\"] == \"Biology\"].sort_values(\"score\", ascending=False)",
+    "lines": [
+      {
+        "line": "df[df[\"subject\"] == \"Biology\"]",
+        "explain": "Keep only Biology sessions."
+      },
+      {
+        "line": ".sort_values(\"score\", ascending=False)",
+        "explain": "Highest score first."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many sessions lasted 45 minutes or more?",
+      "type": "predict",
+      "code": "df[df[\"minutes\"] >= 45]",
+      "options": [
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": "5",
+      "hints": [
+        ">= means 'at least', so exactly 45 counts.",
+        "45, 60, 50, 55 and 45."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"minutes\"] >= 45]",
+          "explain": ">= includes 45 itself, so both 45-minute sessions count: 5 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the Math sessions, highest score first.",
+      "type": "write",
+      "answer": "df[df[\"subject\"] == \"Math\"].sort_values(\"score\", ascending=False)",
+      "compare": "table",
+      "hints": [
+        "Filter, then sort.",
+        "df[df[\"subject\"] == \"Math\"].sort_values(\"score\", ascending=False)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"subject\"] == \"Math\"]",
+          "explain": "Math only."
+        },
+        {
+          "line": ".sort_values(\"score\", ascending=False)",
+          "explain": "Best score first: Ava, Leo, Maya, Sam."
+        }
+      ]
+    },
+    {
+      "prompt": "Add a column points_per_min (score ÷ minutes, rounded to 2 decimals). Then show the sessions where it's above 2.",
+      "type": "write",
+      "answer": "df[\"points_per_min\"] = (df[\"score\"] / df[\"minutes\"]).round(2)\ndf[df[\"points_per_min\"] > 2]",
+      "compare": "table",
+      "hints": [
+        "Make the new column first, then filter on it.",
+        "df[\"points_per_min\"] = (df[\"score\"] / df[\"minutes\"]).round(2), then df[df[\"points_per_min\"] > 2]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"points_per_min\"] = (df[\"score\"] / df[\"minutes\"]).round(2)",
+          "explain": "Quiz points per minute studied."
+        },
+        {
+          "line": "df[df[\"points_per_min\"] > 2]",
+          "explain": "The most efficient sessions: 5 of them."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the Economics sessions by Maya or Sam.",
+      "type": "write",
+      "answer": "df[(df[\"student\"].isin([\"Maya\", \"Sam\"])) & (df[\"subject\"] == \"Economics\")]",
+      "compare": "table",
+      "require": [
+        "&"
+      ],
+      "hints": [
+        "Two conditions with &. For the student, isin() is handy.",
+        "df[(df[\"student\"].isin([\"Maya\", \"Sam\"])) & (df[\"subject\"] == \"Economics\")]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"student\"].isin([\"Maya\", \"Sam\"])",
+          "explain": "Maya or Sam..."
+        },
+        {
+          "line": "& (df[\"subject\"] == \"Economics\")",
+          "explain": "...AND Economics. 2 sessions."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the student and score of the 3 lowest scores, lowest first.",
+      "type": "write",
+      "answer": "df.nsmallest(3, \"score\")[[\"student\", \"score\"]]",
+      "compare": "table",
+      "hints": [
+        "nsmallest() is the opposite of nlargest().",
+        "df.nsmallest(3, \"score\")[[\"student\", \"score\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.nsmallest(3, \"score\")",
+          "explain": "The 3 lowest scores, lowest first."
+        },
+        {
+          "line": "[[\"student\", \"score\"]]",
+          "explain": "Leo 52, Sam 58, Sam 66."
+        }
+      ]
+    }
+  ],
+  "recap": "Level 2 complete! You can filter, combine conditions, sort, create new columns and use loc and iloc. That's how analysts shape raw data into answers."
+}

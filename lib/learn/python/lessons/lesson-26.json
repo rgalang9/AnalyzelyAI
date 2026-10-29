@@ -1,0 +1,155 @@
+{
+  "id": "py-26",
+  "level": 4,
+  "title": "Review: The Game Store Report",
+  "datasets": [
+    "sales",
+    "players",
+    "games"
+  ],
+  "setup": "import pandas as pd\nsales = pd.read_csv(\"sales.csv\")\nplayers = pd.read_csv(\"players.csv\")\ngames = pd.read_csv(\"games.csv\")",
+  "explanation": "Level 4 review! Three tables are ready: sales (who bought which game, and when), players and games. Each sale only stores IDs: player_id says who bought it and game_id says which game. You can chain merges: sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\"). Use everything from Level 4: merging, join types, dates and charts.",
+  "example": {
+    "code": "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")[[\"username\", \"title\", \"sale_date\"]]",
+    "lines": [
+      {
+        "line": "sales.merge(players, on=\"player_id\")",
+        "explain": "Add the buyer's details to each sale."
+      },
+      {
+        "line": ".merge(games, on=\"game_id\")",
+        "explain": "Then add the game's details."
+      },
+      {
+        "line": "[[\"username\", \"title\", \"sale_date\"]]",
+        "explain": "Who bought what, and when."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows does this have? (sales has 13 rows.)",
+      "type": "predict",
+      "code": "sales.merge(games, on=\"game_id\")",
+      "options": [
+        "13",
+        "15",
+        "28"
+      ],
+      "answer": "13",
+      "hints": [
+        "Every sale matches exactly one game.",
+        "One row per sale."
+      ],
+      "solution_lines": [
+        {
+          "line": "sales.merge(games, on=\"game_id\")",
+          "explain": "Each of the 13 sales finds its game: 13 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Show how much each player spent in total (username and total), rounded to 2 decimals, biggest spender first.",
+      "type": "write",
+      "answer": "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\").groupby(\"username\")[\"price\"].sum().round(2).sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "merge",
+        "groupby"
+      ],
+      "hints": [
+        "Chain both merges, then groupby username, sum price, round and sort.",
+        "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\").groupby(\"username\")[\"price\"].sum().round(2).sort_values(ascending=False)"
+      ],
+      "solution_lines": [
+        {
+          "line": "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")",
+          "explain": "Sales with player and game details."
+        },
+        {
+          "line": ".groupby(\"username\")[\"price\"].sum()",
+          "explain": "Total spent per player."
+        },
+        {
+          "line": ".round(2).sort_values(ascending=False)",
+          "explain": "Tidy, biggest first."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a bar chart of the number of sales per year.",
+      "type": "write",
+      "answer": "sales[\"sale_date\"] = pd.to_datetime(sales[\"sale_date\"])\nsales.groupby(sales[\"sale_date\"].dt.year)[\"sale_id\"].count().plot(kind=\"bar\")",
+      "compare": "chart",
+      "require": [
+        "to_datetime"
+      ],
+      "hints": [
+        "Convert the dates first, then group by year and count, then plot.",
+        "sales[\"sale_date\"] = pd.to_datetime(sales[\"sale_date\"]), then sales.groupby(sales[\"sale_date\"].dt.year)[\"sale_id\"].count().plot(kind=\"bar\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.to_datetime(sales[\"sale_date\"])",
+          "explain": "Make the dates real dates."
+        },
+        {
+          "line": ".groupby(sales[\"sale_date\"].dt.year)[\"sale_id\"].count()",
+          "explain": "Sales per year."
+        },
+        {
+          "line": ".plot(kind=\"bar\")",
+          "explain": "2023 was the busiest year."
+        }
+      ]
+    },
+    {
+      "prompt": "Find the players who never bought a game. Show just username.",
+      "type": "write",
+      "answer": "m = players.merge(sales, on=\"player_id\", how=\"left\")\nm[m[\"sale_id\"].isna()][[\"username\"]]",
+      "compare": "table",
+      "require": [
+        "left",
+        "isna"
+      ],
+      "hints": [
+        "Left join players to sales, then look for missing sale_id (Lesson 20).",
+        "m = players.merge(sales, on=\"player_id\", how=\"left\"), then m[m[\"sale_id\"].isna()][[\"username\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "players.merge(sales, on=\"player_id\", how=\"left\")",
+          "explain": "Keep every player."
+        },
+        {
+          "line": "m[m[\"sale_id\"].isna()]",
+          "explain": "Players with no sale: speedy_g and mochi."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the total money spent per player country, rounded to 2 decimals, biggest first.",
+      "type": "write",
+      "answer": "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\").groupby(\"country\")[\"price\"].sum().round(2).sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Same chain as task 2, but group by country.",
+        "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\").groupby(\"country\")[\"price\"].sum().round(2).sort_values(ascending=False)"
+      ],
+      "solution_lines": [
+        {
+          "line": "sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")",
+          "explain": "All the details."
+        },
+        {
+          "line": ".groupby(\"country\")[\"price\"].sum().round(2).sort_values(ascending=False)",
+          "explain": "Spending per country: the USA leads."
+        }
+      ]
+    }
+  ],
+  "recap": "Level 4 complete! You can combine tables (merge, concat), work with dates, and turn results into charts. That's a full analysis workflow."
+}

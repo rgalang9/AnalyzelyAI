@@ -1,0 +1,133 @@
+{
+  "id": "py-21",
+  "level": 4,
+  "title": "Stacking tables with concat",
+  "datasets": [
+    "deliveries",
+    "deliveries_april"
+  ],
+  "setup": "import pandas as pd\njan_mar = pd.read_csv(\"deliveries.csv\")\napril = pd.read_csv(\"deliveries_april.csv\")",
+  "explanation": "merge() joins tables side by side. concat() stacks them on top of each other: perfect when you get the same kind of data in separate files, like one file per month. Here jan_mar holds January–March deliveries and april holds April's, with the same columns. pd.concat([jan_mar, april]) stacks them. Add ignore_index=True so the row labels run 0, 1, 2... all the way down, instead of repeating.",
+  "example": {
+    "code": "pd.concat([jan_mar, april], ignore_index=True)",
+    "lines": [
+      {
+        "line": "pd.concat([jan_mar, april], ignore_index=True)",
+        "explain": "Stack April under January–March, and renumber the rows from 0."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "print(len(pd.concat([jan_mar, april])))",
+      "options": [
+        "4",
+        "10",
+        "14"
+      ],
+      "answer": "14",
+      "hints": [
+        "Stacking adds the rows together.",
+        "jan_mar has 10 rows and april has 4."
+      ],
+      "solution_lines": [
+        {
+          "line": "len(pd.concat([jan_mar, april]))",
+          "explain": "10 + 4 = 14 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so the row labels run from 0 to 13.",
+      "type": "fill",
+      "code": "pd.concat([jan_mar, april], ___=True)",
+      "answer": "pd.concat([jan_mar, april], ignore_index=True)",
+      "compare": "table",
+      "hints": [
+        "It's the setting that ignores the old index.",
+        "ignore_index"
+      ],
+      "solution_lines": [
+        {
+          "line": "ignore_index=True",
+          "explain": "Renumber all rows from 0."
+        }
+      ]
+    },
+    {
+      "prompt": "Stack the two tables and show the last 5 rows.",
+      "type": "write",
+      "answer": "pd.concat([jan_mar, april], ignore_index=True).tail(5)",
+      "compare": "table",
+      "require": [
+        "concat"
+      ],
+      "hints": [
+        "concat with ignore_index, then tail().",
+        "pd.concat([jan_mar, april], ignore_index=True).tail(5)"
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.concat([jan_mar, april], ignore_index=True)",
+          "explain": "All 14 deliveries."
+        },
+        {
+          "line": ".tail(5)",
+          "explain": "The last 5: Isla's March order plus the 4 April orders."
+        }
+      ]
+    },
+    {
+      "prompt": "Stack them, then show the total sales per restaurant, biggest first.",
+      "type": "write",
+      "answer": "pd.concat([jan_mar, april], ignore_index=True).groupby(\"restaurant\")[\"total\"].sum().sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "concat",
+        "groupby"
+      ],
+      "hints": [
+        "Stack first, then groupby, sum and sort.",
+        "pd.concat([jan_mar, april], ignore_index=True).groupby(\"restaurant\")[\"total\"].sum().sort_values(ascending=False)"
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.concat([jan_mar, april], ignore_index=True)",
+          "explain": "All months together."
+        },
+        {
+          "line": ".groupby(\"restaurant\")[\"total\"].sum()",
+          "explain": "Total per restaurant."
+        },
+        {
+          "line": ".sort_values(ascending=False)",
+          "explain": "Sushi Spot leads with 135."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: WITHOUT ignore_index, what is the label of the last row?",
+      "type": "predict",
+      "code": "print(pd.concat([jan_mar, april]).index[-1])",
+      "options": [
+        "13",
+        "3",
+        "14"
+      ],
+      "answer": "3",
+      "hints": [
+        "Without ignore_index, each table keeps its own labels.",
+        "april's labels are 0, 1, 2, 3."
+      ],
+      "solution_lines": [
+        {
+          "line": "pd.concat([jan_mar, april]).index[-1]",
+          "explain": "April's rows keep their own labels 0–3, so the last label is 3, and labels 0–3 now appear twice. That's why ignore_index=True is usually a good idea."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to stack tables with pd.concat([...], ignore_index=True), merge's partner for combining data."
+}

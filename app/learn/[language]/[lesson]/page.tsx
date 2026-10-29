@@ -1,16 +1,24 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { findReleasedLanguage, LEARN_LANGUAGES } from "@/lib/learn/languages";
-import { getDatasetSql, getLessons, summarize } from "@/lib/learn/load-lessons";
+import { findReleasedLanguage, isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
+import {
+  getDatasetCsv,
+  getDatasetSql,
+  getLessons,
+  getLessonSummaries,
+  getPythonLessons,
+  summarize,
+} from "@/lib/learn/load-lessons";
 import LessonGate from "../../lesson-gate";
 import CodingLessonPlayer from "../../coding-lesson";
 import TourLessonPlayer from "../../tour-lesson";
+import PythonLessonPlayer from "../../python-lesson";
 
-// Build a page for every lesson of every released language ahead of time
+// Build a page for every lesson of every open language ahead of time
 export function generateStaticParams() {
-  return LEARN_LANGUAGES.filter((l) => l.released).flatMap((l) =>
-    getLessons(l.slug).map((lesson) => ({ language: l.slug, lesson: lesson.id }))
+  return LEARN_LANGUAGES.filter(isOpen).flatMap((l) =>
+    getLessonSummaries(l.slug).map((lesson) => ({ language: l.slug, lesson: lesson.id }))
   );
 }
 
@@ -29,6 +37,7 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
   const { language, lesson: lessonId } = await params;
   const lang = findReleasedLanguage(language);
   if (!lang) notFound();
+  if (language === "python") return <PythonLesson lessonId={lessonId} langName={lang.name} />;
 
   const lessons = getLessons(language);
   const index = lessons.findIndex((l) => l.id === lessonId);
@@ -57,6 +66,40 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
         ) : (
           <CodingLessonPlayer lesson={lesson} {...shared} />
         )}
+      </LessonGate>
+    </main>
+  );
+}
+
+// Python lessons: the same page layout, with the Python player
+function PythonLesson({ lessonId, langName }: { lessonId: string; langName: string }) {
+  const lessons = getPythonLessons();
+  const index = lessons.findIndex((l) => l.id === lessonId);
+  if (index === -1) notFound();
+
+  const lesson = lessons[index];
+  const summaries = summarize(lessons);
+  const previous = summaries[index - 1] ?? null;
+  const next = summaries[index + 1] ?? null;
+
+  return (
+    <main className="flex w-full flex-1 flex-col px-4 py-6 lg:px-6">
+      <Link href="/learn/python" className="text-sm text-zinc-500 hover:text-foreground">
+        ← All {langName} lessons
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">
+        <span className="text-zinc-500">Lesson {index}: </span>
+        {lesson.title}
+      </h1>
+
+      <LessonGate language="python" previous={previous}>
+        <PythonLessonPlayer
+          lesson={lesson}
+          files={getDatasetCsv(lesson.datasets)}
+          language="python"
+          lessons={summaries}
+          nextLesson={next}
+        />
       </LessonGate>
     </main>
   );

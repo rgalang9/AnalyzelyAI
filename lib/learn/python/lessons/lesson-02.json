@@ -1,0 +1,142 @@
+{
+  "id": "py-02",
+  "level": 1,
+  "title": "Loading data with pandas",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "explanation": "pandas is a free Python tool for working with tables. To use it, you first import it: import pandas as pd. That gives it the short nickname pd. Then pd.read_csv(\"games.csv\") reads a CSV file into a table. A pandas table is called a DataFrame, and analysts usually store it in a variable called df. To peek at a table, use df.head() for the first 5 rows, or df.head(3) for the first 3. df.tail() does the same from the bottom.",
+  "example": {
+    "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head(3)",
+    "lines": [
+      {
+        "line": "import pandas as pd",
+        "explain": "Load the pandas tool and give it the nickname pd. You do this once at the top."
+      },
+      {
+        "line": "df = pd.read_csv(\"games.csv\")",
+        "explain": "Read the games file into a table (a DataFrame) and store it in df."
+      },
+      {
+        "line": "df.head(3)",
+        "explain": "Show the first 3 rows. The last line's result is shown automatically, no print() needed."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Run this code to load the games table and see all of it.",
+      "type": "run",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf",
+      "answer": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf",
+      "compare": "table",
+      "hints": [
+        "Press Run or Cmd+Enter.",
+        "Just run it as it is. Writing df on the last line shows the whole table."
+      ],
+      "solution_lines": [
+        {
+          "line": "import pandas as pd",
+          "explain": "Load pandas."
+        },
+        {
+          "line": "df = pd.read_csv(\"games.csv\")",
+          "explain": "Read the file into df."
+        },
+        {
+          "line": "df",
+          "explain": "Show the whole table: 15 games, 7 columns."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: how many rows will this show?",
+      "type": "predict",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()",
+      "options": [
+        "3",
+        "5",
+        "15"
+      ],
+      "answer": "5",
+      "hints": [
+        "There's nothing inside the brackets of head().",
+        "When you don't say how many, head() uses its default."
+      ],
+      "solution_lines": [
+        {
+          "line": "df.head()",
+          "explain": "With empty brackets, head() shows 5 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to read games.csv into df.",
+      "type": "fill",
+      "code": "import pandas as pd\ndf = pd.___(\"games.csv\")\ndf.head()",
+      "answer": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()",
+      "compare": "table",
+      "hints": [
+        "Which pandas function reads a CSV file?",
+        "read_csv"
+      ],
+      "solution_lines": [
+        {
+          "line": "df = pd.read_csv(\"games.csv\")",
+          "explain": "read_csv reads a CSV file into a table."
+        },
+        {
+          "line": "df.head()",
+          "explain": "Show the first 5 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "The first two lines are done for you. Add a line that shows the first 3 rows.",
+      "type": "write",
+      "starter": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+      "answer": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head(3)",
+      "compare": "table",
+      "hints": [
+        "head() can take a number inside the brackets.",
+        "df.head(3)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.head(3)",
+          "explain": "Show the first 3 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "From scratch: load games.csv and show the LAST 3 rows.",
+      "type": "write",
+      "answer": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.tail(3)",
+      "compare": "table",
+      "require": [
+        "read_csv",
+        "tail"
+      ],
+      "hints": [
+        "You need 3 lines: import, read, then show. The opposite of head is tail.",
+        "import pandas as pd, then df = pd.read_csv(\"games.csv\"), then df.tail(3)"
+      ],
+      "solution_lines": [
+        {
+          "line": "import pandas as pd",
+          "explain": "Load pandas."
+        },
+        {
+          "line": "df = pd.read_csv(\"games.csv\")",
+          "explain": "Read the file."
+        },
+        {
+          "line": "df.tail(3)",
+          "explain": "Show the last 3 rows."
+        }
+      ]
+    }
+  ],
+  "recap": "You just loaded your first real dataset! import pandas as pd loads the tool, pd.read_csv() reads a file into a DataFrame, and head() / tail() let you peek at the top or bottom."
+}

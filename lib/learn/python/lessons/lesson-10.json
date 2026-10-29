@@ -1,0 +1,134 @@
+{
+  "id": "py-10",
+  "level": 2,
+  "title": "New columns",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")",
+  "explanation": "Make a new column by giving it a name and a value: df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]. The maths happens row by row, all at once. You can use + - * / and round(2) for 2 decimal places. Watch out: maths with a missing value (NaN, which means 'not a number') gives NaN. Ben left no tip, so his with_tip is NaN too. To rename columns, use rename(columns={\"old\": \"new\"}) from Lesson 5.",
+  "example": {
+    "code": "df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]\ndf[[\"customer\", \"total\", \"tip\", \"with_tip\"]]",
+    "lines": [
+      {
+        "line": "df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]",
+        "explain": "Make a new column: total plus tip, for every row at once."
+      },
+      {
+        "line": "df[[\"customer\", \"total\", \"tip\", \"with_tip\"]]",
+        "explain": "Show it next to the columns it came from. Missing tips give NaN."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what is Ben's with_tip? (Ben's tip is missing.)",
+      "type": "predict",
+      "code": "df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]\ndf[df[\"customer\"] == \"Ben\"][[\"customer\", \"with_tip\"]]",
+      "options": [
+        "15.0",
+        "NaN",
+        "0"
+      ],
+      "answer": "NaN",
+      "hints": [
+        "Ben's total is 15.0 and his tip is missing.",
+        "Adding anything to a missing value gives a missing value."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"total\"] + df[\"tip\"]",
+          "explain": "15.0 + NaN = NaN. Missing values spread through maths. Lesson 15 shows how to fill them in."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to make a column with the dollars per minute of delivery.",
+      "type": "fill",
+      "code": "df[\"per_minute\"] = df[\"total\"] ___ df[\"minutes\"]\ndf",
+      "answer": "df[\"per_minute\"] = df[\"total\"] / df[\"minutes\"]\ndf",
+      "compare": "table",
+      "hints": [
+        "'Per minute' means divide by minutes.",
+        "Type /"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"total\"] / df[\"minutes\"]",
+          "explain": "Divide each total by its minutes."
+        }
+      ]
+    },
+    {
+      "prompt": "Add a column tip_percent: the tip as a percent of the total, rounded to 1 decimal. Then show the table.",
+      "type": "write",
+      "answer": "df[\"tip_percent\"] = (df[\"tip\"] / df[\"total\"] * 100).round(1)\ndf",
+      "compare": "table",
+      "require": [
+        "round"
+      ],
+      "hints": [
+        "Percent = tip ÷ total × 100. Put the maths in brackets, then add .round(1).",
+        "df[\"tip_percent\"] = (df[\"tip\"] / df[\"total\"] * 100).round(1), then df"
+      ],
+      "solution_lines": [
+        {
+          "line": "(df[\"tip\"] / df[\"total\"] * 100)",
+          "explain": "Tip as a percent of the total."
+        },
+        {
+          "line": ".round(1)",
+          "explain": "Round to 1 decimal."
+        },
+        {
+          "line": "df",
+          "explain": "Show the table with the new column."
+        }
+      ]
+    },
+    {
+      "prompt": "Rename the minutes column to delivery_minutes and show the first 3 rows.",
+      "type": "write",
+      "answer": "df.rename(columns={\"minutes\": \"delivery_minutes\"}).head(3)",
+      "compare": "table",
+      "require": [
+        "rename"
+      ],
+      "hints": [
+        "rename() takes a dictionary: old name to new name.",
+        "df.rename(columns={\"minutes\": \"delivery_minutes\"}).head(3)"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.rename(columns={\"minutes\": \"delivery_minutes\"})",
+          "explain": "Rename one column."
+        },
+        {
+          "line": ".head(3)",
+          "explain": "Show 3 rows."
+        }
+      ]
+    },
+    {
+      "prompt": "Add a column hours (minutes ÷ 60, rounded to 2 decimals). Then show the customer and hours for deliveries that took more than 45 minutes.",
+      "type": "write",
+      "answer": "df[\"hours\"] = (df[\"minutes\"] / 60).round(2)\ndf[df[\"minutes\"] > 45][[\"customer\", \"hours\"]]",
+      "compare": "table",
+      "hints": [
+        "Two steps: make the column, then filter and pick columns (Lessons 7 and 4).",
+        "df[\"hours\"] = (df[\"minutes\"] / 60).round(2), then df[df[\"minutes\"] > 45][[\"customer\", \"hours\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"hours\"] = (df[\"minutes\"] / 60).round(2)",
+          "explain": "New column: minutes turned into hours."
+        },
+        {
+          "line": "df[df[\"minutes\"] > 45][[\"customer\", \"hours\"]]",
+          "explain": "Filter slow deliveries, then pick two columns: Diego and Hiro."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to create new columns with maths on whole columns at once, round them, rename columns, and spot how missing values (NaN) spread."
+}

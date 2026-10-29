@@ -1,0 +1,127 @@
+{
+  "id": "py-08",
+  "level": 2,
+  "title": "Several conditions",
+  "datasets": [
+    "players"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")",
+  "explanation": "To combine conditions, use & for AND (both must be true) and | for OR (either one is enough). Each condition must sit in its own round brackets: df[(cond1) & (cond2)]. Forgetting the brackets is the most common mistake here. To check against a list of values, use isin(): df[df[\"country\"].isin([\"Japan\", \"UK\"])] keeps players from either country. That's a shortcut for several | conditions.",
+  "example": {
+    "code": "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] > 400)]",
+    "lines": [
+      {
+        "line": "(df[\"country\"] == \"USA\")",
+        "explain": "Condition 1, in its own brackets."
+      },
+      {
+        "line": "&",
+        "explain": "AND: both conditions must be true."
+      },
+      {
+        "line": "(df[\"hours_played\"] > 400)",
+        "explain": "Condition 2, in its own brackets. Result: NoScopeNate and xXDragonXx."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will this show?",
+      "type": "predict",
+      "code": "df[(df[\"country\"] == \"Japan\") & (df[\"hours_played\"] > 50)]",
+      "options": [
+        "0",
+        "1",
+        "2"
+      ],
+      "answer": "1",
+      "hints": [
+        "Both must be true: from Japan AND more than 50 hours.",
+        "The two Japan players have 88 and 12 hours."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[(df[\"country\"] == \"Japan\") & (df[\"hours_played\"] > 50)]",
+          "explain": "Both Japan players pass the first check, but only luna_plays (88 hours) passes the second. mochi has just 12. So 1 row."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to show players from Japan OR Brazil.",
+      "type": "fill",
+      "code": "df[(df[\"country\"] == \"Japan\") ___ (df[\"country\"] == \"Brazil\")]",
+      "answer": "df[(df[\"country\"] == \"Japan\") | (df[\"country\"] == \"Brazil\")]",
+      "compare": "table",
+      "hints": [
+        "Either country is fine, so you need OR, not AND.",
+        "OR is the straight line: |"
+      ],
+      "solution_lines": [
+        {
+          "line": "|",
+          "explain": "OR: keep a row if either condition is true. That's luna_plays, mochi and speedy_g."
+        }
+      ]
+    },
+    {
+      "prompt": "Show players from the USA with fewer than 400 hours played.",
+      "type": "write",
+      "answer": "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] < 400)]",
+      "compare": "table",
+      "require": [
+        "&"
+      ],
+      "hints": [
+        "Two conditions that must both be true: use &, with each condition in brackets.",
+        "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] < 400)]"
+      ],
+      "solution_lines": [
+        {
+          "line": "(df[\"country\"] == \"USA\") & (df[\"hours_played\"] < 400)",
+          "explain": "From the USA AND under 400 hours: just ShadowFox."
+        }
+      ]
+    },
+    {
+      "prompt": "Show players from Japan, Mexico or the Philippines. Use isin().",
+      "type": "write",
+      "answer": "df[df[\"country\"].isin([\"Japan\", \"Mexico\", \"Philippines\"])]",
+      "compare": "table",
+      "require": [
+        "isin"
+      ],
+      "hints": [
+        "isin() takes a list, inside its round brackets.",
+        "df[df[\"country\"].isin([\"Japan\", \"Mexico\", \"Philippines\"])]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"country\"].isin([...])",
+          "explain": "True for any row whose country is in the list: 4 players."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: what happens when you run this? (Look at the brackets.)",
+      "type": "predict",
+      "code": "df[df[\"country\"] == \"USA\" & df[\"hours_played\"] > 300]",
+      "options": [
+        "It shows 3 players",
+        "It shows an error",
+        "It shows every player"
+      ],
+      "answer": "It shows an error",
+      "hints": [
+        "Each condition needs its own round brackets when you use &.",
+        "Without brackets, Python tries to do the & part first and gets confused."
+      ],
+      "solution_lines": [
+        {
+          "line": "df[df[\"country\"] == \"USA\" & df[\"hours_played\"] > 300]",
+          "explain": "Python runs & before == and >, so it tries \"USA\" & df[\"hours_played\"], which makes no sense, and you get an error. Fix: put each condition in its own brackets."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to combine conditions with & (AND) and | (OR), each wrapped in brackets, and to match a list of values with isin()."
+}

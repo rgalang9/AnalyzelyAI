@@ -1,0 +1,120 @@
+{
+  "id": "py-09",
+  "level": 2,
+  "title": "Sorting",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")",
+  "explanation": "New dataset: deliveries from a food delivery app. Each row is one order: the customer, restaurant, date, total, tip and how many minutes delivery took. Some tips are missing. sort_values(\"col\") sorts from smallest to biggest. Add ascending=False for biggest first. To sort by two columns, give a list: sort_values([\"restaurant\", \"total\"]). Shortcuts: nlargest(3, \"col\") gives the 3 biggest rows, and nsmallest(3, \"col\") gives the 3 smallest.",
+  "example": {
+    "code": "df.sort_values(\"total\", ascending=False).head(3)",
+    "lines": [
+      {
+        "line": "df.sort_values(\"total\", ascending=False)",
+        "explain": "Sort by total, biggest first."
+      },
+      {
+        "line": ".head(3)",
+        "explain": "Show the top 3 orders."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: whose order will be in the first row?",
+      "type": "predict",
+      "code": "df.sort_values(\"minutes\")",
+      "options": [
+        "Jay",
+        "Hiro",
+        "Ava"
+      ],
+      "answer": "Jay",
+      "hints": [
+        "sort_values() goes smallest to biggest unless you say otherwise.",
+        "Who had the quickest delivery?"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.sort_values(\"minutes\")",
+          "explain": "Smallest first: Jay's 15-minute delivery is at the top. Hiro's 61 minutes is at the bottom."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to sort by total, biggest first.",
+      "type": "fill",
+      "code": "df.sort_values(\"total\", ascending=___)",
+      "answer": "df.sort_values(\"total\", ascending=False)",
+      "compare": "table",
+      "hints": [
+        "Biggest first means NOT ascending.",
+        "Type False, with a capital F."
+      ],
+      "solution_lines": [
+        {
+          "line": "ascending=False",
+          "explain": "Sort from biggest to smallest."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the 3 slowest deliveries.",
+      "type": "write",
+      "answer": "df.nlargest(3, \"minutes\")",
+      "compare": "table",
+      "hints": [
+        "Slowest means the most minutes. There's a shortcut for 'the 3 biggest'.",
+        "df.nlargest(3, \"minutes\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.nlargest(3, \"minutes\")",
+          "explain": "The 3 rows with the most minutes: Hiro, Diego and Chloe."
+        }
+      ]
+    },
+    {
+      "prompt": "Sort by restaurant A to Z, and within each restaurant by total, biggest first.",
+      "type": "write",
+      "answer": "df.sort_values([\"restaurant\", \"total\"], ascending=[True, False])",
+      "compare": "table",
+      "hints": [
+        "Give sort_values a list of two columns, and ascending a list of two True/False values.",
+        "df.sort_values([\"restaurant\", \"total\"], ascending=[True, False])"
+      ],
+      "solution_lines": [
+        {
+          "line": "[\"restaurant\", \"total\"]",
+          "explain": "Sort by restaurant first, then by total."
+        },
+        {
+          "line": "ascending=[True, False]",
+          "explain": "Restaurant A to Z, total biggest first."
+        }
+      ]
+    },
+    {
+      "prompt": "Show just the customer and tip for the 3 biggest tips.",
+      "type": "write",
+      "answer": "df.nlargest(3, \"tip\")[[\"customer\", \"tip\"]]",
+      "compare": "table",
+      "hints": [
+        "Find the 3 biggest tips, then pick two columns.",
+        "df.nlargest(3, \"tip\")[[\"customer\", \"tip\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.nlargest(3, \"tip\")",
+          "explain": "The 3 biggest tips. Missing tips are skipped."
+        },
+        {
+          "line": "[[\"customer\", \"tip\"]]",
+          "explain": "Pick two columns: Finn, Chloe and Diego."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to sort with sort_values() (add ascending=False for biggest first), sort by several columns, and grab the top or bottom rows with nlargest() and nsmallest()."
+}

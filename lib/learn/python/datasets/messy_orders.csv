@@ -1,0 +1,9 @@
+order_id,customer,city,product,qty,price
+1,Ava,new york,Hoodie,2,$40
+2,Ben,New York ,Cap,1,$15
+3,Chloe,BOSTON,Mug,,$14
+4,Dev,Boston,Hoodie,1,$40
+5,Ella,boston,Socks,3,$10
+6,Finn,New York,Cap,3,$15
+5,Ella,boston,Socks,3,$10
+8,Gia,Providence,Mug,2,$14

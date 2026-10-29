@@ -1,0 +1,168 @@
+{
+  "id": "py-28",
+  "level": 5,
+  "title": "if/else and loops",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "if lets your code make decisions: if a condition is True, run the indented lines, otherwise (else) run different ones. elif means 'else if', for checking another condition. A for loop repeats lines once for each item in a list: for genre in [\"RPG\", \"Shooter\"]: does the indented lines with genre set to each item in turn. Pro tip: with pandas you rarely need loops over rows, because column maths like df[\"price\"] * 2 does every row at once, and it's faster and shorter. Use loops for small lists of things, like a few genres.",
+  "example": {
+    "code": "for genre in [\"RPG\", \"Racing\"]:\n    count = len(df[df[\"genre\"] == genre])\n    if count > 1:\n        print(genre, \"has several games\")\n    else:\n        print(genre, \"has one game\")",
+    "lines": [
+      {
+        "line": "for genre in [\"RPG\", \"Racing\"]:",
+        "explain": "Repeat the indented lines for each genre in the list."
+      },
+      {
+        "line": "    count = len(df[df[\"genre\"] == genre])",
+        "explain": "Count the games in this genre."
+      },
+      {
+        "line": "    if count > 1:",
+        "explain": "A decision: more than one game?"
+      },
+      {
+        "line": "        print(genre, \"has several games\")",
+        "explain": "Runs if True: RPG has several games."
+      },
+      {
+        "line": "    else:",
+        "explain": "Otherwise..."
+      },
+      {
+        "line": "        print(genre, \"has one game\")",
+        "explain": "Runs if False: Racing has one game."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: what will this print?",
+      "type": "predict",
+      "code": "total = 0\nfor p in [10, 20, 30]:\n    total = total + p\nprint(total)",
+      "options": [
+        "30",
+        "60",
+        "10 20 30"
+      ],
+      "answer": "60",
+      "hints": [
+        "The loop adds each number to total, one at a time.",
+        "0 + 10 + 20 + 30."
+      ],
+      "solution_lines": [
+        {
+          "line": "for p in [10, 20, 30]:",
+          "explain": "p becomes 10, then 20, then 30."
+        },
+        {
+          "line": "    total = total + p",
+          "explain": "Add each one to the running total."
+        },
+        {
+          "line": "print(total)",
+          "explain": "After the loop: 60. Only printed once, because it isn't indented."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank so this prints Free.",
+      "type": "fill",
+      "code": "price = 0\nif price ___ 0:\n    print(\"Free\")\nelse:\n    print(\"Paid\")",
+      "answer": "price = 0\nif price == 0:\n    print(\"Free\")\nelse:\n    print(\"Paid\")",
+      "compare": "print",
+      "hints": [
+        "You're comparing, not storing.",
+        "=="
+      ],
+      "solution_lines": [
+        {
+          "line": "if price == 0:",
+          "explain": "Is the price exactly 0? Yes, so print Free."
+        }
+      ]
+    },
+    {
+      "prompt": "Write a function band(price) that returns \"Free\" if the price is 0, \"Budget\" if it's under 30, and \"Full price\" otherwise. Apply it to the price column as a band column, then show how many games are in each band.",
+      "type": "write",
+      "answer": "def band(price):\n    if price == 0:\n        return \"Free\"\n    elif price < 30:\n        return \"Budget\"\n    else:\n        return \"Full price\"\n\ndf[\"band\"] = df[\"price\"].apply(band)\ndf[\"band\"].value_counts()",
+      "compare": "table",
+      "require": [
+        "def",
+        "if"
+      ],
+      "hints": [
+        "if, then elif, then else, each with its own indented return. Check for Free first!",
+        "def band(price): / if price == 0: return \"Free\" / elif price < 30: return \"Budget\" / else: return \"Full price\". Then df[\"band\"] = df[\"price\"].apply(band) and df[\"band\"].value_counts()"
+      ],
+      "solution_lines": [
+        {
+          "line": "    if price == 0:",
+          "explain": "Free first, because 0 is also under 30."
+        },
+        {
+          "line": "    elif price < 30:",
+          "explain": "Then budget games."
+        },
+        {
+          "line": "    else:",
+          "explain": "Everything else."
+        },
+        {
+          "line": "df[\"band\"] = df[\"price\"].apply(band)",
+          "explain": "Label every game."
+        },
+        {
+          "line": "df[\"band\"].value_counts()",
+          "explain": "Full price 8, Budget 4, Free 3."
+        }
+      ]
+    },
+    {
+      "prompt": "Loop over the genres RPG, Shooter and Racing, and print each genre with how many games it has.",
+      "type": "write",
+      "answer": "for genre in [\"RPG\", \"Shooter\", \"Racing\"]:\n    print(genre, len(df[df[\"genre\"] == genre]))",
+      "compare": "print",
+      "require": [
+        "for"
+      ],
+      "hints": [
+        "Like the example, but print the genre and the count.",
+        "for genre in [\"RPG\", \"Shooter\", \"Racing\"]: / print(genre, len(df[df[\"genre\"] == genre]))"
+      ],
+      "solution_lines": [
+        {
+          "line": "for genre in [\"RPG\", \"Shooter\", \"Racing\"]:",
+          "explain": "Once per genre."
+        },
+        {
+          "line": "    print(genre, len(df[df[\"genre\"] == genre]))",
+          "explain": "Filter to that genre and count the rows: RPG 2, Shooter 2, Racing 1."
+        }
+      ]
+    },
+    {
+      "prompt": "Predict first: column maths and apply both double the prices. Do they give the same result?",
+      "type": "predict",
+      "code": "print((df[\"price\"] * 2).equals(df[\"price\"].apply(lambda p: p * 2)))",
+      "options": [
+        "True",
+        "False",
+        "An error"
+      ],
+      "answer": "True",
+      "hints": [
+        "Both multiply every price by 2.",
+        ".equals() checks if two columns match exactly."
+      ],
+      "solution_lines": [
+        {
+          "line": "(df[\"price\"] * 2).equals(...)",
+          "explain": "Same result: True. But df[\"price\"] * 2 is shorter and faster, so prefer column maths, and save apply and loops for things column maths can't do."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned if/elif/else for decisions, for loops for repeating, and when NOT to loop: pandas column maths is usually better."
+}

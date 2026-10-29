@@ -1,0 +1,139 @@
+{
+  "id": "py-19",
+  "level": 4,
+  "title": "Joining tables with merge",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "setup": "import pandas as pd\ngames = pd.read_csv(\"games.csv\")\nstudios = pd.read_csv(\"studios.csv\")",
+  "explanation": "Welcome to Level 4! Real data is often split across tables. The games table has a studio_id, but the studio's name and country live in a separate studios table. merge() glues two tables together side by side, matching rows on a shared column: games.merge(studios, on=\"studio_id\"). This lesson has two tables ready for you, called games and studios (not df). It's the same idea as JOIN in SQL.",
+  "example": {
+    "code": "games.merge(studios, on=\"studio_id\")[[\"title\", \"studio_name\"]]",
+    "lines": [
+      {
+        "line": "games.merge(studios, on=\"studio_id\")",
+        "explain": "Line up each game with the studio that has the same studio_id."
+      },
+      {
+        "line": "[[\"title\", \"studio_name\"]]",
+        "explain": "Show just the game title and studio name."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many rows will the merged table have? (games has 15 rows, studios has 12.)",
+      "type": "predict",
+      "code": "games.merge(studios, on=\"studio_id\")",
+      "options": [
+        "12",
+        "15",
+        "27"
+      ],
+      "answer": "15",
+      "hints": [
+        "Each game finds exactly one studio.",
+        "You get one row per matching game."
+      ],
+      "solution_lines": [
+        {
+          "line": "games.merge(studios, on=\"studio_id\")",
+          "explain": "Each of the 15 games matches one studio, so 15 rows. Studios with no games (Valve, Ubisoft) are left out by default."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to merge games and studios on studio_id.",
+      "type": "fill",
+      "code": "games.merge(studios, ___=\"studio_id\")",
+      "answer": "games.merge(studios, on=\"studio_id\")",
+      "compare": "table",
+      "hints": [
+        "Which word tells merge() the shared column?",
+        "on"
+      ],
+      "solution_lines": [
+        {
+          "line": "games.merge(studios, on=\"studio_id\")",
+          "explain": "on= names the column both tables share."
+        }
+      ]
+    },
+    {
+      "prompt": "Show every game's title next to the name of the studio that made it.",
+      "type": "write",
+      "answer": "games.merge(studios, on=\"studio_id\")[[\"title\", \"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "merge"
+      ],
+      "hints": [
+        "Merge, then pick two columns.",
+        "games.merge(studios, on=\"studio_id\")[[\"title\", \"studio_name\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "games.merge(studios, on=\"studio_id\")",
+          "explain": "Glue the tables together."
+        },
+        {
+          "line": "[[\"title\", \"studio_name\"]]",
+          "explain": "Pick the two columns."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the title and studio_name of games made by studios from Japan.",
+      "type": "write",
+      "answer": "m = games.merge(studios, on=\"studio_id\")\nm[m[\"country\"] == \"Japan\"][[\"title\", \"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "merge"
+      ],
+      "hints": [
+        "Merge into a variable, say m. Then filter on the country column, which came from studios.",
+        "m = games.merge(studios, on=\"studio_id\"), then m[m[\"country\"] == \"Japan\"][[\"title\", \"studio_name\"]]"
+      ],
+      "solution_lines": [
+        {
+          "line": "m = games.merge(studios, on=\"studio_id\")",
+          "explain": "Store the merged table in m."
+        },
+        {
+          "line": "m[m[\"country\"] == \"Japan\"]",
+          "explain": "Keep Japanese studios."
+        },
+        {
+          "line": "[[\"title\", \"studio_name\"]]",
+          "explain": "Nintendo's 4 games plus Elden Ring."
+        }
+      ]
+    },
+    {
+      "prompt": "Show the average game price for each studio country, rounded to 2 decimals.",
+      "type": "write",
+      "answer": "games.merge(studios, on=\"studio_id\").groupby(\"country\")[\"price\"].mean().round(2)",
+      "compare": "table",
+      "require": [
+        "merge",
+        "groupby"
+      ],
+      "hints": [
+        "Merge, then groupby country (Lesson 14).",
+        "games.merge(studios, on=\"studio_id\").groupby(\"country\")[\"price\"].mean().round(2)"
+      ],
+      "solution_lines": [
+        {
+          "line": "games.merge(studios, on=\"studio_id\")",
+          "explain": "Bring in the studio's country."
+        },
+        {
+          "line": ".groupby(\"country\")[\"price\"].mean().round(2)",
+          "explain": "Average price per country."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to join tables with merge(on=...), so information from different tables can be analysed together."
+}

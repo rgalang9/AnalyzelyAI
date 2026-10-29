@@ -14,7 +14,18 @@ export const LEARN_LANGUAGES: LearnLanguage[] = [
   { slug: "stata", name: "Stata", released: false },
 ];
 
-// The language for a web address, or null if it doesn't exist or isn't released yet
+// Preview switch: languages listed in NEXT_PUBLIC_LEARN_PREVIEW (in .env.local, e.g. "python")
+// open on this computer before they're released. The live site doesn't set it, so there
+// they stay "Coming soon".
+const PREVIEW = (process.env.NEXT_PUBLIC_LEARN_PREVIEW ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+// Released, or switched on for preview here
+export const isOpen = (language: LearnLanguage) => language.released || PREVIEW.includes(language.slug);
+
+// The language for a web address, or null if it doesn't exist or isn't open yet
 export function findReleasedLanguage(slug: string): LearnLanguage | null {
-  return LEARN_LANGUAGES.find((l) => l.slug === slug && l.released) ?? null;
+  return LEARN_LANGUAGES.find((l) => l.slug === slug && isOpen(l)) ?? null;
 }

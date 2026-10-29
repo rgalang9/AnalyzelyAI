@@ -1,0 +1,130 @@
+{
+  "id": "py-23",
+  "level": 4,
+  "title": "Charts: bar and line",
+  "datasets": [
+    "games"
+  ],
+  "setup": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")",
+  "explanation": "Charts make patterns jump out. Any pandas result can draw itself with .plot(). Use kind=\"bar\" to compare categories (like genres), kind=\"barh\" for sideways bars, and kind=\"line\" to show change over time (like years). Add title=\"...\" to label the chart. The usual recipe: summarise first (value_counts or groupby), then .plot(). The chart appears below your code.",
+  "example": {
+    "code": "df[\"genre\"].value_counts().plot(kind=\"bar\", title=\"Games per genre\")",
+    "lines": [
+      {
+        "line": "df[\"genre\"].value_counts()",
+        "explain": "Count the games in each genre."
+      },
+      {
+        "line": ".plot(kind=\"bar\", title=\"Games per genre\")",
+        "explain": "Draw those counts as a bar chart with a title."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Predict first: how many bars will this chart have?",
+      "type": "predict",
+      "code": "df[\"genre\"].value_counts().plot(kind=\"bar\")",
+      "options": [
+        "15",
+        "11",
+        "4"
+      ],
+      "answer": "11",
+      "hints": [
+        "One bar per value that value_counts() finds.",
+        "How many different genres are there?"
+      ],
+      "solution_lines": [
+        {
+          "line": "df[\"genre\"].value_counts().plot(kind=\"bar\")",
+          "explain": "One bar per genre: 11."
+        }
+      ]
+    },
+    {
+      "prompt": "Fill in the blank to draw the genre counts as a bar chart.",
+      "type": "fill",
+      "code": "df[\"genre\"].value_counts().plot(kind=___)",
+      "answer": "df[\"genre\"].value_counts().plot(kind=\"bar\")",
+      "compare": "chart",
+      "hints": [
+        "The chart type is text, so it needs quotes.",
+        "\"bar\""
+      ],
+      "solution_lines": [
+        {
+          "line": "kind=\"bar\"",
+          "explain": "A bar chart, one bar per genre."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a line chart of how many games came out each year.",
+      "type": "write",
+      "answer": "df.groupby(\"release_year\")[\"title\"].count().plot(kind=\"line\")",
+      "compare": "chart",
+      "require": [
+        "line"
+      ],
+      "hints": [
+        "Count per year with groupby, then plot a line.",
+        "df.groupby(\"release_year\")[\"title\"].count().plot(kind=\"line\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.groupby(\"release_year\")[\"title\"].count()",
+          "explain": "Games per year."
+        },
+        {
+          "line": ".plot(kind=\"line\")",
+          "explain": "A line shows the change over time: 2017 stands out."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a sideways bar chart of every game's price, with the titles as labels.",
+      "type": "write",
+      "answer": "df.plot(kind=\"barh\", x=\"title\", y=\"price\")",
+      "compare": "chart",
+      "require": [
+        "barh"
+      ],
+      "hints": [
+        "On the whole table, plot() takes x= for the labels and y= for the values.",
+        "df.plot(kind=\"barh\", x=\"title\", y=\"price\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.plot(kind=\"barh\", x=\"title\", y=\"price\")",
+          "explain": "One sideways bar per game. Long titles fit better sideways."
+        }
+      ]
+    },
+    {
+      "prompt": "Draw a bar chart of the average rating per genre, highest first.",
+      "type": "write",
+      "answer": "df.groupby(\"genre\")[\"rating\"].mean().sort_values(ascending=False).plot(kind=\"bar\")",
+      "compare": "chart",
+      "hints": [
+        "groupby, mean, sort, then plot.",
+        "df.groupby(\"genre\")[\"rating\"].mean().sort_values(ascending=False).plot(kind=\"bar\")"
+      ],
+      "solution_lines": [
+        {
+          "line": "df.groupby(\"genre\")[\"rating\"].mean()",
+          "explain": "Average rating per genre."
+        },
+        {
+          "line": ".sort_values(ascending=False)",
+          "explain": "Highest first, so the chart reads like a ranking."
+        },
+        {
+          "line": ".plot(kind=\"bar\")",
+          "explain": "Draw it. Sports has no rating, so it has no bar."
+        }
+      ]
+    }
+  ],
+  "recap": "You just learned to draw bar, sideways bar and line charts with .plot(): summarise first, then plot."
+}
