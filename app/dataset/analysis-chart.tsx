@@ -1,11 +1,11 @@
 "use client"; // charts are drawn in the browser
 
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
@@ -14,7 +14,14 @@ import {
   YAxis,
   ZAxis,
 } from "recharts";
-import { formatNumber, type ChartData } from "@/lib/dataset-stats";
+import {
+  formatMoney,
+  formatMoneyShort,
+  formatNumber,
+  midSentence,
+  plainLabel,
+  type ChartData,
+} from "@/lib/dataset-stats";
 import { downloadBlob } from "@/lib/download";
 
 // Shared look: brand grey axes and a light purple grid so the data stands out.
@@ -35,6 +42,34 @@ const shorten = (text: string | number, max = 18) => {
 };
 const formatValue = (value: unknown) =>
   typeof value === "number" ? formatNumber(value) : String(value);
+
+const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
+
+// Tick marks for a time axis: whole years at a tidy step (1, 2, 5, 10, 20, 25 or 50 years)
+function yearTicks(min: number, max: number, asDates: boolean): number[] | undefined {
+  const toYear = (v: number) => (asDates ? new Date(v).getFullYear() : v);
+  const [first, last] = [toYear(min), toYear(max)];
+  if (last - first < 3) return undefined; // short spans: let the chart pick
+  const step = [1, 2, 5, 10, 20, 25, 50, 100].find((s) => (last - first) / s <= 6) ?? 100;
+  const ticks: number[] = [];
+  for (let y = Math.ceil(first / step) * step; y <= last; y += step) {
+    ticks.push(asDates ? new Date(y, 0, 1).getTime() : y);
+  }
+  return ticks;
+}
+
+// How the x axis shows its values
+function xFormatter(chart: ChartData): (v: unknown) => string {
+  if (chart.xAxis === "year") return (v) => String(v);
+  if (chart.xAxis === "date") {
+    const xs = chart.points.map((p) => Number(p.x));
+    const longSpan = Math.max(...xs) - Math.min(...xs) >= 3 * YEAR_MS;
+    return (v) =>
+      new Date(Number(v)).toLocaleDateString("en-US", longSpan ? { year: "numeric" } : { month: "short", year: "numeric" });
+  }
+  if (chart.xMoney) return (v) => (typeof v === "number" ? formatMoneyShort(v) : String(v));
+  return formatValue;
+}
 
 // The chart inside `figure` as a PNG picture (white background, title on top)
 export async function saveChartPng(figure: HTMLElement, title: string, fileName: string) {
@@ -89,14 +124,28 @@ export default function AnalysisChart({
   chart: ChartData;
   ref?: React.Ref<HTMLElement>;
 }) {
-  const { type, points, xLabel, yLabel } = chart;
+  const { type, points } = chart;
+  // Plain words even for charts saved before labels were tidied up
+  const xLabel = plainLabel(chart.xLabel);
+  const yLabel = plainLabel(chart.yLabel);
+  const yTick = chart.yMoney ? formatMoneyShort : formatNumber;
+  const yFull = (v: unknown) => (typeof v !== "number" ? String(v) : chart.yMoney ? formatMoney(v) : formatNumber(v));
+  const xFull = (v: unknown) => (typeof v !== "number" ? String(v) : chart.xMoney ? formatMoney(v) : formatNumber(v));
+  const xTick = xFormatter(chart);
+  const timeX = chart.xAxis === "date" || chart.xAxis === "year";
+  const xs = timeX ? points.map((p) => Number(p.x)) : [];
+  const ticks = timeX ? yearTicks(Math.min(...xs), Math.max(...xs), chart.xAxis === "date") : undefined;
+  // Tooltip title on time charts: the date as the file wrote it
+  const labelOf = (x: unknown) => points.find((p) => p.x === x)?.label ?? xTick(x);
 
   return (
     <figure ref={ref} className="rounded-2xl border border-purple-light bg-white p-4 sm:p-5">
       <figcaption className="mb-3">
         <p className="font-display font-extrabold text-navy">{chart.title}</p>
         <p className="text-xs text-grey">
-          {type === "scatter" ? `${yLabel} vs. ${xLabel}` : `${yLabel} by ${xLabel}`}
+          {type === "scatter"
+            ? `${yLabel} vs. ${midSentence(xLabel)}`
+            : `${yLabel} by ${midSentence(xLabel)}`}
           {chart.note && ` · ${chart.note}`}
         </p>
       </figcaption>
@@ -108,7 +157,7 @@ export default function AnalysisChart({
           <ResponsiveContainer width="100%" height={Math.max(200, points.length * 30 + 40)}>
             <BarChart data={points} layout="vertical" margin={{ left: 8, right: 16 }}>
               <CartesianGrid horizontal={false} stroke={GRID_COLOR} />
-              <XAxis type="number" tick={AXIS_TICK} tickFormatter={formatValue} stroke={GRID_COLOR} />
+              <XAxis type="number" tick={AXIS_TICK} tickFormatter={yTick} stroke={GRID_COLOR} />
               <YAxis
                 type="category"
                 dataKey="x"
@@ -121,7 +170,7 @@ export default function AnalysisChart({
               <Tooltip
                 cursor={{ fill: "#ede5ff80" }}
                 contentStyle={TOOLTIP_STYLE}
-                formatter={(value) => [formatValue(value), yLabel]}
+                formatter={(value) => [yFull(value), yLabel]}
               />
               <Bar dataKey="y" fill="currentColor" radius={[0, 4, 4, 0]} maxBarSize={20} />
             </BarChart>
@@ -130,23 +179,41 @@ export default function AnalysisChart({
 
         {type === "line" && (
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={points} margin={{ left: 8, right: 16 }}>
+            <AreaChart data={points} margin={{ left: 8, right: 16 }}>
               <CartesianGrid vertical={false} stroke={GRID_COLOR} />
-              <XAxis dataKey="x" tick={AXIS_TICK} tickFormatter={(v) => shorten(v, 12)} stroke={GRID_COLOR} minTickGap={24} />
-              <YAxis tick={AXIS_TICK} tickFormatter={formatValue} stroke={GRID_COLOR} width={70} />
+              {timeX ? (
+                // Years and dates sit at their real place in time, so gaps show as gaps
+                <XAxis
+                  type="number"
+                  dataKey="x"
+                  domain={["dataMin", "dataMax"]}
+                  ticks={ticks}
+                  tick={AXIS_TICK}
+                  tickFormatter={xTick}
+                  stroke={GRID_COLOR}
+                  minTickGap={24}
+                />
+              ) : (
+                <XAxis dataKey="x" tick={AXIS_TICK} tickFormatter={(v) => shorten(xTick(v), 12)} stroke={GRID_COLOR} minTickGap={24} />
+              )}
+              <YAxis tick={AXIS_TICK} tickFormatter={yTick} stroke={GRID_COLOR} width={70} tickCount={6} />
               <Tooltip
                 contentStyle={TOOLTIP_STYLE}
-                formatter={(value) => [formatValue(value), yLabel]}
+                labelFormatter={(x) => (timeX ? labelOf(x) : String(x))}
+                formatter={(value) => [yFull(value), yLabel]}
               />
-              <Line
+              <Area
+                type="linear"
                 dataKey="y"
                 stroke="currentColor"
-                strokeWidth={2}
-                dot={points.length <= 40 ? { r: 4, fill: "currentColor" } : false}
+                strokeWidth={3}
+                fill="currentColor"
+                fillOpacity={0.08}
+                dot={points.length <= 40 ? { r: 4, fill: "#ffffff", stroke: "currentColor", strokeWidth: 2 } : false}
                 activeDot={{ r: 5 }}
                 isAnimationActive={false}
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         )}
 
@@ -154,10 +221,15 @@ export default function AnalysisChart({
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ left: 8, right: 16, bottom: 8 }}>
               <CartesianGrid stroke={GRID_COLOR} />
-              <XAxis type="number" dataKey="x" name={xLabel} tick={AXIS_TICK} tickFormatter={formatValue} stroke={GRID_COLOR} />
-              <YAxis type="number" dataKey="y" name={yLabel} tick={AXIS_TICK} tickFormatter={formatValue} stroke={GRID_COLOR} width={70} />
+              <XAxis type="number" dataKey="x" name={xLabel} domain={["auto", "auto"]} tick={AXIS_TICK} tickFormatter={xTick} stroke={GRID_COLOR} />
+              <YAxis type="number" dataKey="y" name={yLabel} tick={AXIS_TICK} tickFormatter={yTick} stroke={GRID_COLOR} width={70} />
               <ZAxis range={[50, 50]} />
-              <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(value) => formatValue(value)} />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                formatter={(value, name) =>
+                  name === xLabel ? (chart.xAxis === "year" ? String(value) : xFull(value)) : yFull(value)
+                }
+              />
               <Scatter data={points} fill="currentColor" fillOpacity={0.7} />
             </ScatterChart>
           </ResponsiveContainer>

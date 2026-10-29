@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, Download, MessageCircle, Sheet, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Download, MessageCircle, Sheet, Sparkles } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
 import { applyFixes, type Issue } from "@/lib/cleaning";
 import { downloadCsv } from "@/lib/csv";
@@ -41,8 +41,11 @@ export default function DatasetPage() {
 }
 
 // Highlight colors for problem cells (red) and fixed cells (green)
-const RED = "cursor-help bg-red-100 text-red-900";
-const GREEN = "cursor-help bg-green-100 text-green-900";
+const RED = "cursor-help bg-red-100 font-semibold text-red-700";
+const GREEN = "cursor-help bg-green-100 font-semibold text-green-800";
+const CELL_BORDER = "border-b border-r border-purple-light";
+const PAGER_CLASS =
+  "flex items-center gap-1 rounded-full border-2 border-purple-light bg-white px-4 py-2 text-sm font-bold text-navy hover:bg-purple-light/60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white";
 
 type Tab = "ask" | "data" | "clean";
 
@@ -157,113 +160,133 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
             </div>
           )}
 
-          {tab === "clean" && <CleaningPanel dataset={dataset} onShowIssue={showIssue} />}
-
           {tab === "clean" && (
-            <>
-              {/* Scroll box: scrolls down for many rows and sideways for many columns */}
-              <div
-                ref={tableBoxRef}
-                className="mt-6 max-h-[70vh] overflow-auto rounded-lg border border-zinc-200"
-              >
-                <table className="min-w-full border-collapse text-sm">
-                  {/* sticky keeps the headers visible while scrolling down */}
-                  <thead className="sticky top-0 bg-zinc-100">
-                    <tr>
-                      <th className="border-b border-zinc-200 px-3 py-2 text-right font-medium text-zinc-500">
-                        #
-                      </th>
-                      {headers.map((header, i) => (
-                        <th
-                          key={i}
-                          className="whitespace-nowrap border-b border-zinc-200 px-3 py-2 text-left font-semibold"
-                        >
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pageRows.map((row, rowIndex) => {
-                      const r = start + rowIndex;
-                      const rowIssue = rowIssues.get(r);
-                      const rowFixed = rowIssue && fixedIds.has(rowIssue.id);
-                      return (
-                        <tr
-                          key={r}
-                          id={`data-row-${r}`}
-                          className={
-                            !rowIssue
-                              ? "even:bg-zinc-50"
-                              : rowFixed
-                                ? `${GREEN} line-through`
-                                : RED
-                          }
-                        >
-                          <td
-                            {...(rowIssue && tipProps(rowIssue))}
-                            className={`px-3 py-1.5 text-right ${rowIssue ? "font-medium" : "text-zinc-400"}`}
+            // Table on the left, issue list on the right (under the table on phones)
+            <div role="tabpanel" aria-label="Clean" className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+              <section className="min-w-0 rounded-2xl bg-white p-4 text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)] sm:p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="min-w-0 truncate font-display text-xl font-extrabold" title={fileName}>
+                    {fileName}
+                  </h2>
+                  <p className="flex items-center gap-4 text-xs font-semibold text-grey">
+                    <span className="flex items-center gap-1.5">
+                      <span aria-hidden="true" className="size-3 rounded border border-red-300 bg-red-100" />
+                      Needs a look
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span aria-hidden="true" className="size-3 rounded border border-green-300 bg-green-100" />
+                      Fixed
+                    </span>
+                  </p>
+                </div>
+
+                {/* Scroll box: scrolls down for many rows and sideways for many columns */}
+                <div
+                  ref={tableBoxRef}
+                  className="mt-4 max-h-[70vh] overflow-auto rounded-xl border-l border-t border-purple-light"
+                >
+                  <table className="min-w-full border-separate border-spacing-0 text-sm">
+                    {/* sticky keeps the headers visible while scrolling down */}
+                    <thead className="sticky top-0 z-10 bg-white">
+                      <tr className="bg-purple-light/40">
+                        <th className={`${CELL_BORDER} px-3 py-2 text-left font-semibold text-grey`}>#</th>
+                        {headers.map((header, i) => (
+                          <th
+                            key={i}
+                            className={`${CELL_BORDER} whitespace-nowrap px-3 py-2 text-left font-semibold`}
                           >
-                            {r + 1}
-                          </td>
-                          {row.map((cell, i) => {
-                            const issue = cellIssues.get(`${r}:${i}`);
-                            if (!issue) {
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pageRows.map((row, rowIndex) => {
+                        const r = start + rowIndex;
+                        const rowIssue = rowIssues.get(r);
+                        const rowFixed = rowIssue && fixedIds.has(rowIssue.id);
+                        return (
+                          <tr
+                            key={r}
+                            id={`data-row-${r}`}
+                            className={!rowIssue ? "" : rowFixed ? `${GREEN} line-through` : RED}
+                          >
+                            <td
+                              {...(rowIssue && tipProps(rowIssue))}
+                              className={`${CELL_BORDER} px-3 py-2 ${rowIssue ? "" : "text-grey"}`}
+                            >
+                              {r + 1}
+                            </td>
+                            {row.map((cell, i) => {
+                              const issue = cellIssues.get(`${r}:${i}`);
+                              if (!issue) {
+                                return (
+                                  <td
+                                    key={i}
+                                    title={cell}
+                                    className={`${CELL_BORDER} max-w-xs truncate whitespace-nowrap px-3 py-2`}
+                                  >
+                                    {cell}
+                                  </td>
+                                );
+                              }
+                              const isFixed = fixedIds.has(issue.id);
                               return (
                                 <td
                                   key={i}
-                                  title={cell}
-                                  className="max-w-xs truncate whitespace-nowrap px-3 py-1.5"
+                                  {...tipProps(issue)}
+                                  className={`${CELL_BORDER} max-w-xs truncate whitespace-nowrap px-3 py-2 ${isFixed ? GREEN : RED}`}
                                 >
-                                  {cell}
+                                  {isFixed && issue.fix?.type === "set" ? issue.fix.value : cell || "(blank)"}
+                                  {isFixed && (
+                                    <Check aria-label="fixed" className="ml-1 inline size-3.5" strokeWidth={3} />
+                                  )}
                                 </td>
                               );
-                            }
-                            const isFixed = fixedIds.has(issue.id);
-                            return (
-                              <td
-                                key={i}
-                                {...tipProps(issue)}
-                                className={`max-w-xs truncate whitespace-nowrap px-3 py-1.5 ${isFixed ? GREEN : RED}`}
-                              >
-                                {isFixed && issue.fix?.type === "set" ? issue.fix.value : cell}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
 
-                {rows.length === 0 && (
-                  <p className="p-6 text-center text-zinc-500">
-                    This file has headers but no data rows.
-                  </p>
+                  {rows.length === 0 && (
+                    <p className="p-6 text-center text-grey">This file has headers but no data rows.</p>
+                  )}
+                </div>
+
+                <p className="mt-3 text-xs text-grey">
+                  Hover any red cell to see the problem and the suggested fix. Your original file is always kept.
+                </p>
+
+                {/* Pagination controls */}
+                {totalPages > 1 && (
+                  <div className="mt-4 flex items-center justify-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => goToPage(page - 1)}
+                      disabled={page === 1}
+                      className={PAGER_CLASS}
+                    >
+                      <ArrowLeft aria-hidden="true" className="size-4" /> Previous
+                    </button>
+                    <span className="text-sm font-bold">
+                      Page {page} of {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => goToPage(page + 1)}
+                      disabled={page === totalPages}
+                      className={PAGER_CLASS}
+                    >
+                      Next <ArrowRight aria-hidden="true" className="size-4" />
+                    </button>
+                  </div>
                 )}
-              </div>
+              </section>
 
-              {/* Pagination controls */}
-              <div className="mt-4 flex items-center justify-center gap-4">
-                <button
-                  onClick={() => goToPage(page - 1)}
-                  disabled={page === 1}
-                  className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Previous
-                </button>
-                <span className="text-sm text-zinc-600">
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  onClick={() => goToPage(page + 1)}
-                  disabled={page === totalPages}
-                  className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Next
-                </button>
-              </div>
-            </>
+              <CleaningPanel dataset={dataset} onShowIssue={showIssue} />
+            </div>
           )}
         </div>
       </div>

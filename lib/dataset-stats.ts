@@ -11,7 +11,71 @@ export function toNumber(value: string): number | null {
 }
 
 export function formatNumber(n: number): string {
-  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+}
+
+// $2,500 or $19.99 (cents only when there are some)
+export function formatMoney(n: number): string {
+  const cents = Math.round(Math.abs(n) * 100) % 100 !== 0;
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: cents ? 2 : 0,
+    maximumFractionDigits: 2,
+  });
+}
+
+// Short money for chart axes: $250k, $1.2M
+export function formatMoneyShort(n: number): string {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  const short = (v: number, unit: string) => `${sign}$${Number(v.toFixed(1)).toLocaleString("en-US")}${unit}`;
+  if (abs >= 1e9) return short(abs / 1e9, "B");
+  if (abs >= 1e6) return short(abs / 1e6, "M");
+  if (abs >= 1e3) return short(abs / 1e3, "k");
+  return formatMoney(n);
+}
+
+const MONEY_WORDS = /\b(usd|dollars?|price|cost|costs|revenue|sales|amount|salary|salaries|income|spend|spending|fee|fees|profit|budget|wage|wages|pay|earnings)\b/;
+
+// A column holds money if its name says so (e.g. "price", "revenue_usd") or most values start with $
+export function isMoneyColumn(rows: string[][], col: number, name: string): boolean {
+  const words = name.toLowerCase().replace(/[_\-]+/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
+  const filled = rows.filter((row) => row[col].trim());
+  const dollars = filled.filter((row) => /^-?\$/.test(row[col].trim())).length;
+  const numeric = filled.filter((row) => toNumber(row[col]) !== null).length;
+  if (numeric < filled.length * 0.8 || numeric === 0) return false;
+  return dollars >= filled.length * 0.5 || (MONEY_WORDS.test(words) && !/\b(count|qty|quantity|units?)\b/.test(words));
+}
+
+const ACRONYMS = new Set(["usd", "id", "gdp", "url", "api", "nyc", "us", "uk", "eu", "cpi", "kpi", "sku"]);
+const UNITS: Record<string, string> = { usd: "USD", pct: "%", percent: "%" };
+
+// Column names in plain words: "standard_coverage_limit_usd" → "Standard coverage limit (USD)".
+// Names that already read like words ("Number of rows") are left alone apart from a capital first letter.
+export function plainLabel(name: string): string {
+  const coded = /[_]|[a-z][A-Z]/.test(name) || /^[a-z0-9]+$/.test(name);
+  if (!coded) return name.charAt(0).toUpperCase() + name.slice(1);
+
+  let words = name
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .split(/[_\s-]+/)
+    .filter(Boolean)
+    .map((w) => w.toLowerCase());
+  let unit = "";
+  const last = words[words.length - 1];
+  if (words.length > 1 && UNITS[last]) {
+    unit = ` (${UNITS[last]})`;
+    words = words.slice(0, -1);
+  }
+  const text = words.map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w)).join(" ");
+  return text.charAt(0).toUpperCase() + text.slice(1) + unit;
+}
+
+// The same label for use in the middle of a sentence ("… by effective date")
+export function midSentence(label: string): string {
+  const first = label.split(" ")[0];
+  return first === first.toUpperCase() ? label : label.charAt(0).toLowerCase() + label.slice(1);
 }
 
 // Finds a column by name (exact match first, then ignoring upper/lower case)
@@ -228,14 +292,16 @@ export function computeStat({ headers, rows }: Dataset, spec: StatSpec): StatRes
 
     if (first === 0) return null; // can't compute a % change from zero
     const pct = ((last - first) / Math.abs(first)) * 100;
+    const show = isMoneyColumn(rows, col, headers[col]) ? formatMoney : formatNumber;
     return {
       label,
-      value: `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`,
-      detail: `${formatNumber(first)} (${firstName}) → ${formatNumber(last)} (${lastName})`,
+      value: `${pct >= 0 ? "+" : ""}${formatNumber(Number(pct.toFixed(1)))}%`,
+      detail: `${show(first)} (${firstName}) → ${show(last)} (${lastName})`,
     };
   }
 
   // mean / median / sum / min / max
+  const money = isMoneyColumn(rows, col, headers[col]);
   const nums = numbersIn(rows, col);
   if (nums.length === 0) return null;
   let value: number;
@@ -248,7 +314,11 @@ export function computeStat({ headers, rows }: Dataset, spec: StatSpec): StatRes
     const mid = Math.floor(sorted.length / 2);
     value = sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
   }
-  return { label, value: formatNumber(value), detail: `based on ${formatNumber(nums.length)} rows` };
+  return {
+    label,
+    value: money ? formatMoney(value) : formatNumber(value),
+    detail: `based on ${formatNumber(nums.length)} rows`,
+  };
 }
 
 // ---------- Turn the AI's chart requests into chart points ----------
@@ -256,11 +326,25 @@ export function computeStat({ headers, rows }: Dataset, spec: StatSpec): StatRes
 export type ChartData = {
   title: string;
   type: ChartSpec["type"];
-  points: { x: string | number; y: number }[];
+  // For time axes, x is a date as a number (milliseconds) and `label` is how the file wrote it
+  points: { x: string | number; y: number; label?: string }[];
   xLabel: string;
   yLabel: string;
   note?: string;
+  // Added later, so charts saved before then don't have these:
+  xAxis?: "category" | "date" | "year" | "number"; // date/year = spaced by real time
+  xMoney?: boolean;
+  yMoney?: boolean;
 };
+
+// Line chart x values that are all years (1934) or all dates (1/1/1934) can be placed by real time
+function timeAxis(keys: string[]): "year" | "date" | null {
+  if (keys.every((k) => /^\d{4}$/.test(k.trim()) && +k >= 1000 && +k <= 2999)) return "year";
+  const looksLikeDate = (k: string) =>
+    /\d/.test(k) && toNumber(k) === null && !Number.isNaN(Date.parse(k)) &&
+    (/[-/.]/.test(k) || /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(k));
+  return keys.length > 0 && keys.every(looksLikeDate) ? "date" : null;
+}
 
 const MAX_BARS = 20;
 const MAX_LINE_POINTS = 500;
@@ -270,7 +354,12 @@ export function buildChartData({ headers, rows }: Dataset, spec: ChartSpec): Cha
   const xCol = findColumn(headers, spec.x_column);
   if (xCol === -1) return null;
   const yCol = findColumn(headers, spec.y_column);
-  const base = { title: spec.title, type: spec.type, xLabel: headers[xCol] };
+  const base = {
+    title: spec.title,
+    type: spec.type,
+    xLabel: plainLabel(headers[xCol]),
+    xMoney: isMoneyColumn(rows, xCol, headers[xCol]),
+  };
 
   if (spec.type === "scatter") {
     if (yCol === -1) return null;
@@ -281,9 +370,12 @@ export function buildChartData({ headers, rows }: Dataset, spec: ChartSpec): Cha
       if (x !== null && y !== null) points.push({ x, y });
     }
     if (points.length < 2) return null;
+    const isYear = /\byear\b/i.test(plainLabel(headers[xCol])) && points.every((p) => Number.isInteger(p.x));
     return {
       ...base,
-      yLabel: headers[yCol],
+      xAxis: isYear ? "year" : "number",
+      yLabel: plainLabel(headers[yCol]),
+      yMoney: isMoneyColumn(rows, yCol, headers[yCol]),
       points: evenlySpaced(points, MAX_SCATTER_POINTS),
       note:
         points.length > MAX_SCATTER_POINTS
@@ -302,10 +394,14 @@ export function buildChartData({ headers, rows }: Dataset, spec: ChartSpec): Cha
   const groups = groupBy(rows, xCol, yCol, aggregation);
   if (groups.size === 0) return null;
 
+  const yName = yCol === -1 ? "" : plainLabel(headers[yCol]);
   const yLabel =
     aggregation === "count"
       ? "Number of rows"
-      : `${aggregation === "mean" ? "Average" : "Total"} ${headers[yCol]}`;
+      : groupsAreSingleRows(rows, xCol)
+        ? yName // one row per x value: "Total" would be misleading
+        : `${aggregation === "mean" ? "Average" : "Total"} ${midSentence(yName)}`;
+  const yMoney = aggregation !== "count" && isMoneyColumn(rows, yCol, headers[yCol]);
 
   let keys = [...groups.keys()];
   let note: string | undefined;
@@ -326,5 +422,30 @@ export function buildChartData({ headers, rows }: Dataset, spec: ChartSpec): Cha
     }
   }
 
-  return { ...base, yLabel, note, points: keys.map((k) => ({ x: k, y: groups.get(k)! })) };
+  // Line charts over years or dates: place each point by real time, not evenly
+  const time = spec.type === "line" ? timeAxis(keys) : null;
+  if (time) {
+    const at = (k: string) => (time === "year" ? Number(k) : Date.parse(k));
+    return {
+      ...base,
+      xAxis: time,
+      yLabel,
+      yMoney,
+      note,
+      points: keys.map((k) => ({ x: at(k), y: groups.get(k)!, label: k })).sort((a, b) => a.x - b.x),
+    };
+  }
+
+  return { ...base, xAxis: "category", yLabel, yMoney, note, points: keys.map((k) => ({ x: k, y: groups.get(k)! })) };
+}
+
+// True when no x value appears in more than one row
+function groupsAreSingleRows(rows: string[][], xCol: number): boolean {
+  const seen = new Set<string>();
+  for (const row of rows) {
+    const key = row[xCol].trim() || "(blank)";
+    if (seen.has(key)) return false;
+    seen.add(key);
+  }
+  return true;
 }

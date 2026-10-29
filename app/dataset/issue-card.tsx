@@ -3,21 +3,19 @@
 import { ISSUE_LABELS, type Issue } from "@/lib/cleaning";
 
 // One problem: what's wrong, what we suggest, and a Fix / Undo button.
-// Used in the hover tooltip on red/green cells and in the issue list.
+// Used in the hover tooltip on red/green cells.
 export function IssueCard({
   issue,
   original,
   fixed,
   canFix,
   onToggle,
-  children,
 }: {
   issue: Issue;
   original: string; // the cell's original value ("" for whole-row issues)
   fixed: boolean;
   canFix: boolean; // false while the AI is still double-checking
   onToggle: () => void;
-  children?: React.ReactNode; // extra buttons
 }) {
   const adviceLabel = !issue.fix
     ? "Note: "
@@ -26,9 +24,9 @@ export function IssueCard({
       : "Suggested fix: ";
 
   return (
-    <div className="flex flex-col gap-1.5 text-sm">
+    <div className="flex flex-col gap-1.5 text-sm text-navy">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium">
+        <span className="rounded-full bg-purple-light px-2 py-0.5 text-xs font-bold text-purple">
           {ISSUE_LABELS[issue.kind]}
         </span>
         {fixed && (
@@ -36,7 +34,7 @@ export function IssueCard({
         )}
       </div>
 
-      <p className={fixed ? "text-zinc-500" : ""}>{issue.problem}</p>
+      <p className={fixed ? "text-grey" : ""}>{issue.problem}</p>
 
       {fixed ? (
         <p>
@@ -50,8 +48,8 @@ export function IssueCard({
           )}
         </p>
       ) : (
-        <p className="text-zinc-600">
-          <span className="font-medium text-foreground">{adviceLabel}</span>
+        <p className="text-grey">
+          <span className="font-semibold text-navy">{adviceLabel}</span>
           {issue.advice}
         </p>
       )}
@@ -62,16 +60,15 @@ export function IssueCard({
             type="button"
             onClick={onToggle}
             disabled={!canFix}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40 ${
+            className={`rounded-full px-3 py-1 text-xs font-bold transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40 ${
               fixed
-                ? "border border-zinc-300"
-                : "bg-foreground text-background"
+                ? "bg-green-100 text-green-800"
+                : "bg-purple text-white"
             }`}
           >
             {fixed ? "Undo" : "Fix"}
           </button>
         )}
-        {children}
       </div>
     </div>
   );
@@ -103,7 +100,7 @@ export function IssueTooltip({
       style={{ ...position, width }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="fixed z-50 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-background p-3 shadow-lg"
+      className="fixed z-50 max-w-[calc(100vw-1rem)] rounded-xl border border-purple-light bg-white p-3 shadow-[0_12px_40px_rgba(36,23,79,0.12)]"
     >
       {children}
     </div>

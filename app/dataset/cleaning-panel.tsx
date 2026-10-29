@@ -1,12 +1,26 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
-import type { Issue } from "@/lib/cleaning";
+import { ISSUE_LABELS, type Issue } from "@/lib/cleaning";
 import { downloadCsv } from "@/lib/csv";
 import { useDataset } from "../dataset-context";
-import { IssueCard } from "./issue-card";
+import { chunkyPurple } from "../brand";
 
-// Summary above the table: how many issues, Fix all / Restore, original download, and the full list
+const short = (v: string, max = 30) => (v.length > max ? `${v.slice(0, max - 1)}…` : v);
+
+// One line under the issue's name: what changes, or what's wrong
+function issueDetail(issue: Issue, dataset: Dataset): string {
+  const column = issue.col === null ? "" : dataset.headers[issue.col];
+  if (issue.fix?.type === "set") {
+    const original = issue.col === null ? "" : dataset.rows[issue.row][issue.col];
+    return `${column} "${short(original) || "(blank)"}" → ${short(issue.fix.value) || "(blank)"}`;
+  }
+  return column ? `${column}: ${issue.problem}` : issue.problem;
+}
+
+// The Clean tab's side panel: how many issues, one card per issue with Fix / Undo,
+// "Fix all safe issues" (confident fixes only), Restore original, and the original download
 export default function CleaningPanel({
   dataset,
   onShowIssue,
@@ -20,114 +34,139 @@ export default function CleaningPanel({
 
   if (!cleaning) {
     return (
-      <p className="mt-6 animate-pulse text-sm text-zinc-600">
-        Checking your data for problems…
-      </p>
+      <section className="rounded-2xl bg-white p-5 text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)]">
+        <p className="animate-pulse text-sm text-grey">Checking your data for problems…</p>
+      </section>
     );
   }
 
   const { issues } = cleaning;
   const fixed = new Set(cleaning.fixedIds);
-  const fixable = issues.filter((issue) => issue.fix);
-  const allFixed = fixable.every((issue) => fixed.has(issue.id));
+  const toReview = issues.length - fixed.size;
+  // "Safe" = fixes we're confident about. Uncertain suggestions are left for the user to decide.
+  const safeUnfixed = issues.filter((i) => i.fix && i.certainty === "confident" && !fixed.has(i.id));
+  const uncertainLeft = issues.filter((i) => i.fix && i.certainty === "suggestion" && !fixed.has(i.id));
   const baseName = dataset.fileName.replace(/\.(csv|xlsx)$/i, "");
 
-  const buttonClass =
-    "rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40";
-
   return (
-    <section className="mt-6 rounded-2xl border border-zinc-200 p-5">
-      <h2 className="text-lg font-semibold">
+    <section className="flex flex-col rounded-2xl bg-white p-5 text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)] sm:p-6">
+      <h2 className="font-display text-2xl font-extrabold tracking-tight">
         {issues.length === 0
-          ? "No problems found. Your data looks clean ✨"
-          : `We found ${issues.length.toLocaleString()} possible ${issues.length === 1 ? "issue" : "issues"}.`}
-        {fixed.size > 0 && (
-          <span className="ml-2 text-base font-normal text-green-700">
-            {fixed.size.toLocaleString()} fixed
-          </span>
-        )}
+          ? "No problems found ✨"
+          : `We found ${issues.length.toLocaleString()} ${issues.length === 1 ? "issue" : "issues"}`}
       </h2>
+      <p className="mt-1 text-sm text-grey">
+        {issues.length === 0
+          ? "Your data looks clean."
+          : `${fixed.size.toLocaleString()} fixed · ${toReview.toLocaleString()} to review`}
+      </p>
 
-      {scanning ? (
-        <p className="mt-1 animate-pulse text-sm text-zinc-600">
+      {scanning && (
+        <p className="mt-3 animate-pulse text-sm text-grey">
           Our AI is double-checking these and working out the best fixes…
         </p>
-      ) : (
-        issues.length > 0 && (
-          <p className="mt-1 text-sm text-zinc-600">
-            <span className="text-red-700">Red</span> cells may have a problem,{" "}
-            <span className="text-green-700">green</span> cells are fixed. Hover
-            a cell for details. Your original data is always kept.
-          </p>
-        )
       )}
-
       {cleaningNote && (
-        <p role="status" className="mt-2 text-sm text-amber-700">
+        <p role="status" className="mt-3 rounded-xl bg-orange-light px-3 py-2 text-sm">
           {cleaningNote}
         </p>
       )}
       {cleaningSaveFailed && (
-        <p role="status" className="mt-2 text-sm text-amber-700">
+        <p role="status" className="mt-3 rounded-xl bg-orange-light px-3 py-2 text-sm">
           We couldn&rsquo;t save your fixes to your history, but they&rsquo;re still here for now.
         </p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {fixable.length > 0 && (
-          <button
-            type="button"
-            onClick={() => setFixed(fixable.map((issue) => issue.id), true)}
-            disabled={scanning || allFixed}
-            className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Fix all ({fixable.length.toLocaleString()})
-          </button>
-        )}
-        {fixable.length > 0 && (
-          <button type="button" onClick={restoreOriginal} disabled={fixed.size === 0} className={buttonClass}>
-            Restore original
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={() => downloadCsv(`${baseName}-original.csv`, dataset.headers, dataset.rows)}
-          className={buttonClass}
-        >
-          Download original CSV
-        </button>
-      </div>
-
       {issues.length > 0 && (
-        <details className="mt-4">
-          <summary className="cursor-pointer text-sm font-medium">See all issues</summary>
-          <ul className="mt-3 flex max-h-96 flex-col divide-y divide-zinc-200 overflow-y-auto">
-            {issues.map((issue) => (
-              <li key={issue.id} className="py-3">
-                <p className="mb-1 text-xs text-zinc-500">
-                  Row {issue.row + 1}
-                  {issue.col !== null && ` · ${dataset.headers[issue.col]}`}
-                </p>
-                <IssueCard
-                  issue={issue}
-                  original={issue.col === null ? "" : dataset.rows[issue.row][issue.col]}
-                  fixed={fixed.has(issue.id)}
-                  canFix={!scanning}
-                  onToggle={() => setFixed([issue.id], !fixed.has(issue.id))}
+        <ul className="-mx-1 mt-4 flex flex-col gap-2.5 px-1 lg:max-h-[60vh] lg:overflow-y-auto">
+          {issues.map((issue) => {
+            const isFixed = fixed.has(issue.id);
+            return (
+              <li
+                key={issue.id}
+                className="flex items-center gap-3 rounded-xl border border-purple-light p-3.5"
+              >
+                {/* Tap the text to jump to the row in the table */}
+                <button
+                  type="button"
+                  onClick={() => onShowIssue(issue)}
+                  className="min-w-0 flex-1 text-left"
+                  title="Show in table"
                 >
+                  <span className="block text-sm font-bold">
+                    {ISSUE_LABELS[issue.kind]}
+                    <span className="font-normal text-grey"> · row {issue.row + 1}</span>
+                  </span>
+                  <span className="mt-0.5 block truncate text-xs text-grey">
+                    {issueDetail(issue, dataset)}
+                  </span>
+                  {issue.fix && issue.certainty === "suggestion" && !isFixed && (
+                    <span className="mt-1 block text-xs font-semibold text-orange-dark">
+                      Not certain: check before fixing
+                    </span>
+                  )}
+                </button>
+
+                {issue.fix ? (
                   <button
                     type="button"
-                    onClick={() => onShowIssue(issue)}
-                    className="rounded-full px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100"
+                    onClick={() => setFixed([issue.id], !isFixed)}
+                    disabled={scanning}
+                    aria-label={isFixed ? `Undo fix: ${ISSUE_LABELS[issue.kind]}, row ${issue.row + 1}` : undefined}
+                    className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-opacity disabled:cursor-not-allowed disabled:opacity-40 ${
+                      isFixed
+                        ? "bg-green-100 text-green-800 hover:opacity-80"
+                        : "bg-purple text-white hover:opacity-90"
+                    }`}
                   >
-                    Show in table
+                    {isFixed ? "Fixed · Undo" : "Fix"}
                   </button>
-                </IssueCard>
+                ) : (
+                  <span className="shrink-0 text-xs text-grey">Flagged only</span>
+                )}
               </li>
-            ))}
-          </ul>
-        </details>
+            );
+          })}
+        </ul>
       )}
+
+      {issues.some((i) => i.fix) && (
+        <div className="mt-5 flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFixed(safeUnfixed.map((i) => i.id), true)}
+            disabled={scanning || safeUnfixed.length === 0}
+            className={`${chunkyPurple} w-full gap-2 px-6! py-3.5! text-base! disabled:cursor-not-allowed disabled:opacity-50`}
+          >
+            <Sparkles aria-hidden="true" className="size-5" />
+            Fix all safe issues
+            {safeUnfixed.length > 0 && ` (${safeUnfixed.length.toLocaleString()})`}
+          </button>
+          {uncertainLeft.length > 0 && (
+            <p className="text-center text-xs text-grey">
+              {uncertainLeft.length.toLocaleString()} uncertain{" "}
+              {uncertainLeft.length === 1 ? "suggestion is" : "suggestions are"} left for you to
+              check one by one.
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={restoreOriginal}
+            disabled={fixed.size === 0}
+            className="mt-1 text-sm font-bold text-navy hover:underline disabled:cursor-not-allowed disabled:opacity-40 disabled:no-underline"
+          >
+            Restore original
+          </button>
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => downloadCsv(`${baseName}-original.csv`, dataset.headers, dataset.rows)}
+        className={`${issues.some((i) => i.fix) ? "mt-1" : "mt-4"} self-center text-xs font-semibold text-purple hover:underline`}
+      >
+        Download original CSV
+      </button>
     </section>
   );
 }
