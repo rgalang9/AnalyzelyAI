@@ -49,7 +49,8 @@ export default function CleaningPanel({
   const baseName = dataset.fileName.replace(/\.(csv|xlsx)$/i, "");
 
   return (
-    <section className="flex flex-col rounded-2xl bg-white p-5 text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)] sm:p-6">
+    // min-w-0 stops long issue text from stretching the panel wider than a phone screen
+    <section className="flex min-w-0 flex-col rounded-2xl bg-white p-5 text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)] sm:p-6">
       <h2 className="font-display text-2xl font-extrabold tracking-tight">
         {issues.length === 0
           ? "No problems found ✨"
