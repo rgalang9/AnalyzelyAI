@@ -7,8 +7,8 @@ import { needsReview, reviewIssues, type Cleaning } from "@/lib/cleaning";
 import { findIssues } from "@/lib/data-checks";
 
 // Shared memory for the dataset that's open right now, so the upload screen
-// and the sidebar can hand it to the dataset screen. It lives in the browser
-// tab, so a page refresh clears it (saved analyses can be reopened from the sidebar).
+// and a saved analysis card can hand it to the dataset screen. It lives in the browser
+// tab, so a page refresh clears it (saved analyses can be reopened from My analyses).
 type DatasetContextValue = {
   dataset: Dataset | null; // always the original, as uploaded
   analysisId: string | null; // set when it's saved to the user's history

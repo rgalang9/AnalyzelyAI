@@ -11,7 +11,7 @@ export type Answer = {
   charts: ChartData[];
 };
 
-// One entry in the history list (sidebar and analysis cards)
+// One entry in the history list (the analysis cards)
 export type AnalysisSummary = {
   id: string;
   file_name: string;
@@ -21,7 +21,7 @@ export type AnalysisSummary = {
   column_count: number;
 };
 
-// The sidebar listens for this to refresh the list (e.g. when an AI title arrives)
+// The analysis cards listen for this to refresh the list (e.g. when an AI title arrives)
 export const HISTORY_CHANGED = "analyzely:history-changed";
 const announceHistoryChange = () => window.dispatchEvent(new Event(HISTORY_CHANGED));
 
@@ -44,7 +44,7 @@ export async function saveNewAnalysis(dataset: Dataset): Promise<string | null> 
   const upload = await supabase.storage.from(BUCKET).upload(path, file);
   if (upload.error) throw upload.error;
 
-  // 2. A small row in the table makes it show up in the sidebar
+  // 2. A small row in the table makes it show up in My analyses
   const { error } = await supabase.from("analyses").insert({
     id,
     file_name: dataset.fileName,

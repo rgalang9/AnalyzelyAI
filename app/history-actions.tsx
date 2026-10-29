@@ -2,20 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { Download, Pencil, Trash2 } from "lucide-react";
 
-// Pieces for managing a history entry in the sidebar: the "⋯" menu,
+// Pieces for managing a saved analysis: the "⋯" menu,
 // renaming in place, and the delete confirmation.
 
-// Small menu under the "⋯" button. It's drawn at the page level (a portal) so the
-// sidebar's scroll area can't cut it off.
+// Small menu under the "⋯" button. It's drawn at the page level (a portal) so
+// nothing around the card can cut it off.
 export function ItemMenu({
   anchor,
   onRename,
+  onDownload,
   onDelete,
   onClose,
 }: {
   anchor: DOMRect; // where the "⋯" button is on screen
   onRename: () => void;
+  onDownload: () => void;
   onDelete: () => void;
   onClose: () => void;
 }) {
@@ -38,25 +41,27 @@ export function ItemMenu({
     };
   }, [onClose]);
 
-  const width = 160;
-  const itemClass = "block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-900";
+  const width = 180;
+  const itemClass =
+    "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold hover:bg-purple-light/60";
 
   return createPortal(
     <div
       ref={menuRef}
       role="menu"
       style={{ top: anchor.bottom + 4, left: Math.max(8, anchor.right - width), width }}
-      className="fixed z-50 rounded-xl border border-zinc-200 bg-background p-1.5 shadow-lg dark:border-zinc-800"
+      className="fixed z-50 rounded-xl border border-purple-light bg-white p-1.5 text-navy shadow-[0_12px_40px_rgba(36,23,79,0.12)]"
     >
       <button type="button" role="menuitem" onClick={onRename} className={itemClass}>
+        <Pencil aria-hidden="true" className="size-4 text-purple" />
         Rename
       </button>
-      <button
-        type="button"
-        role="menuitem"
-        onClick={onDelete}
-        className={`${itemClass} text-red-600 dark:text-red-400`}
-      >
+      <button type="button" role="menuitem" onClick={onDownload} className={itemClass}>
+        <Download aria-hidden="true" className="size-4 text-purple" />
+        Download CSV
+      </button>
+      <button type="button" role="menuitem" onClick={onDelete} className={`${itemClass} text-pink`}>
+        <Trash2 aria-hidden="true" className="size-4" />
         Delete
       </button>
     </div>,
@@ -98,7 +103,7 @@ export function RenameInput({
         if (e.key === "Escape") finish(false);
       }}
       onBlur={() => finish(false)}
-      className="min-w-0 flex-1 rounded-lg border border-zinc-300 bg-background px-2 py-1.5 text-sm font-medium outline-none focus:border-foreground dark:border-zinc-700"
+      className="w-full min-w-0 rounded-lg border-2 border-purple-light bg-white px-2 py-1.5 font-display text-lg font-extrabold text-navy outline-none focus:border-purple"
     />
   );
 }
@@ -127,10 +132,12 @@ export function ConfirmDeleteDialog({
         e.preventDefault(); // Escape: close through onCancel, not on its own
         if (!busy) onCancel();
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-background p-6 text-foreground shadow-xl backdrop:bg-black/40"
+      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-white p-6 text-navy shadow-xl backdrop:bg-navy/40"
     >
-      <h2 className="text-lg font-semibold">Delete this analysis? This can&rsquo;t be undone.</h2>
-      <p className="mt-2 truncate text-sm text-zinc-600 dark:text-zinc-400" title={name}>
+      <h2 className="font-display text-lg font-extrabold">
+        Delete this analysis? This can&rsquo;t be undone.
+      </h2>
+      <p className="mt-2 truncate text-sm text-grey" title={name}>
         &ldquo;{name}&rdquo; and its questions, answers, and fixes will be removed.
       </p>
       <div className="mt-6 flex justify-end gap-2">
@@ -138,7 +145,7 @@ export function ConfirmDeleteDialog({
           type="button"
           onClick={onCancel}
           disabled={busy}
-          className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium hover:bg-zinc-100 disabled:opacity-40 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          className="rounded-full border-2 border-navy px-5 py-2 text-sm font-bold hover:bg-purple-light/60 disabled:opacity-40"
         >
           Cancel
         </button>
@@ -146,7 +153,7 @@ export function ConfirmDeleteDialog({
           type="button"
           onClick={onConfirm}
           disabled={busy}
-          className="rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+          className="rounded-full bg-pink px-5 py-2 text-sm font-bold text-white hover:brightness-95 disabled:opacity-60"
         >
           {busy ? "Deleting…" : "Delete"}
         </button>

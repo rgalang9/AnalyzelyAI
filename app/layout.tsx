@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { DatasetProvider } from "./dataset-context";
-import AppShell from "./app-shell";
 import { Suspense } from "react";
 import TopBar, { TopBarPlaceholder } from "./top-bar";
 import { LearnProgressProvider } from "./learn/progress-context";
@@ -43,9 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Suspense fallback={<TopBarPlaceholder />}>
               <TopBar />
             </Suspense>
-            <Suspense>
-              <AppShell>{children}</AppShell>
-            </Suspense>
+            <Suspense>{children}</Suspense>
           </LearnProgressProvider>
         </DatasetProvider>
       </body>

@@ -8,6 +8,8 @@ import {
   loadAnalysis,
   type AnalysisSummary,
 } from "@/lib/history";
+import { applyFixes } from "@/lib/cleaning";
+import { downloadCsv } from "@/lib/csv";
 import { useDataset } from "./dataset-context";
 
 // Shared pieces for showing saved analyses as cards (Analyze page and My analyses)
@@ -84,6 +86,15 @@ export function useOpenAnalysis() {
   return { open, openingId, openError };
 }
 
+// Saves a saved analysis as a CSV file, with any fixes the user applied
+export async function downloadAnalysis(id: string) {
+  const { dataset, cleaning } = await loadAnalysis(id);
+  const data = applyFixes(dataset, cleaning);
+  const baseName = dataset.fileName.replace(/\.(csv|xlsx)$/i, "");
+  const suffix = cleaning?.fixedIds.length ? "-cleaned" : "";
+  downloadCsv(`${baseName}${suffix}.csv`, data.headers, data.rows);
+}
+
 // Card colors take turns: purple, pink, orange. Each card is its own white box,
 // so pink and orange never touch (color rule).
 const THEMES = [
@@ -136,6 +147,7 @@ function MiniChart({ shape }: { shape: number }) {
 }
 
 // One saved analysis. The whole card opens it; `menu` (the ⋯ button) sits on top.
+// While renaming, `titleEditor` takes the title's place and the card stops being a button.
 export function AnalysisCard({
   item,
   index,
@@ -143,6 +155,7 @@ export function AnalysisCard({
   disabled,
   onOpen,
   menu,
+  titleEditor,
 }: {
   item: AnalysisSummary;
   index: number; // position in the list, picks the color
@@ -150,28 +163,30 @@ export function AnalysisCard({
   disabled: boolean;
   onOpen: () => void;
   menu?: React.ReactNode;
+  titleEditor?: React.ReactNode;
 }) {
   const theme = THEMES[index % THEMES.length];
   const chipClass = "rounded-full bg-purple-light/60 px-2.5 py-1 text-xs font-medium text-grey";
+  const Box = titleEditor ? "div" : "button";
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={onOpen}
-        disabled={disabled}
-        className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_8px_30px_rgba(36,23,79,0.08)] transition-transform hover:-translate-y-1 disabled:cursor-wait"
+      <Box
+        {...(!titleEditor && { type: "button" as const, onClick: onOpen, disabled })}
+        className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_8px_30px_rgba(36,23,79,0.08)] transition-transform enabled:hover:-translate-y-1 disabled:cursor-wait"
       >
         <span className={`flex h-28 w-full items-center justify-center ${theme.band} ${theme.ink}`}>
           <MiniChart shape={shapeFor(item.id)} />
         </span>
         <span className="flex flex-1 flex-col p-5">
-          <span
-            className="line-clamp-2 font-display text-lg font-extrabold leading-snug text-navy"
-            title={nameOf(item)}
-          >
-            {nameOf(item)}
-          </span>
+          {titleEditor ?? (
+            <span
+              className="line-clamp-2 font-display text-lg font-extrabold leading-snug text-navy"
+              title={nameOf(item)}
+            >
+              {nameOf(item)}
+            </span>
+          )}
           <span className="mt-1 truncate text-sm text-grey">{item.file_name}</span>
           <span className="mt-4 flex flex-wrap gap-2">
             <span className={chipClass}>
@@ -180,7 +195,7 @@ export function AnalysisCard({
             <span className={chipClass}>{opening ? "Opening…" : formatDate(item.created_at)}</span>
           </span>
         </span>
-      </button>
+      </Box>
       {menu && <div className="absolute right-3 top-3">{menu}</div>}
     </div>
   );
