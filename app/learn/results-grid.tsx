@@ -9,20 +9,24 @@ function show(value: SqlValue, nullLabel: string) {
 
 // A query's result as a grid, like the results panel in SQL tools.
 // Python tables pass pandas' row labels (`rowLabels`, which start at 0), "NaN" for empty cells,
-// and how many rows the full table has when only the first ones are shown.
+// and how many rows the full table has when only the first ones are shown. A pandas Series
+// already has its row labels as its first column, so it turns the row-number column off.
+export type GridExtras = {
+  rowLabels?: string[];
+  rowHeader?: string;
+  nullLabel?: string;
+  totalRows?: number;
+  showRowColumn?: boolean;
+};
+
 export default function ResultsGrid({
   result,
   rowLabels,
   rowHeader = "Row",
   nullLabel = "NULL",
   totalRows,
-}: {
-  result: QueryResult;
-  rowLabels?: string[];
-  rowHeader?: string;
-  nullLabel?: string;
-  totalRows?: number;
-}) {
+  showRowColumn = true,
+}: { result: QueryResult } & GridExtras) {
   if (result.columns.length === 0) {
     return <p className="p-4 text-sm text-zinc-500">Done. This query didn&rsquo;t return a table.</p>;
   }
@@ -33,9 +37,11 @@ export default function ResultsGrid({
         <table className="min-w-full border-collapse font-mono text-xs">
           <thead className="sticky top-0 bg-zinc-100">
             <tr>
-              <th className="w-px border-b border-r border-zinc-200 px-2 py-1.5 text-right font-medium text-zinc-400">
-                {rowHeader}
-              </th>
+              {showRowColumn && (
+                <th className="w-px border-b border-r border-zinc-200 px-2 py-1.5 text-right font-medium text-zinc-400">
+                  {rowHeader}
+                </th>
+              )}
               {result.columns.map((col, i) => (
                 <th
                   key={i}
@@ -49,9 +55,11 @@ export default function ResultsGrid({
           <tbody>
             {result.rows.map((row, r) => (
               <tr key={r} className="even:bg-zinc-50">
-                <td className="w-px border-r border-zinc-200 px-2 py-1 text-right text-zinc-400">
-                  {rowLabels ? rowLabels[r] : r + 1}
-                </td>
+                {showRowColumn && (
+                  <td className="w-px border-r border-zinc-200 px-2 py-1 text-right text-zinc-400">
+                    {rowLabels ? rowLabels[r] : r + 1}
+                  </td>
+                )}
                 {row.map((value, c) => (
                   <td key={c} className="whitespace-nowrap border-r border-zinc-200 px-3 py-1">
                     {show(value, nullLabel)}

@@ -35,6 +35,9 @@ export default function LessonList({ language, lessons }: { language: string; le
                   Lesson {lesson.number} · Level {lesson.level}
                 </span>
                 <span className="block font-medium">{lesson.title}</span>
+                {lesson.problem && (
+                  <span className="block text-xs text-amber-700">⚠ This lesson file has a problem, so it can&rsquo;t open yet.</span>
+                )}
               </span>
               {!unlocked && <span className="ml-auto text-xs text-zinc-400">Finish the previous lesson to unlock</span>}
             </>

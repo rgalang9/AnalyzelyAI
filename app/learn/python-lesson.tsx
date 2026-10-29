@@ -4,17 +4,21 @@ import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "rea
 import type { LessonSummary, PythonLesson, PythonTask, PyTourTarget } from "@/lib/learn/lesson-types";
 import {
   getPythonStatus,
+  getSetupTables,
   preloadPython,
   runPython,
   stopPython,
   subscribePythonStatus,
   type PyOutput,
   type PyStatus,
+  type PyTable,
+  type PyTableInfo,
 } from "@/lib/learn/python/runner";
 import CodeEditor from "./code-editor";
 import ResultsGrid from "./results-grid";
+import SchemaPanel from "./schema-panel";
 import LessonSidebar from "./lesson-sidebar";
-import { LessonDone, SolutionModal } from "./lesson-parts";
+import { LessonDone, SolutionModal, TablePreviewModal } from "./lesson-parts";
 import {
   ExplanationRecall,
   LessonIntro,
@@ -55,6 +59,23 @@ const fillIn = (code: string, blanks: string[]) =>
 const needsPandas = (lesson: PythonLesson) =>
   lesson.datasets.length > 0 || /\b(pandas|pd)\b/.test(lesson.setup);
 
+// Lessons with chart tasks or .plot() code load matplotlib up front (it's only for them)
+const needsCharts = (lesson: PythonLesson) =>
+  lesson.tasks.some((t) => t.type !== "predict" && t.compare === "chart") ||
+  /\.plot\b|\.hist\(|\bplt\b/.test(JSON.stringify([lesson.example.code, lesson.tasks]));
+
+// A pandas table as the grid's data, row labels and header
+const gridFor = (table: PyTable) => ({
+  result: { columns: table.columns, rows: table.rows },
+  grid: {
+    rowLabels: table.index,
+    rowHeader: table.indexName,
+    nullLabel: "NaN",
+    totalRows: table.total,
+    showRowColumn: !table.series,
+  },
+});
+
 export default function PythonLessonPlayer({
   lesson,
   files,
@@ -76,18 +97,34 @@ export default function PythonLessonPlayer({
   const [output, setOutput] = useState<PyOutput | null>(null);
   const [expected, setExpected] = useState<PyOutput | null>(null);
   const [running, setRunning] = useState(false);
+  const [tables, setTables] = useState<PyTableInfo[]>([]); // what the setup makes, for the side panel
+  const [viewing, setViewing] = useState<string | null>(null); // table open in the preview pop-up
   const [explored, setExplored] = useState<Set<PyTourTarget>>(new Set());
   const [spot, setSpot] = useState<PyTourTarget | null>(null); // tour part being looked at
   const busy = useRef(false); // stops double runs
 
   useEffect(() => {
-    preloadPython({ pandas: needsPandas(lesson) });
+    preloadPython({ pandas: needsPandas(lesson), charts: needsCharts(lesson) });
   }, [lesson]);
+
+  // The side panel: every table the lesson's setup makes (df, or games and studios, …)
+  const ready = python.state === "ready";
+  useEffect(() => {
+    if (!ready || !lesson.setup.trim()) return;
+    let cancelled = false;
+    getSetupTables(files, lesson.setup).then((res) => {
+      if (cancelled) return;
+      setTables(res.tables);
+      if (res.error) console.error(res.error);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, lesson, files]);
 
   const tour = lesson.tour ?? [];
   const touring = tour.length > 0 && !started;
   const allExplored = tour.every((t) => explored.has(t.target));
-  const ready = python.state === "ready";
   const isPredict = task.type === "predict";
   const checksResult = task.type !== "predict";
 
@@ -158,7 +195,7 @@ export default function PythonLessonPlayer({
         res.reason === "timeout"
           ? "Your code ran for more than 10 seconds, so we stopped it. Is there a loop that never ends?"
           : "You stopped the code.";
-      setOutput({ stdout: "", table: null, value: null, error: text });
+      setOutput({ stdout: "", table: null, value: null, error: text, charts: [] });
       if (checking && res.reason === "timeout") flow.miss(text);
       return;
     }
@@ -312,40 +349,67 @@ export default function PythonLessonPlayer({
 
           <PythonStatusBar status={python} />
 
-          <TourSpot {...spotProps("editor")} className="relative h-56 shrink-0 overflow-auto border-b border-zinc-200">
-            {task.type === "fill" && started ? (
-              <FillCode code={task.code} blanks={blanks} onChange={setBlanks} onRun={handleRun} disabled={ts.solved || finished} />
-            ) : (
-              <CodeEditor language="python" value={code} onChange={setCode} onRun={handleRun} readOnly={editorLocked} />
-            )}
-            {!started && (
-              <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-6 text-center text-sm text-zinc-600">
-                🔒 Read the explanation and example, then press &ldquo;Got it&rdquo; to start.
-              </div>
-            )}
-          </TourSpot>
+          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+            <aside className="border-b border-zinc-200 md:w-52 md:shrink-0 md:border-b-0 md:border-r">
+              {tables.length > 0 ? (
+                <SchemaPanel tables={tables} onViewData={setViewing} />
+              ) : lesson.datasets.length > 0 ? (
+                <div className="p-3 text-sm">
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Files</h3>
+                  <ul className="flex flex-col gap-1 font-mono text-xs">
+                    {lesson.datasets.map((name) => (
+                      <li key={name}>📄 {name}.csv</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="p-3 text-xs text-zinc-500">No data files in this lesson.</p>
+              )}
+            </aside>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <TourSpot {...spotProps("editor")} className="relative h-56 shrink-0 overflow-auto border-b border-zinc-200">
+                {task.type === "fill" && started ? (
+                  <FillCode code={task.code} blanks={blanks} onChange={setBlanks} onRun={handleRun} disabled={ts.solved || finished} />
+                ) : (
+                  <CodeEditor language="python" value={code} onChange={setCode} onRun={handleRun} readOnly={editorLocked} />
+                )}
+                {!started && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-6 text-center text-sm text-zinc-600">
+                    🔒 Read the explanation and example, then press &ldquo;Got it&rdquo; to start.
+                  </div>
+                )}
+              </TourSpot>
 
-          <TourSpot {...spotProps("output")} className={`grid min-h-64 flex-1 ${checksResult ? "lg:grid-cols-2" : ""}`}>
-            <ResultPane title={isPredict ? "Output" : "Your output"}>
-              <PyOutputView
-                output={output}
-                empty={
-                  isPredict && started && !ts.solved
-                    ? "Pick an answer to see the output."
-                    : "Run your code to see the output here."
-                }
-              />
-            </ResultPane>
-            {checksResult && started && expected && (
-              <ResultPane title="Expected output" className="border-t lg:border-l lg:border-t-0">
-                <PyOutputView output={expected} empty="" />
-              </ResultPane>
-            )}
-          </TourSpot>
+              <TourSpot {...spotProps("output")} className={`grid min-h-64 flex-1 ${checksResult ? "lg:grid-cols-2" : ""}`}>
+                <ResultPane title={isPredict ? "Output" : "Your output"}>
+                  <PyOutputView
+                    output={output}
+                    empty={
+                      isPredict && started && !ts.solved
+                        ? "Pick an answer to see the output."
+                        : "Run your code to see the output here."
+                    }
+                  />
+                </ResultPane>
+                {checksResult && started && expected && (
+                  <ResultPane title="Expected output" className="border-t lg:border-l lg:border-t-0">
+                    <PyOutputView output={expected} empty="" />
+                  </ResultPane>
+                )}
+              </TourSpot>
+            </div>
+          </div>
         </section>
       </div>
 
       {ts.solutionOpen && <SolutionModal lines={task.solution_lines} onClose={() => flow.setSolutionOpen(false)} />}
+      {viewing &&
+        (() => {
+          const table = tables.find((t) => t.name === viewing);
+          if (!table) return null;
+          const { result, grid } = gridFor(table.data);
+          return <TablePreviewModal name={viewing} data={result} grid={grid} onClose={() => setViewing(null)} />;
+        })()}
     </div>
   );
 }
@@ -446,22 +510,20 @@ function FillCode({
 // What Python produced: printed text, a table, or another value (or a plain-words error)
 function PyOutputView({ output, empty }: { output: PyOutput | null; empty: string }) {
   if (!output) return <p className="p-4 text-sm text-zinc-500">{empty}</p>;
-  const nothing = !output.stdout && !output.table && !output.value && !output.error;
+  const nothing = !output.stdout && !output.table && !output.value && !output.error && output.charts.length === 0;
   return (
     <div className="flex h-full min-h-0 flex-col overflow-auto">
       {output.stdout && <pre className="whitespace-pre-wrap p-3 font-mono text-sm">{output.stdout}</pre>}
       {output.value && <pre className="whitespace-pre-wrap p-3 font-mono text-sm text-zinc-700">{output.value}</pre>}
       {output.table && (
         <div className="min-h-48 flex-1">
-          <ResultsGrid
-            result={{ columns: output.table.columns, rows: output.table.rows }}
-            rowLabels={output.table.index}
-            rowHeader={output.table.indexName}
-            nullLabel="NaN"
-            totalRows={output.table.total}
-          />
+          <ResultsGrid {...gridFor(output.table).grid} result={gridFor(output.table).result} />
         </div>
       )}
+      {output.charts.map((png, i) => (
+        // eslint-disable-next-line @next/next/no-img-element -- a picture made in the browser, not a file
+        <img key={i} src={`data:image/png;base64,${png}`} alt={`Chart ${i + 1} drawn by the code`} className="mx-auto max-w-full p-3" />
+      ))}
       {output.error && <p className="p-4 text-sm text-amber-800">{output.error}</p>}
       {nothing && <p className="p-4 text-sm text-zinc-500">Your code ran, but didn&rsquo;t print or show anything.</p>}
     </div>

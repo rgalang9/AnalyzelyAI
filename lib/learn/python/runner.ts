@@ -9,24 +9,28 @@ const TIME_LIMIT_MS = 10_000;
 
 export type PyTable = {
   columns: string[];
-  index: string[]; // pandas' row labels (they start at 0)
+  index: string[]; // pandas' row labels (they start at 0); empty for a Series
   indexName: string;
   rows: (string | null)[][]; // null = empty (NaN)
   total: number; // rows in the full table (only the first 200 are sent)
+  series: boolean; // a Series: shown as two columns (row labels, values)
 };
 export type PyOutput = {
   stdout: string; // what print() showed
   table: PyTable | null; // a table on the last line
   value: string | null; // anything else on the last line, like 42
   error: string | null; // a plain-words error message
+  charts: string[]; // charts drawn, as PNG pictures (base64)
 };
 export type PyRunRequest = {
   files: Record<string, string>; // lesson CSVs: "games" → the file's text
   setup: string;
   code: string;
   answer?: string; // when given, the answer runs too and the two are compared
-  compare?: "print" | "table";
+  compare?: "print" | "table" | "value" | "chart";
 };
+// A table the lesson's setup makes (like df, or games and studios), for the side panel
+export type PyTableInfo = { name: string; columns: { name: string; type: string }[]; data: PyTable };
 export type PyRunResult =
   | { kind: "done"; output: PyOutput; expected: PyOutput | null; check: { match: boolean; reason: string } | null }
   | { kind: "stopped"; reason: "timeout" | "stop" };
@@ -38,12 +42,15 @@ export type PyStatus = {
 };
 
 type Pending = { resolve: (result: PyRunResult) => void; timer?: number };
+type TablesJob = { resolve: (result: { tables: PyTableInfo[]; error: string | null }) => void };
 
 let worker: Worker | null = null;
 let status: PyStatus = { state: "idle", text: "", pct: 0 };
 let wantPandas = false;
+let wantCharts = false;
 let nextId = 1;
 const pending = new Map<number, Pending>();
+const tableJobs = new Map<number, TablesJob>();
 const listeners = new Set<(status: PyStatus) => void>();
 
 function setStatus(next: PyStatus) {
@@ -68,6 +75,9 @@ function start(restarting: boolean) {
       // The code is running now (any packages are loaded), so the time limit starts
       const job = pending.get(msg.id);
       if (job) job.timer = window.setTimeout(() => restart("timeout"), TIME_LIMIT_MS);
+    } else if (msg.type === "tables") {
+      tableJobs.get(msg.id)?.resolve({ tables: msg.tables, error: msg.error ?? null });
+      tableJobs.delete(msg.id);
     } else if (msg.type === "result") {
       const job = pending.get(msg.id);
       if (!job) return;
@@ -80,14 +90,16 @@ function start(restarting: boolean) {
     console.error("Python worker error:", event.message);
     setStatus({ state: "failed", text: "We couldn't start Python. Check your internet connection and refresh the page.", pct: 0 });
   };
-  worker.postMessage({ type: "init", version: PYODIDE_VERSION, pandas: wantPandas });
+  worker.postMessage({ type: "init", version: PYODIDE_VERSION, pandas: wantPandas, charts: wantCharts });
 }
 
 // Start loading Python in the background (safe to call many times).
-// `pandas`: the lesson needs pandas right away, so load it before saying "ready".
-export function preloadPython(options: { pandas?: boolean } = {}) {
+// `pandas` / `charts`: the lesson needs pandas or matplotlib right away, so load them before
+// saying "ready". (A worker that's already running loads them the first time code needs them.)
+export function preloadPython(options: { pandas?: boolean; charts?: boolean } = {}) {
   if (typeof window === "undefined") return;
   if (options.pandas) wantPandas = true;
+  if (options.charts) wantCharts = true;
   if (!worker) start(false);
 }
 
@@ -111,6 +123,10 @@ function restart(reason: "timeout" | "stop") {
     job.resolve({ kind: "stopped", reason });
     pending.delete(id);
   }
+  for (const [id, job] of tableJobs) {
+    job.resolve({ tables: [], error: null });
+    tableJobs.delete(id);
+  }
   start(true);
 }
 
@@ -121,6 +137,16 @@ export function runPython(request: PyRunRequest): Promise<PyRunResult> {
   return new Promise((resolve) => {
     pending.set(id, { resolve });
     worker!.postMessage({ type: "run", id, ...request });
+  });
+}
+
+// The tables a lesson's setup makes, with their columns, for the side panel
+export function getSetupTables(files: Record<string, string>, setup: string) {
+  preloadPython();
+  const id = nextId++;
+  return new Promise<{ tables: PyTableInfo[]; error: string | null }>((resolve) => {
+    tableJobs.set(id, { resolve });
+    worker!.postMessage({ type: "tables", id, files, setup });
   });
 }
 

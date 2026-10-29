@@ -8,6 +8,7 @@ import {
   getLessons,
   getLessonSummaries,
   getPythonLessons,
+  pythonSummary,
   summarize,
 } from "@/lib/learn/load-lessons";
 import LessonGate from "../../lesson-gate";
@@ -73,12 +74,12 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
 
 // Python lessons: the same page layout, with the Python player
 function PythonLesson({ lessonId, langName }: { lessonId: string; langName: string }) {
-  const lessons = getPythonLessons();
-  const index = lessons.findIndex((l) => l.id === lessonId);
+  const entries = getPythonLessons();
+  const index = entries.findIndex((l) => l.id === lessonId);
   if (index === -1) notFound();
 
-  const lesson = lessons[index];
-  const summaries = summarize(lessons);
+  const entry = entries[index];
+  const summaries = entries.map(pythonSummary);
   const previous = summaries[index - 1] ?? null;
   const next = summaries[index + 1] ?? null;
 
@@ -88,19 +89,27 @@ function PythonLesson({ lessonId, langName }: { lessonId: string; langName: stri
         ← All {langName} lessons
       </Link>
       <h1 className="mt-3 text-2xl font-bold tracking-tight">
-        <span className="text-zinc-500">Lesson {index}: </span>
-        {lesson.title}
+        <span className="text-zinc-500">Lesson {entry.number}: </span>
+        {entry.title}
       </h1>
 
-      <LessonGate language="python" previous={previous}>
-        <PythonLessonPlayer
-          lesson={lesson}
-          files={getDatasetCsv(lesson.datasets)}
-          language="python"
-          lessons={summaries}
-          nextLesson={next}
-        />
-      </LessonGate>
+      {entry.lesson ? (
+        <LessonGate language="python" previous={previous}>
+          <PythonLessonPlayer
+            lesson={entry.lesson}
+            files={getDatasetCsv(entry.lesson.datasets)}
+            language="python"
+            lessons={summaries}
+            nextLesson={next}
+          />
+        </LessonGate>
+      ) : (
+        // The lesson file has a mistake: say so here, so the rest of the course still works
+        <div role="alert" className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950">
+          <p className="font-semibold">This lesson can&rsquo;t open yet: its lesson file has a problem.</p>
+          <pre className="mt-3 whitespace-pre-wrap font-mono text-xs">{entry.problem}</pre>
+        </div>
+      )}
     </main>
   );
 }

@@ -74,14 +74,17 @@ export type TourTarget = (typeof TOUR_TARGETS)[number];
 export type QuizAnswer = TourLesson["quiz"][number]["answer"];
 export type Lesson = z.infer<typeof LessonSchema>;
 
-// What the lesson list needs to know about each lesson
-export type LessonSummary = { id: string; number: number; title: string; level: number };
+// What the lesson list needs to know about each lesson.
+// `problem`: the lesson file has a mistake, so it shows an error instead of the lesson.
+export type LessonSummary = { id: string; number: number; title: string; level: number; problem?: string };
 
 // ---------- Python lessons (lib/learn/python/lessons/*.json) ----------
 // Answers are checked by what the code produces, never by the exact code:
-// "print" compares the printed text, "table" compares the table on the last line.
+// "print" compares the printed text, "table" the table (DataFrame or Series) on the last line,
+// "value" the value on the last line (numbers within 0.000001), "chart" the kind of chart and
+// how many bars, points or lines it has.
 
-const PyCompareSchema = z.enum(["print", "table"]);
+const PyCompareSchema = z.enum(["print", "table", "value", "chart"]);
 
 const pyTaskBase = {
   prompt: z.string(),

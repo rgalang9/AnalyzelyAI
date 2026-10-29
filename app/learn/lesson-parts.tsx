@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { CodeLine } from "@/lib/learn/lesson-types";
 import type { QueryResult } from "@/lib/learn/sql/runner";
 import CodeLines from "./code-lines";
-import ResultsGrid from "./results-grid";
+import ResultsGrid, { type GridExtras } from "./results-grid";
 
 // Small pieces shared by every kind of lesson
 
@@ -66,10 +66,12 @@ export function SolutionModal({ lines, onClose }: { lines: CodeLine[]; onClose: 
 export function TablePreviewModal({
   name,
   data,
+  grid,
   onClose,
 }: {
   name: string;
   data: QueryResult;
+  grid?: GridExtras; // e.g. pandas' row labels
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -85,7 +87,7 @@ export function TablePreviewModal({
     >
       <h2 className="font-mono text-lg font-semibold">▦ {name}</h2>
       <div className="mt-4 h-[60vh] overflow-hidden rounded-xl border border-zinc-200">
-        <ResultsGrid result={data} />
+        <ResultsGrid result={data} {...grid} />
       </div>
       <button
         type="button"

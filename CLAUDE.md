@@ -21,3 +21,5 @@ I'm learning as I build and don't read code well yet. Explain changes in plain l
 
 ## Workflow
 - Stop after each step so I can test at localhost:3000 and commit.
+
+- For anything related to the Learn feature, read and follow LEARN_PLAN.md.

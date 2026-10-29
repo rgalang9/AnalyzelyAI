@@ -2,11 +2,13 @@
 // Loaded by lib/learn/python/runner.ts as a module worker, which also stops it if code runs too long.
 // Python itself (Pyodide) comes from jsDelivr; its version is set in runner.ts.
 //
-// Messages in:  { type: "init", version, pandas }   start Python (and pandas if the lesson needs it)
+// Messages in:  { type: "init", version, pandas, charts }  start Python (plus pandas / matplotlib if needed)
 //               { type: "warm" }                   load pandas quietly in the background
 //               { type: "run", id, files, setup, code, answer?, compare? }
+//               { type: "tables", id, files, setup }   the tables the setup makes, for the side panel
 // Messages out: { type: "progress", text, pct } · { type: "ready" } · { type: "failed", message }
 //               { type: "started", id } · { type: "result", id, output, expected, check }
+//               { type: "tables", id, tables }
 
 let pyodide = null;
 let queue = Promise.resolve(); // runs happen one at a time, in order
@@ -16,8 +18,10 @@ const progress = (text, pct) => self.postMessage({ type: "progress", text, pct }
 // The Python side: runs code on a clean slate, captures what it prints and shows,
 // compares with the answer, and turns errors into plain words.
 const HELPERS = String.raw`
-import builtins, contextlib, io, json, math, re, sys, traceback
+import base64, builtins, contextlib, io, json, math, os, re, sys, traceback
 from pyodide.code import eval_code
+
+os.environ["MPLBACKEND"] = "Agg"  # charts are drawn as pictures (there's no screen in a worker)
 
 MAX_ROWS = 200
 YOUR_CODE = "<your code>"
@@ -45,19 +49,106 @@ def _show_cell(v):
         return repr(v)
     return str(v)
 
+def _label(i):
+    return " / ".join(map(str, i)) if isinstance(i, tuple) else str(i)
+
 def _show_table(value):
     pd = sys.modules["pandas"]
-    df = value.to_frame() if isinstance(value, pd.Series) else value
-    head = df.head(MAX_ROWS)
-    index = head.index
-    names = [n for n in index.names if n is not None]
+    head = value.head(MAX_ROWS)
+    names = [n for n in head.index.names if n is not None]
+    if isinstance(value, pd.Series):
+        # A Series is shown as two columns: its row labels, then its values
+        return {
+            "columns": [" / ".join(map(str, names)), "" if value.name is None else str(value.name)],
+            "index": [],
+            "indexName": "",
+            "rows": [[_label(i), _show_cell(v)] for i, v in head.items()],
+            "total": int(len(value)),
+            "series": True,
+        }
     return {
         "columns": [str(c) for c in head.columns],
-        "index": [" / ".join(map(str, i)) if isinstance(i, tuple) else str(i) for i in index],
+        "index": [_label(i) for i in head.index],
         "indexName": " / ".join(map(str, names)),
         "rows": [[_show_cell(v) for v in row] for row in head.itertuples(index=False, name=None)],
-        "total": int(len(df)),
+        "total": int(len(value)),
+        "series": False,
     }
+
+# ---------- Charts ----------
+# pandas' .plot() is watched so we know which kind of chart each one is (bar, line, …)
+
+_chart_kinds = {}  # figure number → chart kind
+
+def _watch_plots():
+    pd = sys.modules.get("pandas")
+    if pd is None or getattr(pd, "_az_watched", False):
+        return
+    from pandas.plotting import PlotAccessor
+    real_call = PlotAccessor.__call__
+
+    def remember(result, kind):
+        first = result.flat[0] if hasattr(result, "flat") else result
+        figure = getattr(first, "figure", None)
+        if figure is not None:
+            _chart_kinds[figure.number] = kind
+
+    def call(self, *args, **kwargs):
+        result = real_call(self, *args, **kwargs)
+        remember(result, kwargs.get("kind") or "line")
+        return result
+    PlotAccessor.__call__ = call
+
+    for owner in (pd.DataFrame, pd.Series):
+        real_hist = owner.hist
+        def hist(self, *args, _real=real_hist, **kwargs):
+            result = _real(self, *args, **kwargs)
+            remember(result, "hist")
+            return result
+        owner.hist = hist
+    pd._az_watched = True
+
+def _close_charts():
+    _chart_kinds.clear()
+    plt = sys.modules.get("matplotlib.pyplot")
+    if plt is not None:
+        plt.close("all")
+
+def _describe(fig):
+    # What a chart shows, worked out from what's drawn: kind and how many bars, points or lines
+    from matplotlib.collections import PathCollection
+    from matplotlib.container import BarContainer
+    bars, points, lines, sideways, touching = 0, 0, 0, False, False
+    for ax in fig.axes:
+        for container in ax.containers:
+            if isinstance(container, BarContainer):
+                patches = list(container)
+                bars += len(patches)
+                sideways = sideways or getattr(container, "orientation", "vertical") == "horizontal"
+                xs = sorted((p.get_x(), p.get_x() + p.get_width()) for p in patches)
+                touching = touching or (len(xs) > 1 and all(math.isclose(a[1], b[0], abs_tol=1e-9) for a, b in zip(xs, xs[1:])))
+        points += sum(len(c.get_offsets()) for c in ax.collections if isinstance(c, PathCollection))
+        lines += sum(1 for l in ax.get_lines() if len(l.get_xdata()) > 1)
+    kind = _chart_kinds.get(fig.number)
+    if kind is None:
+        kind = "hist" if bars and touching and not sideways else "barh" if bars and sideways else "bar" if bars else "scatter" if points else "line" if lines else "empty"
+    if kind == "kde" or kind == "density":
+        kind = "line"
+    return {"kind": kind, "bars": bars, "points": points, "lines": lines}
+
+def _collect_charts():
+    plt = sys.modules.get("matplotlib.pyplot")
+    images, charts = [], []
+    if plt is None:
+        return images, charts
+    for number in plt.get_fignums():
+        fig = plt.figure(number)
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format="png", dpi=100, bbox_inches="tight")
+        images.append(base64.b64encode(buffer.getvalue()).decode())
+        charts.append(_describe(fig))
+    _close_charts()
+    return images, charts
 
 # ---------- Running code ----------
 
@@ -94,6 +185,8 @@ def _friendly(error):
         m = re.search(r"name '(\w+)' is not defined", text)
         name = m.group(1) if m else "that"
         return f"Python doesn't know {name} yet{at}. Did you make it first, like {name} = ...? If it's text, put it in quotes."
+    if isinstance(error, (TypeError, ValueError)) and ("'rand_'" in text or "'ror_'" in text or "'and_'" in text or "'or_'" in text or "truth value of a Series is ambiguous" in text):
+        return f"When you join conditions with & or |, put each condition in its own brackets{at}, like (df[\"a\"] > 1) & (df[\"b\"] < 5). Use & and |, not and / or."
     if isinstance(error, TypeError) and ("concatenate" in text or "unsupported operand" in text):
         return f"You're mixing text and numbers{at}. Text goes in quotes and numbers don't, so Python can't combine them as they are."
     if isinstance(error, ZeroDivisionError):
@@ -114,30 +207,42 @@ def _friendly(error):
         return f"input(){at} doesn't work here. Put the value straight into your code instead, like name = \"Sam\"."
     return f"{type(error).__name__}{at}: {text}"
 
+def _is_chart_object(value):
+    # .plot() returns the chart's drawing area (or a grid of them); showing that as text is just noise
+    first = value.flat[0] if type(value).__name__ == "ndarray" and value.size else value
+    return (type(first).__module__ or "").startswith("matplotlib")
+
 def _run(setup, code):
     namespace = {"__name__": "__main__"}
     printed = io.StringIO()
-    out = {"stdout": "", "table": None, "value": None, "error": None}
+    out = {"stdout": "", "table": None, "value": None, "error": None, "charts": []}
     value = None
+    charts = []
     real_input = builtins.input
     builtins.input = _no_input
+    _close_charts()
     try:
         with contextlib.redirect_stdout(printed), contextlib.redirect_stderr(printed):
             if setup.strip():
                 eval_code(setup, namespace, filename="<setup>")
+            _watch_plots()
             value = eval_code(code, namespace, filename=YOUR_CODE)
         if value is not None:
             if _is_table(value):
                 out["table"] = _show_table(value)
-            else:
+            elif not _is_chart_object(value):
                 out["value"] = repr(value)
     except BaseException as error:
         out["error"] = _friendly(error)
         value = None
     finally:
         builtins.input = real_input
+        try:
+            out["charts"], charts = _collect_charts()
+        except Exception:
+            _close_charts()
     out["stdout"] = printed.getvalue()
-    return out, value
+    return out, value, charts
 
 # ---------- Checking an answer ----------
 
@@ -167,62 +272,151 @@ def _check_print(mine, expected):
             return False, "Your output is a bit different from the expected output. Compare the two."
     return True, ""
 
-def _as_frame(value):
+def _plural(n, word):
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+def _equal_tables(a, b, check_index=True):
     pd = sys.modules["pandas"]
-    df = value.to_frame() if isinstance(value, pd.Series) else value.copy()
-    # Row labels that hold real information (like group names) are compared as a column;
-    # plain row numbers are ignored, so reset_index() or not doesn't matter
-    if any(n is not None for n in df.index.names) or not pd.api.types.is_integer_dtype(df.index):
-        df = df.reset_index()
-    return df.reset_index(drop=True)
+    if not check_index:
+        a, b = a.reset_index(drop=True), b.reset_index(drop=True)
+    try:
+        if isinstance(a, pd.Series):
+            pd.testing.assert_series_equal(a, b, check_dtype=False, check_exact=False, rtol=1e-6, atol=1e-6, check_index_type=False, check_names=True)
+        else:
+            pd.testing.assert_frame_equal(a, b, check_dtype=False, check_exact=False, rtol=1e-6, atol=1e-6, check_column_type=False, check_index_type=False, check_names=True)
+        return True
+    except (AssertionError, TypeError, ValueError):
+        return False
 
 def _check_table(mine_value, expected_value):
     if not _is_table(mine_value):
         return False, "Your code doesn't end with a table. Put the table on the last line (like df.head()) so it shows up."
     pd = sys.modules["pandas"]
-    a, b = _as_frame(mine_value), _as_frame(expected_value)
-    ca, cb = [str(c) for c in a.columns], [str(c) for c in b.columns]
-    if len(ca) != len(cb):
-        n = len(cb)
-        return False, f"Your table has {len(ca)} column{'s' if len(ca) != 1 else ''}, but we're looking for {n} column{'s' if n != 1 else ''}."
-    if sorted(ca) != sorted(cb):
-        return False, f"Your columns are {', '.join(ca)}, but we're looking for {', '.join(cb)}."
-    if len(a) != len(b):
-        return False, f"Your table has {len(a)} row{'s' if len(a) != 1 else ''}, but we're looking for {len(b)}."
-    a.columns, b.columns = ca, cb
-    a = a[cb]
-    def same(x, y):
+    a, b = mine_value, expected_value
+    def same_after_reset(series, frame):
         try:
-            pd.testing.assert_frame_equal(x, y, check_dtype=False, check_exact=False, rtol=1e-6, check_column_type=False, check_index_type=False)
-            return True
-        except AssertionError:
+            flat = series.reset_index()
+            return list(map(str, flat.columns)) == list(map(str, frame.columns)) and _equal_tables(flat, frame, check_index=False)
+        except (TypeError, ValueError):
             return False
-    if same(a, b):
+    if isinstance(b, pd.Series) and isinstance(a, pd.DataFrame):
+        if same_after_reset(b, a):
+            return False, "Your values are right, but this task wants them as a Series, with the groups as row labels. Leave out reset_index()."
+        return False, "We're looking for a Series (one column of values with row labels), but your result is a DataFrame (a whole table). For one column, use single brackets like df[\"col\"]."
+    if isinstance(b, pd.DataFrame) and isinstance(a, pd.Series):
+        if same_after_reset(a, b):
+            return False, "Your values are right, but this task wants a table with the groups as a column. Add .reset_index() at the end."
+        return False, "We're looking for a DataFrame (a table), but your result is a Series (a single column). To keep it as a table, use double brackets like df[[\"col\"]]."
+
+    if isinstance(b, pd.DataFrame):
+        ca, cb = [str(c) for c in a.columns], [str(c) for c in b.columns]
+        if len(ca) != len(cb):
+            return False, f"Your table has {_plural(len(ca), 'column')}, but we're looking for {len(cb)}."
+        if sorted(ca) != sorted(cb):
+            return False, f"Your columns are {', '.join(ca)}, but we're looking for {', '.join(cb)}."
+        a = a.copy()
+        a.columns = ca
+        a = a[cb]
+        b = b.copy()
+        b.columns = cb
+    elif str(a.name) != str(b.name):
+        return False, f"Your Series is called {a.name}, but we're looking for one called {b.name}."
+
+    if len(a) != len(b):
+        return False, f"Your result has {_plural(len(a), 'row')}, but we're looking for {len(b)}."
+    if _equal_tables(a, b):
         return True, ""
+    if _equal_tables(a, b, check_index=False):
+        return False, "Your values are right, but the row labels (the index on the left) are different. Check reset_index(), set_index() or the sort order."
     try:
-        if same(a.sort_values(cb).reset_index(drop=True), b.sort_values(cb).reset_index(drop=True)):
+        sa = a.sort_values(list(a.columns)) if isinstance(a, pd.DataFrame) else a.sort_values()
+        sb = b.sort_values(list(b.columns)) if isinstance(b, pd.DataFrame) else b.sort_values()
+        if _equal_tables(sa, sb, check_index=False):
             return False, "You've got the right rows, but they're in a different order."
-    except TypeError:
+    except (TypeError, ValueError):
         pass
-    return False, "The columns look right, but some of the values are different."
+    return False, "The shape looks right, but some of the values are different."
+
+def _plain(value):
+    return value.item() if hasattr(value, "item") and not _is_table(value) else value
+
+def _check_value(mine, mine_value, expected_value):
+    if mine_value is None:
+        if mine["stdout"].strip():
+            return False, "You printed it. This task wants the value on its own on the last line, without print()."
+        return False, "Your code doesn't end with a value. Put it on the last line so it shows up."
+    if _is_table(expected_value):
+        return _check_table(mine_value, expected_value)
+    a, b = _plain(mine_value), _plain(expected_value)
+    numbers = (int, float)
+    if isinstance(a, numbers) and isinstance(b, numbers) and not isinstance(a, bool) and not isinstance(b, bool):
+        if math.isclose(a, b, rel_tol=1e-6, abs_tol=1e-6):
+            return True, ""
+        return False, f"Your answer is {a!r}, but that's not quite the value we're looking for."
+    if a == b:
+        return True, ""
+    return False, f"Your answer is {a!r}, but that's not quite the value we're looking for."
+
+CHART_NAMES = {"bar": "a bar chart", "barh": "a sideways bar chart", "line": "a line chart", "hist": "a histogram", "scatter": "a scatter plot", "pie": "a pie chart", "box": "a box plot", "area": "an area chart", "empty": "an empty chart"}
+
+def _check_chart(mine_charts, expected_charts):
+    if not mine_charts:
+        return False, "Your code didn't draw a chart. Use .plot(...) to make one."
+    a, b = mine_charts[-1], expected_charts[-1]
+    if a["kind"] != b["kind"]:
+        return False, f"You drew {CHART_NAMES.get(a['kind'], a['kind'])}, but we're looking for {CHART_NAMES.get(b['kind'], b['kind'])}."
+    what = {"bar": "bars", "barh": "bars", "hist": "bars", "scatter": "points"}.get(b["kind"], "lines")
+    if a[what] != b[what]:
+        return False, f"Your chart has {_plural(a[what], what[:-1])}, but we're looking for {b[what]}."
+    return True, ""
 
 def az_run(setup, code, answer, compare):
-    mine, mine_value = _run(setup, code)
+    mine, mine_value, mine_charts = _run(setup, code)
     result = {"output": mine, "expected": None, "check": None}
     if answer is not None:
-        expected, expected_value = _run(setup, answer)
+        expected, expected_value, expected_charts = _run(setup, answer)
         result["expected"] = expected
         if mine["error"]:
             result["check"] = {"match": False, "reason": mine["error"]}
         elif expected["error"]:
             result["check"] = {"match": False, "reason": "The lesson's own answer didn't run: " + expected["error"]}
         else:
-            match, reason = _check_print(mine, expected) if compare == "print" else _check_table(mine_value, expected_value)
+            if compare == "print":
+                match, reason = _check_print(mine, expected)
+            elif compare == "value":
+                match, reason = _check_value(mine, mine_value, expected_value)
+            elif compare == "chart":
+                match, reason = _check_chart(mine_charts, expected_charts)
+            else:
+                match, reason = _check_table(mine_value, expected_value)
             result["check"] = {"match": match, "reason": reason}
     return json.dumps(result)
+
+def az_tables(setup):
+    # Every table (DataFrame) the setup makes, in the order it makes them, for the side panel
+    namespace = {"__name__": "__main__"}
+    tables = []
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            if setup.strip():
+                eval_code(setup, namespace, filename="<setup>")
+    except BaseException as error:
+        return json.dumps({"tables": [], "error": "The lesson's setup didn't run: " + _friendly(error)})
+    finally:
+        _close_charts()
+    pd = sys.modules.get("pandas")
+    if pd is not None:
+        for name, value in namespace.items():
+            if isinstance(value, pd.DataFrame) and not name.startswith("_"):
+                tables.append({
+                    "name": name,
+                    "columns": [{"name": str(c), "type": str(t)} for c, t in value.dtypes.items()],
+                    "data": _show_table(value),
+                })
+    return json.dumps({"tables": tables, "error": None})
 `;
 
-async function init(version, pandas) {
+async function init(version, pandas, charts) {
   const base = `https://cdn.jsdelivr.net/pyodide/v${version}/full/`;
   progress("Downloading Python…", 10);
   const { loadPyodide } = await import(`${base}pyodide.mjs`);
@@ -233,18 +427,27 @@ async function init(version, pandas) {
     progress("Loading pandas…", 80);
     await pyodide.loadPackage(["pandas"]);
   }
+  if (charts) {
+    progress("Loading charts…", 90);
+    await pyodide.loadPackage(["matplotlib"]);
+  }
   progress("Ready", 100);
   self.postMessage({ type: "ready" });
 }
 
-async function run({ id, files, setup, code, answer, compare }) {
-  // A fresh copy of the lesson's CSV files every run, in case code changed them
+// Charts: pandas' .plot() needs matplotlib, but there's no "import matplotlib" to spot
+const DRAWS_CHART = /\.plot\b|\.hist\(|\bplt\b|matplotlib/;
+
+// A fresh copy of the lesson's CSV files, then whatever the code needs (like pandas). Code with a
+// typo can't be read for imports; that's fine, running it gives the friendly error message instead.
+async function prepare(files, sources) {
   for (const [name, text] of Object.entries(files)) pyodide.FS.writeFile(`${name}.csv`, text);
-  // Load whatever the code imports (like pandas) before running it. Code with a typo can't be
-  // read for imports; that's fine, running it gives the friendly error message instead.
-  for (const source of [setup, code, answer ?? ""]) {
-    await pyodide.loadPackagesFromImports(source).catch(() => {});
-  }
+  for (const source of sources) await pyodide.loadPackagesFromImports(source).catch(() => {});
+  if (sources.some((source) => DRAWS_CHART.test(source))) await pyodide.loadPackage(["matplotlib"]);
+}
+
+async function run({ id, files, setup, code, answer, compare }) {
+  await prepare(files, [setup, code, answer ?? ""]);
   self.postMessage({ type: "started", id }); // the time limit starts now, not while downloading
   const azRun = pyodide.globals.get("az_run");
   try {
@@ -255,10 +458,24 @@ async function run({ id, files, setup, code, answer, compare }) {
   }
 }
 
+async function tables({ id, files, setup }) {
+  await prepare(files, [setup]);
+  const azTables = pyodide.globals.get("az_tables");
+  try {
+    self.postMessage({ type: "tables", id, ...JSON.parse(azTables(setup)) });
+  } finally {
+    azTables.destroy();
+  }
+}
+
 self.onmessage = (event) => {
   const msg = event.data;
   if (msg.type === "init") {
-    init(msg.version, msg.pandas).catch((err) => self.postMessage({ type: "failed", message: String(err?.message ?? err) }));
+    init(msg.version, msg.pandas, msg.charts).catch((err) => self.postMessage({ type: "failed", message: String(err?.message ?? err) }));
+  } else if (msg.type === "tables") {
+    queue = queue.then(() =>
+      tables(msg).catch((err) => self.postMessage({ type: "tables", id: msg.id, tables: [], error: String(err?.message ?? err) }))
+    );
   } else if (msg.type === "warm") {
     // Not in the run queue, so runs don't wait for it
     pyodide?.loadPackage(["pandas"]).catch(() => {});
@@ -268,7 +485,7 @@ self.onmessage = (event) => {
         self.postMessage({
           type: "result",
           id: msg.id,
-          output: { stdout: "", table: null, value: null, error: `Something went wrong inside Python: ${err?.message ?? err}` },
+          output: { stdout: "", table: null, value: null, charts: [], error: `Something went wrong inside Python: ${err?.message ?? err}` },
           expected: null,
           check: null,
         })

@@ -5,7 +5,7 @@
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { z } from "zod";
+import { z } from "zod";
 import { LessonSchema, PythonLessonSchema, type Lesson, type LessonSummary, type PythonLesson } from "./lesson-types";
 
 const learnDir = (language: string) => path.join(process.cwd(), "lib", "learn", language);
@@ -34,13 +34,61 @@ export function getLessons(language: string): Lesson[] {
   return readLessons(language, LessonSchema);
 }
 
-export function getPythonLessons(): PythonLesson[] {
-  return readLessons("python", PythonLessonSchema);
+// One Python lesson file. A file with a mistake doesn't stop the course: it gets `problem`
+// (shown on its lesson page and in the lesson list) and `lesson` is null.
+export type PythonLessonEntry = LessonSummary & { lesson: PythonLesson | null };
+
+// Python lessons are numbered by their file name (lesson-19.json is Lesson 19), so a gap in
+// the files doesn't renumber the lessons after it
+export function getPythonLessons(): PythonLessonEntry[] {
+  const dir = path.join(learnDir("python"), "lessons");
+  if (!existsSync(dir)) return [];
+  const files = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .sort((a, b) => lessonNumber(a) - lessonNumber(b) || a.localeCompare(b));
+
+  return files.map((file, index) => {
+    const number = Number.isFinite(lessonNumber(file)) ? lessonNumber(file) : index;
+    let data: unknown;
+    try {
+      data = JSON.parse(readFileSync(path.join(dir, file), "utf8"));
+    } catch (err) {
+      return broken(file, number, null, `This file isn't valid JSON: ${err instanceof Error ? err.message : err}`);
+    }
+    const parsed = PythonLessonSchema.safeParse(data);
+    if (!parsed.success) return broken(file, number, data, z.prettifyError(parsed.error));
+    const lesson = parsed.data;
+    return { id: lesson.id, number, title: lesson.title, level: lesson.level, lesson };
+  });
 }
+
+function broken(file: string, number: number, data: unknown, problem: string): PythonLessonEntry {
+  const d = (data ?? {}) as { id?: unknown; title?: unknown; level?: unknown };
+  const message = `python/lessons/${file} doesn't match the lesson format:\n${problem}`;
+  console.error(message); // also shows in the build log
+  return {
+    id: typeof d.id === "string" ? d.id : file.replace(/\.json$/, ""),
+    number,
+    title: typeof d.title === "string" ? d.title : file,
+    level: typeof d.level === "number" ? d.level : 0,
+    problem: message,
+    lesson: null,
+  };
+}
+
+// Just the lesson-list details of a Python lesson
+export const pythonSummary = ({ id, number, title, level, problem }: PythonLessonEntry): LessonSummary => ({
+  id,
+  number,
+  title,
+  level,
+  ...(problem && { problem }),
+});
 
 // The lesson list for any language
 export function getLessonSummaries(language: string): LessonSummary[] {
-  return summarize(language === "python" ? getPythonLessons() : getLessons(language));
+  if (language === "python") return getPythonLessons().map(pythonSummary);
+  return summarize(getLessons(language));
 }
 
 export function summarize(lessons: { id: string; title: string; level: number }[]): LessonSummary[] {
