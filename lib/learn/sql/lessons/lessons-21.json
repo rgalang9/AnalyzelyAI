@@ -58,7 +58,7 @@
       "type": "predict",
       "code": "SELECT DISTINCT customer_id FROM orders;",
       "options": ["12", "6", "8", "5"],
-      "answer": "SELECT DISTINCT customer_id FROM orders;",
+      "answer": "6",
       "hints": ["DISTINCT removes repeats. Count how many different customers placed orders.", "Look at customer_id in orders: 1 to 6 show up. Customers 7 and 8 never ordered."],
       "solution_lines": [
         {"line": "SELECT DISTINCT customer_id FROM orders;", "explain": "Lists each customer who ordered, once each — 6 people."}
