@@ -11,12 +11,14 @@ export type Answer = {
   charts: ChartData[];
 };
 
-// One entry in the sidebar's history list
+// One entry in the history list (sidebar and analysis cards)
 export type AnalysisSummary = {
   id: string;
   file_name: string;
   title: string | null; // null = no title yet, show the file name
   created_at: string;
+  row_count: number;
+  column_count: number;
 };
 
 // The sidebar listens for this to refresh the list (e.g. when an AI title arrives)
@@ -66,7 +68,7 @@ export async function saveAnswer(analysisId: string, answer: Answer) {
 export async function listAnalyses(): Promise<AnalysisSummary[]> {
   const { data, error } = await createClient()
     .from("analyses")
-    .select("id, file_name, title, created_at")
+    .select("id, file_name, title, created_at, row_count, column_count")
     .order("created_at", { ascending: false })
     .limit(100);
   if (error) throw error;

@@ -3,10 +3,19 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowRight, CircleAlert, LockKeyhole, Upload } from "lucide-react";
 import { parseDataset } from "@/lib/parse-dataset";
 import { autoTitleAnalysis, saveNewAnalysis } from "@/lib/history";
-import { checkCellCount, checkFileSize, type LimitProblem } from "@/lib/plans";
+import {
+  checkCellCount,
+  checkFileSize,
+  getCurrentPlan,
+  type LimitProblem,
+} from "@/lib/plans";
 import { useDataset } from "../dataset-context";
+import { useUserEmail } from "../use-user-email";
+import { AnalysisCard, useAnalysisList, useOpenAnalysis } from "../analysis-cards";
+import { chunkyPurple } from "../brand";
 import { UpgradeModal } from "./upgrade-modal";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
@@ -16,10 +25,19 @@ function hasAllowedExtension(fileName: string) {
   return ALLOWED_EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
+const RECENT_COUNT = 3;
+
+// "free plan up to 3,000 cells and 2 MB", read from the plan limits
+function planLimitsText() {
+  const plan = getCurrentPlan();
+  const mb = plan.maxFileSizeBytes / (1024 * 1024);
+  return `${plan.name.toLowerCase()} plan up to ${plan.maxCells.toLocaleString("en-US")} cells and ${mb} MB`;
+}
+
 export default function UploadPage() {
-  const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [limitProblem, setLimitProblem] = useState<LimitProblem | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -31,58 +49,55 @@ export default function UploadPage() {
   useLayoutEffect(() => {
     const input = fileInputRef.current;
     return () => {
-      setFile(null);
       setError("");
       setUploading(false);
+      setDragging(false);
       setLimitProblem(null);
       if (input) input.value = "";
     };
   }, []);
 
-  // Called when the user picks a file
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const picked = event.target.files?.[0] ?? null;
-    if (picked && !hasAllowedExtension(picked.name)) {
-      setFile(null);
+  // Called when the user chooses a file or drops one on the box: check it, then upload
+  async function handlePicked(picked: File) {
+    if (uploading) return;
+    if (!hasAllowedExtension(picked.name)) {
       setError(
         `"${picked.name}" isn't supported. Please upload a .csv or .xlsx file.`
       );
-      event.target.value = ""; // clear the rejected file from the input
       return;
     }
 
     // Too big? Stop here, before uploading or reading it
-    const sizeProblem = picked ? checkFileSize(picked.size) : null;
+    const sizeProblem = checkFileSize(picked.size);
     if (sizeProblem) {
-      setFile(null);
       setError("");
       setLimitProblem(sizeProblem);
-      event.target.value = "";
-      return;
-    }
-
-    setFile(picked);
-    setError("");
-  }
-
-  // Called when the user clicks Submit
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!file) {
-      setError("Please choose a .csv or .xlsx file first.");
       return;
     }
 
     setUploading(true);
     setError("");
     try {
-      await upload(file);
+      await upload(picked);
     } catch (err) {
-      // Anything unexpected: never leave the button stuck on "Uploading…"
+      // Anything unexpected: never leave the page stuck on "Uploading…"
       console.error("Upload failed:", err);
       setError("Something went wrong while uploading. Please try again.");
       setUploading(false);
     }
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const picked = event.target.files?.[0];
+    event.target.value = ""; // so choosing the same file again still works
+    if (picked) void handlePicked(picked);
+  }
+
+  function handleDrop(event: React.DragEvent) {
+    event.preventDefault();
+    setDragging(false);
+    const dropped = event.dataTransfer.files[0];
+    if (dropped) void handlePicked(dropped);
   }
 
   async function upload(file: File) {
@@ -147,45 +162,66 @@ export default function UploadPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-6 py-24">
-      <div className="w-full max-w-md">
-        <Link
-          href="/"
-          className="text-sm text-zinc-500 hover:text-foreground"
-        >
-          ← Back
-        </Link>
-
-        <h1 className="mt-4 text-3xl font-bold tracking-tight">
-          Upload your dataset
+    // Always light, even in dark mode, to match the brand design
+    <main className="flex flex-1 flex-col bg-white bg-linear-to-b from-purple-light/30 to-purple-light/30 px-4 py-10 text-navy sm:px-6 sm:py-14">
+      <div className="mx-auto w-full max-w-6xl">
+        <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">
+          What do you want to <span className="text-purple">analyze</span> today?
         </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Accepted file types: .csv and .xlsx
+        <p className="mt-3 text-grey sm:text-lg">
+          Upload a spreadsheet, then ask questions in plain English.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+        {/* Drop zone: drag a file onto it, or use the button */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          className={`mt-8 flex flex-col items-center rounded-3xl border-2 border-dashed px-6 py-12 text-center transition-colors sm:py-14 ${
+            dragging ? "border-purple bg-purple-light/60" : "border-purple/40 bg-white"
+          }`}
+        >
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-purple-light text-purple">
+            <Upload aria-hidden="true" className="size-7" />
+          </span>
+          <h2 className="mt-5 font-display text-xl font-extrabold sm:text-2xl">
+            {uploading ? "Uploading…" : "Drag & drop your file here"}
+          </h2>
+          <p className="mt-2 text-sm text-grey sm:text-base">
+            CSV or Excel (.xlsx) · {planLimitsText()}
+          </p>
+
           <input
             ref={fileInputRef}
             type="file"
             accept=".csv,.xlsx"
             onChange={handleFileChange}
-            className="rounded-lg border border-zinc-300 p-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:font-medium dark:border-zinc-700 dark:file:bg-zinc-800 dark:file:text-zinc-100"
+            className="hidden"
           />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className={`${chunkyPurple} mt-7 disabled:cursor-wait disabled:opacity-60`}
+          >
+            {uploading ? "Uploading…" : "Choose a file"}
+          </button>
 
           {error && (
-            <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+            <p
+              role="alert"
+              className="mt-6 flex max-w-md items-start gap-2 rounded-xl bg-pink-light px-4 py-3 text-left text-sm text-navy"
+            >
+              <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-pink" />
               {error}
             </p>
           )}
+        </div>
 
-          <button
-            type="submit"
-            disabled={!file || uploading}
-            className="rounded-full bg-foreground px-6 py-3 font-medium text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {uploading ? "Uploading..." : "Submit"}
-          </button>
-        </form>
+        <RecentAnalyses />
       </div>
 
       {limitProblem && (
@@ -195,5 +231,89 @@ export default function UploadPage() {
         />
       )}
     </main>
+  );
+}
+
+// "Your recent analyses": the newest few for logged-in users, a log-in nudge for guests
+function RecentAnalyses() {
+  const { email, loading } = useUserEmail();
+  const { items, loaded, error } = useAnalysisList(email);
+  const { open, openingId, openError } = useOpenAnalysis();
+
+  if (loading) return null;
+
+  if (!email) {
+    return (
+      <section className="mt-12 flex flex-col items-start gap-4 rounded-2xl bg-white p-6 shadow-[0_8px_30px_rgba(36,23,79,0.08)] sm:flex-row sm:items-center">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-purple-light text-purple">
+          <LockKeyhole aria-hidden="true" className="size-6" />
+        </span>
+        <div className="flex-1">
+          <h2 className="font-display text-lg font-extrabold">Log in to save your analyses</h2>
+          <p className="mt-1 text-sm text-grey">
+            With a free account, every file and question is saved so you can pick up where you
+            left off.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/login"
+            className="rounded-full border-2 border-navy px-5 py-2 text-sm font-bold hover:bg-purple-light/60"
+          >
+            Log in
+          </Link>
+          <Link
+            href="/signup"
+            className="rounded-full bg-purple px-5 py-2 text-sm font-bold text-white shadow-[0_4px_0_var(--color-purple-dark)] transition-all active:translate-y-[2px] active:shadow-[0_2px_0_var(--color-purple-dark)]"
+          >
+            Sign up
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  const recent = items.slice(0, RECENT_COUNT);
+
+  return (
+    <section className="mt-12">
+      <div className="flex items-end justify-between gap-4">
+        <h2 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+          Your recent analyses
+        </h2>
+        <Link
+          href="/analyses"
+          className="flex shrink-0 items-center gap-1 font-bold text-purple hover:underline"
+        >
+          See all <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+      </div>
+
+      {(error || openError) && (
+        <p
+          role="alert"
+          className="mt-4 flex items-start gap-2 rounded-xl bg-pink-light px-4 py-3 text-sm text-navy"
+        >
+          <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-pink" />
+          {error || openError}
+        </p>
+      )}
+      {loaded && !error && recent.length === 0 && (
+        <p className="mt-4 text-grey">Nothing saved yet. Upload a file and it&rsquo;ll show up here.</p>
+      )}
+
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {recent.map((item, i) => (
+          <AnalysisCard
+            key={item.id}
+            item={item}
+            index={i}
+            opening={openingId === item.id}
+            disabled={openingId !== null}
+            onOpen={() => open(item.id)}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

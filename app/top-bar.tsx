@@ -24,7 +24,7 @@ export function TopBarPlaceholder() {
   return <header className={`${barClass} z-20`} />;
 }
 
-const BRAND_BAR_PAGES = ["/", "/login", "/signup"];
+const BRAND_BAR_PAGES = ["/", "/login", "/signup", "/upload"];
 
 // Bar across the top of every page: "Home" (the AI analyzer) and the "Learn" menu
 export default function TopBar() {
@@ -32,7 +32,7 @@ export default function TopBar() {
   const inLearn = pathname.startsWith("/learn");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // The landing, log-in and sign-up pages get the new brand-style bar; other pages keep this one for now
+  // These pages get the new brand-style bar; other pages keep this one for now
   if (BRAND_BAR_PAGES.includes(pathname))
     return <LandingTopBar pathname={pathname} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />;
 
@@ -58,7 +58,7 @@ const landingTabClass = (active: boolean) =>
 const chunkyClass =
   "rounded-full px-5 py-2 text-sm font-bold transition-all active:translate-y-[2px]";
 
-// Brand-style top bar (landing, log-in and sign-up pages): logo, tabs, and Log in / Sign up (or the account if logged in).
+// Brand-style top bar (landing, log-in, sign-up and Analyze pages): logo, tabs, and Log in / Sign up (or the account if logged in).
 // On phones the tabs drop to their own row under the logo.
 function LandingTopBar({
   pathname,
@@ -71,6 +71,7 @@ function LandingTopBar({
 }) {
   const { email, loading } = useUserEmail();
   const isHome = pathname === "/";
+  const inAnalyze = isHome || pathname === "/upload";
   const handleLogOut = useLogOut();
 
   return (
@@ -86,7 +87,7 @@ function LandingTopBar({
         </Link>
 
         <nav className="order-last flex w-full justify-center gap-1 md:order-none md:w-auto">
-          <Link href="/upload" className={landingTabClass(isHome)}>
+          <Link href="/upload" className={landingTabClass(inAnalyze)}>
             Analyze
           </Link>
           <LearnMenu
