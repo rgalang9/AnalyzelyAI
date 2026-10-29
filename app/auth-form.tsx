@@ -52,7 +52,7 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
   }
 
   return (
-    // Soft light background with faint purple and orange glows. Always light, even in dark mode.
+    // Soft light background with faint purple and orange glows
     <main className="flex flex-1 flex-col items-center justify-center bg-white bg-[radial-gradient(circle_at_15%_30%,var(--color-purple-light),transparent_45%),radial-gradient(circle_at_85%_75%,var(--color-orange-light),transparent_45%)] px-4 py-12 sm:py-20">
       <div className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_12px_40px_rgba(36,23,79,0.10)]">
         {/* Brand stripe: white gaps keep the pink and orange from touching */}

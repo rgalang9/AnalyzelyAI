@@ -15,15 +15,17 @@ import {
   ZAxis,
 } from "recharts";
 import { formatNumber, type ChartData } from "@/lib/dataset-stats";
+import { downloadBlob } from "@/lib/download";
 
-// Shared look: muted axes and grid so the data stands out
-const AXIS_TICK = { fill: "#71717a", fontSize: 12 };
-const GRID_COLOR = "#71717a33";
+// Shared look: brand grey axes and a light purple grid so the data stands out.
+// Plain color codes (not CSS variables) so a saved PNG of the chart keeps them.
+const AXIS_TICK = { fill: "#4a3f6b", fontSize: 12 };
+const GRID_COLOR = "#ede5ff";
 const TOOLTIP_STYLE = {
-  background: "var(--background)",
-  border: "1px solid #71717a55",
+  background: "#ffffff",
+  border: "1px solid #ede5ff",
   borderRadius: 8,
-  color: "var(--foreground)",
+  color: "#24174f",
   fontSize: 13,
 };
 
@@ -34,20 +36,72 @@ const shorten = (text: string | number, max = 18) => {
 const formatValue = (value: unknown) =>
   typeof value === "number" ? formatNumber(value) : String(value);
 
-export default function AnalysisChart({ chart }: { chart: ChartData }) {
+// The chart inside `figure` as a PNG picture (white background, title on top)
+export async function saveChartPng(figure: HTMLElement, title: string, fileName: string) {
+  const svg = figure.querySelector("svg.recharts-surface");
+  if (!(svg instanceof SVGSVGElement)) throw new Error("No chart found");
+  const { width, height } = svg.getBoundingClientRect();
+
+  // Copy the chart with its color filled in, since "currentColor" means nothing outside the page
+  const copy = svg.cloneNode(true) as SVGSVGElement;
+  copy.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  copy.setAttribute("width", String(width));
+  copy.setAttribute("height", String(height));
+  copy.style.color = getComputedStyle(svg).color;
+  copy.style.fontFamily = "Arial, sans-serif";
+  const svgUrl = URL.createObjectURL(
+    new Blob([new XMLSerializer().serializeToString(copy)], { type: "image/svg+xml" })
+  );
+
+  try {
+    const image = new Image();
+    image.src = svgUrl;
+    await image.decode();
+
+    const scale = 2; // sharper picture
+    const pad = 24;
+    const titleSpace = 40;
+    const canvas = document.createElement("canvas");
+    canvas.width = (width + pad * 2) * scale;
+    canvas.height = (height + pad * 2 + titleSpace) * scale;
+    const ctx = canvas.getContext("2d")!;
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width + pad * 2, height + pad * 2 + titleSpace);
+    ctx.fillStyle = "#24174f";
+    ctx.font = "bold 18px Arial, sans-serif";
+    ctx.fillText(title, pad, pad + 18, width);
+    ctx.drawImage(image, pad, pad + titleSpace, width, height);
+
+    const png = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+    if (!png) throw new Error("Couldn't make the picture");
+    downloadBlob(fileName, png);
+  } finally {
+    URL.revokeObjectURL(svgUrl);
+  }
+}
+
+// `ref` lets the answer card find this chart for "Save chart"
+export default function AnalysisChart({
+  chart,
+  ref,
+}: {
+  chart: ChartData;
+  ref?: React.Ref<HTMLElement>;
+}) {
   const { type, points, xLabel, yLabel } = chart;
 
   return (
-    <figure className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
+    <figure ref={ref} className="rounded-2xl border border-purple-light bg-white p-4 sm:p-5">
       <figcaption className="mb-3">
-        <p className="font-semibold">{chart.title}</p>
-        <p className="text-xs text-zinc-500">
+        <p className="font-display font-extrabold text-navy">{chart.title}</p>
+        <p className="text-xs text-grey">
           {type === "scatter" ? `${yLabel} vs. ${xLabel}` : `${yLabel} by ${xLabel}`}
           {chart.note && ` · ${chart.note}`}
         </p>
       </figcaption>
 
-      {/* currentColor = the chart color, so it switches with light/dark mode */}
+      {/* currentColor = the chart color (--series-1 in globals.css) */}
       <div style={{ color: "var(--series-1)" }}>
         {type === "bar" && (
           // Horizontal bars keep long category names readable
@@ -65,7 +119,7 @@ export default function AnalysisChart({ chart }: { chart: ChartData }) {
                 interval={0}
               />
               <Tooltip
-                cursor={{ fill: "#71717a1a" }}
+                cursor={{ fill: "#ede5ff80" }}
                 contentStyle={TOOLTIP_STYLE}
                 formatter={(value) => [formatValue(value), yLabel]}
               />

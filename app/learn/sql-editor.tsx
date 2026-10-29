@@ -16,7 +16,7 @@ import { bracketMatching, HighlightStyle, syntaxHighlighting } from "@codemirror
 import { sql } from "@codemirror/lang-sql";
 import { tags } from "@lezer/highlight";
 
-// Colors come from the --sql-* variables in globals.css (they switch for dark mode)
+// Colors come from the --sql-* variables in globals.css
 const sqlColors = HighlightStyle.define([
   { tag: tags.keyword, color: "var(--sql-keyword)", fontWeight: "600" },
   { tag: [tags.function(tags.variableName), tags.standard(tags.name)], color: "var(--sql-function)" },

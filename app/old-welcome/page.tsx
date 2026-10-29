@@ -21,7 +21,7 @@ export default function Home() {
         Analyzely
       </h1>
 
-      <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+      <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-600">
         Upload a dataset and let AI find and fix bad data — missing values,
         duplicates, and inconsistencies. Then explore it with smart charts and
         an AI chat assistant.
@@ -40,13 +40,13 @@ export default function Home() {
         </Link>
         <Link
           href="/login"
-          className="rounded-full border border-zinc-300 px-8 py-3 text-base font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          className="rounded-full border border-zinc-300 px-8 py-3 text-base font-medium hover:bg-zinc-100"
         >
           Log in
         </Link>
         <Link
           href="/upload"
-          className="px-8 py-2 text-sm text-zinc-600 underline-offset-4 hover:text-foreground hover:underline dark:text-zinc-400"
+          className="px-8 py-2 text-sm text-zinc-600 underline-offset-4 hover:text-foreground hover:underline"
         >
           Continue as guest
         </Link>

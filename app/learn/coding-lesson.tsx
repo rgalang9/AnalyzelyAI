@@ -265,7 +265,7 @@ export default function CodingLessonPlayer({
           <LessonDone recap={lesson.recap} language={language} nextLesson={nextLesson} />
         ) : (
           <>
-            <details className="rounded-xl border border-zinc-200 px-4 py-2 text-sm dark:border-zinc-800">
+            <details className="rounded-xl border border-zinc-200 px-4 py-2 text-sm">
               <summary className="cursor-pointer font-medium">Explanation and example</summary>
               <p className="mt-2 leading-6">{lesson.explanation}</p>
               <div className="my-3">
@@ -273,7 +273,7 @@ export default function CodingLessonPlayer({
               </div>
             </details>
 
-            <div className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div className="rounded-2xl border border-zinc-200 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 Task {taskIndex + 1} of {lesson.tasks.length}
                 {isPredict && " · Predict"}
@@ -287,7 +287,7 @@ export default function CodingLessonPlayer({
                     tableData[name] && (
                       <div key={name} className="mt-3">
                         <p className="mb-1 font-mono text-xs font-semibold">▦ {name}</p>
-                        <div className="h-72 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+                        <div className="h-72 overflow-hidden rounded-xl border border-zinc-200">
                           <ResultsGrid result={tableData[name]} />
                         </div>
                       </div>
@@ -307,10 +307,10 @@ export default function CodingLessonPlayer({
                         disabled={ts.solved || cooling || triedWrong}
                         className={`min-w-16 rounded-full border px-5 py-2 font-medium transition-colors disabled:cursor-not-allowed ${
                           isAnswer
-                            ? "border-green-600 bg-green-50 text-green-900 dark:bg-green-950/50 dark:text-green-200"
+                            ? "border-green-600 bg-green-50 text-green-900"
                             : triedWrong
-                              ? "border-zinc-200 text-zinc-400 line-through dark:border-zinc-800"
-                              : "border-zinc-300 hover:bg-zinc-100 disabled:opacity-60 dark:border-zinc-700 dark:hover:bg-zinc-900"
+                              ? "border-zinc-200 text-zinc-400 line-through"
+                              : "border-zinc-300 hover:bg-zinc-100 disabled:opacity-60"
                         }`}
                       >
                         {option}
@@ -327,7 +327,7 @@ export default function CodingLessonPlayer({
             {ts.hintsShown > 0 && !ts.solved && (
               <ul className="flex flex-col gap-2">
                 {task.hints.slice(0, ts.hintsShown).map((hint, i) => (
-                  <li key={i} className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-950 dark:bg-blue-950/50 dark:text-blue-100">
+                  <li key={i} className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-950">
                     <span className="font-semibold">💡 Hint {i + 1}: </span>
                     {hint}
                   </li>
@@ -339,7 +339,7 @@ export default function CodingLessonPlayer({
               <button
                 type="button"
                 onClick={() => setTs((s) => ({ ...s, solutionOpen: true }))}
-                className="self-start text-sm font-medium text-zinc-600 underline underline-offset-4 hover:text-foreground dark:text-zinc-400"
+                className="self-start text-sm font-medium text-zinc-600 underline underline-offset-4 hover:text-foreground"
               >
                 Show the example again
               </button>
@@ -356,12 +356,12 @@ export default function CodingLessonPlayer({
             )}
           </>
         )}
-        {loadError && <p className="text-sm text-red-600 dark:text-red-400">{loadError}</p>}
+        {loadError && <p className="text-sm text-red-600">{loadError}</p>}
       </section>
 
       {/* ---------- Workspace (like a SQL tool) ---------- */}
-      <section className="flex min-h-[36rem] flex-col overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
-        <div className="flex items-center gap-3 border-b border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="flex min-h-[36rem] flex-col overflow-hidden rounded-2xl border border-zinc-200">
+        <div className="flex items-center gap-3 border-b border-zinc-200 bg-zinc-50 px-3 py-2">
           <span className="text-sm font-medium">Query editor</span>
           <span className="hidden text-xs text-zinc-500 sm:inline">
             {editorLocked && started ? "Read-only: pick an answer first" : "Ctrl/⌘ + Enter to run"}
@@ -377,15 +377,15 @@ export default function CodingLessonPlayer({
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-          <aside className="border-b border-zinc-200 md:w-52 md:shrink-0 md:border-b-0 md:border-r dark:border-zinc-800">
+          <aside className="border-b border-zinc-200 md:w-52 md:shrink-0 md:border-b-0 md:border-r">
             <SchemaPanel tables={tables} onViewData={setViewing} />
           </aside>
 
           <div className="flex min-w-0 flex-1 flex-col">
-            <div className="relative h-56 shrink-0 overflow-auto border-b border-zinc-200 dark:border-zinc-800">
+            <div className="relative h-56 shrink-0 overflow-auto border-b border-zinc-200">
               <SqlEditor value={code} onChange={setCode} onRun={handleRun} readOnly={editorLocked} />
               {!started && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-6 text-center text-sm text-zinc-600">
                   🔒 Read the explanation and example, then press &ldquo;Got it&rdquo; to start.
                 </div>
               )}
@@ -394,7 +394,7 @@ export default function CodingLessonPlayer({
             <div className={`grid min-h-64 flex-1 ${!isPredict ? "lg:grid-cols-2" : ""}`}>
               <ResultPane title={isPredict ? "Result" : task.check ? "Table after your code" : "Your result"}>
                 {sqlError ? (
-                  <p className="p-4 text-sm text-amber-800 dark:text-amber-300">{sqlError}</p>
+                  <p className="p-4 text-sm text-amber-800">{sqlError}</p>
                 ) : result ? (
                   <ResultsGrid result={result} />
                 ) : (
@@ -436,8 +436,8 @@ function ResultPane({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`flex min-h-0 min-w-0 flex-col border-zinc-200 dark:border-zinc-800 ${className}`}>
-      <p className="border-b border-zinc-200 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:border-zinc-800">
+    <div className={`flex min-h-0 min-w-0 flex-col border-zinc-200 ${className}`}>
+      <p className="border-b border-zinc-200 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">
         {title}
       </p>
       <div className="max-h-80 min-h-0 flex-1 overflow-hidden">{children}</div>
@@ -461,7 +461,7 @@ function TaskSteps({ count, current, solved, finished }: { count: number; curren
                 ? "bg-green-600 text-white"
                 : active
                   ? "bg-foreground text-background"
-                  : "bg-zinc-100 text-zinc-400 dark:bg-zinc-900"
+                  : "bg-zinc-100 text-zinc-400"
             }`}
           >
             {done ? "✓" : i > current ? "🔒" : i + 1}

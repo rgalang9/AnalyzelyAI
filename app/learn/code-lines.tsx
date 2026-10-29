@@ -47,8 +47,8 @@ export default function CodeLines({ lines }: { lines: CodeLine[] }) {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-      <pre className="select-none bg-zinc-50 py-2 font-mono text-sm leading-7 dark:bg-zinc-900">
+    <div className="overflow-hidden rounded-xl border border-zinc-200">
+      <pre className="select-none bg-zinc-50 py-2 font-mono text-sm leading-7">
         {lines.map((l, i) => (
           <div
             key={i}
@@ -56,7 +56,7 @@ export default function CodeLines({ lines }: { lines: CodeLine[] }) {
             onMouseEnter={() => setActive(i)}
             onFocus={() => setActive(i)}
             onClick={() => setActive(i)}
-            className={`flex cursor-help px-3 outline-none ${active === i ? "bg-blue-100 dark:bg-blue-950/60" : ""}`}
+            className={`flex cursor-help px-3 outline-none ${active === i ? "bg-blue-100" : ""}`}
           >
             <span className="mr-4 w-4 shrink-0 text-right text-zinc-400">{i + 1}</span>
             <code className="whitespace-pre-wrap">
@@ -67,7 +67,7 @@ export default function CodeLines({ lines }: { lines: CodeLine[] }) {
       </pre>
       <p
         aria-live="polite"
-        className="min-h-12 border-t border-zinc-200 px-4 py-3 text-sm dark:border-zinc-800"
+        className="min-h-12 border-t border-zinc-200 px-4 py-3 text-sm"
       >
         {active === null ? (
           <span className="text-zinc-500">Hover over a line to see what it does.</span>

@@ -110,6 +110,17 @@ export async function autoTitleAnalysis(analysisId: string, dataset: Dataset) {
   }
 }
 
+// The saved title of one analysis (null = no title yet, show the file name)
+export async function getAnalysisTitle(analysisId: string): Promise<string | null> {
+  const { data, error } = await createClient()
+    .from("analyses")
+    .select("title")
+    .eq("id", analysisId)
+    .single();
+  if (error) throw error;
+  return data.title;
+}
+
 export async function renameAnalysis(analysisId: string, title: string) {
   const { error } = await createClient()
     .from("analyses")

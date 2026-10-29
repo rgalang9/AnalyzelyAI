@@ -18,9 +18,9 @@ export default function LessonGate({
   if (unlocked) return children;
 
   return (
-    <div className="mt-8 rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+    <div className="mt-8 rounded-2xl border border-zinc-200 p-6">
       <p className="font-medium">🔒 This lesson is still locked.</p>
-      <p className="mt-1 text-zinc-600 dark:text-zinc-400">
+      <p className="mt-1 text-zinc-600">
         Finish Lesson {previous!.number} ({previous!.title}) first, and this one opens up.
       </p>
       <Link

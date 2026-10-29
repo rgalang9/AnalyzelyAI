@@ -6,14 +6,12 @@ import { downloadCsv } from "@/lib/csv";
 import { useDataset } from "../dataset-context";
 import { IssueCard } from "./issue-card";
 
-// Summary above the table: how many issues, Fix all / Restore, downloads, and the full list
+// Summary above the table: how many issues, Fix all / Restore, original download, and the full list
 export default function CleaningPanel({
   dataset,
-  cleaned,
   onShowIssue,
 }: {
   dataset: Dataset; // the original
-  cleaned: Dataset; // the original with applied fixes
   onShowIssue: (issue: Issue) => void;
 }) {
   const { cleaning, cleaningStatus, cleaningNote, cleaningSaveFailed, setFixed, restoreOriginal } =
@@ -22,7 +20,7 @@ export default function CleaningPanel({
 
   if (!cleaning) {
     return (
-      <p className="mt-6 animate-pulse text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="mt-6 animate-pulse text-sm text-zinc-600">
         Checking your data for problems…
       </p>
     );
@@ -35,42 +33,42 @@ export default function CleaningPanel({
   const baseName = dataset.fileName.replace(/\.(csv|xlsx)$/i, "");
 
   const buttonClass =
-    "rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:hover:bg-zinc-800";
+    "rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40";
 
   return (
-    <section className="mt-6 rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
+    <section className="mt-6 rounded-2xl border border-zinc-200 p-5">
       <h2 className="text-lg font-semibold">
         {issues.length === 0
           ? "No problems found. Your data looks clean ✨"
           : `We found ${issues.length.toLocaleString()} possible ${issues.length === 1 ? "issue" : "issues"}.`}
         {fixed.size > 0 && (
-          <span className="ml-2 text-base font-normal text-green-700 dark:text-green-400">
+          <span className="ml-2 text-base font-normal text-green-700">
             {fixed.size.toLocaleString()} fixed
           </span>
         )}
       </h2>
 
       {scanning ? (
-        <p className="mt-1 animate-pulse text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1 animate-pulse text-sm text-zinc-600">
           Our AI is double-checking these and working out the best fixes…
         </p>
       ) : (
         issues.length > 0 && (
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            <span className="text-red-700 dark:text-red-400">Red</span> cells may have a problem,{" "}
-            <span className="text-green-700 dark:text-green-400">green</span> cells are fixed. Hover
+          <p className="mt-1 text-sm text-zinc-600">
+            <span className="text-red-700">Red</span> cells may have a problem,{" "}
+            <span className="text-green-700">green</span> cells are fixed. Hover
             a cell for details. Your original data is always kept.
           </p>
         )
       )}
 
       {cleaningNote && (
-        <p role="status" className="mt-2 text-sm text-amber-700 dark:text-amber-400">
+        <p role="status" className="mt-2 text-sm text-amber-700">
           {cleaningNote}
         </p>
       )}
       {cleaningSaveFailed && (
-        <p role="status" className="mt-2 text-sm text-amber-700 dark:text-amber-400">
+        <p role="status" className="mt-2 text-sm text-amber-700">
           We couldn&rsquo;t save your fixes to your history, but they&rsquo;re still here for now.
         </p>
       )}
@@ -93,14 +91,6 @@ export default function CleaningPanel({
         )}
         <button
           type="button"
-          onClick={() => downloadCsv(`${baseName}-cleaned.csv`, cleaned.headers, cleaned.rows)}
-          disabled={scanning}
-          className={buttonClass}
-        >
-          Download cleaned CSV
-        </button>
-        <button
-          type="button"
           onClick={() => downloadCsv(`${baseName}-original.csv`, dataset.headers, dataset.rows)}
           className={buttonClass}
         >
@@ -111,7 +101,7 @@ export default function CleaningPanel({
       {issues.length > 0 && (
         <details className="mt-4">
           <summary className="cursor-pointer text-sm font-medium">See all issues</summary>
-          <ul className="mt-3 flex max-h-96 flex-col divide-y divide-zinc-200 overflow-y-auto dark:divide-zinc-800">
+          <ul className="mt-3 flex max-h-96 flex-col divide-y divide-zinc-200 overflow-y-auto">
             {issues.map((issue) => (
               <li key={issue.id} className="py-3">
                 <p className="mb-1 text-xs text-zinc-500">
@@ -128,7 +118,7 @@ export default function CleaningPanel({
                   <button
                     type="button"
                     onClick={() => onShowIssue(issue)}
-                    className="rounded-full px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                    className="rounded-full px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100"
                   >
                     Show in table
                   </button>

@@ -5,7 +5,6 @@ import { chunkyPurple } from "../brand";
 // Placeholder for the Daily Case feature (no data behind it yet)
 export default function DailyPage() {
   return (
-    // Always light, even in dark mode, to match the brand design
     <main className="flex flex-1 flex-col items-center justify-center bg-linear-to-b from-white to-orange-light px-4 py-24 text-center text-navy sm:px-6">
       <span className="flex size-16 items-center justify-center rounded-2xl bg-orange-light text-orange">
         <Flame aria-hidden="true" className="size-8" />

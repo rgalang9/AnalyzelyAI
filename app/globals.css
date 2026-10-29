@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
+/* Always light. "dark:" classes only apply inside an element with class "dark", which we never add,
+   so they never follow the computer's dark mode. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --series-1: #2a78d6; /* chart color */
+  --series-1: #6d3ef0; /* chart color (brand purple) */
   /* SQL code colors (Learn section) */
   --sql-keyword: #1d4ed8;
   --sql-function: #7e22ce;
@@ -36,17 +40,8 @@
   --color-white: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --series-1: #3987e5;
-    --sql-keyword: #60a5fa;
-    --sql-function: #c084fc;
-    --sql-string: #34d399;
-    --sql-number: #fbbf24;
-    --sql-comment: #a1a1aa;
-  }
+html {
+  color-scheme: light; /* form fields and scrollbars stay light too */
 }
 
 body {

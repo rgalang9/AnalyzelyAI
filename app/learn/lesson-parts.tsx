@@ -22,8 +22,8 @@ export function Feedback({ tone, children }: { tone: "good" | "try"; children: R
       role="status"
       className={`rounded-xl px-4 py-3 text-sm ${
         tone === "good"
-          ? "bg-green-50 text-green-900 dark:bg-green-950/50 dark:text-green-200"
-          : "bg-amber-50 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200"
+          ? "bg-green-50 text-green-900"
+          : "bg-amber-50 text-amber-900"
       }`}
     >
       {children}
@@ -45,7 +45,7 @@ export function SolutionModal({ lines, onClose }: { lines: CodeLine[]; onClose: 
       className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl bg-background p-6 text-foreground shadow-xl backdrop:bg-black/40"
     >
       <h2 className="text-xl font-bold tracking-tight">Here&rsquo;s one way to do it 💡</h2>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="mt-1 text-sm text-zinc-600">
         Hover over each line to see what it does. Then close this and type it in yourself.
       </p>
       <div className="mt-4">
@@ -84,7 +84,7 @@ export function TablePreviewModal({
       className="m-auto w-[calc(100%-2rem)] max-w-5xl rounded-2xl bg-background p-6 text-foreground shadow-xl backdrop:bg-black/40"
     >
       <h2 className="font-mono text-lg font-semibold">▦ {name}</h2>
-      <div className="mt-4 h-[60vh] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+      <div className="mt-4 h-[60vh] overflow-hidden rounded-xl border border-zinc-200">
         <ResultsGrid result={data} />
       </div>
       <button
@@ -109,7 +109,7 @@ export function LessonDone({
   nextLesson: { id: string; number: number; title: string } | null;
 }) {
   return (
-    <div className="rounded-2xl border border-green-200 bg-green-50 p-5 dark:border-green-900 dark:bg-green-950/40">
+    <div className="rounded-2xl border border-green-200 bg-green-50 p-5">
       <p className="text-lg font-semibold">Lesson complete! 🎉</p>
       <p className="mt-2 leading-7">{recap}</p>
       <div className="mt-4 flex flex-wrap gap-2">
@@ -123,7 +123,7 @@ export function LessonDone({
         )}
         <Link
           href={`/learn/${language}`}
-          className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium hover:bg-zinc-100"
         >
           All lessons
         </Link>

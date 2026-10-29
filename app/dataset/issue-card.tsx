@@ -28,11 +28,11 @@ export function IssueCard({
   return (
     <div className="flex flex-col gap-1.5 text-sm">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium dark:bg-zinc-800">
+        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium">
           {ISSUE_LABELS[issue.kind]}
         </span>
         {fixed && (
-          <span className="text-xs font-medium text-green-700 dark:text-green-400">Fixed ✓</span>
+          <span className="text-xs font-medium text-green-700">Fixed ✓</span>
         )}
       </div>
 
@@ -50,7 +50,7 @@ export function IssueCard({
           )}
         </p>
       ) : (
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <p className="text-zinc-600">
           <span className="font-medium text-foreground">{adviceLabel}</span>
           {issue.advice}
         </p>
@@ -64,7 +64,7 @@ export function IssueCard({
             disabled={!canFix}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40 ${
               fixed
-                ? "border border-zinc-300 dark:border-zinc-700"
+                ? "border border-zinc-300"
                 : "bg-foreground text-background"
             }`}
           >
@@ -103,7 +103,7 @@ export function IssueTooltip({
       style={{ ...position, width }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="fixed z-50 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-background p-3 shadow-lg dark:border-zinc-800"
+      className="fixed z-50 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-background p-3 shadow-lg"
     >
       {children}
     </div>

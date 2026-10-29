@@ -17,9 +17,9 @@ export function TopBarPlaceholder() {
   return <header className={`${barClass} h-16`} />;
 }
 
-// Brand-style tab: light purple pill when active
+// Brand-style tab: light purple pill when active. Never wraps its text.
 const tabClass = (active: boolean) =>
-  `flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+  `flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-colors lg:px-4 ${
     active ? "bg-purple-light text-purple" : "text-navy hover:bg-purple-light/60"
   }`;
 
@@ -31,7 +31,7 @@ const chunkyClass =
 const ANALYZE_PAGES = ["/", "/upload", "/dataset"];
 
 // Bar across the top of every page: logo, tabs, and Log in / Sign up (or My account).
-// On phones the tabs drop to their own row under the logo.
+// One line from tablet width up; only on phones do the tabs drop to their own row.
 export default function TopBar() {
   const pathname = usePathname();
   const { email, loading } = useUserEmail();
@@ -39,12 +39,12 @@ export default function TopBar() {
   return (
     // No line under the bar on the landing page, where the hero starts right below it
     <header className={`${barClass} ${pathname === "/" ? "border-transparent" : ""}`}>
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
-        <Link href="/" aria-label="Analyzely home">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6 md:flex-nowrap">
+        <Link href="/" aria-label="Analyzely home" className="shrink-0">
           <Logo />
         </Link>
 
-        <nav className="order-last flex w-full justify-center gap-1 md:order-none md:w-auto">
+        <nav className="order-last flex w-full justify-center gap-1 md:order-none md:w-auto md:min-w-0">
           {/* A plain link on purpose: it loads /upload fresh, like a browser refresh. An in-app
               <Link> can bring back the old upload page (old file, stuck "Uploading…") because
               Next.js keeps visited pages alive in the background. The reload also clears the
@@ -62,7 +62,11 @@ export default function TopBar() {
         </nav>
 
         {/* Hidden until we know if someone is logged in, so the buttons don't flicker */}
-        <div className={`flex items-center gap-2 transition-opacity ${loading ? "opacity-0" : ""}`}>
+        <div
+          className={`flex shrink-0 items-center gap-2 whitespace-nowrap transition-opacity ${
+            loading ? "opacity-0" : ""
+          }`}
+        >
           {email ? (
             <AccountMenu email={email} />
           ) : (

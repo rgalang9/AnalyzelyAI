@@ -10,7 +10,6 @@ const FEATURES = ["Ask in plain English", "Auto charts & stats", "One-click data
 // Landing page: the first screen people see at "/" (logged in or not)
 export default function Home() {
   return (
-    // Always light, even in dark mode, to match the brand design
     <main className="flex flex-1 flex-col bg-white text-navy">
       {/* Hero */}
       <section className="bg-linear-to-b from-white via-purple-light/40 to-purple-light/30 px-4 pb-16 pt-12 text-center sm:px-6 sm:pt-20">

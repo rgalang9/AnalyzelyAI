@@ -123,7 +123,7 @@ export default function TourLessonPlayer({
   }
 
   // Shading for whatever part of the table the mouse is over
-  const shade = "bg-blue-100 dark:bg-blue-950/60";
+  const shade = "bg-blue-100";
   const isLit = (row: number, col: number | null) =>
     hover !== null &&
     ((hover.target === "row" && hover.row === row) ||
@@ -138,7 +138,7 @@ export default function TourLessonPlayer({
         {phase === "explore" && (
           <>
             <p className="leading-7">{lesson.explanation}</p>
-            <div className="min-h-24 rounded-xl border border-zinc-200 px-4 py-3 text-sm dark:border-zinc-800" aria-live="polite">
+            <div className="min-h-24 rounded-xl border border-zinc-200 px-4 py-3 text-sm" aria-live="polite">
               {hover && explainFor.has(hover.target) ? (
                 <>
                   <p className="font-semibold">{TARGET_LABELS[hover.target]}</p>
@@ -156,8 +156,8 @@ export default function TourLessonPlayer({
                   key={t.target}
                   className={`rounded-full px-3 py-1 text-xs font-medium ${
                     explored.has(t.target)
-                      ? "bg-green-100 text-green-900 dark:bg-green-950/60 dark:text-green-200"
-                      : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900"
+                      ? "bg-green-100 text-green-900"
+                      : "bg-zinc-100 text-zinc-500"
                   }`}
                 >
                   {explored.has(t.target) ? "✓ " : ""}
@@ -181,7 +181,7 @@ export default function TourLessonPlayer({
 
         {phase === "quiz" && (
           <>
-            <div className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
+            <div className="rounded-2xl border border-zinc-200 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 Question {quizIndex + 1} of {lesson.quiz.length}
               </p>
@@ -201,7 +201,7 @@ export default function TourLessonPlayer({
         )}
 
         {phase === "done" && <LessonDone recap={lesson.recap} language={language} nextLesson={nextLesson} />}
-        {loadError && <p className="text-sm text-red-600 dark:text-red-400">{loadError}</p>}
+        {loadError && <p className="text-sm text-red-600">{loadError}</p>}
       </section>
 
       {/* ---------- The table ---------- */}
@@ -209,12 +209,12 @@ export default function TourLessonPlayer({
         {data && (
           <div
             className={`inline-block max-w-full overflow-hidden rounded-2xl border-2 ${
-              hover?.target === "table" ? "border-blue-500" : "border-zinc-200 dark:border-zinc-800"
+              hover?.target === "table" ? "border-blue-500" : "border-zinc-200"
             }`}
           >
             <div
               onMouseEnter={() => handleHover({ target: "table" })}
-              className={`border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-sm font-semibold dark:border-zinc-800 dark:bg-zinc-900 ${
+              className={`border-b border-zinc-200 bg-zinc-50 px-4 py-2 font-mono text-sm font-semibold ${
                 phase === "explore" ? "cursor-help" : ""
               } ${hover?.target === "table" ? shade : ""}`}
             >
@@ -224,14 +224,14 @@ export default function TourLessonPlayer({
               <table className="border-collapse font-mono text-xs">
                 <thead>
                   <tr>
-                    <th className="border-b border-r border-zinc-200 px-2 py-1.5 text-zinc-400 dark:border-zinc-800">#</th>
+                    <th className="border-b border-r border-zinc-200 px-2 py-1.5 text-zinc-400">#</th>
                     {data.columns.map((column, c) => (
                       <th
                         key={column}
                         onMouseEnter={() => handleHover({ target: "column_header", col: c })}
                         onClick={() => handleClick({ column })}
-                        className={`whitespace-nowrap border-b border-r border-zinc-200 px-3 py-1.5 text-left font-semibold dark:border-zinc-800 ${clickable} ${
-                          isLit(-1, c) ? shade : "bg-zinc-100 dark:bg-zinc-900"
+                        className={`whitespace-nowrap border-b border-r border-zinc-200 px-3 py-1.5 text-left font-semibold ${clickable} ${
+                          isLit(-1, c) ? shade : "bg-zinc-100"
                         }`}
                       >
                         {column}
@@ -247,7 +247,7 @@ export default function TourLessonPlayer({
                         <td
                           onMouseEnter={() => handleHover({ target: "row", row })}
                           onClick={() => handleClick({ row })}
-                          className={`border-r border-zinc-200 px-2 py-1 text-right text-zinc-400 dark:border-zinc-800 ${clickable} ${
+                          className={`border-r border-zinc-200 px-2 py-1 text-right text-zinc-400 ${clickable} ${
                             isLit(row, null) ? shade : ""
                           }`}
                         >
@@ -258,7 +258,7 @@ export default function TourLessonPlayer({
                             key={c}
                             onMouseEnter={() => handleHover({ target: value === null ? "null_cell" : "cell", row, col: c })}
                             onClick={() => handleClick({ row, column: data.columns[c] })}
-                            className={`whitespace-nowrap border-r border-zinc-200 px-3 py-1 dark:border-zinc-800 ${clickable} ${
+                            className={`whitespace-nowrap border-r border-zinc-200 px-3 py-1 ${clickable} ${
                               isLit(row, c) ? shade : ""
                             }`}
                           >

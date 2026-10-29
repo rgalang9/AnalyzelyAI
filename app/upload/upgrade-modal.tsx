@@ -48,7 +48,7 @@ export function UpgradeModal({
       <h2 className="text-2xl font-bold tracking-tight">
         This file&apos;s a big one! 📊
       </h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+      <p className="mt-2 text-zinc-600">
         {problem.detail}, and the {problem.planName} limit is {problem.limit}.
       </p>
       <p className="mt-4 font-medium">
@@ -57,7 +57,7 @@ export function UpgradeModal({
       </p>
 
       {joined ? (
-        <p role="status" className="mt-4 text-sm text-green-700 dark:text-green-400">
+        <p role="status" className="mt-4 text-sm text-green-700">
           You&apos;re on the list! We&apos;ll let you know when {pro.name} launches.
         </p>
       ) : (
@@ -70,10 +70,10 @@ export function UpgradeModal({
             aria-label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-lg border border-zinc-300 p-3 text-sm dark:border-zinc-700 dark:bg-transparent"
+            className="rounded-lg border border-zinc-300 p-3 text-sm"
           />
           {error && (
-            <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+            <p role="alert" className="text-sm text-red-600">
               {error}
             </p>
           )}
@@ -90,7 +90,7 @@ export function UpgradeModal({
       <button
         type="button"
         onClick={() => dialogRef.current?.close()}
-        className="mt-3 w-full rounded-full border border-zinc-300 px-6 py-3 font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+        className="mt-3 w-full rounded-full border border-zinc-300 px-6 py-3 font-medium transition-colors hover:bg-zinc-100"
       >
         Try a smaller file
       </button>

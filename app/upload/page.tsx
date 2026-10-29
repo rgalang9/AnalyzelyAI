@@ -162,7 +162,6 @@ export default function UploadPage() {
   }
 
   return (
-    // Always light, even in dark mode, to match the brand design
     <main className="flex flex-1 flex-col bg-white bg-linear-to-b from-purple-light/30 to-purple-light/30 px-4 py-10 text-navy sm:px-6 sm:py-14">
       <div className="mx-auto w-full max-w-6xl">
         <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">

@@ -53,6 +53,13 @@ function readDate(raw: string): DateRead | null {
   return null;
 }
 
+// The year of a date cell, or null if it isn't a date we can read
+export function yearOf(value: string): number | null {
+  const read = readDate(value);
+  if (!read || read.kind === "time") return null;
+  return read.y;
+}
+
 function isRealDate(y: number, m: number, d: number) {
   return m >= 1 && m <= 12 && d >= 1 && d <= new Date(y, m, 0).getDate();
 }
@@ -250,16 +257,39 @@ function checkColumn(rows: string[][], col: number, add: AddIssue) {
     }
   }
 
+  const type = typeOf(rows, col, filled);
+  if (type === "number") checkNumberColumn(rows, col, filled, add);
+  else if (type === "date") checkDateColumn(rows, col, filled, add);
+  else checkCapitalization(rows, col, filled, add);
+}
+
+export type ColumnType = "number" | "date" | "text";
+
+// What a column holds, judged from its filled cells (needs at least 3 to call it numbers or dates)
+function typeOf(rows: string[][], col: number, filled: number[]): ColumnType {
   const share = (test: (v: string) => boolean) =>
     filled.filter((i) => test(rows[i][col])).length / filled.length;
+  if (filled.length >= 3 && share((v) => toNumber(v) !== null) >= TYPE_THRESHOLD) return "number";
+  if (filled.length >= 3 && share((v) => readDate(v) !== null) >= TYPE_THRESHOLD) return "date";
+  return "text";
+}
 
-  if (filled.length >= 3 && share((v) => toNumber(v) !== null) >= TYPE_THRESHOLD) {
-    checkNumberColumn(rows, col, filled, add);
-  } else if (filled.length >= 3 && share((v) => readDate(v) !== null) >= TYPE_THRESHOLD) {
-    checkDateColumn(rows, col, filled, add);
-  } else {
-    checkCapitalization(rows, col, filled, add);
-  }
+export function columnType(rows: string[][], col: number): ColumnType {
+  const filled = rows.flatMap((row, i) => (isMissing(row[col]) ? [] : [i]));
+  return typeOf(rows, col, filled);
+}
+
+// Exact duplicate rows (ignoring extra spaces): each copy after the first → the first's row
+export function duplicateRows(rows: string[][]): Map<number, number> {
+  const firstSeen = new Map<string, number>();
+  const copies = new Map<number, number>();
+  rows.forEach((row, i) => {
+    const key = row.map((v) => v.trim()).join("\u0000");
+    const first = firstSeen.get(key);
+    if (first === undefined) firstSeen.set(key, i);
+    else copies.set(i, first);
+  });
+  return copies;
 }
 
 // ---------- The whole dataset ----------
@@ -279,15 +309,8 @@ export function findIssues({ headers, rows }: Dataset): Issue[] {
 
   headers.forEach((_, col) => checkColumn(rows, col, add));
 
-  // Exact duplicate rows (ignoring extra spaces): flag every copy after the first
-  const firstSeen = new Map<string, number>();
-  rows.forEach((row, i) => {
-    const key = row.map((v) => v.trim()).join("\u0000");
-    const first = firstSeen.get(key);
-    if (first === undefined) {
-      firstSeen.set(key, i);
-      return;
-    }
+  // Exact duplicate rows: flag every copy after the first
+  duplicateRows(rows).forEach((first, i) => {
     add({
       row: i, col: null, kind: "duplicate",
       problem: `This row is an exact copy of row ${first + 1}.`,

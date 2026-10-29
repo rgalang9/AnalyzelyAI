@@ -31,7 +31,7 @@ async function LessonListPage({ params }: { params: PageProps<"/learn/[language]
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-12">
       <h1 className="text-3xl font-bold tracking-tight">Learn {lang.name}</h1>
       {lessons.length === 0 ? (
-        <p className="mt-4 text-zinc-600 dark:text-zinc-400">{lang.name} lessons coming very soon!</p>
+        <p className="mt-4 text-zinc-600">{lang.name} lessons coming very soon!</p>
       ) : (
         <LessonList language={language} lessons={lessons} />
       )}
