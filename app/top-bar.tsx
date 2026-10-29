@@ -24,14 +24,17 @@ export function TopBarPlaceholder() {
   return <header className={`${barClass} z-20`} />;
 }
 
+const BRAND_BAR_PAGES = ["/", "/login", "/signup"];
+
 // Bar across the top of every page: "Home" (the AI analyzer) and the "Learn" menu
 export default function TopBar() {
   const pathname = usePathname();
   const inLearn = pathname.startsWith("/learn");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // The landing page at "/" gets the new brand-style bar; other pages keep this one for now
-  if (pathname === "/") return <LandingTopBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />;
+  // The landing, log-in and sign-up pages get the new brand-style bar; other pages keep this one for now
+  if (BRAND_BAR_PAGES.includes(pathname))
+    return <LandingTopBar pathname={pathname} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />;
 
   return (
     // While the Learn menu is open, the bar (and so the menu) sits above everything, sidebar
@@ -55,27 +58,35 @@ const landingTabClass = (active: boolean) =>
 const chunkyClass =
   "rounded-full px-5 py-2 text-sm font-bold transition-all active:translate-y-[2px]";
 
-// Top bar on the landing page: logo, tabs, and Log in / Sign up (or the account if logged in).
+// Brand-style top bar (landing, log-in and sign-up pages): logo, tabs, and Log in / Sign up (or the account if logged in).
 // On phones the tabs drop to their own row under the logo.
 function LandingTopBar({
+  pathname,
   menuOpen,
   setMenuOpen,
 }: {
+  pathname: string;
   menuOpen: boolean;
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { email, loading } = useUserEmail();
+  const isHome = pathname === "/";
   const handleLogOut = useLogOut();
 
   return (
-    <header className={`sticky top-0 bg-white ${menuOpen ? "z-50" : "z-20"}`}>
+    // A thin line under the bar on the log-in and sign-up pages, where the page below is tinted
+    <header
+      className={`sticky top-0 bg-white ${isHome ? "" : "border-b border-purple-light"} ${
+        menuOpen ? "z-50" : "z-20"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
         <Link href="/" aria-label="Analyzely home">
           <Logo />
         </Link>
 
         <nav className="order-last flex w-full justify-center gap-1 md:order-none md:w-auto">
-          <Link href="/upload" className={landingTabClass(true)}>
+          <Link href="/upload" className={landingTabClass(isHome)}>
             Analyze
           </Link>
           <LearnMenu
@@ -119,13 +130,19 @@ function LandingTopBar({
             <>
               <Link
                 href="/login"
-                className={`${chunkyClass} border-2 border-navy text-navy hover:bg-purple-light/60`}
+                className={`${chunkyClass} border-2 ${
+                  pathname === "/login"
+                    ? "border-purple bg-purple-light text-purple"
+                    : "border-navy text-navy hover:bg-purple-light/60"
+                }`}
               >
                 Log in
               </Link>
               <Link
                 href="/signup"
-                className={`${chunkyClass} bg-purple text-white shadow-[0_4px_0_var(--color-purple-dark)] active:shadow-[0_2px_0_var(--color-purple-dark)]`}
+                className={`${chunkyClass} bg-purple text-white shadow-[0_4px_0_var(--color-purple-dark)] active:shadow-[0_2px_0_var(--color-purple-dark)] ${
+                  pathname === "/signup" ? "ring-4 ring-purple-light" : ""
+                }`}
               >
                 Sign up
               </Link>

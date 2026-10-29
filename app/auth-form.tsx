@@ -1,9 +1,15 @@
 "use client"; // runs in the browser so we can handle typing and clicks
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CircleAlert, CircleCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { chunkyPurple } from "./brand";
+
+const inputClass =
+  "w-full rounded-xl border-2 border-purple-light bg-white px-4 py-3 text-navy outline-none transition-colors placeholder:text-grey/60 focus:border-purple";
 
 // One form shared by the "Create an account" and "Log in" screens
 export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
@@ -13,6 +19,7 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -45,82 +52,122 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-6 py-24">
-      <div className="w-full max-w-md">
-        <Link href="/" className="text-sm text-zinc-500 hover:text-foreground">
-          ← Back
-        </Link>
+    // Soft light background with faint purple and orange glows. Always light, even in dark mode.
+    <main className="flex flex-1 flex-col items-center justify-center bg-white bg-[radial-gradient(circle_at_15%_30%,var(--color-purple-light),transparent_45%),radial-gradient(circle_at_85%_75%,var(--color-orange-light),transparent_45%)] px-4 py-12 sm:py-20">
+      <div className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-[0_12px_40px_rgba(36,23,79,0.10)]">
+        {/* Brand stripe: white gaps keep the pink and orange from touching */}
+        <div aria-hidden="true" className="flex h-2 gap-2.5">
+          <span className="flex-[3] bg-purple" />
+          <span className="flex-1 bg-pink" />
+          <span className="flex-1 bg-orange" />
+        </div>
 
-        <h1 className="mt-4 text-3xl font-bold tracking-tight">
-          {isSignup ? "Create your account" : "Welcome back"}
-        </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          {isSignup
-            ? "Sign up with your email and a password."
-            : "Log in with your email and password."}
-        </p>
+        <div className="px-6 pb-10 pt-8 sm:px-11">
+          <Image src="/logo.png" alt="" width={74} height={64} className="mx-auto h-16 w-auto" />
 
-        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Email
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="rounded-lg border border-zinc-300 p-3 font-normal dark:border-zinc-700 dark:bg-transparent"
-            />
-          </label>
+          <h1 className="mt-4 text-center font-display text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">
+            {isSignup ? "Create your free account" : "Welcome back!"}
+          </h1>
+          <p className="mt-2 text-center text-grey">
+            {isSignup
+              ? "Save your analyses and lesson progress."
+              : "Log in to see your saved analyses."}
+          </p>
 
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Password
-            <input
-              type="password"
-              required
-              minLength={6}
-              autoComplete={isSignup ? "new-password" : "current-password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="rounded-lg border border-zinc-300 p-3 font-normal dark:border-zinc-700 dark:bg-transparent"
-            />
-          </label>
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+            <label className="flex flex-col gap-2 text-sm font-semibold text-navy">
+              Email
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="you@school.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`${inputClass} font-normal`}
+              />
+            </label>
 
-          {error && (
-            <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-              {error}
-            </p>
-          )}
-          {message && (
-            <p role="status" className="text-sm text-green-700 dark:text-green-400">
-              {message}
-            </p>
-          )}
+            <label className="flex flex-col gap-2 text-sm font-semibold text-navy">
+              Password
+              <span className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  minLength={6}
+                  autoComplete={isSignup ? "new-password" : "current-password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`${inputClass} pr-16 font-normal`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-purple hover:text-purple-dark"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </span>
+            </label>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded-full bg-foreground px-6 py-3 font-medium text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {submitting
-              ? isSignup
-                ? "Creating account..."
-                : "Logging in..."
-              : isSignup
-                ? "Create account"
-                : "Log in"}
-          </button>
-        </form>
+            {error && (
+              <p
+                role="alert"
+                className="flex items-start gap-2 rounded-xl bg-pink-light px-4 py-3 text-sm text-navy"
+              >
+                <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-pink" />
+                {error}
+              </p>
+            )}
+            {message && (
+              <p
+                role="status"
+                className="flex items-start gap-2 rounded-xl bg-purple-light px-4 py-3 text-sm text-navy"
+              >
+                <CircleCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-purple" />
+                {message}
+              </p>
+            )}
 
-        <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
-          {isSignup ? "Already have an account? " : "New here? "}
+            <button
+              type="submit"
+              disabled={submitting}
+              className={`${chunkyPurple} mt-1 w-full disabled:cursor-not-allowed disabled:opacity-60`}
+            >
+              {submitting
+                ? isSignup
+                  ? "Creating account..."
+                  : "Logging in..."
+                : isSignup
+                  ? "Sign up"
+                  : "Log in"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-grey">
+            {isSignup ? "Already have an account? " : "New here? "}
+            <Link
+              href={isSignup ? "/login" : "/signup"}
+              className="font-bold text-pink hover:underline"
+            >
+              {isSignup ? "Log in" : "Create a free account"}
+            </Link>
+          </p>
+
+          <div className="my-6 flex items-center gap-3 text-xs text-grey/70">
+            <span className="h-px flex-1 bg-purple-light" />
+            or
+            <span className="h-px flex-1 bg-purple-light" />
+          </div>
+
           <Link
-            href={isSignup ? "/login" : "/signup"}
-            className="font-medium text-foreground underline"
+            href="/upload"
+            className="block rounded-full border-2 border-navy px-6 py-3 text-center font-display font-extrabold text-navy transition-colors hover:bg-purple-light/60"
           >
-            {isSignup ? "Log in" : "Create an account"}
+            Try it free, no account needed
           </Link>
-        </p>
+        </div>
       </div>
     </main>
   );
