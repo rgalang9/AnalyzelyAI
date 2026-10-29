@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, Download, MessageCircle, Sheet, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, MessageCircle, Sheet, Sparkles } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
 import { applyFixes, type Issue } from "@/lib/cleaning";
-import { downloadCsv } from "@/lib/csv";
+import { downloadTable, type DownloadFormat } from "@/lib/table-download";
 import { getAnalysisTitle, HISTORY_CHANGED } from "@/lib/history";
 import { useDataset } from "../dataset-context";
 import { useUserEmail } from "../use-user-email";
+import DownloadMenu from "../download-menu";
 import AskQuestion from "./ask-question";
 import CleaningPanel from "./cleaning-panel";
 import DataTab from "./data-tab";
@@ -136,7 +137,9 @@ function DatasetView({ dataset }: { dataset: Dataset }) {
         onTab={setTab}
         issuesLeft={issuesLeft}
         canDownload={cleaningStatus !== "scanning"}
-        onDownload={() => downloadCsv(`${baseName}-cleaned.csv`, cleaned.headers, cleaned.rows)}
+        onDownload={(format) =>
+          downloadTable(format, `${baseName}-cleaned`, fileName, cleaned.headers, cleaned.rows)
+        }
       />
 
       <div className="flex flex-1 flex-col bg-purple-light/30 px-4 py-8 sm:px-6">
@@ -339,7 +342,7 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "clean", label: "Clean", icon: <Sparkles aria-hidden="true" className="size-4" /> },
 ];
 
-// White band at the top: back link, title, tags, Download CSV, and the three tabs
+// White band at the top: back link, title, tags, Download (CSV or Excel), and the three tabs
 function DatasetHeader({
   dataset,
   saved,
@@ -355,7 +358,7 @@ function DatasetHeader({
   onTab: (tab: Tab) => void;
   issuesLeft: number;
   canDownload: boolean;
-  onDownload: () => void;
+  onDownload: (format: DownloadFormat) => Promise<void>;
 }) {
   const { analysisId } = useDataset();
   const { email } = useUserEmail();
@@ -402,15 +405,13 @@ function DatasetHeader({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onDownload}
+          <DownloadMenu
+            label="Download"
+            variant="button"
+            onPick={onDownload}
             disabled={!canDownload}
             title={canDownload ? "Download the data with your fixes applied" : "Wait for the data check to finish"}
-            className="flex shrink-0 items-center gap-2 rounded-full border-2 border-navy px-5 py-2.5 text-sm font-bold hover:bg-purple-light/60 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <Download aria-hidden="true" className="size-4" /> Download CSV
-          </button>
+          />
         </div>
 
         {/* Scrolls sideways on narrow phones instead of squashing */}

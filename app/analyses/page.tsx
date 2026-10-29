@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CircleAlert, Ellipsis, Search } from "lucide-react";
 import { deleteAnalysis, renameAnalysis, type AnalysisSummary } from "@/lib/history";
+import type { DownloadFormat } from "@/lib/table-download";
 import { useDataset } from "../dataset-context";
 import { useUserEmail } from "../use-user-email";
 import {
@@ -73,10 +74,10 @@ function AnalysesList({ email }: { email: string }) {
     }
   }
 
-  async function handleDownload(id: string) {
+  async function handleDownload(id: string, format: DownloadFormat) {
     setActionError("");
     try {
-      await downloadAnalysis(id);
+      await downloadAnalysis(id, format);
     } catch (err) {
       console.error("Couldn't download analysis:", err);
       setActionError("We couldn't download that one. Please try again.");
@@ -218,8 +219,8 @@ function AnalysesList({ email }: { email: string }) {
             setRenamingId(menu.id);
             setMenu(null);
           }}
-          onDownload={() => {
-            void handleDownload(menu.id);
+          onDownload={(format) => {
+            void handleDownload(menu.id, format);
             setMenu(null);
           }}
           onDelete={() => {

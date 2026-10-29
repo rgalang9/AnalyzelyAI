@@ -3,9 +3,10 @@
 import { Sparkles } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
 import { ISSUE_LABELS, type Issue } from "@/lib/cleaning";
-import { downloadCsv } from "@/lib/csv";
+import { downloadTable } from "@/lib/table-download";
 import { useDataset } from "../dataset-context";
 import { chunkyPurple } from "../brand";
+import DownloadMenu from "../download-menu";
 
 const short = (v: string, max = 30) => (v.length > max ? `${v.slice(0, max - 1)}…` : v);
 
@@ -20,7 +21,7 @@ function issueDetail(issue: Issue, dataset: Dataset): string {
 }
 
 // The Clean tab's side panel: how many issues, one card per issue with Fix / Undo,
-// "Fix all safe issues" (confident fixes only), Restore original, and the original download
+// "Fix all safe issues" (confident fixes only), Restore original, and the original download (CSV or Excel)
 export default function CleaningPanel({
   dataset,
   onShowIssue,
@@ -161,13 +162,15 @@ export default function CleaningPanel({
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => downloadCsv(`${baseName}-original.csv`, dataset.headers, dataset.rows)}
-        className={`${issues.some((i) => i.fix) ? "mt-1" : "mt-4"} self-center text-xs font-semibold text-purple hover:underline`}
-      >
-        Download original CSV
-      </button>
+      <div className={issues.some((i) => i.fix) ? "mt-1 flex justify-center" : "mt-4 flex justify-center"}>
+        <DownloadMenu
+          label="Download original"
+          variant="link"
+          onPick={(format) =>
+            downloadTable(format, `${baseName}-original`, dataset.fileName, dataset.headers, dataset.rows)
+          }
+        />
+      </div>
     </section>
   );
 }

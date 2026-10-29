@@ -9,7 +9,7 @@ import {
   type AnalysisSummary,
 } from "@/lib/history";
 import { applyFixes } from "@/lib/cleaning";
-import { downloadCsv } from "@/lib/csv";
+import { downloadTable, type DownloadFormat } from "@/lib/table-download";
 import { useDataset } from "./dataset-context";
 
 // Shared pieces for showing saved analyses as cards (Analyze page and My analyses)
@@ -86,13 +86,13 @@ export function useOpenAnalysis() {
   return { open, openingId, openError };
 }
 
-// Saves a saved analysis as a CSV file, with any fixes the user applied
-export async function downloadAnalysis(id: string) {
+// Saves a saved analysis as a .csv or .xlsx file, with any fixes the user applied
+export async function downloadAnalysis(id: string, format: DownloadFormat) {
   const { dataset, cleaning } = await loadAnalysis(id);
   const data = applyFixes(dataset, cleaning);
   const baseName = dataset.fileName.replace(/\.(csv|xlsx)$/i, "");
   const suffix = cleaning?.fixedIds.length ? "-cleaned" : "";
-  downloadCsv(`${baseName}${suffix}.csv`, data.headers, data.rows);
+  await downloadTable(format, `${baseName}${suffix}`, dataset.fileName, data.headers, data.rows);
 }
 
 // Card colors take turns: purple, pink, orange. Each card is its own white box,

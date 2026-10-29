@@ -10,6 +10,13 @@ export function toNumber(value: string): number | null {
   return Number(cleaned);
 }
 
+// Digits that are really a code, not an amount: "02134" (leading zero) or very long digit
+// strings like account numbers. Showing them as numbers would drop the 0 or round the end.
+export function isCode(value: string): boolean {
+  const text = value.trim().replace(/^[-+$]/, "");
+  return /^0\d/.test(text) || text.replace(/\D/g, "").length > 15;
+}
+
 export function formatNumber(n: number): string {
   return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
 }

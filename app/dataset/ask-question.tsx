@@ -12,6 +12,7 @@ import {
   rowsForPrompt,
 } from "@/lib/dataset-stats";
 import { saveAnswer, type Answer } from "@/lib/history";
+import { safeFileName } from "@/lib/download";
 import { useDataset } from "../dataset-context";
 import AnalysisChart, { saveChartPng } from "./analysis-chart";
 
@@ -247,8 +248,7 @@ function AnswerView({ answer }: { answer: Answer }) {
       for (const [i, chart] of answer.charts.entries()) {
         const figure = chartRefs.current[i];
         if (!figure) continue;
-        const name = chart.title.replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "-") || "chart";
-        await saveChartPng(figure, chart.title, `${name}.png`);
+        await saveChartPng(figure, chart.title, safeFileName(chart.title || "chart", ".png"));
       }
     } catch (err) {
       console.error("Couldn't save chart:", err);

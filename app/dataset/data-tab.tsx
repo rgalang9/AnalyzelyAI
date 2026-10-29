@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Search } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
-import { toNumber } from "@/lib/dataset-stats";
+import { isCode, toNumber } from "@/lib/dataset-stats";
 import { columnType, duplicateRows, isMissing, yearOf, type ColumnType } from "@/lib/data-checks";
 
 const ROWS_PER_PAGE = 250;
@@ -25,10 +25,11 @@ const TYPE_TAGS: Record<ColumnType, { label: string; className: string }> = {
   text: { label: "Text", className: "bg-pink-light text-pink" },
 };
 
-// Plain numbers get commas (2500 → 2,500). Anything else, like "$19.99", is shown as written.
+// Plain numbers get commas (2500 → 2,500). Anything else, like "$19.99" or a zip code
+// like "02134", is shown as written.
 function displayNumber(cell: string): string {
   const n = toNumber(cell);
-  return n !== null && /^[-+]?[\d.]+$/.test(cell.trim())
+  return n !== null && /^[-+]?[\d.]+$/.test(cell.trim()) && !isCode(cell)
     ? n.toLocaleString("en-US", { maximumFractionDigits: 10 })
     : cell;
 }

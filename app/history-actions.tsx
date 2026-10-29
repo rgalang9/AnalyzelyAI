@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Download, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
+import type { DownloadFormat } from "@/lib/table-download";
+import { DOWNLOAD_FORMATS } from "./download-menu";
 
 // Pieces for managing a saved analysis: the "⋯" menu,
 // renaming in place, and the delete confirmation.
@@ -18,7 +20,7 @@ export function ItemMenu({
 }: {
   anchor: DOMRect; // where the "⋯" button is on screen
   onRename: () => void;
-  onDownload: () => void;
+  onDownload: (format: DownloadFormat) => void;
   onDelete: () => void;
   onClose: () => void;
 }) {
@@ -41,7 +43,7 @@ export function ItemMenu({
     };
   }, [onClose]);
 
-  const width = 180;
+  const width = 210;
   const itemClass =
     "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold hover:bg-purple-light/60";
 
@@ -56,10 +58,18 @@ export function ItemMenu({
         <Pencil aria-hidden="true" className="size-4 text-purple" />
         Rename
       </button>
-      <button type="button" role="menuitem" onClick={onDownload} className={itemClass}>
-        <Download aria-hidden="true" className="size-4 text-purple" />
-        Download CSV
-      </button>
+      {DOWNLOAD_FORMATS.map((f) => (
+        <button
+          key={f.format}
+          type="button"
+          role="menuitem"
+          onClick={() => onDownload(f.format)}
+          className={itemClass}
+        >
+          {f.icon}
+          Download {f.label}
+        </button>
+      ))}
       <button type="button" role="menuitem" onClick={onDelete} className={`${itemClass} text-pink`}>
         <Trash2 aria-hidden="true" className="size-4" />
         Delete
