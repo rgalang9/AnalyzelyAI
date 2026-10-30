@@ -9,7 +9,7 @@ export type LearnLanguage = {
 
 export const LEARN_LANGUAGES: LearnLanguage[] = [
   { slug: "sql", name: "SQL", released: true },
-  { slug: "python", name: "Python", released: false },
+  { slug: "python", name: "Python", released: true },
   { slug: "r", name: "R", released: false },
   { slug: "stata", name: "Stata", released: false },
 ];
