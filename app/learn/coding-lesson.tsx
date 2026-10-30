@@ -182,7 +182,7 @@ export default function CodingLessonPlayer({
   const canRun = started && !cooling && !(isPredict && !ts.solved);
 
   return (
-    <div className="mt-4 grid gap-4 xl:grid-cols-[26rem_minmax(0,1fr)]">
+    <div className="grid gap-4 xl:grid-cols-[26rem_minmax(0,1fr)]">
       {/* ---------- Lesson panel ---------- */}
       <section className="flex flex-col gap-4">
         <TaskSteps count={lesson.tasks.length} current={started ? taskIndex : -1} solved={ts.solved} finished={finished} />

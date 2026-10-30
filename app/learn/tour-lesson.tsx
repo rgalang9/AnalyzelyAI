@@ -132,7 +132,7 @@ export default function TourLessonPlayer({
   const clickable = phase === "quiz" ? "cursor-pointer" : "cursor-help";
 
   return (
-    <div className="mt-4 grid gap-4 xl:grid-cols-[26rem_minmax(0,1fr)]">
+    <div className="grid gap-4 xl:grid-cols-[26rem_minmax(0,1fr)]">
       {/* ---------- Lesson panel ---------- */}
       <section className="flex flex-col gap-4">
         {phase === "explore" && (

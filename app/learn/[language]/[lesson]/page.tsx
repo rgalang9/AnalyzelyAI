@@ -13,6 +13,7 @@ import {
   summarize,
 } from "@/lib/learn/load-lessons";
 import LessonGate from "../../lesson-gate";
+import LessonSidebar from "../../lesson-sidebar";
 import CodingLessonPlayer from "../../coding-lesson";
 import TourLessonPlayer from "../../tour-lesson";
 import PythonLessonPlayer from "../../python-lesson";
@@ -70,11 +71,19 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
       </h1>
 
       <LessonGate language={language} previous={previous}>
-        {lesson.type === "tour" ? (
-          <TourLessonPlayer lesson={lesson} {...shared} />
-        ) : (
-          <CodingLessonPlayer lesson={lesson} {...shared} />
-        )}
+        {/* The lesson list on the left, the same as in the Python course */}
+        <div className="mt-4 grid gap-4 lg:grid-cols-[14rem_minmax(0,1fr)]">
+          <div className="self-start">
+            <LessonSidebar language={language} lessons={summaries} currentId={lesson.id} />
+          </div>
+          <div className="min-w-0">
+            {lesson.type === "tour" ? (
+              <TourLessonPlayer lesson={lesson} {...shared} />
+            ) : (
+              <CodingLessonPlayer lesson={lesson} {...shared} />
+            )}
+          </div>
+        </div>
       </LessonGate>
     </main>
   );
