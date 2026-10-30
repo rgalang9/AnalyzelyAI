@@ -1,0 +1,102 @@
+{
+  "id": "py-24",
+  "level": 4,
+  "title": "Histograms, scatter plots and correlation",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Back to the study log. Does studying longer lead to better scores? This lesson gives you 3 tools to find out: histograms, scatter plots and correlation."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the study log.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "A **histogram** (`kind=\"hist\"`) shows how values are spread out. It splits the scores into ranges and draws one bar per range, with taller bars meaning more sessions in that range."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: draw a histogram of the score column.",
+      "answer": "df[\"score\"].plot(kind=\"hist\")",
+      "compare": "chart",
+      "require": [
+        "hist"
+      ],
+      "hints": [
+        "Pick the score column, then .plot(kind=\"hist\").",
+        "df[\"score\"].plot(kind=\"hist\")"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "A **scatter plot** draws one dot per row, with x for one column and y for another. If the dots go up from left to right, the two columns rise together. It's drawn from the whole table: `df.plot(kind=\"scatter\", x=\"...\", y=\"...\")`."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"score\" (in quotes) to plot minutes across the bottom and score up the side, then press Run.",
+      "code": "df.plot(kind=\"scatter\", x=\"minutes\", y=___)",
+      "answer": "df.plot(kind=\"scatter\", x=\"minutes\", y=\"score\")",
+      "compare": "chart",
+      "hints": [
+        "Column names are text, so use quotes.",
+        "\"score\""
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "**Correlation** puts a number on that pattern, from -1 to 1. Near **1** means they rise together, near **-1** means one goes down as the other goes up, and near **0** means no clear link. `df[\"a\"].corr(df[\"b\"])` works it out."
+    },
+    {
+      "type": "predict",
+      "prompt": "Look at the dots in your scatter plot. What's the correlation between minutes and score? Pick one, then press Run.",
+      "code": "print(round(df[\"minutes\"].corr(df[\"score\"]), 2))",
+      "options": [
+        "About 0.9",
+        "About -0.9",
+        "About 0"
+      ],
+      "answer": "About 0.9"
+    },
+    {
+      "type": "markdown",
+      "text": "0.94 is a strong link. But careful: correlation doesn't prove that one **causes** the other. Students who study longer might also be more interested in the subject, for example."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: print the correlation between score and minutes the other way round (score first), rounded to 2 decimals. Does the order matter?",
+      "answer": "print(round(df[\"score\"].corr(df[\"minutes\"]), 2))",
+      "compare": "print",
+      "require": [
+        "corr"
+      ],
+      "hints": [
+        "Swap the two columns from the cell above.",
+        "print(round(df[\"score\"].corr(df[\"minutes\"]), 2))"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "It doesn't: correlation is the same both ways. To see every pair at once, use `.corr()` on a table of columns. You get a grid, with 1 wherever a column meets itself."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the correlation grid for the minutes and score columns, rounded to 2 decimals.",
+      "answer": "df[[\"minutes\", \"score\"]].corr().round(2)",
+      "compare": "table",
+      "require": [
+        "corr"
+      ],
+      "hints": [
+        "Pick the 2 columns with double brackets, then .corr().round(2)",
+        "df[[\"minutes\", \"score\"]].corr().round(2)"
+      ]
+    }
+  ],
+  "recap": "kind=\"hist\" shows how values spread out, and kind=\"scatter\" shows if two columns move together. corr() gives a number from -1 to 1, and correlation doesn't prove cause."
+}

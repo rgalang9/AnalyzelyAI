@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { findReleasedLanguage, isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
+import { findReleasedLanguage, isOpen, LEARN_LANGUAGES, PYTHON_VIEW } from "@/lib/learn/languages";
 import {
   getDatasetCsv,
   getDatasetSql,
   getLessons,
   getLessonSummaries,
+  getNotebookLessons,
   getPythonLessons,
   pythonSummary,
   summarize,
@@ -15,6 +16,7 @@ import LessonGate from "../../lesson-gate";
 import CodingLessonPlayer from "../../coding-lesson";
 import TourLessonPlayer from "../../tour-lesson";
 import PythonLessonPlayer from "../../python-lesson";
+import NotebookPlayer from "../../notebook-lesson";
 
 // Build a page for every lesson of every open language ahead of time
 export function generateStaticParams() {
@@ -38,7 +40,13 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
   const { language, lesson: lessonId } = await params;
   const lang = findReleasedLanguage(language);
   if (!lang) notFound();
-  if (language === "python") return <PythonLesson lessonId={lessonId} langName={lang.name} />;
+  if (language === "python") {
+    return PYTHON_VIEW === "notebook" ? (
+      <NotebookLessonPage lessonId={lessonId} langName={lang.name} />
+    ) : (
+      <PythonLesson lessonId={lessonId} langName={lang.name} />
+    );
+  }
 
   const lessons = getLessons(language);
   const index = lessons.findIndex((l) => l.id === lessonId);
@@ -105,6 +113,46 @@ function PythonLesson({ lessonId, langName }: { lessonId: string; langName: stri
         </LessonGate>
       ) : (
         // The lesson file has a mistake: say so here, so the rest of the course still works
+        <div role="alert" className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950">
+          <p className="font-semibold">This lesson can&rsquo;t open yet: its lesson file has a problem.</p>
+          <pre className="mt-3 whitespace-pre-wrap font-mono text-xs">{entry.problem}</pre>
+        </div>
+      )}
+    </main>
+  );
+}
+
+// Python in the notebook view (see PYTHON_VIEW in lib/learn/languages.ts)
+function NotebookLessonPage({ lessonId, langName }: { lessonId: string; langName: string }) {
+  const entries = getNotebookLessons();
+  const index = entries.findIndex((l) => l.id === lessonId);
+  if (index === -1) notFound();
+
+  const entry = entries[index];
+  const summaries = entries.map(pythonSummary);
+
+  return (
+    <main className="flex w-full flex-1 flex-col px-4 py-6 lg:px-6">
+      <Link href="/learn/python" className="text-sm text-zinc-500 hover:text-foreground">
+        ← All {langName} lessons
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">
+        <span className="text-zinc-500">Lesson {entry.number}: </span>
+        {entry.title}
+      </h1>
+
+      {entry.lesson ? (
+        <LessonGate language="python" previous={summaries[index - 1] ?? null}>
+          <NotebookPlayer
+            key={entry.lesson.id} // a fresh notebook for each lesson
+            lesson={entry.lesson}
+            files={getDatasetCsv(entry.lesson.datasets)}
+            language="python"
+            lessons={summaries}
+            nextLesson={summaries[index + 1] ?? null}
+          />
+        </LessonGate>
+      ) : (
         <div role="alert" className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950">
           <p className="font-semibold">This lesson can&rsquo;t open yet: its lesson file has a problem.</p>
           <pre className="mt-3 whitespace-pre-wrap font-mono text-xs">{entry.problem}</pre>

@@ -1,0 +1,103 @@
+{
+  "id": "py-14",
+  "level": 3,
+  "title": "groupby: summarising each group",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Last lesson you found the average price of **all** games. But what about the average price **per genre**? That's what `groupby()` does. It's the same idea as GROUP BY in SQL."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`df.groupby(\"genre\")[\"price\"].mean()` reads in 3 parts: **groupby(\"genre\")** makes one group per genre, **[\"price\"]** picks the column to summarise, and **.mean()** works out the average in each group. You get one row per genre."
+    },
+    {
+      "type": "predict",
+      "prompt": "There are 11 different genres. How many rows will the result have? Pick one, then press Run.",
+      "code": "df.groupby(\"genre\")[\"price\"].mean()",
+      "options": [
+        "15",
+        "11",
+        "4"
+      ],
+      "answer": "11"
+    },
+    {
+      "type": "markdown",
+      "text": "You can group by any column and use any summary: `sum()`, `min()`, `max()`, `count()` and so on."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"release_year\" (in quotes) to find the best rating in each release year, then press Run.",
+      "code": "df.groupby(___)[\"rating\"].max()",
+      "answer": "df.groupby(\"release_year\")[\"rating\"].max()",
+      "compare": "table",
+      "hints": [
+        "The column to group by goes in quotes.",
+        "\"release_year\""
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: count how many games each genre has, using groupby. Group by genre, pick the title column, then count().",
+      "answer": "df.groupby(\"genre\")[\"title\"].count()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Same 3 parts: groupby(\"genre\"), [\"title\"], .count()",
+        "df.groupby(\"genre\")[\"title\"].count()"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "To get several summaries at once, use `agg()` with a list of their names in quotes: `.agg([\"min\", \"max\", \"mean\"])`. You get one column per summary."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the lowest, highest and average rating per genre, rounded to 2 decimals.",
+      "code": "df.groupby(\"genre\")[\"rating\"].agg([\"min\", \"max\", \"mean\"]).round(2)"
+    },
+    {
+      "type": "write",
+      "prompt": "For each genre, show the cheapest and the most expensive price.",
+      "answer": "df.groupby(\"genre\")[\"price\"].agg([\"min\", \"max\"])",
+      "compare": "table",
+      "require": [
+        "agg"
+      ],
+      "hints": [
+        "Group by genre, pick price, then .agg() with a list of 2 names.",
+        "df.groupby(\"genre\")[\"price\"].agg([\"min\", \"max\"])"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "You can keep adding steps at the end: `.round(2)` to tidy decimals, then `.sort_values(ascending=False)` to put the biggest first."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the average price per studio_id, rounded to 2 decimals, highest first.",
+      "answer": "df.groupby(\"studio_id\")[\"price\"].mean().round(2).sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Group, pick, mean, then add .round(2) and .sort_values(ascending=False) on the end.",
+        "df.groupby(\"studio_id\")[\"price\"].mean().round(2).sort_values(ascending=False)"
+      ]
+    }
+  ],
+  "recap": "groupby(\"col\")[\"other\"].mean() summarises each group. agg([...]) gives several summaries at once. Add .round() and .sort_values() to tidy the result."
+}

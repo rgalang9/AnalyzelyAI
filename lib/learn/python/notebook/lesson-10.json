@@ -1,0 +1,95 @@
+{
+  "id": "py-10",
+  "level": 2,
+  "title": "New columns",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Analysts often work out new numbers from existing columns, like the total including the tip. This lesson shows how to add your own columns."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the deliveries table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "To make a new column, give it a name in square brackets and store a value in it with `=`: `df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]`. pandas does the maths **row by row**, for every row at once."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to add a with_tip column, then show it next to the total and tip.",
+      "code": "df[\"with_tip\"] = df[\"total\"] + df[\"tip\"]\ndf[[\"customer\", \"total\", \"tip\", \"with_tip\"]]"
+    },
+    {
+      "type": "predict",
+      "prompt": "Ben left no tip, so his tip is NaN (empty). What is his with_tip? Pick one, then press Run.",
+      "code": "df[df[\"customer\"] == \"Ben\"][[\"customer\", \"tip\", \"with_tip\"]]",
+      "options": [
+        "15.0",
+        "NaN",
+        "0"
+      ],
+      "answer": "NaN"
+    },
+    {
+      "type": "markdown",
+      "text": "Maths with an empty value gives an empty result, because pandas can't add a number it doesn't have. You'll learn how to fill in missing values in Level 3."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the divide sign to make per_minute, the dollars per minute of delivery, then press Run.",
+      "code": "df[\"per_minute\"] = df[\"total\"] ___ df[\"minutes\"]\ndf[[\"customer\", \"per_minute\"]]",
+      "answer": "df[\"per_minute\"] = df[\"total\"] / df[\"minutes\"]\ndf[[\"customer\", \"per_minute\"]]",
+      "compare": "table",
+      "hints": [
+        "Divide is a forward slash.",
+        "/"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Those numbers have lots of decimals. Wrap the maths in round brackets and add `.round(2)` to keep 2 decimal places: `(df[\"total\"] / df[\"minutes\"]).round(2)`."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to remake per_minute with 2 decimals.",
+      "code": "df[\"per_minute\"] = (df[\"total\"] / df[\"minutes\"]).round(2)\ndf[[\"customer\", \"per_minute\"]]"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: add a column tip_percent, which is the tip as a percent of the total (tip ÷ total × 100), rounded to 1 decimal. Then show the customer and tip_percent columns.",
+      "answer": "df[\"tip_percent\"] = (df[\"tip\"] / df[\"total\"] * 100).round(1)\ndf[[\"customer\", \"tip_percent\"]]",
+      "compare": "table",
+      "require": [
+        "round"
+      ],
+      "hints": [
+        "Wrap df[\"tip\"] / df[\"total\"] * 100 in round brackets, then add .round(1). On the second line, pick the 2 columns.",
+        "df[\"tip_percent\"] = (df[\"tip\"] / df[\"total\"] * 100).round(1)\ndf[[\"customer\", \"tip_percent\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "New columns work with everything you already know. For example, you can filter on minutes and then show a new column."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: add a column hours (minutes ÷ 60, rounded to 2 decimals). Then show the customer and hours columns, only for deliveries that took more than 45 minutes.",
+      "answer": "df[\"hours\"] = (df[\"minutes\"] / 60).round(2)\ndf[df[\"minutes\"] > 45][[\"customer\", \"hours\"]]",
+      "compare": "table",
+      "require": [
+        "round"
+      ],
+      "hints": [
+        "Line 1 makes the column like the cell above. Line 2 filters df[\"minutes\"] > 45, then picks the 2 columns.",
+        "df[\"hours\"] = (df[\"minutes\"] / 60).round(2)\ndf[df[\"minutes\"] > 45][[\"customer\", \"hours\"]]"
+      ]
+    }
+  ],
+  "recap": "df[\"new\"] = ... adds a column, with the maths done row by row. Maths with NaN gives NaN. Use (maths).round(2) to round."
+}

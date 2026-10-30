@@ -1,0 +1,95 @@
+{
+  "id": "py-22",
+  "level": 4,
+  "title": "Working with dates",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Back to the deliveries. Dates let you see trends over time, like which month was busiest. First the dates must be real dates, not text, using `pd.to_datetime()` from Lesson 16."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the deliveries and turn order_date into real dates.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf[\"order_date\"] = pd.to_datetime(df[\"order_date\"])\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "Real dates have a **.dt** toolbox, just like text has .str. `.dt.year` gives the year, `.dt.month` gives the month as a number from 1 to 12, `.dt.day` gives the day of the month, and `.dt.day_name()` gives the weekday, like Monday."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the month of every order.",
+      "code": "df[\"order_date\"].dt.month"
+    },
+    {
+      "type": "predict",
+      "prompt": "The orders run from January to early April. How many different months do they cover? Pick one, then press Run.",
+      "code": "print(df[\"order_date\"].dt.month.nunique())",
+      "options": [
+        "3",
+        "4",
+        "10"
+      ],
+      "answer": "4"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ so the new month column holds each order's month number, then press Run.",
+      "code": "df[\"month\"] = df[\"order_date\"].dt.___\ndf[[\"customer\", \"order_date\", \"month\"]]",
+      "answer": "df[\"month\"] = df[\"order_date\"].dt.month\ndf[[\"customer\", \"order_date\", \"month\"]]",
+      "compare": "table",
+      "hints": [
+        "It's the .dt part that gives 1 to 12. No brackets after it.",
+        "month"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show only the orders placed in March (month 3). Filter on the month column.",
+      "answer": "df[df[\"month\"] == 3]",
+      "compare": "table",
+      "require": [
+        "=="
+      ],
+      "hints": [
+        "A normal filter: df[df[\"month\"] == 3]",
+        "df[df[\"month\"] == 3]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Count the orders in each month, using groupby on the month column. Count the order_id column.",
+      "answer": "df.groupby(\"month\")[\"order_id\"].count()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby(\"month\"), pick order_id, then count().",
+        "df.groupby(\"month\")[\"order_id\"].count()"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "`day_name()` is the one .dt action that needs brackets, because it works out a name rather than reading a number."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: add a day column with each order's weekday name, then show the customer and day columns.",
+      "answer": "df[\"day\"] = df[\"order_date\"].dt.day_name()\ndf[[\"customer\", \"day\"]]",
+      "compare": "table",
+      "require": [
+        "day_name"
+      ],
+      "hints": [
+        "Line 1: df[\"day\"] = df[\"order_date\"].dt.day_name(). Line 2: pick the 2 columns.",
+        "df[\"day\"] = df[\"order_date\"].dt.day_name()\ndf[[\"customer\", \"day\"]]"
+      ]
+    }
+  ],
+  "recap": "After pd.to_datetime(), the .dt toolbox gives year, month, day and day_name(). Use them to filter or group by time."
+}

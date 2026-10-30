@@ -1,0 +1,94 @@
+{
+  "id": "py-12",
+  "level": 2,
+  "title": "Review: The Study Log",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Level 2 review!** This is a study app's log. Each row is one study session: the student, the subject, how many minutes they studied, and their quiz score afterwards (out of 100). Use everything from Level 2: filtering, several conditions, sorting, new columns and loc. Scroll up to earlier lessons if you get stuck."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the study log into df.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")\ndf.head()"
+    },
+    {
+      "type": "predict",
+      "prompt": "How many sessions lasted 45 minutes or more? Pick one, then press Run.",
+      "code": "df[df[\"minutes\"] >= 45]",
+      "options": [
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": "5"
+    },
+    {
+      "type": "write",
+      "prompt": "Show the Math sessions, highest score first.",
+      "answer": "df[df[\"subject\"] == \"Math\"].sort_values(\"score\", ascending=False)",
+      "compare": "table",
+      "require": [
+        "sort_values"
+      ],
+      "hints": [
+        "Filter to Math, then add .sort_values() with ascending=False.",
+        "df[df[\"subject\"] == \"Math\"].sort_values(\"score\", ascending=False)"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Show the Economics sessions by Maya or Sam.",
+      "answer": "df[(df[\"subject\"] == \"Economics\") & (df[\"student\"].isin([\"Maya\", \"Sam\"]))]",
+      "compare": "table",
+      "require": [
+        "&"
+      ],
+      "hints": [
+        "Two conditions joined with &, each in round brackets. isin() handles Maya or Sam.",
+        "df[(df[\"subject\"] == \"Economics\") & (df[\"student\"].isin([\"Maya\", \"Sam\"]))]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Add a column points_per_min (score ÷ minutes, rounded to 2 decimals). Then show the sessions where it's above 2.",
+      "answer": "df[\"points_per_min\"] = (df[\"score\"] / df[\"minutes\"]).round(2)\ndf[df[\"points_per_min\"] > 2]",
+      "compare": "table",
+      "require": [
+        "round"
+      ],
+      "hints": [
+        "Line 1: wrap the division in round brackets and add .round(2). Line 2: filter on the new column.",
+        "df[\"points_per_min\"] = (df[\"score\"] / df[\"minutes\"]).round(2)\ndf[df[\"points_per_min\"] > 2]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Using loc, show the student and minutes of the Biology sessions.",
+      "answer": "df.loc[df[\"subject\"] == \"Biology\", [\"student\", \"minutes\"]]",
+      "compare": "table",
+      "require": [
+        "loc"
+      ],
+      "hints": [
+        "df.loc[condition, list of columns]",
+        "df.loc[df[\"subject\"] == \"Biology\", [\"student\", \"minutes\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the student and score columns for the 3 lowest scores, lowest first.",
+      "answer": "df.nsmallest(3, \"score\")[[\"student\", \"score\"]]",
+      "compare": "table",
+      "hints": [
+        "nsmallest gives the lowest rows, already in order. Then pick the 2 columns.",
+        "df.nsmallest(3, \"score\")[[\"student\", \"score\"]]"
+      ]
+    }
+  ],
+  "recap": "Level 2 done! You can filter with one or several conditions, sort, add new columns and pick with loc and iloc. Next up: summarising data."
+}

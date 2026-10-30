@@ -1,0 +1,103 @@
+{
+  "id": "py-16",
+  "level": 3,
+  "title": "Cleaning text and numbers",
+  "datasets": [
+    "club_signups"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "New dataset: sign-ups for campus clubs. People typed them in by hand, so the data is **messy**: extra spaces, different capital letters, and fees saved as text like \"$10\". Cleaning data like this is a big part of every analyst's job."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load all 8 sign-ups. Look closely at the club column.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"club_signups.csv\")\ndf"
+    },
+    {
+      "type": "markdown",
+      "text": "`nunique()` counts the different values. It's a quick way to spot messy text, because \"Chess\" and \"chess\" count as 2 different clubs."
+    },
+    {
+      "type": "predict",
+      "prompt": "There are really only 3 clubs: Chess, Robotics and Debate. How many different clubs will pandas count BEFORE cleaning? Pick one, then press Run.",
+      "code": "print(df[\"club\"].nunique())",
+      "options": [
+        "3",
+        "6",
+        "8"
+      ],
+      "answer": "6"
+    },
+    {
+      "type": "markdown",
+      "text": "Text columns have a toolbox called `.str`. `str.strip()` removes extra spaces at the start and end. `str.lower()` makes everything lowercase, and `str.title()` Makes It Like This. You can chain them: `df[\"club\"].str.strip().str.lower()`."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the action that makes everything lowercase, so the club names match. Then press Run to count them again.",
+      "code": "df[\"club\"] = df[\"club\"].str.strip().str.___()\nprint(df[\"club\"].nunique())",
+      "answer": "df[\"club\"] = df[\"club\"].str.strip().str.lower()\nprint(df[\"club\"].nunique())",
+      "compare": "print",
+      "hints": [
+        "The opposite of upper.",
+        "lower"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: Maya's name has extra spaces around it. Remove the spaces from the name column for good, then show the name column.",
+      "answer": "df[\"name\"] = df[\"name\"].str.strip()\ndf[\"name\"]",
+      "compare": "table",
+      "require": [
+        "strip"
+      ],
+      "hints": [
+        "Line 1: df[\"name\"] = df[\"name\"].str.strip(). Line 2: df[\"name\"]",
+        "df[\"name\"] = df[\"name\"].str.strip()\ndf[\"name\"]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Now the fees. They're saved as **text** like \"$10\", so pandas can't add them up. First, `str.replace(\"$\", \"\")` swaps every $ for nothing. Then `astype(int)` converts the text into whole numbers (int means integer, a whole number)."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to make a clean fee_amount column next to the messy one, and compare them.",
+      "code": "df[\"fee_amount\"] = df[\"fee\"].str.replace(\"$\", \"\").astype(int)\ndf[[\"fee\", \"fee_amount\"]]"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: print the total of all the fees, using the clean fee_amount column.",
+      "answer": "print(df[\"fee_amount\"].sum())",
+      "compare": "print",
+      "require": [
+        "sum"
+      ],
+      "hints": [
+        "Use sum() on fee_amount, inside print().",
+        "print(df[\"fee_amount\"].sum())"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Dates are often saved as text too. `pd.to_datetime()` turns date text into real dates, so you can find the earliest one, sort them in order or pull out the month later on."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: convert signup_date to real dates and store it back in the same column. Then print the earliest sign-up date.",
+      "answer": "df[\"signup_date\"] = pd.to_datetime(df[\"signup_date\"])\nprint(df[\"signup_date\"].min())",
+      "compare": "print",
+      "require": [
+        "to_datetime"
+      ],
+      "hints": [
+        "Line 1: df[\"signup_date\"] = pd.to_datetime(df[\"signup_date\"]). Line 2: print the min().",
+        "df[\"signup_date\"] = pd.to_datetime(df[\"signup_date\"])\nprint(df[\"signup_date\"].min())"
+      ]
+    }
+  ],
+  "recap": "The .str toolbox cleans text: strip() removes spaces, and lower() or title() fix capitals. str.replace() plus astype(int) turns \"$10\" into 10. pd.to_datetime() makes real dates."
+}

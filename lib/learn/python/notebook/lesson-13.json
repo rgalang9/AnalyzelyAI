@@ -1,0 +1,108 @@
+{
+  "id": "py-13",
+  "level": 3,
+  "title": "Summary numbers",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Welcome to Level 3: summarising!** So far you've looked at rows. Now you'll squash a whole column into one number, like the average price, which is what managers usually ask for."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "Pick a column, then add a summary action with brackets: `df[\"price\"].mean()` is the **average** price. Others: `sum()` adds everything up, `min()` is the smallest, `max()` is the biggest, and `count()` counts the filled-in cells, skipping empty ones."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the average price.",
+      "code": "df[\"price\"].mean()"
+    },
+    {
+      "type": "markdown",
+      "text": "Long decimals are messy. `round(number, 2)` rounds any number to 2 decimal places. Notice this `round` goes **around** the number, with the number first and then how many decimals."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to print the average price rounded to 2 decimals.",
+      "code": "print(round(df[\"price\"].mean(), 2))"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the action that adds up all the prices, then press Run.",
+      "code": "df[\"price\"].___()",
+      "answer": "df[\"price\"].sum()",
+      "compare": "value",
+      "hints": [
+        "It's a short word that means \"add them all up\".",
+        "sum"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "Remember, 2 games have no rating. What will this print? Pick one, then press Run.",
+      "code": "print(df[\"rating\"].count())",
+      "options": [
+        "15",
+        "13",
+        "2"
+      ],
+      "answer": "13"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: print the average rating, rounded to 2 decimals. Use the rounding cell above as your pattern.",
+      "answer": "print(round(df[\"rating\"].mean(), 2))",
+      "compare": "print",
+      "require": [
+        "mean"
+      ],
+      "hints": [
+        "Change price to rating in the rounding cell above.",
+        "print(round(df[\"rating\"].mean(), 2))"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "You can do maths with summaries too. The newest game is from 2023 and the oldest from 2009. What will this print? Pick one, then press Run.",
+      "code": "print(df[\"release_year\"].max() - df[\"release_year\"].min())",
+      "options": [
+        "14",
+        "2023",
+        "15"
+      ],
+      "answer": "14"
+    },
+    {
+      "type": "markdown",
+      "text": "`value_counts()` is an analyst favourite. It counts how many times each value appears in a column, most common first. `nunique()` just tells you how many **different** values there are."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to count how many different genres there are.",
+      "code": "print(df[\"genre\"].nunique())"
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show how many games there are in each genre, using value_counts().",
+      "starter": "df[\"genre\"].",
+      "answer": "df[\"genre\"].value_counts()",
+      "compare": "table",
+      "require": [
+        "value_counts"
+      ],
+      "hints": [
+        "Pick the genre column, then add .value_counts()",
+        "df[\"genre\"].value_counts()"
+      ]
+    }
+  ],
+  "recap": "mean(), sum(), min(), max() and count() turn a column into one number. round(number, 2) tidies decimals. value_counts() counts each value, and nunique() counts the different values."
+}

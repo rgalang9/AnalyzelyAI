@@ -1,3 +1,43 @@
+This replaces the old lesson format.
+Python Notebook Lessons — Format Spec
+This spec replaces the SQL-style format for the Python course only. SQL stays as it is.
+Why the change
+• Real pandas work happens in Jupyter notebooks: stacked cells, with output under each cell.
+• Reviews praise writing real code (Dataquest, Kaggle) and criticise heavy fill-in scaffolding (DataCamp).
+• So learners should feel like they're in a notebook, and they learn by running code and seeing its result, not by hovering.
+What stays
+• All 32 topics, the lesson order, the datasets and the tested answers.
+• Gating (you can't skip a cell), auto-unlocking hints, friendly errors, the Pyodide engine and the answer checks (print, value, table, chart).
+What changes
+• One lesson = one notebook. Cells are stacked top to bottom and scroll like Jupyter.
+• Cells share memory. A variable made in cell 2 still exists in cell 5. Each cell shows a run counter like [3].
+• Output appears under each cell: printed text, a pandas table or a chart.
+• No hover explanations. Each new idea gets a short markdown cell (2–4 sentences) right before the code that uses it.
+• There is no separate example block anymore. The first code cells are the worked example: the learner just runs them.
+• The help ladder runs inside one notebook: run → predict → fill one blank → edit the cell → write the cell from scratch.
+• The final cell is a mini challenge that combines the lesson's idea with earlier lessons.
+Cell types (JSON)
+• markdown: text only. Fields: text.
+• run: prefilled code; the learner presses Run. Fields: code.
+• predict: choose the output before running. Fields: code, options, answer.
+• fill: code containing one ___. Fields: code, answer, compare, hints.
+• write: an empty cell or a starter. Fields: prompt, starter, answer, compare, require, hints.
+All code cells run in the same Python session, in order. A Restart & run all button rebuilds the state.
+Pacing rules
+• Lessons 0–2: one new idea each. At least half the cells are run or predict. Only one write cell, at the end, with a starter.
+• Lessons 3–12: a write cell from scratch appears by mid-lesson.
+• Lesson 13 onward: at most 2 run cells; most cells are write.
+• Review lessons (6, 12, 18, 26, 31): a markdown brief at the top, then mostly blank write cells, like a real analysis notebook.
+• New ideas reuse yesterday's code, so every lesson starts by loading data the familiar way.
+Look
+• The notebook area should look like JupyterLab: grey code cells, an In [n]: gutter, a white output area and a pandas-style table.
+• The Analyzely brand stays on the frame around it, matching the redesign rule.
+Rollout
+1. Claude (chat) rewrites Lessons 0–2 in the new format.
+2. Claude Code builds the notebook view, behind a switch, without touching SQL.
+3. Raph tests Lessons 0–2.
+4. If they're good, Claude converts Lessons 3–31, and Claude Code reruns all the answer tests.
+
 Analyzely Python Course Plan
 The big idea
 Teach beginners to analyse data with pandas from lesson one. Learners pick up only the plain Python they need, when they need it. Same screen as the SQL course: editor, results table, hint ladder, gated progress.

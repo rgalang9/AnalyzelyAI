@@ -1,0 +1,154 @@
+{
+  "id": "py-05",
+  "level": 1,
+  "title": "Lists and dictionaries",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Two Python containers show up everywhere in pandas: **lists** and **dictionaries**. You've already used one without knowing it: `df[[\"title\", \"price\"]]` has a list inside it."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table. You'll need it later in this lesson.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "A **list** holds several items in order, inside square brackets, separated by commas: `[\"RPG\", \"Shooter\", \"Racing\"]`. You can store a list in a variable, just like a number."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to make a list called genres and print it.",
+      "code": "genres = [\"RPG\", \"Shooter\", \"Racing\"]\nprint(genres)"
+    },
+    {
+      "type": "markdown",
+      "text": "To get one item, put its **position** in square brackets after the name. Positions start at **0**, so `genres[0]` is the first item. `len()` tells you how many items a list has."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to print the first item, then the length of the list.",
+      "code": "print(genres[0])\nprint(len(genres))"
+    },
+    {
+      "type": "predict",
+      "prompt": "Remember, positions start at 0. What will this print? Pick one, then press Run.",
+      "code": "games = [\"Minecraft\", \"Fortnite\", \"Elden Ring\"]\nprint(games[1])",
+      "options": [
+        "Minecraft",
+        "Fortnite",
+        "Elden Ring"
+      ],
+      "answer": "Fortnite"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: make a list called colors holding \"red\", \"green\" and \"blue\". Then, on a second line, print the last item (blue) using its position.",
+      "starter": "colors = \nprint()",
+      "answer": "colors = [\"red\", \"green\", \"blue\"]\nprint(colors[2])",
+      "compare": "print",
+      "require": [
+        "["
+      ],
+      "hints": [
+        "The list goes in square brackets. blue is the 3rd item, so its position is 2.",
+        "colors = [\"red\", \"green\", \"blue\"]\nprint(colors[2])"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "A **dictionary** stores pairs. Each pair has a **key** (a name to look up) and a **value**, joined by a colon. Pairs go inside curly brackets `{ }`, separated by commas. To look up a value, put its key in square brackets."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to make a dictionary of prices and look up Minecraft.",
+      "code": "prices = {\"Minecraft\": 29.99, \"Fortnite\": 0}\nprint(prices[\"Minecraft\"])"
+    },
+    {
+      "type": "predict",
+      "prompt": "What will this print? Pick one, then press Run.",
+      "code": "print(prices[\"Fortnite\"])",
+      "options": [
+        "0",
+        "29.99",
+        "Fortnite"
+      ],
+      "answer": "0"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: make a dictionary called prices with Minecraft at 29.99 and Elden Ring at 59.99. Then, on a second line, print the price of Elden Ring. You should see 59.99.",
+      "starter": "prices = \nprint()",
+      "answer": "prices = {\"Minecraft\": 29.99, \"Elden Ring\": 59.99}\nprint(prices[\"Elden Ring\"])",
+      "compare": "print",
+      "require": [
+        "{",
+        "prices["
+      ],
+      "hints": [
+        "Curly brackets, with \"key\": value pairs separated by a comma. Then look up the key in square brackets.",
+        "prices = {\"Minecraft\": 29.99, \"Elden Ring\": 59.99}\nprint(prices[\"Elden Ring\"])"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Back to the table. Because a list of column names is just a list, you can store it in a variable first and then pick with it: `df[cols]`."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"price\" so cols holds the title and price column names, then press Run.",
+      "code": "cols = [\"title\", ___]\ndf[cols].head()",
+      "answer": "cols = [\"title\", \"price\"]\ndf[cols].head()",
+      "compare": "table",
+      "hints": [
+        "Column names are text, so use quotes.",
+        "cols = [\"title\", \"price\"]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Dictionaries are how you **rename** columns. Inside `rename(columns={...})`, each key is the old name and each value is the new name. This shows a renamed copy, and df itself doesn't change."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to show the first 2 rows with title renamed to game.",
+      "code": "df.rename(columns={\"title\": \"game\"}).head(2)"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: rename release_year to year, and show the first 3 rows.",
+      "answer": "df.rename(columns={\"release_year\": \"year\"}).head(3)",
+      "compare": "table",
+      "require": [
+        "rename"
+      ],
+      "hints": [
+        "Copy the cell above: change the old and new names, and the number in head().",
+        "df.rename(columns={\"release_year\": \"year\"}).head(3)"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "You can even build your own table from a dictionary with `pd.DataFrame()`. Each key becomes a column name, and each value is a list of that column's values, in order. For example: `pd.DataFrame({\"name\": [\"Ava\", \"Ben\"], \"age\": [20, 21]})`."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: build a table with a column called game holding \"Minecraft\" and \"Fortnite\", and a column called hours holding 120 and 45.",
+      "starter": "pd.DataFrame({})",
+      "answer": "pd.DataFrame({\"game\": [\"Minecraft\", \"Fortnite\"], \"hours\": [120, 45]})",
+      "compare": "table",
+      "require": [
+        "DataFrame"
+      ],
+      "hints": [
+        "Follow the example above: one key per column, and a list of values for each.",
+        "pd.DataFrame({\"game\": [\"Minecraft\", \"Fortnite\"], \"hours\": [120, 45]})"
+      ]
+    }
+  ],
+  "recap": "A list holds items in order (positions start at 0) and len() counts them. A dictionary holds key: value pairs. Lists pick columns, and dictionaries rename them or build new tables."
+}

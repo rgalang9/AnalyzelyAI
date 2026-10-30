@@ -1,0 +1,20 @@
+{
+  "id": "py-01",
+  "level": 1,
+  "title": "Variables",
+  "datasets": [],
+  "setup": "",
+  "cells": [
+    { "type": "markdown", "text": "A **variable** is a name that stores a value, like a labelled box. `price = 60` means \"store 60 under the name price\". In Python, `=` means **store**, not \"equals\" like in maths. The name goes on the left and the value on the right." },
+    { "type": "run", "prompt": "Press Run to store 60 in price, then print it.", "code": "price = 60\nprint(price)" },
+    { "type": "markdown", "text": "Notice there are no quotes in `print(price)`. Without quotes, Python looks up what's stored in price. Cells also **remember** variables, so price still works in every cell below this one." },
+    { "type": "run", "prompt": "This cell uses price from the cell above. Press Run.", "code": "print(price * 2)" },
+    { "type": "predict", "prompt": "Careful with the quotes this time. What will this print? Pick one, then press Run.", "code": "print(\"price\")", "options": ["60", "price", "An error"], "answer": "price" },
+    { "type": "markdown", "text": "With quotes, `\"price\"` is just the word price, so Python prints it as text. You can also **change** a variable. Python reads code top to bottom, so `x = x + 2` means \"take x, add 2, and store the result back in x\"." },
+    { "type": "predict", "prompt": "Follow the code line by line. What will this print? Pick one, then press Run.", "code": "x = 3\nx = x + 2\nprint(x)", "options": ["3", "5", "32"], "answer": "5" },
+    { "type": "markdown", "text": "Variables can store text too. Just put the text in quotes, like `name = \"Raph\"`." },
+    { "type": "fill", "prompt": "Replace ___ with the name of any game, in quotes, then press Run.", "code": "game = ___\nprint(game)", "answer": "game = \"Minecraft\"\nprint(game)", "compare": "any_text", "variable": "game", "hints": ["The game name needs quotes around it, because it's text.", "For example: game = \"Fortnite\""] },
+    { "type": "write", "prompt": "Your turn. price is still 60 from earlier. On the first line, finish copies = so that copies stores 4. On the second line, print price times copies (use * for times). You should see 240.", "starter": "copies = \nprint()", "answer": "copies = 4\nprint(price * copies)", "compare": "print", "require": ["copies"], "hints": ["First line: copies = 4. Second line: put price * copies inside print().", "copies = 4\nprint(price * copies)"] }
+  ],
+  "recap": "= stores a value under a name. Without quotes, Python uses what's stored; with quotes, it's just text. Cells remember variables, so later cells can use them."
+}

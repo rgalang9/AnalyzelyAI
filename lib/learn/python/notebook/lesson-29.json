@@ -1,0 +1,86 @@
+{
+  "id": "py-29",
+  "level": 5,
+  "title": "Grouping numbers into ranges with pd.cut",
+  "datasets": [
+    "players"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Back to the players. Managers often want **categories** instead of raw numbers, like Casual, Regular and Hardcore players. You could write a function with if/elif, but pandas has a shortcut: `pd.cut()`. It's the pandas version of CASE WHEN in SQL."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the players table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`pd.cut()` sorts numbers into ranges called **bins**. `bins=[0, 100, 300, 1000]` gives the edges, which make 3 ranges: over 0 up to 100, over 100 up to 300, and over 300 up to 1000. Each range **includes its top number**, so exactly 100 hours counts as the first range. `labels` names the ranges, in order."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to label every player.",
+      "code": "df[\"level\"] = pd.cut(df[\"hours_played\"], bins=[0, 100, 300, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"])\ndf[[\"username\", \"hours_played\", \"level\"]]"
+    },
+    {
+      "type": "predict",
+      "prompt": "How many players are Regular (over 100, up to 300 hours)? Look at the table above, then pick one and press Run.",
+      "code": "df[\"level\"].value_counts()",
+      "options": [
+        "3",
+        "4",
+        "5"
+      ],
+      "answer": "4"
+    },
+    {
+      "type": "markdown",
+      "text": "value_counts() sorts by count, so the levels came out in a mixed order. Add `.sort_index()` to put them back in label order: Casual, Regular, Hardcore."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: count the players in each level, in the order Casual, Regular, Hardcore.",
+      "answer": "df[\"level\"].value_counts().sort_index()",
+      "compare": "table",
+      "require": [
+        "sort_index"
+      ],
+      "hints": [
+        "Add .sort_index() to the end of the cell above.",
+        "df[\"level\"].value_counts().sort_index()"
+      ]
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ so that Regular means over 100 and up to 500 hours, then press Run to see the new counts.",
+      "code": "pd.cut(df[\"hours_played\"], bins=[0, 100, ___, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"]).value_counts().sort_index()",
+      "answer": "pd.cut(df[\"hours_played\"], bins=[0, 100, 500, 1000], labels=[\"Casual\", \"Regular\", \"Hardcore\"]).value_counts().sort_index()",
+      "compare": "table",
+      "hints": [
+        "The bins list holds the edges between ranges, in order.",
+        "500"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "The new level column works with everything you know, including groupby. When you group by a column made with pd.cut, add `observed=True` inside groupby(). It keeps only the levels that actually appear and avoids a warning."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the average hours per level, rounded to 1 decimal. Use the level column from earlier.",
+      "answer": "df.groupby(\"level\", observed=True)[\"hours_played\"].mean().round(1)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "df.groupby(\"level\", observed=True), pick hours_played, mean, round(1).",
+        "df.groupby(\"level\", observed=True)[\"hours_played\"].mean().round(1)"
+      ]
+    }
+  ],
+  "recap": "pd.cut(column, bins=[...], labels=[...]) turns numbers into categories. Each range includes its top number. Use sort_index() for label order and observed=True when grouping."
+}

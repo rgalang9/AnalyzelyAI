@@ -1,0 +1,110 @@
+{
+  "id": "py-08",
+  "level": 2,
+  "title": "Several conditions",
+  "datasets": [
+    "players"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Sometimes one condition isn't enough, like \"players from the USA **with** more than 400 hours\". This lesson shows how to combine conditions."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the players table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`&` means **AND**: both conditions must be true. Each condition goes in its **own round brackets**, then the whole thing goes inside `df[ ]`: `df[(condition 1) & (condition 2)]`."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to show players from the USA with more than 400 hours.",
+      "code": "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] > 400)]"
+    },
+    {
+      "type": "predict",
+      "prompt": "How many players are from Japan AND have more than 50 hours? Pick one, then press Run.",
+      "code": "df[(df[\"country\"] == \"Japan\") & (df[\"hours_played\"] > 50)]",
+      "options": [
+        "0",
+        "1",
+        "2"
+      ],
+      "answer": "1"
+    },
+    {
+      "type": "markdown",
+      "text": "`|` means **OR**: at least one condition must be true. It's the straight line key, usually above Enter (Shift + \\). It needs the same round brackets."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the OR sign so players from Japan OR Brazil show, then press Run.",
+      "code": "df[(df[\"country\"] == \"Japan\") ___ (df[\"country\"] == \"Brazil\")]",
+      "answer": "df[(df[\"country\"] == \"Japan\") | (df[\"country\"] == \"Brazil\")]",
+      "compare": "table",
+      "hints": [
+        "OR is the straight line |, not the letter l or I.",
+        "|"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show players from the USA with fewer than 400 hours. Both must be true, so use &, and keep each condition in its own round brackets.",
+      "answer": "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] < 400)]",
+      "compare": "table",
+      "require": [
+        "&"
+      ],
+      "hints": [
+        "df[(first condition) & (second condition)]",
+        "df[(df[\"country\"] == \"USA\") & (df[\"hours_played\"] < 400)]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "To match any value from a list, `isin()` is a shortcut for lots of `|`. `df[df[\"country\"].isin([\"Japan\", \"UK\"])]` keeps players from Japan or the UK. Notice the list in square brackets inside the round ones."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to show players from Japan or the UK.",
+      "code": "df[df[\"country\"].isin([\"Japan\", \"UK\"])]"
+    },
+    {
+      "type": "write",
+      "prompt": "Show players from Japan, Mexico or the Philippines, using isin().",
+      "answer": "df[df[\"country\"].isin([\"Japan\", \"Mexico\", \"Philippines\"])]",
+      "compare": "table",
+      "require": [
+        "isin"
+      ],
+      "hints": [
+        "Copy the cell above and put 3 countries in the list.",
+        "df[df[\"country\"].isin([\"Japan\", \"Mexico\", \"Philippines\"])]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "The most common mistake here is forgetting the round brackets around each condition."
+    },
+    {
+      "type": "predict",
+      "prompt": "This code has no round brackets around the conditions. What will happen? Pick one, then press Run.",
+      "code": "df[df[\"country\"] == \"USA\" & df[\"hours_played\"] > 300]",
+      "options": [
+        "It shows 3 players",
+        "It shows an error",
+        "It shows every player"
+      ],
+      "answer": "It shows an error"
+    },
+    {
+      "type": "markdown",
+      "text": "Python works out `&` **before** `==` and `>`, so without brackets it tries to combine the wrong pieces and fails. Whenever you see an error with & or |, check the brackets first."
+    }
+  ],
+  "recap": "& means AND (both true), | means OR (either true), and each condition needs its own round brackets. isin() matches any value from a list."
+}

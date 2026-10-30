@@ -1,0 +1,111 @@
+{
+  "id": "py-04",
+  "level": 1,
+  "title": "Picking columns",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Most of the time you only need a few columns. This lesson shows how to pick them."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "To pick **one** column, put its name in quotes inside square brackets: `df[\"title\"]`. One column on its own is called a **Series**: a single column with the row labels on the left."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to pick just the title column.",
+      "code": "df[\"title\"]"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"genre\" (with the quotes) to pick the genre column, then press Run.",
+      "code": "df[___]",
+      "answer": "df[\"genre\"]",
+      "compare": "table",
+      "hints": [
+        "Column names are text, so they need quotes.",
+        "df[\"genre\"]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Column names must match **exactly**, capital letters included. The column is called title, all lowercase."
+    },
+    {
+      "type": "predict",
+      "prompt": "Notice the capital T this time. What will happen? Pick one, then press Run.",
+      "code": "df[\"Title\"]",
+      "options": [
+        "It shows the title column",
+        "It shows an error",
+        "It shows an empty column"
+      ],
+      "answer": "It shows an error"
+    },
+    {
+      "type": "markdown",
+      "text": "That's a **KeyError**: Python couldn't find a column called Title. When you see one, check the spelling and capitals of the column name."
+    },
+    {
+      "type": "markdown",
+      "text": "To pick **several** columns, put a list of names inside the brackets: `df[[\"title\", \"price\"]]`. That's **double** brackets: the outer ones mean \"pick\", and the inner ones hold the list of names. The result is a smaller table (a DataFrame)."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to pick the title and price columns.",
+      "code": "df[[\"title\", \"price\"]]"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"rating\" to pick the title and rating columns, then press Run.",
+      "code": "df[[\"title\", ___]]",
+      "answer": "df[[\"title\", \"rating\"]]",
+      "compare": "table",
+      "hints": [
+        "Add the column name in quotes, inside the inner brackets.",
+        "df[[\"title\", \"rating\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "You can add `.head()` or `.tail()` straight after picking, to see only some rows: `df[[\"title\", \"price\"]].head(2)`."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show the title, genre and rating columns for the first 5 games. Pick the 3 columns with double brackets, then add .head() at the end.",
+      "starter": "df[[]]",
+      "answer": "df[[\"title\", \"genre\", \"rating\"]].head()",
+      "compare": "table",
+      "require": [
+        "head"
+      ],
+      "hints": [
+        "Put the 3 names in quotes, separated by commas, inside double brackets. Then add .head()",
+        "df[[\"title\", \"genre\", \"rating\"]].head()"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the title and release_year columns for the last 4 games only.",
+      "answer": "df[[\"title\", \"release_year\"]].tail(4)",
+      "compare": "table",
+      "require": [
+        "tail"
+      ],
+      "hints": [
+        "Pick the 2 columns with double brackets, then add .tail() with a number.",
+        "df[[\"title\", \"release_year\"]].tail(4)"
+      ]
+    }
+  ],
+  "recap": "df[\"name\"] picks one column (a Series). df[[\"a\", \"b\"]] picks several (a DataFrame). Names must match exactly, or you get a KeyError."
+}

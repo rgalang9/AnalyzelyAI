@@ -1,0 +1,93 @@
+{
+  "id": "py-25",
+  "level": 4,
+  "title": "Pivot tables",
+  "datasets": [
+    "study_log"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "A **pivot table** is a summary grid, just like in Excel. For example: students down the side, subjects across the top, and each student's average score in the cells."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the study log.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"study_log.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "pivot_table() takes 4 settings. **index** is the column whose values go down the side. **columns** is the one that goes across the top. **values** is the column to summarise in the cells. **aggfunc** is how to summarise it: \"mean\", \"sum\" or \"count\"."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see each student's average score in each subject.",
+      "code": "df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\")"
+    },
+    {
+      "type": "predict",
+      "prompt": "In the grid above, what's Maya's Biology value? Find the Maya row and the Biology column. Pick one, then press Run.",
+      "code": "print(df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\").loc[\"Maya\", \"Biology\"])",
+      "options": [
+        "82",
+        "91",
+        "70"
+      ],
+      "answer": "91"
+    },
+    {
+      "type": "predict",
+      "prompt": "There are 4 students and 3 subjects. What shape is the grid, as (rows, columns)? Pick one, then press Run.",
+      "code": "print(df.pivot_table(values=\"score\", index=\"student\", columns=\"subject\", aggfunc=\"mean\").shape)",
+      "options": [
+        "(4, 3)",
+        "(3, 4)",
+        "(12, 5)"
+      ],
+      "answer": "(4, 3)"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"sum\" (in quotes) to show the TOTAL minutes per student per subject, then press Run.",
+      "code": "df.pivot_table(values=\"minutes\", index=\"student\", columns=\"subject\", aggfunc=___)",
+      "answer": "df.pivot_table(values=\"minutes\", index=\"student\", columns=\"subject\", aggfunc=\"sum\")",
+      "compare": "table",
+      "hints": [
+        "aggfunc is text, so use quotes.",
+        "\"sum\""
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: make a pivot table of the average minutes, with subjects down the side and students across the top.",
+      "answer": "df.pivot_table(values=\"minutes\", index=\"subject\", columns=\"student\", aggfunc=\"mean\")",
+      "compare": "table",
+      "require": [
+        "pivot_table"
+      ],
+      "hints": [
+        "Swap index and columns compared with the cells above, and use values=\"minutes\".",
+        "df.pivot_table(values=\"minutes\", index=\"subject\", columns=\"student\", aggfunc=\"mean\")"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "You can leave out **columns** to get just one column of results, one row per value of index."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: make a pivot table of the total minutes per subject, with subjects down the side and no columns setting.",
+      "answer": "df.pivot_table(values=\"minutes\", index=\"subject\", aggfunc=\"sum\")",
+      "compare": "table",
+      "require": [
+        "pivot_table"
+      ],
+      "hints": [
+        "Use values, index and aggfunc only.",
+        "df.pivot_table(values=\"minutes\", index=\"subject\", aggfunc=\"sum\")"
+      ]
+    }
+  ],
+  "recap": "pivot_table(values=, index=, columns=, aggfunc=) builds a summary grid: index down the side, columns across the top, and values summarised in the cells."
+}

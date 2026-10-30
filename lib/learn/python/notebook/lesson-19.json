@@ -1,0 +1,99 @@
+{
+  "id": "py-19",
+  "level": 4,
+  "title": "Joining tables with merge",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Welcome to Level 4!** Real data is often split across several tables. The games table has a **studio_id** column, but the studio's name and country live in a separate **studios** table. This lesson shows how to join them. It's the same idea as JOIN in SQL."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load both tables. This time they're called games and studios, not df. The cell shows studios.",
+      "code": "import pandas as pd\ngames = pd.read_csv(\"games.csv\")\nstudios = pd.read_csv(\"studios.csv\")\nstudios"
+    },
+    {
+      "type": "markdown",
+      "text": "Both tables have a **studio_id** column, and that's the link between them. `games.merge(studios, on=\"studio_id\")` glues the tables side by side, matching each game to the studio with the same studio_id. Read it as \"games, joined with studios, on studio_id\"."
+    },
+    {
+      "type": "predict",
+      "prompt": "games has 15 rows and studios has 12. Each game has exactly one studio. How many rows will the merged table have? Pick one, then press Run.",
+      "code": "games.merge(studios, on=\"studio_id\")",
+      "options": [
+        "12",
+        "15",
+        "27"
+      ],
+      "answer": "15"
+    },
+    {
+      "type": "markdown",
+      "text": "Every game found its studio, so there's still one row per game, now with the studio's columns added on the right."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the word that says which column to match on, then press Run.",
+      "code": "games.merge(studios, ___=\"studio_id\")",
+      "answer": "games.merge(studios, on=\"studio_id\")",
+      "compare": "table",
+      "hints": [
+        "It's a short word: merge ... ___ the studio_id column.",
+        "on"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "After merging, you can pick columns from **both** tables, using everything you already know."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show every game's title next to the name of the studio that made it (the studio_name column).",
+      "answer": "games.merge(studios, on=\"studio_id\")[[\"title\", \"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "merge"
+      ],
+      "hints": [
+        "Merge first, then pick the 2 columns with double brackets.",
+        "games.merge(studios, on=\"studio_id\")[[\"title\", \"studio_name\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Long chains get hard to read. Store the merged table in a variable first, like `m = games.merge(...)`, then work with m on the next lines."
+    },
+    {
+      "type": "write",
+      "prompt": "Show the title and studio_name of the games made by studios from Japan. Store the merge in m first, then filter m on its country column.",
+      "answer": "m = games.merge(studios, on=\"studio_id\")\nm[m[\"country\"] == \"Japan\"][[\"title\", \"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "merge"
+      ],
+      "hints": [
+        "Line 1: m = games.merge(studios, on=\"studio_id\"). Line 2: filter m where country is \"Japan\", then pick the 2 columns.",
+        "m = games.merge(studios, on=\"studio_id\")\nm[m[\"country\"] == \"Japan\"][[\"title\", \"studio_name\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show the average game price for each studio country, rounded to 2 decimals. You can use m from the cell above.",
+      "answer": "m.groupby(\"country\")[\"price\"].mean().round(2)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby country, pick price, mean, then round(2).",
+        "m.groupby(\"country\")[\"price\"].mean().round(2)"
+      ]
+    }
+  ],
+  "recap": "merge() joins two tables side by side, matching rows on a shared column with on=\"...\". Store the result in a variable to keep your code readable."
+}

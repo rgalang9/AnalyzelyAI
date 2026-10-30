@@ -1,0 +1,90 @@
+{
+  "id": "py-23",
+  "level": 4,
+  "title": "Charts: bar and line",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Charts make patterns jump out. Any pandas summary can draw itself with `.plot()`, and the chart appears right under the cell. The usual recipe: **summarise first** (value_counts or groupby), **then** add `.plot()`."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`kind=\"bar\"` draws a bar chart, which is best for comparing categories like genres. One bar is drawn per row of the summary."
+    },
+    {
+      "type": "predict",
+      "prompt": "There are 11 different genres. How many bars will this chart have? Pick one, then press Run.",
+      "code": "df[\"genre\"].value_counts().plot(kind=\"bar\")",
+      "options": [
+        "15",
+        "11",
+        "4"
+      ],
+      "answer": "11"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"bar\" (in quotes) to draw the genre counts as a bar chart, then press Run.",
+      "code": "df[\"genre\"].value_counts().plot(kind=___)",
+      "answer": "df[\"genre\"].value_counts().plot(kind=\"bar\")",
+      "compare": "chart",
+      "hints": [
+        "The chart kind is text, so it needs quotes.",
+        "\"bar\""
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Add `title=\"...\"` inside plot() to label the chart, for example `.plot(kind=\"bar\", title=\"Games per genre\")`."
+    },
+    {
+      "type": "markdown",
+      "text": "`kind=\"line\"` draws a line chart, which is best for change over time, like years. The summary must be in time order, and groupby sorts the years for you."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see how many games came out each year, as a line.",
+      "code": "df.groupby(\"release_year\")[\"title\"].count().plot(kind=\"line\", title=\"Games per year\")"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: draw a bar chart of the average rating per genre, highest first. Summarise with groupby, sort, then plot.",
+      "answer": "df.groupby(\"genre\")[\"rating\"].mean().sort_values(ascending=False).plot(kind=\"bar\")",
+      "compare": "chart",
+      "require": [
+        "plot"
+      ],
+      "hints": [
+        "groupby genre, pick rating, mean, sort_values(ascending=False), then .plot(kind=\"bar\").",
+        "df.groupby(\"genre\")[\"rating\"].mean().sort_values(ascending=False).plot(kind=\"bar\")"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "You can also plot straight from the table. `df.plot(kind=\"barh\", x=\"title\", y=\"price\")` draws sideways bars (h for horizontal), with x as the labels and y as the bar lengths. Sideways bars are easier to read when the labels are long."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: draw a sideways bar chart of every game's price, with the titles as the labels.",
+      "answer": "df.plot(kind=\"barh\", x=\"title\", y=\"price\")",
+      "compare": "chart",
+      "require": [
+        "barh"
+      ],
+      "hints": [
+        "Copy the example: df.plot(kind=\"barh\", x=\"title\", y=\"price\")",
+        "df.plot(kind=\"barh\", x=\"title\", y=\"price\")"
+      ]
+    }
+  ],
+  "recap": "Summarise first, then .plot(). kind=\"bar\" compares categories, kind=\"line\" shows change over time, and kind=\"barh\" gives sideways bars. title=\"...\" labels the chart."
+}

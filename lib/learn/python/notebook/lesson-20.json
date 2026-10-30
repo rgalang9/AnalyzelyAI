@@ -1,0 +1,97 @@
+{
+  "id": "py-20",
+  "level": 4,
+  "title": "Join types: inner vs left",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Last lesson every game found its studio. But what about studios with no games in our table? This lesson shows how merge decides which rows to keep."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load games and studios. Valve and Ubisoft are in studios, but no game in our table has their studio_id.",
+      "code": "import pandas as pd\ngames = pd.read_csv(\"games.csv\")\nstudios = pd.read_csv(\"studios.csv\")\nstudios"
+    },
+    {
+      "type": "markdown",
+      "text": "By default, merge() only keeps rows that match in **both** tables. That's called an **inner** join, so Valve and Ubisoft disappear. With `how=\"left\"`, merge keeps **every** row from the first (left) table, even with no match, and fills the missing columns with **NaN**."
+    },
+    {
+      "type": "predict",
+      "prompt": "Studios is first now. Nintendo has 4 games, and Valve and Ubisoft have none but are kept anyway. How many rows will this have? Pick one, then press Run.",
+      "code": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+      "options": [
+        "12",
+        "15",
+        "17"
+      ],
+      "answer": "17"
+    },
+    {
+      "type": "markdown",
+      "text": "15 matching games, plus 1 row each for Valve and Ubisoft with NaN where the game columns would be."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with \"left\" (in quotes) to keep every studio, even ones with no games, then press Run.",
+      "code": "studios.merge(games, on=\"studio_id\", how=___)",
+      "answer": "studios.merge(games, on=\"studio_id\", how=\"left\")",
+      "compare": "table",
+      "hints": [
+        "The value is text, so it needs quotes.",
+        "\"left\""
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "That's how analysts find what's missing: do a left join, then look for NaN with `isna()`."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: find the studios with no games in our table. Store the left join in m, then show just the studio_name column of the rows where title is NaN.",
+      "answer": "m = studios.merge(games, on=\"studio_id\", how=\"left\")\nm[m[\"title\"].isna()][[\"studio_name\"]]",
+      "compare": "table",
+      "require": [
+        "isna"
+      ],
+      "hints": [
+        "Line 1: m = the left join. Line 2: filter m[m[\"title\"].isna()], then pick [[\"studio_name\"]].",
+        "m = studios.merge(games, on=\"studio_id\", how=\"left\")\nm[m[\"title\"].isna()][[\"studio_name\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Count the games for every studio, including studios with 0 games. Group m by studio_name and count() the title column (count() skips NaN, so Valve gets 0).",
+      "answer": "m.groupby(\"studio_name\")[\"title\"].count()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Use m from the cell above.",
+        "m.groupby(\"studio_name\")[\"title\"].count()"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "Which table you write first matters, because that's the one that keeps all its rows. This time games is first. How many rows? Pick one, then press Run.",
+      "code": "games.merge(studios, on=\"studio_id\", how=\"left\")",
+      "options": [
+        "12",
+        "15",
+        "17"
+      ],
+      "answer": "15"
+    },
+    {
+      "type": "markdown",
+      "text": "Every game has a studio, so keeping all games gives 15 rows. Valve and Ubisoft aren't kept, because studios is now the second (right) table."
+    }
+  ],
+  "recap": "An inner join (the default) keeps only matches. how=\"left\" keeps every row of the first table and fills gaps with NaN. A left join plus isna() finds what's missing."
+}

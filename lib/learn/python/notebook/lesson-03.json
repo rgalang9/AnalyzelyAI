@@ -1,0 +1,121 @@
+{
+  "id": "py-03",
+  "level": 1,
+  "title": "Getting to know your data",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Before analysing anything, analysts get to know their data: how big it is, what the columns are, and what the numbers look like. Every lesson starts by loading the data, using the same lines as last lesson."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table into df.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`df.shape` tells you the size of the table as **(rows, columns)**, always rows first. There are no brackets after `shape`, because it's a fact about the table, not an action."
+    },
+    {
+      "type": "predict",
+      "prompt": "df holds 15 games, and each game has 7 details (columns). What will this print? Pick one, then press Run.",
+      "code": "print(df.shape)",
+      "options": [
+        "(15, 7)",
+        "(7, 15)",
+        "(5, 7)"
+      ],
+      "answer": "(15, 7)"
+    },
+    {
+      "type": "markdown",
+      "text": "To get just one of the two numbers, put its position in square brackets. Python counts from **0**, so `df.shape[0]` is the rows and `df.shape[1]` is the columns."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with a number so this prints only the number of rows (15), then press Run.",
+      "code": "print(df.shape[___])",
+      "answer": "print(df.shape[0])",
+      "compare": "print",
+      "hints": [
+        "Rows come first, and Python counts from 0.",
+        "print(df.shape[0])"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: print only the number of columns. You should see 7. Use df.shape with the right number in square brackets, inside print().",
+      "starter": "print()",
+      "answer": "print(df.shape[1])",
+      "compare": "print",
+      "require": [
+        "shape"
+      ],
+      "hints": [
+        "Columns are the second number, and the second position is 1.",
+        "print(df.shape[1])"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "`df.columns` lists the names of all the columns. Like shape, it has no brackets after it."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see every column name.",
+      "code": "df.columns"
+    },
+    {
+      "type": "markdown",
+      "text": "`df.describe()` makes a summary table of the **number** columns. **count** is how many cells are filled in, **mean** is the average, **min** is the smallest and **max** is the biggest. It has brackets because it's an action: it works something out."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the summary.",
+      "code": "df.describe()"
+    },
+    {
+      "type": "predict",
+      "prompt": "In the summary, the count for rating is 13, but there are 15 games. Why? Pick a guess, then press Run to look at the last 3 games.",
+      "code": "df.tail(3)",
+      "options": [
+        "2 games have no rating",
+        "2 games were deleted",
+        "describe() skips 2 rows"
+      ],
+      "answer": "2 games have no rating"
+    },
+    {
+      "type": "markdown",
+      "text": "**NaN** means the cell is empty (\"Not a Number\"). describe() only counts cells that are filled in, so the 2 games with no rating aren't counted. Spotting missing data early is a big part of an analyst's job."
+    },
+    {
+      "type": "markdown",
+      "text": "`df.info()` gives a quick report on every column: its name, how many cells are filled in (non-null), and its type, such as numbers or text."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the report. Look at the rating row: 13 non-null.",
+      "code": "df.info()"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show the summary table for the number columns again, from memory. Remember the brackets at the end.",
+      "starter": "df.",
+      "answer": "df.describe()",
+      "compare": "table",
+      "require": [
+        "describe"
+      ],
+      "hints": [
+        "It's the action that summarises the number columns.",
+        "df.describe()"
+      ]
+    }
+  ],
+  "recap": "df.shape gives (rows, columns), with shape[0] for rows and shape[1] for columns. df.columns lists the names, df.describe() summarises the numbers, and df.info() shows what's filled in. NaN means empty."
+}

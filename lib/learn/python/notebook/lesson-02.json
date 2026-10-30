@@ -1,0 +1,20 @@
+{
+  "id": "py-02",
+  "level": 1,
+  "title": "Loading a table with pandas",
+  "datasets": ["games"],
+  "setup": "",
+  "cells": [
+    { "type": "markdown", "text": "**pandas** is the Python tool for working with tables. Before you can use it, you **import** it. Everyone gives it the short name `pd`, so you type less. Then `pd.read_csv()` loads a CSV file into a table called a **DataFrame**, which analysts usually name `df`." },
+    { "type": "run", "prompt": "Press Run to import pandas, load games.csv into df, and show it.", "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf" },
+    { "type": "markdown", "text": "Each **row** is one game, and each **column** is one detail about it. The bold numbers on the left are row labels, and pandas starts counting at **0**, not 1. Writing `df` on the last line of a cell shows the table." },
+    { "type": "markdown", "text": "Real tables can have thousands of rows, so analysts peek at the start with `df.head()`. The empty brackets mean \"use the default number of rows\"." },
+    { "type": "predict", "prompt": "How many rows will df.head() show? Pick one, then press Run.", "code": "df.head()", "options": ["5 rows", "10 rows", "Every row"], "answer": "5 rows" },
+    { "type": "markdown", "text": "Put a number in the brackets to choose how many rows to show. For example, `df.head(2)` shows the first 2 rows." },
+    { "type": "fill", "prompt": "Replace ___ with a number so only the first 3 rows show, then press Run.", "code": "df.head(___)", "answer": "df.head(3)", "compare": "table", "hints": ["Type just the number, without quotes.", "df.head(3)"] },
+    { "type": "markdown", "text": "`df.tail()` works the same way, but shows the **last** rows instead of the first." },
+    { "type": "predict", "prompt": "Which row will df.tail(1) show? Pick one, then press Run.", "code": "df.tail(1)", "options": ["The first row", "The last row", "Every row"], "answer": "The last row" },
+    { "type": "write", "prompt": "Your turn. The cell already starts with df. for you. Finish it using tail() so it shows the last 2 rows, then press Run.", "starter": "df.", "answer": "df.tail(2)", "compare": "table", "require": ["tail"], "hints": ["Type tail with a number inside the brackets, right after df.", "df.tail(2)"] }
+  ],
+  "recap": "import pandas as pd, then pd.read_csv() loads a table into df. head() shows the first rows and tail() shows the last. Rows are counted from 0."
+}

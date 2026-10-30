@@ -1,0 +1,118 @@
+{
+  "id": "py-27",
+  "level": 5,
+  "title": "Writing your own functions",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Welcome to Level 5: pro skills!** So far you've used functions other people wrote, like `print()`, `len()` and `round()`. Now you'll write your own. A **function** is a set of steps you give a name, so you can reuse it whenever you like."
+    },
+    {
+      "type": "markdown",
+      "text": "A function has 3 parts. `def` (short for define) starts it, followed by the name, the **input** in round brackets, and a colon. The steps go on the lines below, **indented** by 4 spaces, which is how Python knows they belong to the function. `return` sends the answer back.\n\n```\ndef double(x):\n    return x * 2\n```"
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to create the double function. Nothing shows yet, because creating a function doesn't run it.",
+      "code": "def double(x):\n    return x * 2"
+    },
+    {
+      "type": "predict",
+      "prompt": "Now you use it. double(21) runs the steps with x set to 21. What will this print? Pick one, then press Run.",
+      "code": "print(double(21))",
+      "options": [
+        "21",
+        "42",
+        "double(21)"
+      ],
+      "answer": "42"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the multiply sign so add_tax adds 8% tax (price × 1.08), then press Run. You should see 54.0.",
+      "code": "def add_tax(price):\n    return price ___ 1.08\n\nprint(round(add_tax(50), 2))",
+      "answer": "def add_tax(price):\n    return price * 1.08\n\nprint(round(add_tax(50), 2))",
+      "compare": "print",
+      "hints": [
+        "Adding 8% is the same as multiplying by 1.08.",
+        "*"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: write a function called to_cents that takes a price and returns it in whole cents: round(price * 100). Then print to_cents(29.99). You should see 2999. Remember the colon after the first line, and indent the return line by 4 spaces.",
+      "starter": "def to_cents(price):\n    return \n\nprint()",
+      "answer": "def to_cents(price):\n    return round(price * 100)\n\nprint(to_cents(29.99))",
+      "compare": "print",
+      "require": [
+        "def",
+        "return"
+      ],
+      "hints": [
+        "Line 1: def to_cents(price): Line 2 (indented): return round(price * 100). Line 3: print(to_cents(29.99))",
+        "def to_cents(price):\n    return round(price * 100)\n\nprint(to_cents(29.99))"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Your function works on one number. To run it on **every** value in a column, use `apply()`: `df[\"price\"].apply(to_cents)`. Notice there are **no brackets** after to_cents inside apply, because you're handing over the function itself, and pandas runs it on each value for you."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: add a cents column by applying to_cents to the price column. Then show the title and cents columns.",
+      "answer": "df[\"cents\"] = df[\"price\"].apply(to_cents)\ndf[[\"title\", \"cents\"]]",
+      "compare": "table",
+      "require": [
+        "apply"
+      ],
+      "hints": [
+        "Line 1: df[\"cents\"] = df[\"price\"].apply(to_cents). Line 2: pick the 2 columns.",
+        "df[\"cents\"] = df[\"price\"].apply(to_cents)\ndf[[\"title\", \"cents\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "apply() works with built-in functions too. `len` counts the characters in a piece of text, so `df[\"title\"].apply(len)` gives the length of every title."
+    },
+    {
+      "type": "write",
+      "prompt": "Add a title_length column using apply(len). Then show the title and title_length of the game with the longest title, using nlargest(1, ...).",
+      "answer": "df[\"title_length\"] = df[\"title\"].apply(len)\ndf.nlargest(1, \"title_length\")[[\"title\", \"title_length\"]]",
+      "compare": "table",
+      "require": [
+        "apply"
+      ],
+      "hints": [
+        "Line 1: apply(len) on the title column. Line 2: df.nlargest(1, \"title_length\") and pick the 2 columns.",
+        "df[\"title_length\"] = df[\"title\"].apply(len)\ndf.nlargest(1, \"title_length\")[[\"title\", \"title_length\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "For a tiny one-line function, a **lambda** is a shortcut that skips def and the name. `lambda p: p * 2` means \"take p and give back p × 2\". It's handy right inside apply: `df[\"price\"].apply(lambda p: p * 2)`."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: use a lambda inside apply to show every price with a 20% discount (price × 0.8), rounded to 2 decimals.",
+      "answer": "df[\"price\"].apply(lambda p: round(p * 0.8, 2))",
+      "compare": "table",
+      "require": [
+        "lambda"
+      ],
+      "hints": [
+        "The lambda is: lambda p: round(p * 0.8, 2)",
+        "df[\"price\"].apply(lambda p: round(p * 0.8, 2))"
+      ]
+    }
+  ],
+  "recap": "def name(input): starts a function, the steps are indented 4 spaces, and return sends back the answer. apply() runs a function on every value in a column, and lambda is a one-line shortcut."
+}

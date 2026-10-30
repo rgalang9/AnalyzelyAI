@@ -11,8 +11,8 @@ import {
   lineNumbers,
   placeholder,
 } from "@codemirror/view";
-import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
-import { bracketMatching, HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { defaultKeymap, history, historyKeymap, indentLess, indentMore } from "@codemirror/commands";
+import { bracketMatching, HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { sql } from "@codemirror/lang-sql";
 import { python } from "@codemirror/lang-python";
 import { tags } from "@lezer/highlight";
@@ -41,10 +41,24 @@ const editorTheme = EditorView.theme({
   ".cm-placeholder": { color: "#a1a1aa" },
 });
 
+// Python indents by 4 spaces, like Jupyter: Tab adds 4 spaces (or indents the selected lines),
+// Shift+Tab takes them away, and Enter keeps the indent (adding 4 after a line ending in ":").
+const pythonTab = [
+  {
+    key: "Tab",
+    run: (view: EditorView) => {
+      if (!view.state.selection.ranges.every((r) => r.empty)) return indentMore(view);
+      view.dispatch(view.state.replaceSelection("    "));
+      return true;
+    },
+    shift: indentLess,
+  },
+];
+
 // What changes per language: the colors, the empty-editor text, and Tab (Python needs it for indenting)
 const LANGUAGES = {
-  sql: { support: sql, placeholder: "Type your SQL here…", keys: [] },
-  python: { support: python, placeholder: "Type your Python here…", keys: [indentWithTab] },
+  sql: { support: () => [sql()], placeholder: "Type your SQL here…", keys: [] },
+  python: { support: () => [python(), indentUnit.of("    ")], placeholder: "Type your Python here…", keys: pythonTab },
 };
 
 // Code editor with line numbers and colors. Ctrl/Cmd+Enter runs the code.

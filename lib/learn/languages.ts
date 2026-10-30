@@ -29,3 +29,14 @@ export const isOpen = (language: LearnLanguage) => language.released || PREVIEW.
 export function findReleasedLanguage(slug: string): LearnLanguage | null {
   return LEARN_LANGUAGES.find((l) => l.slug === slug && isOpen(l)) ?? null;
 }
+
+// Python has two lesson views: "lessons" (one task at a time, lib/learn/python/lessons/) and
+// "notebook" (one scrolling notebook per lesson, lib/learn/python/notebook/).
+// The live site uses PYTHON_VIEW_LIVE. To try the other view on this computer, set
+// NEXT_PUBLIC_PYTHON_VIEW in .env.local (it's set to "notebook" there).
+export type PythonView = "lessons" | "notebook";
+const PYTHON_VIEW_LIVE: PythonView = "lessons";
+export const PYTHON_VIEW: PythonView =
+  process.env.NEXT_PUBLIC_PYTHON_VIEW === "notebook" || process.env.NEXT_PUBLIC_PYTHON_VIEW === "lessons"
+    ? process.env.NEXT_PUBLIC_PYTHON_VIEW
+    : PYTHON_VIEW_LIVE;

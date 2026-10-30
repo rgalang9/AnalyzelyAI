@@ -1,0 +1,111 @@
+{
+  "id": "py-11",
+  "level": 2,
+  "title": "loc and iloc",
+  "datasets": [
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Back to the games! This lesson shows two tools that pick rows and columns at the same time: **iloc** (by position) and **loc** (by label or condition)."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the games table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"games.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "Every row has a label on the left, called the **index**: 0, 1, 2 and so on. `df.iloc[0]` picks a row by its **position**, like a list, so `df.iloc[0]` is the first row. Notice the **square** brackets."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the first row. It shows sideways, with the column names on the left.",
+      "code": "df.iloc[0]"
+    },
+    {
+      "type": "predict",
+      "prompt": "What will this print? Pick one, then press Run.",
+      "code": "print(df.iloc[1][\"title\"])",
+      "options": [
+        "Minecraft",
+        "Fortnite",
+        "An error"
+      ],
+      "answer": "Fortnite"
+    },
+    {
+      "type": "markdown",
+      "text": "iloc can pick several rows and columns: `df.iloc[rows, columns]`. `:3` means \"from the start up to 3, not including 3\", so positions 0, 1 and 2. `df.iloc[:3, :2]` is the first 3 rows and the first 2 columns."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the first 3 rows and first 2 columns.",
+      "code": "df.iloc[:3, :2]"
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ so this shows the first 5 rows and the first 3 columns, then press Run.",
+      "code": "df.iloc[___, :3]",
+      "answer": "df.iloc[:5, :3]",
+      "compare": "table",
+      "hints": [
+        "Use the same pattern as the columns part: a colon, then the number.",
+        ":5"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "**loc** picks by label or condition: `df.loc[rows, columns]`. The rows part can be a condition, and the columns part a list of names. So `df.loc[df[\"genre\"] == \"Shooter\", [\"title\", \"price\"]]` filters and picks columns in one step."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to show the title and price of the Shooter games.",
+      "code": "df.loc[df[\"genre\"] == \"Shooter\", [\"title\", \"price\"]]"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: using loc, show the title and rating of the RPG games.",
+      "answer": "df.loc[df[\"genre\"] == \"RPG\", [\"title\", \"rating\"]]",
+      "compare": "table",
+      "require": [
+        "loc"
+      ],
+      "hints": [
+        "Copy the cell above, then change Shooter to RPG and price to rating.",
+        "df.loc[df[\"genre\"] == \"RPG\", [\"title\", \"rating\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Using loc, show the title and genre of every free game (price 0).",
+      "answer": "df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]]",
+      "compare": "table",
+      "require": [
+        "loc"
+      ],
+      "hints": [
+        "Condition first: df[\"price\"] == 0. Then a comma and the list of columns.",
+        "df.loc[df[\"price\"] == 0, [\"title\", \"genre\"]]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "loc can also pick one cell by its row **label** and column name: `df.loc[0, \"title\"]` is the title in the row labelled 0."
+    },
+    {
+      "type": "predict",
+      "prompt": "What will this print? Remember, labels start at 0. Pick one, then press Run.",
+      "code": "print(df.loc[2, \"title\"])",
+      "options": [
+        "Fortnite",
+        "Super Mario Odyssey",
+        "Mario Kart 8 Deluxe"
+      ],
+      "answer": "Super Mario Odyssey"
+    }
+  ],
+  "recap": "iloc picks by position (like a list), and :3 means the first 3. loc picks by label or condition, with df.loc[rows, columns]."
+}

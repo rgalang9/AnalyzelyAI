@@ -48,7 +48,7 @@ const TOUR_LABELS: Record<PyTourTarget, string> = {
 const BLANK = "___";
 const SERVER_STATUS: PyStatus = { state: "idle", text: "", pct: 0 };
 
-function usePythonStatus() {
+export function usePythonStatus() {
   return useSyncExternalStore(subscribePythonStatus, getPythonStatus, () => SERVER_STATUS);
 }
 
@@ -442,7 +442,7 @@ function TourSpot({
 }
 
 // Loading bar while Python downloads or restarts (hidden once it's ready)
-function PythonStatusBar({ status }: { status: PyStatus }) {
+export function PythonStatusBar({ status }: { status: PyStatus }) {
   if (status.state === "ready" || status.state === "idle") return null;
   if (status.state === "failed") {
     return <p className="border-b border-zinc-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">{status.text}</p>;
@@ -461,7 +461,7 @@ function PythonStatusBar({ status }: { status: PyStatus }) {
 }
 
 // Fill-in-the-blank: the code is read-only, with a small box in each ___ to type into
-function FillCode({
+export function FillCode({
   code,
   blanks,
   onChange,
@@ -508,7 +508,7 @@ function FillCode({
 }
 
 // What Python produced: printed text, a table, or another value (or a plain-words error)
-function PyOutputView({ output, empty }: { output: PyOutput | null; empty: string }) {
+export function PyOutputView({ output, empty }: { output: PyOutput | null; empty: string }) {
   if (!output) return <p className="p-4 text-sm text-zinc-500">{empty}</p>;
   const nothing = !output.stdout && !output.table && !output.value && !output.error && output.charts.length === 0;
   return (

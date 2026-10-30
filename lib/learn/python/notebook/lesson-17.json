@@ -1,0 +1,96 @@
+{
+  "id": "py-17",
+  "level": 3,
+  "title": "Duplicates and saving",
+  "datasets": [
+    "club_signups"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Look closely at the club sign-ups again: some people signed up twice, so their rows appear twice. Copies like this would count them double. This lesson shows how to find and remove them, and then how to save your clean data."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load all 8 sign-ups. Can you spot the repeated rows?",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"club_signups.csv\")\ndf"
+    },
+    {
+      "type": "markdown",
+      "text": "`duplicated()` marks a row True if it's an exact copy of an earlier row. The first time a row appears is False, and only the later copies are True. Add `.sum()` to count them."
+    },
+    {
+      "type": "predict",
+      "prompt": "Leo and Ava each appear twice. What will this print? Pick one, then press Run.",
+      "code": "print(df.duplicated().sum())",
+      "options": [
+        "0",
+        "2",
+        "4"
+      ],
+      "answer": "2"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show only the duplicate rows. Put df.duplicated() inside df[ ], just like a filter.",
+      "answer": "df[df.duplicated()]",
+      "compare": "table",
+      "require": [
+        "duplicated"
+      ],
+      "hints": [
+        "df.duplicated() gives True or False for each row, so it works as a filter.",
+        "df[df.duplicated()]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "`drop_duplicates()` removes the copies and keeps the first of each. To keep the result, store it back in df: `df = df.drop_duplicates()`."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the action that removes the duplicates. Then press Run to print how many rows are left.",
+      "code": "df = df.___()\nprint(len(df))",
+      "answer": "df = df.drop_duplicates()\nprint(len(df))",
+      "compare": "print",
+      "hints": [
+        "drop + duplicates, joined by an underscore.",
+        "drop_duplicates"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Clean data is worth saving. `df.to_csv(\"file.csv\", index=False)` saves df as a CSV file. **index=False** stops pandas from also saving the row labels (0, 1, 2...) as an extra column. To check the file, read it back with `pd.read_csv()`."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: save df as clean_signups.csv without the index. Then, on a second line, read the file back to check it.",
+      "answer": "df.to_csv(\"clean_signups.csv\", index=False)\npd.read_csv(\"clean_signups.csv\")",
+      "compare": "table",
+      "require": [
+        "to_csv"
+      ],
+      "hints": [
+        "Line 1: df.to_csv(\"clean_signups.csv\", index=False). Line 2: pd.read_csv(\"clean_signups.csv\")",
+        "df.to_csv(\"clean_signups.csv\", index=False)\npd.read_csv(\"clean_signups.csv\")"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "This saves WITHOUT index=False, then reads the file back. What will its first column be called? Pick one, then press Run.",
+      "code": "df.to_csv(\"oops.csv\")\nprint(pd.read_csv(\"oops.csv\").columns[0])",
+      "options": [
+        "id",
+        "Unnamed: 0",
+        "name"
+      ],
+      "answer": "Unnamed: 0"
+    },
+    {
+      "type": "markdown",
+      "text": "The row labels got saved as a nameless extra column, which pandas calls **Unnamed: 0**. If you ever see that column, the file was saved without index=False."
+    }
+  ],
+  "recap": "duplicated() finds copies and drop_duplicates() removes them. to_csv(\"file.csv\", index=False) saves your clean data, and forgetting index=False adds an Unnamed: 0 column."
+}

@@ -1,0 +1,82 @@
+{
+  "id": "py-06",
+  "level": 1,
+  "title": "Review: The Sneaker Store",
+  "datasets": [
+    "sneakers"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Level 1 review!** You've been hired by a sneaker store. Its data is in sneakers.csv: each row is one shoe, with its name, brand, category, release year, price and how many are in stock. There's nothing new here, just everything from Level 1. Scroll up to earlier lessons if you get stuck."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the sneakers table into df.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"sneakers.csv\")\ndf.head()"
+    },
+    {
+      "type": "predict",
+      "prompt": "How big is the table? Pick one, then press Run.",
+      "code": "print(df.shape)",
+      "options": [
+        "(12, 7)",
+        "(7, 12)",
+        "(5, 7)"
+      ],
+      "answer": "(12, 7)"
+    },
+    {
+      "type": "write",
+      "prompt": "Show the first 4 shoes.",
+      "answer": "df.head(4)",
+      "compare": "table",
+      "require": [
+        "head"
+      ],
+      "hints": [
+        "Use head() with a number.",
+        "df.head(4)"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Show the name, brand and price columns, for the last 3 shoes only.",
+      "answer": "df[[\"name\", \"brand\", \"price\"]].tail(3)",
+      "compare": "table",
+      "require": [
+        "tail"
+      ],
+      "hints": [
+        "Pick the 3 columns with double brackets, then add .tail() with a number.",
+        "df[[\"name\", \"brand\", \"price\"]].tail(3)"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "This shows the summary of the price column. Roughly what is the average (mean) price? Pick a guess, then press Run.",
+      "code": "df[\"price\"].describe()",
+      "options": [
+        "About 100",
+        "About 124",
+        "About 190"
+      ],
+      "answer": "About 124"
+    },
+    {
+      "type": "write",
+      "prompt": "The manager wants the stock column called in_stock. Rename it, then show only the name and in_stock columns for the first 5 shoes.",
+      "answer": "df.rename(columns={\"stock\": \"in_stock\"})[[\"name\", \"in_stock\"]].head()",
+      "compare": "table",
+      "require": [
+        "rename"
+      ],
+      "hints": [
+        "Rename first, then pick the 2 columns with double brackets, then add .head(). Use the new name, in_stock.",
+        "df.rename(columns={\"stock\": \"in_stock\"})[[\"name\", \"in_stock\"]].head()"
+      ]
+    }
+  ],
+  "recap": "Level 1 done! You can load a table, check its size and summary, pick columns, and use lists and dictionaries. Next up: filtering rows."
+}

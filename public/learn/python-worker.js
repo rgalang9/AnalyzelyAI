@@ -6,6 +6,8 @@
 //               { type: "warm" }                   load pandas quietly in the background
 //               { type: "run", id, files, setup, code, answer?, compare? }
 //               { type: "tables", id, files, setup }   the tables the setup makes, for the side panel
+//               { type: "cell", id, files, setup, code, answer?, compare?, reset? }   notebook cells: one
+//                 shared session, so variables carry over ("reset" starts a fresh one and runs setup)
 // Messages out: { type: "progress", text, pct } · { type: "ready" } · { type: "failed", message }
 //               { type: "started", id } · { type: "result", id, output, expected, check }
 //               { type: "tables", id, tables }
@@ -212,10 +214,11 @@ def _is_chart_object(value):
     first = value.flat[0] if type(value).__name__ == "ndarray" and value.size else value
     return (type(first).__module__ or "").startswith("matplotlib")
 
-def _run(setup, code):
-    namespace = {"__name__": "__main__"}
+def _run(setup, code, namespace=None):
+    if namespace is None:
+        namespace = {"__name__": "__main__"}
     printed = io.StringIO()
-    out = {"stdout": "", "table": None, "value": None, "error": None, "charts": []}
+    out = {"stdout": "", "table": None, "value": None, "error": None, "errorKind": None, "charts": []}
     value = None
     charts = []
     real_input = builtins.input
@@ -234,6 +237,7 @@ def _run(setup, code):
                 out["value"] = repr(value)
     except BaseException as error:
         out["error"] = _friendly(error)
+        out["errorKind"] = type(error).__name__
         value = None
     finally:
         builtins.input = real_input
@@ -269,8 +273,25 @@ def _check_print(mine, expected):
         return False, f"Your code printed {len(a)} line{'s' if len(a) != 1 else ''}, but we're looking for {n} line{'s' if n != 1 else ''}."
     for line_a, line_b in zip(a, b):
         if len(line_a) != len(line_b) or not all(_same_token(x, y) for x, y in zip(line_a, line_b)):
-            return False, "Your output is a bit different from the expected output. Compare the two."
+            return False, _print_difference(" ".join(line_a), " ".join(line_b))
     return True, ""
+
+def _print_difference(mine, wanted):
+    # Says what's off without giving the answer away
+    shown = mine if len(mine) <= 60 else mine[:57] + "..."
+    if mine.lower() == wanted.lower():
+        return f"You printed {shown}. Check the capital letters."
+    squash = lambda text: re.sub(r"[\W_]+", "", text.lower())
+    if squash(mine) == squash(wanted):
+        return f"You printed {shown}. Check the spaces and punctuation."
+    def number(text):
+        try:
+            return float(text)
+        except ValueError:
+            return None
+    if number(mine) is not None and number(wanted) is not None:
+        return f"You printed {shown}, but that's not the number we're looking for. Check the maths."
+    return f"You printed {shown}, but that's not quite what we're looking for."
 
 def _plural(n, word):
     return f"{n} {word}{'' if n == 1 else 's'}"
@@ -392,6 +413,66 @@ def az_run(setup, code, answer, compare):
             result["check"] = {"match": match, "reason": reason}
     return json.dumps(result)
 
+# ---------- Notebook cells: one shared session ----------
+
+_session = None
+
+def _copy_session(namespace):
+    # A copy for trying the lesson's answer, so checking it can't change the learner's variables
+    pd = sys.modules.get("pandas")
+    copy = {}
+    for name, value in namespace.items():
+        copy[name] = value.copy() if pd is not None and isinstance(value, (pd.DataFrame, pd.Series)) else value
+    return copy
+
+QUOTES = "Put the name in quotes so Python knows it's text."
+
+def az_cell(setup, code, answer, compare, reset, variable=None):
+    global _session
+    result = {"output": None, "expected": None, "check": None}
+    if reset or _session is None:
+        _session = {"__name__": "__main__"}
+        if setup.strip():
+            out, _, _ = _run(setup, "", _session)
+            if out["error"]:
+                result["output"] = out
+                return json.dumps(result)
+    if compare == "any_text":
+        # Any text will do: the named variable just has to hold some (non-empty) text
+        mine, _, _ = _run("", code, _session)
+        result["output"] = mine
+        held = _session.get(variable)
+        if mine["errorKind"] == "NameError" or (not mine["error"] and not isinstance(held, str)):
+            result["check"] = {"match": False, "reason": QUOTES}
+        elif mine["error"]:
+            result["check"] = {"match": False, "reason": mine["error"]}
+        elif not held.strip():
+            result["check"] = {"match": False, "reason": "Type a name between the quotes."}
+        else:
+            result["check"] = {"match": True, "reason": ""}
+        return json.dumps(result)
+    if answer is not None:
+        expected, expected_value, expected_charts = _run("", answer, _copy_session(_session))
+        result["expected"] = expected
+    mine, mine_value, mine_charts = _run("", code, _session)
+    result["output"] = mine
+    if answer is not None:
+        if mine["error"]:
+            result["check"] = {"match": False, "reason": mine["error"]}
+        elif expected["error"]:
+            result["check"] = {"match": False, "reason": "The lesson's own answer didn't run: " + expected["error"]}
+        else:
+            if compare == "print":
+                match, reason = _check_print(mine, expected)
+            elif compare == "value":
+                match, reason = _check_value(mine, mine_value, expected_value)
+            elif compare == "chart":
+                match, reason = _check_chart(mine_charts, expected_charts)
+            else:
+                match, reason = _check_table(mine_value, expected_value)
+            result["check"] = {"match": match, "reason": reason}
+    return json.dumps(result)
+
 def az_tables(setup):
     # Every table (DataFrame) the setup makes, in the order it makes them, for the side panel
     namespace = {"__name__": "__main__"}
@@ -458,6 +539,18 @@ async function run({ id, files, setup, code, answer, compare }) {
   }
 }
 
+async function cell({ id, files, setup, code, answer, compare, reset, variable }) {
+  await prepare(files, [setup, code, answer ?? ""]);
+  self.postMessage({ type: "started", id });
+  const azCell = pyodide.globals.get("az_cell");
+  try {
+    const result = JSON.parse(azCell(setup, code, answer ?? null, compare ?? null, !!reset, variable ?? null));
+    self.postMessage({ type: "result", id, ...result });
+  } finally {
+    azCell.destroy();
+  }
+}
+
 async function tables({ id, files, setup }) {
   await prepare(files, [setup]);
   const azTables = pyodide.globals.get("az_tables");
@@ -479,9 +572,9 @@ self.onmessage = (event) => {
   } else if (msg.type === "warm") {
     // Not in the run queue, so runs don't wait for it
     pyodide?.loadPackage(["pandas"]).catch(() => {});
-  } else if (msg.type === "run") {
+  } else if (msg.type === "run" || msg.type === "cell") {
     queue = queue.then(() =>
-      run(msg).catch((err) =>
+      (msg.type === "cell" ? cell(msg) : run(msg)).catch((err) =>
         self.postMessage({
           type: "result",
           id: msg.id,

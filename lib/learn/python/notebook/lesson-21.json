@@ -1,0 +1,93 @@
+{
+  "id": "py-21",
+  "level": 4,
+  "title": "Stacking tables with concat",
+  "datasets": [
+    "deliveries",
+    "deliveries_april"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "merge() joins tables **side by side**. Sometimes you need to stack them **on top of each other** instead, like when you get one file per month with the same columns."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load January–March into jan_mar and April into april. The cell shows april.",
+      "code": "import pandas as pd\njan_mar = pd.read_csv(\"deliveries.csv\")\napril = pd.read_csv(\"deliveries_april.csv\")\napril"
+    },
+    {
+      "type": "markdown",
+      "text": "`pd.concat([jan_mar, april])` stacks the tables, in the order of the list. Notice the square brackets: concat takes a **list** of tables."
+    },
+    {
+      "type": "predict",
+      "prompt": "jan_mar has 10 orders and april has 4. What will this print? Pick one, then press Run.",
+      "code": "print(len(pd.concat([jan_mar, april])))",
+      "options": [
+        "4",
+        "10",
+        "14"
+      ],
+      "answer": "14"
+    },
+    {
+      "type": "predict",
+      "prompt": "Each table kept its own row labels. What's the label of the last row in the stacked table? Pick one, then press Run.",
+      "code": "print(pd.concat([jan_mar, april]).index[-1])",
+      "options": [
+        "13",
+        "3",
+        "14"
+      ],
+      "answer": "3"
+    },
+    {
+      "type": "markdown",
+      "text": "The labels go 0–9 and then start again at 0–3, which is confusing. Add `ignore_index=True` to give fresh labels running from 0 to 13."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the setting that makes the row labels run from 0 to 13, then press Run.",
+      "code": "pd.concat([jan_mar, april], ___=True)",
+      "answer": "pd.concat([jan_mar, april], ignore_index=True)",
+      "compare": "table",
+      "hints": [
+        "ignore + index, joined by an underscore.",
+        "ignore_index"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Store the stacked table in a variable so you can keep working with it, like `all_orders = pd.concat(...)`."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: stack the two tables with ignore_index=True and store them in all_orders. Then show the last 5 rows.",
+      "answer": "all_orders = pd.concat([jan_mar, april], ignore_index=True)\nall_orders.tail(5)",
+      "compare": "table",
+      "require": [
+        "concat"
+      ],
+      "hints": [
+        "Line 1: all_orders = pd.concat([...], ignore_index=True). Line 2: all_orders.tail(5)",
+        "all_orders = pd.concat([jan_mar, april], ignore_index=True)\nall_orders.tail(5)"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: using all_orders, show the total sales per restaurant, biggest first.",
+      "answer": "all_orders.groupby(\"restaurant\")[\"total\"].sum().sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby restaurant, pick total, sum, then sort biggest first.",
+        "all_orders.groupby(\"restaurant\")[\"total\"].sum().sort_values(ascending=False)"
+      ]
+    }
+  ],
+  "recap": "pd.concat([a, b]) stacks tables on top of each other. Add ignore_index=True for fresh row labels."
+}

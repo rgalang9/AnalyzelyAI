@@ -27,7 +27,8 @@ export type PyRunRequest = {
   setup: string;
   code: string;
   answer?: string; // when given, the answer runs too and the two are compared
-  compare?: "print" | "table" | "value" | "chart";
+  compare?: "print" | "table" | "value" | "chart" | "any_text";
+  variable?: string; // compare "any_text": the variable that must hold some text
 };
 // A table the lesson's setup makes (like df, or games and studios), for the side panel
 export type PyTableInfo = { name: string; columns: { name: string; type: string }[]; data: PyTable };
@@ -49,6 +50,7 @@ let status: PyStatus = { state: "idle", text: "", pct: 0 };
 let wantPandas = false;
 let wantCharts = false;
 let nextId = 1;
+let session = 0; // goes up each time a fresh Python starts (notebook variables are gone then)
 const pending = new Map<number, Pending>();
 const tableJobs = new Map<number, TablesJob>();
 const listeners = new Set<(status: PyStatus) => void>();
@@ -59,6 +61,7 @@ function setStatus(next: PyStatus) {
 }
 
 function start(restarting: boolean) {
+  session++;
   worker = new Worker("/learn/python-worker.js", { type: "module" });
   setStatus({ state: restarting ? "restarting" : "loading", text: restarting ? "Restarting Python…" : "Downloading Python…", pct: 5 });
   worker.onmessage = (event) => {
@@ -132,11 +135,26 @@ function restart(reason: "timeout" | "stop") {
 
 // Runs code (and the answer, if given). Code that runs longer than 10 seconds is stopped.
 export function runPython(request: PyRunRequest): Promise<PyRunResult> {
+  return send("run", request);
+}
+
+// Notebook cells: like runPython, but every cell shares one Python session, so variables carry
+// over. `reset` starts a fresh session (and runs `setup`) first.
+export function runCell(request: PyRunRequest & { reset?: boolean }): Promise<PyRunResult> {
+  return send("cell", request);
+}
+
+// Which Python session is running: a different number means Python restarted (Stop, time limit)
+export function getPythonSession() {
+  return session;
+}
+
+function send(type: "run" | "cell", request: PyRunRequest & { reset?: boolean }): Promise<PyRunResult> {
   preloadPython();
   const id = nextId++;
   return new Promise((resolve) => {
     pending.set(id, { resolve });
-    worker!.postMessage({ type: "run", id, ...request });
+    worker!.postMessage({ type, id, ...request });
   });
 }
 

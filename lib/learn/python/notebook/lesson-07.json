@@ -1,0 +1,123 @@
+{
+  "id": "py-07",
+  "level": 2,
+  "title": "Filtering rows",
+  "datasets": [
+    "players"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Welcome to Level 2!** New dataset: **players**, the people who play the games. Each row is one player, with their username, country, signup date and total hours played. This lesson is about **filtering**: keeping only the rows you want."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the players table into df.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"players.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "Filtering starts with a **condition**. `df[\"hours_played\"] > 200` checks every row and answers **True** or **False** for each: is this player's hours_played more than 200?"
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see True or False for every player.",
+      "code": "df[\"hours_played\"] > 200"
+    },
+    {
+      "type": "markdown",
+      "text": "Now put that condition inside `df[ ]`. pandas keeps only the rows where the answer was True: `df[df[\"hours_played\"] > 200]`. Read it as \"df, where hours_played is more than 200\"."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to keep only the players with more than 200 hours.",
+      "code": "df[df[\"hours_played\"] > 200]"
+    },
+    {
+      "type": "markdown",
+      "text": "You can compare with `>` (more than), `<` (less than), `>=` (at least), `<=` (at most), `==` (equal to) and `!=` (not equal to). Careful: **two** equals signs `==` **compares**, while one `=` **stores** a value, like in Lesson 1."
+    },
+    {
+      "type": "predict",
+      "prompt": "How many players have more than 300 hours? Pick one, then press Run.",
+      "code": "df[df[\"hours_played\"] > 300]",
+      "options": [
+        "3",
+        "4",
+        "10"
+      ],
+      "answer": "3"
+    },
+    {
+      "type": "markdown",
+      "text": "To compare with text, put the text in quotes. It must match exactly, capital letters included, so \"usa\" won't match \"USA\"."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the sign that means \"equal to\" so only players from the USA show, then press Run.",
+      "code": "df[df[\"country\"] ___ \"USA\"]",
+      "answer": "df[df[\"country\"] == \"USA\"]",
+      "compare": "table",
+      "hints": [
+        "You're comparing, not storing, so it's two signs.",
+        "=="
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "!= means \"not equal to\". How many players are NOT from the USA? Pick one, then press Run.",
+      "code": "df[df[\"country\"] != \"USA\"]",
+      "options": [
+        "3",
+        "7",
+        "10"
+      ],
+      "answer": "7"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show all the players from Japan. Follow the same pattern as the USA cell above.",
+      "answer": "df[df[\"country\"] == \"Japan\"]",
+      "compare": "table",
+      "require": [
+        "=="
+      ],
+      "hints": [
+        "df[df[\"column\"] == \"value\"], with Japan in quotes.",
+        "df[df[\"country\"] == \"Japan\"]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Show the players with fewer than 100 hours played.",
+      "answer": "df[df[\"hours_played\"] < 100]",
+      "compare": "table",
+      "require": [
+        "<"
+      ],
+      "hints": [
+        "Fewer than means <. Numbers don't need quotes.",
+        "df[df[\"hours_played\"] < 100]"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "After filtering, you can pick columns too. Filter first, then add the double brackets from Lesson 4: `df[df[\"country\"] == \"UK\"][[\"username\", \"country\"]]`."
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show just the username and hours_played columns, for players with more than 250 hours.",
+      "answer": "df[df[\"hours_played\"] > 250][[\"username\", \"hours_played\"]]",
+      "compare": "table",
+      "require": [
+        ">"
+      ],
+      "hints": [
+        "First filter: df[df[\"hours_played\"] > 250]. Then add [[\"username\", \"hours_played\"]] straight after it.",
+        "df[df[\"hours_played\"] > 250][[\"username\", \"hours_played\"]]"
+      ]
+    }
+  ],
+  "recap": "A condition gives True or False for every row, and df[condition] keeps the True rows. == compares and = stores. Text in conditions needs quotes and must match exactly."
+}

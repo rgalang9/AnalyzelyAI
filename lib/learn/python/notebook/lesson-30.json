@@ -1,0 +1,83 @@
+{
+  "id": "py-30",
+  "level": 5,
+  "title": "Method chaining",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "You've already chained steps, like `df.groupby(...).mean().round(2)`. Pros write whole analyses as one readable **chain**, where each step works on the result of the step before. This lesson shows how to keep long chains tidy."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the deliveries table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "Long chains get hard to read on one line. Wrap the whole chain in **round brackets**, and you can put each step on its own line. Python treats it as one piece of code, and it reads top to bottom like a recipe."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run. The chain drops orders with no tip, sorts by tip (biggest first), then picks 2 columns.",
+      "code": "(\n    df.dropna(subset=[\"tip\"])\n    .sort_values(\"tip\", ascending=False)\n    [[\"customer\", \"tip\"]]\n)"
+    },
+    {
+      "type": "predict",
+      "prompt": "head(10) asks for up to 10 rows, but 3 of the 10 orders have no tip. How many rows will this show? Pick one, then press Run.",
+      "code": "df.dropna(subset=[\"tip\"]).head(10)",
+      "options": [
+        "3",
+        "7",
+        "10"
+      ],
+      "answer": "7"
+    },
+    {
+      "type": "markdown",
+      "text": "To add a new column **inside** a chain, use `assign()`. `.assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"])` adds a with_tip column. The new column's name goes before the `=`, and `lambda d:` means \"the table at this point in the chain\"."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the sorting action so the chain sorts by with_tip, biggest first, then press Run.",
+      "code": "df.assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"]).___(\"with_tip\", ascending=False)",
+      "answer": "df.assign(with_tip=lambda d: d[\"total\"] + d[\"tip\"]).sort_values(\"with_tip\", ascending=False)",
+      "compare": "table",
+      "hints": [
+        "The sorting action from Lesson 9.",
+        "sort_values"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn, in one chain: the average delivery minutes per restaurant, rounded to 1 decimal, fastest first.",
+      "answer": "df.groupby(\"restaurant\")[\"minutes\"].mean().round(1).sort_values()",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby, pick minutes, mean, round(1), then sort_values(). Smallest first is the default.",
+        "df.groupby(\"restaurant\")[\"minutes\"].mean().round(1).sort_values()"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one, in one chain: keep orders over 30 minutes, add per_minute (total ÷ minutes, rounded to 2) with assign, sort by per_minute biggest first, and show the customer and per_minute columns. Wrap it in round brackets and put each step on its own line.",
+      "starter": "(\n    df[df[\"minutes\"] > 30]\n    \n)",
+      "answer": "(\n    df[df[\"minutes\"] > 30]\n    .assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2))\n    .sort_values(\"per_minute\", ascending=False)\n    [[\"customer\", \"per_minute\"]]\n)",
+      "compare": "table",
+      "require": [
+        "assign"
+      ],
+      "hints": [
+        "4 steps: filter, .assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2)), .sort_values(...), then pick the 2 columns.",
+        "(\n    df[df[\"minutes\"] > 30]\n    .assign(per_minute=lambda d: (d[\"total\"] / d[\"minutes\"]).round(2))\n    .sort_values(\"per_minute\", ascending=False)\n    [[\"customer\", \"per_minute\"]]\n)"
+      ]
+    }
+  ],
+  "recap": "Method chaining writes an analysis as one recipe of steps. Wrap it in round brackets to put each step on its own line, and use assign() to add columns along the way."
+}

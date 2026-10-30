@@ -1,0 +1,106 @@
+{
+  "id": "py-09",
+  "level": 2,
+  "title": "Sorting",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "New dataset: **deliveries** from a food delivery app. Each row is one order: the customer, restaurant, date, total, tip and how many minutes the delivery took. Some tips are empty (NaN). This lesson is about **sorting**: putting rows in order."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the deliveries table.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf.head()"
+    },
+    {
+      "type": "markdown",
+      "text": "`df.sort_values(\"minutes\")` sorts the rows by the minutes column, from **smallest to biggest**. The column name goes in quotes inside the brackets."
+    },
+    {
+      "type": "predict",
+      "prompt": "Who had the fastest delivery? They'll be in the first row. Pick one, then press Run.",
+      "code": "df.sort_values(\"minutes\")",
+      "options": [
+        "Jay",
+        "Hiro",
+        "Ava"
+      ],
+      "answer": "Jay"
+    },
+    {
+      "type": "markdown",
+      "text": "Add `ascending=False` inside the brackets to sort **biggest first**. Ascending means going up, so False flips it. Capital F, no quotes."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ so the orders sort by total, biggest first, then press Run.",
+      "code": "df.sort_values(\"total\", ascending=___)",
+      "answer": "df.sort_values(\"total\", ascending=False)",
+      "compare": "table",
+      "hints": [
+        "It's True or False, with a capital letter and no quotes.",
+        "False"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "Text columns sort **A to Z**. For example, `df.sort_values(\"customer\")` puts Ava first."
+    },
+    {
+      "type": "markdown",
+      "text": "Shortcuts: `df.nlargest(3, \"total\")` gives the 3 rows with the biggest totals, and `df.nsmallest(3, \"total\")` gives the 3 smallest. The number comes first, then the column name."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the 3 cheapest orders.",
+      "code": "df.nsmallest(3, \"total\")"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: show the 3 slowest deliveries (the ones that took the most minutes).",
+      "answer": "df.nlargest(3, \"minutes\")",
+      "compare": "table",
+      "hints": [
+        "Slowest means the biggest minutes, so use nlargest.",
+        "df.nlargest(3, \"minutes\")"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "To sort by two columns, use lists. `df.sort_values([\"restaurant\", \"total\"])` sorts by restaurant first, then by total within each restaurant. Add `ascending=[True, False]` to sort the first column A to Z and the second biggest first."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to sort by restaurant, then by total within each restaurant.",
+      "code": "df.sort_values([\"restaurant\", \"total\"])"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: sort by restaurant A to Z, and within each restaurant by total, biggest first.",
+      "answer": "df.sort_values([\"restaurant\", \"total\"], ascending=[True, False])",
+      "compare": "table",
+      "require": [
+        "ascending"
+      ],
+      "hints": [
+        "Copy the cell above, then add ascending=[True, False] inside the brackets.",
+        "df.sort_values([\"restaurant\", \"total\"], ascending=[True, False])"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: show just the customer and tip columns for the 3 biggest tips.",
+      "answer": "df.nlargest(3, \"tip\")[[\"customer\", \"tip\"]]",
+      "compare": "table",
+      "hints": [
+        "Use nlargest on tip, then pick the 2 columns with double brackets.",
+        "df.nlargest(3, \"tip\")[[\"customer\", \"tip\"]]"
+      ]
+    }
+  ],
+  "recap": "sort_values() sorts smallest first, and ascending=False flips it. Use lists to sort by two columns. nlargest() and nsmallest() give the top or bottom rows."
+}

@@ -1,0 +1,105 @@
+{
+  "id": "py-26",
+  "level": 4,
+  "title": "Review: The Game Store Report",
+  "datasets": [
+    "sales",
+    "players",
+    "games"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Level 4 review!** The game store wants a report. You have 3 tables: **sales** (who bought which game, and when), **players** and **games**. Each sale only stores IDs: player_id says who bought it, and game_id says which game. Use everything from Level 4: merging, join types, dates and charts."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load the 3 tables. The cell shows sales.",
+      "code": "import pandas as pd\nsales = pd.read_csv(\"sales.csv\")\nplayers = pd.read_csv(\"players.csv\")\ngames = pd.read_csv(\"games.csv\")\nsales"
+    },
+    {
+      "type": "predict",
+      "prompt": "sales has 13 rows, and every sale's game is in games. How many rows will this merge have? Pick one, then press Run.",
+      "code": "sales.merge(games, on=\"game_id\")",
+      "options": [
+        "13",
+        "15",
+        "28"
+      ],
+      "answer": "13"
+    },
+    {
+      "type": "markdown",
+      "text": "You can chain merges to bring in all 3 tables at once: `sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")`. Each sale now has the player's details and the game's details on the same row."
+    },
+    {
+      "type": "write",
+      "prompt": "Step 1: chain the two merges and store the result in full. Then show the username, title and sale_date columns.",
+      "answer": "full = sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")\nfull[[\"username\", \"title\", \"sale_date\"]]",
+      "compare": "table",
+      "require": [
+        "merge"
+      ],
+      "hints": [
+        "Line 1: full = the chained merge. Line 2: pick the 3 columns.",
+        "full = sales.merge(players, on=\"player_id\").merge(games, on=\"game_id\")\nfull[[\"username\", \"title\", \"sale_date\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 2: using full, show how much each player spent in total, rounded to 2 decimals, biggest spender first.",
+      "answer": "full.groupby(\"username\")[\"price\"].sum().round(2).sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "groupby username, sum the price, round(2), then sort biggest first.",
+        "full.groupby(\"username\")[\"price\"].sum().round(2).sort_values(ascending=False)"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 3: using full, show the total money spent per player country, rounded to 2 decimals, biggest first.",
+      "answer": "full.groupby(\"country\")[\"price\"].sum().round(2).sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Same as step 2, but group by country.",
+        "full.groupby(\"country\")[\"price\"].sum().round(2).sort_values(ascending=False)"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 4: find the players who never bought a game. Left join players to sales and store it in m, then show just the username column of the rows where sale_id is NaN.",
+      "answer": "m = players.merge(sales, on=\"player_id\", how=\"left\")\nm[m[\"sale_id\"].isna()][[\"username\"]]",
+      "compare": "table",
+      "require": [
+        "left",
+        "isna"
+      ],
+      "hints": [
+        "Line 1: players first, with how=\"left\". Line 2: filter where sale_id isna(), then pick [[\"username\"]].",
+        "m = players.merge(sales, on=\"player_id\", how=\"left\")\nm[m[\"sale_id\"].isna()][[\"username\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Final step: turn sale_date in full into real dates, then draw a bar chart of the number of sales per year.",
+      "answer": "full[\"sale_date\"] = pd.to_datetime(full[\"sale_date\"])\nfull.groupby(full[\"sale_date\"].dt.year)[\"sale_id\"].count().plot(kind=\"bar\")",
+      "compare": "chart",
+      "require": [
+        "to_datetime",
+        "plot"
+      ],
+      "hints": [
+        "Line 1: pd.to_datetime() like Lesson 22. Line 2: groupby full[\"sale_date\"].dt.year, count sale_id, then plot.",
+        "full[\"sale_date\"] = pd.to_datetime(full[\"sale_date\"])\nfull.groupby(full[\"sale_date\"].dt.year)[\"sale_id\"].count().plot(kind=\"bar\")"
+      ]
+    }
+  ],
+  "recap": "Level 4 done! You joined 3 tables, found missing matches with a left join, and charted sales over time. Next up: pro skills like functions and loops."
+}

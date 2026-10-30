@@ -6,7 +6,16 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import { LessonSchema, PythonLessonSchema, type Lesson, type LessonSummary, type PythonLesson } from "./lesson-types";
+import {
+  LessonSchema,
+  NotebookLessonSchema,
+  PythonLessonSchema,
+  type Lesson,
+  type LessonSummary,
+  type NotebookLesson,
+  type PythonLesson,
+} from "./lesson-types";
+import { PYTHON_VIEW } from "./languages";
 
 const learnDir = (language: string) => path.join(process.cwd(), "lib", "learn", language);
 
@@ -37,11 +46,24 @@ export function getLessons(language: string): Lesson[] {
 // One Python lesson file. A file with a mistake doesn't stop the course: it gets `problem`
 // (shown on its lesson page and in the lesson list) and `lesson` is null.
 export type PythonLessonEntry = LessonSummary & { lesson: PythonLesson | null };
+export type NotebookLessonEntry = LessonSummary & { lesson: NotebookLesson | null };
 
 // Python lessons are numbered by their file name (lesson-19.json is Lesson 19), so a gap in
 // the files doesn't renumber the lessons after it
 export function getPythonLessons(): PythonLessonEntry[] {
-  const dir = path.join(learnDir("python"), "lessons");
+  return readPythonFolder("lessons", PythonLessonSchema);
+}
+
+// The notebook view's lessons (lib/learn/python/notebook/)
+export function getNotebookLessons(): NotebookLessonEntry[] {
+  return readPythonFolder("notebook", NotebookLessonSchema);
+}
+
+function readPythonFolder<T extends { id: string; title: string; level: number }>(
+  folder: string,
+  schema: z.ZodType<T>
+): (LessonSummary & { lesson: T | null })[] {
+  const dir = path.join(learnDir("python"), folder);
   if (!existsSync(dir)) return [];
   const files = readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
@@ -53,18 +75,18 @@ export function getPythonLessons(): PythonLessonEntry[] {
     try {
       data = JSON.parse(readFileSync(path.join(dir, file), "utf8"));
     } catch (err) {
-      return broken(file, number, null, `This file isn't valid JSON: ${err instanceof Error ? err.message : err}`);
+      return broken(folder, file, number, null, `This file isn't valid JSON: ${err instanceof Error ? err.message : err}`);
     }
-    const parsed = PythonLessonSchema.safeParse(data);
-    if (!parsed.success) return broken(file, number, data, z.prettifyError(parsed.error));
+    const parsed = schema.safeParse(data);
+    if (!parsed.success) return broken(folder, file, number, data, z.prettifyError(parsed.error));
     const lesson = parsed.data;
     return { id: lesson.id, number, title: lesson.title, level: lesson.level, lesson };
   });
 }
 
-function broken(file: string, number: number, data: unknown, problem: string): PythonLessonEntry {
+function broken(folder: string, file: string, number: number, data: unknown, problem: string) {
   const d = (data ?? {}) as { id?: unknown; title?: unknown; level?: unknown };
-  const message = `python/lessons/${file} doesn't match the lesson format:\n${problem}`;
+  const message = `python/${folder}/${file} doesn't match the lesson format:\n${problem}`;
   console.error(message); // also shows in the build log
   return {
     id: typeof d.id === "string" ? d.id : file.replace(/\.json$/, ""),
@@ -77,7 +99,7 @@ function broken(file: string, number: number, data: unknown, problem: string): P
 }
 
 // Just the lesson-list details of a Python lesson
-export const pythonSummary = ({ id, number, title, level, problem }: PythonLessonEntry): LessonSummary => ({
+export const pythonSummary = ({ id, number, title, level, problem }: LessonSummary): LessonSummary => ({
   id,
   number,
   title,
@@ -87,7 +109,9 @@ export const pythonSummary = ({ id, number, title, level, problem }: PythonLesso
 
 // The lesson list for any language
 export function getLessonSummaries(language: string): LessonSummary[] {
-  if (language === "python") return getPythonLessons().map(pythonSummary);
+  if (language === "python") {
+    return (PYTHON_VIEW === "notebook" ? getNotebookLessons() : getPythonLessons()).map(pythonSummary);
+  }
   return summarize(getLessons(language));
 }
 

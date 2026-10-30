@@ -1,0 +1,113 @@
+{
+  "id": "py-15",
+  "level": 3,
+  "title": "Missing values",
+  "datasets": [
+    "deliveries"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "Real data has gaps. In the deliveries table, some customers left no tip, so their tip is **NaN** (empty). This lesson shows how to find gaps and decide what to do with them."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load all 10 deliveries. Spot the NaN tips.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"deliveries.csv\")\ndf"
+    },
+    {
+      "type": "markdown",
+      "text": "`isna()` checks every cell and answers True if it's missing. Add `.sum()` to count them, because each True counts as 1."
+    },
+    {
+      "type": "predict",
+      "prompt": "How many tips are missing? Pick one, then press Run.",
+      "code": "print(df[\"tip\"].isna().sum())",
+      "options": [
+        "0",
+        "3",
+        "10"
+      ],
+      "answer": "3"
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: count the missing values in every column at once. Use isna().sum() on the whole table df, not just one column.",
+      "answer": "df.isna().sum()",
+      "compare": "table",
+      "require": [
+        "isna"
+      ],
+      "hints": [
+        "Leave out the column part: start with df.isna()",
+        "df.isna().sum()"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "There are 2 ways to deal with gaps. **Remove** them: `df.dropna(subset=[\"tip\"])` drops the rows where tip is empty. Or **fill** them: `df[\"tip\"].fillna(0)` puts 0 in every empty tip."
+    },
+    {
+      "type": "fill",
+      "prompt": "Replace ___ with the action that removes the orders with no tip, then press Run.",
+      "code": "df.___(subset=[\"tip\"])",
+      "answer": "df.dropna(subset=[\"tip\"])",
+      "compare": "table",
+      "hints": [
+        "drop + na",
+        "dropna"
+      ]
+    },
+    {
+      "type": "markdown",
+      "text": "dropna() only showed a copy, so df still has all 10 orders. Now think about the **average** tip. `mean()` skips empty cells, so it averages only the 7 people who tipped."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to see the average tip, skipping the empty ones.",
+      "code": "print(round(df[\"tip\"].mean(), 2))"
+    },
+    {
+      "type": "markdown",
+      "text": "But a missing tip probably means \"no tip\", which is really $0. Filling the gaps with 0 first gives a fairer average. Choose carefully, though: filling a missing **rating** with 0 would be wrong, because no rating doesn't mean a terrible game."
+    },
+    {
+      "type": "write",
+      "prompt": "Your turn: print the average tip, counting missing tips as 0, rounded to 2 decimals. Add .fillna(0) before .mean().",
+      "answer": "print(round(df[\"tip\"].fillna(0).mean(), 2))",
+      "compare": "print",
+      "require": [
+        "fillna"
+      ],
+      "hints": [
+        "Copy the cell above and add .fillna(0) right after df[\"tip\"].",
+        "print(round(df[\"tip\"].fillna(0).mean(), 2))"
+      ]
+    },
+    {
+      "type": "predict",
+      "prompt": "Compare: 4.79 when skipping gaps, and 3.35 when they count as 0. Which one is the fair average tip per order? Pick one, then press Run.",
+      "code": "print(round(df[\"tip\"].mean(), 2), round(df[\"tip\"].fillna(0).mean(), 2))",
+      "options": [
+        "4.79, because empty cells don't count",
+        "3.35, because no tip means $0"
+      ],
+      "answer": "3.35, because no tip means $0"
+    },
+    {
+      "type": "write",
+      "prompt": "Last one: fill the missing tips with 0 for good by storing the result back in the tip column. Then show the whole table to check.",
+      "answer": "df[\"tip\"] = df[\"tip\"].fillna(0)\ndf",
+      "compare": "table",
+      "require": [
+        "fillna"
+      ],
+      "hints": [
+        "Line 1: df[\"tip\"] = df[\"tip\"].fillna(0). Line 2: df",
+        "df[\"tip\"] = df[\"tip\"].fillna(0)\ndf"
+      ]
+    }
+  ],
+  "recap": "isna().sum() counts the gaps. dropna() removes rows with gaps, and fillna() fills them. mean() skips gaps, so think about what a gap really means before you choose."
+}

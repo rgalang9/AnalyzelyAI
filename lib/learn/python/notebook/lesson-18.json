@@ -1,0 +1,98 @@
+{
+  "id": "py-18",
+  "level": 3,
+  "title": "Review: Cleaning messy orders",
+  "datasets": [
+    "messy_orders"
+  ],
+  "setup": "",
+  "cells": [
+    {
+      "type": "markdown",
+      "text": "**Level 3 review!** A small shop has sent you its order list, and it's a mess: city names typed differently, prices saved as text with $, a missing quantity and a duplicate order. Your job: clean it step by step, then work out the revenue per city. Each cell builds on the one before, like a real cleaning notebook."
+    },
+    {
+      "type": "run",
+      "prompt": "Press Run to load all 8 orders. Look for the problems before you start.",
+      "code": "import pandas as pd\ndf = pd.read_csv(\"messy_orders.csv\")\ndf"
+    },
+    {
+      "type": "predict",
+      "prompt": "How many missing values are there in the whole table? Pick one, then press Run. (The second .sum() adds up the counts from every column.)",
+      "code": "print(df.isna().sum().sum())",
+      "options": [
+        "0",
+        "1",
+        "2"
+      ],
+      "answer": "1"
+    },
+    {
+      "type": "write",
+      "prompt": "Step 1: clean the city names for good. Strip the spaces and use Title Case, storing the result back in the city column. Then print how many orders each city has.",
+      "answer": "df[\"city\"] = df[\"city\"].str.strip().str.title()\nprint(df[\"city\"].value_counts())",
+      "compare": "print",
+      "require": [
+        "strip",
+        "title"
+      ],
+      "hints": [
+        "Line 1: chain .str.strip() and .str.title(). Line 2: print the value_counts() of city.",
+        "df[\"city\"] = df[\"city\"].str.strip().str.title()\nprint(df[\"city\"].value_counts())"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 2: Ella's order appears twice. Remove the duplicate for good, then print how many orders are left.",
+      "answer": "df = df.drop_duplicates()\nprint(len(df))",
+      "compare": "print",
+      "require": [
+        "drop_duplicates"
+      ],
+      "hints": [
+        "Store the result back in df, then print len(df).",
+        "df = df.drop_duplicates()\nprint(len(df))"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 3: Chloe's qty is missing. The shop says she bought 1 mug, so fill the missing qty with 1 for good. Then show the total quantity sold.",
+      "answer": "df[\"qty\"] = df[\"qty\"].fillna(1)\ndf[\"qty\"].sum()",
+      "compare": "value",
+      "require": [
+        "fillna"
+      ],
+      "hints": [
+        "Line 1: store fillna(1) back in the qty column. Line 2: df[\"qty\"].sum()",
+        "df[\"qty\"] = df[\"qty\"].fillna(1)\ndf[\"qty\"].sum()"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Step 4: make a clean price_amount column from price (remove the $, then convert to whole numbers). Then add a revenue column: qty × price_amount. Show the customer and revenue of the 3 biggest orders.",
+      "answer": "df[\"price_amount\"] = df[\"price\"].str.replace(\"$\", \"\").astype(int)\ndf[\"revenue\"] = df[\"qty\"] * df[\"price_amount\"]\ndf.nlargest(3, \"revenue\")[[\"customer\", \"revenue\"]]",
+      "compare": "table",
+      "require": [
+        "astype"
+      ],
+      "hints": [
+        "3 lines: make price_amount like the fee cell in Lesson 16, then revenue, then nlargest(3, \"revenue\") with 2 columns picked.",
+        "df[\"price_amount\"] = df[\"price\"].str.replace(\"$\", \"\").astype(int)\ndf[\"revenue\"] = df[\"qty\"] * df[\"price_amount\"]\ndf.nlargest(3, \"revenue\")[[\"customer\", \"revenue\"]]"
+      ]
+    },
+    {
+      "type": "write",
+      "prompt": "Final step: show the total revenue per city, biggest first. This is the answer for the shop owner!",
+      "answer": "df.groupby(\"city\")[\"revenue\"].sum().sort_values(ascending=False)",
+      "compare": "table",
+      "require": [
+        "groupby"
+      ],
+      "hints": [
+        "Group by city, pick revenue, sum, then sort biggest first.",
+        "df.groupby(\"city\")[\"revenue\"].sum().sort_values(ascending=False)"
+      ]
+    }
+  ],
+  "recap": "Level 3 done! You cleaned a messy file from start to finish: text, duplicates, missing values and types, then summarised it with groupby. Next up: combining tables and charts."
+}

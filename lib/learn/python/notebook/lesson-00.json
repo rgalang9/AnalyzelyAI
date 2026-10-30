@@ -1,0 +1,19 @@
+{
+  "id": "py-00",
+  "level": 1,
+  "title": "Meet Python",
+  "datasets": [],
+  "setup": "",
+  "cells": [
+    { "type": "markdown", "text": "Welcome! This is a **notebook**, the same tool data analysts use every day. Each grey box is a **cell** that holds Python code. To **run** a cell, press its **Run** button (or Shift+Enter). The result appears right underneath." },
+    { "type": "run", "prompt": "Press Run to run your first line of Python.", "code": "print(\"Hello, Analyzely!\")" },
+    { "type": "markdown", "text": "`print()` shows whatever is inside its brackets. **Text** must go inside quotes, like `\"Hello\"`. **Numbers** don't need quotes, and Python can do maths with them: `+` is plus, `-` is minus, `*` is times, and `/` is divided by." },
+    { "type": "run", "prompt": "Press Run. Python works out the maths first, then prints the answer.", "code": "print(7 + 5)" },
+    { "type": "predict", "prompt": "Remember, * means times. What will this print? Pick one, then press Run.", "code": "print(10 * 3)", "options": ["103", "30", "13"], "answer": "30" },
+    { "type": "predict", "prompt": "This time the maths is inside quotes. What will it print? Pick one, then press Run.", "code": "print(\"7 + 5\")", "options": ["12", "7 + 5", "An error"], "answer": "7 + 5" },
+    { "type": "markdown", "text": "Quotes turn anything into text, so Python prints it exactly as typed and doesn't do the maths. Keep quotes for words, and leave them off for maths." },
+    { "type": "fill", "prompt": "Replace ___ with the sentence \"I am learning Python\", including the quotes, then press Run.", "code": "print(___)", "answer": "print(\"I am learning Python\")", "compare": "print", "hints": ["Keep the quotes, because they tell Python it's text. Check the capital I and P.", "print(\"I am learning Python\")"] },
+    { "type": "write", "prompt": "Your turn: make Python work out 12 + 30 and print the answer. Type the maths inside the brackets, without quotes, then press Run.", "starter": "print()", "answer": "print(12 + 30)", "compare": "print", "require": ["print"], "hints": ["No quotes this time, so Python does the maths.", "print(12 + 30)"] }
+  ],
+  "recap": "You ran your first Python! print() shows a result. Text goes in quotes, and maths goes without quotes."
+}
