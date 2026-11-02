@@ -10,7 +10,7 @@ export type LearnLanguage = {
 export const LEARN_LANGUAGES: LearnLanguage[] = [
   { slug: "sql", name: "SQL", released: true },
   { slug: "python", name: "Python", released: true },
-  { slug: "excel", name: "Excel", released: false }, // the Excel released switch
+  { slug: "excel", name: "Excel", released: true }, // the Excel released switch
   { slug: "r", name: "R", released: false },
 ];
 
