@@ -1,0 +1,275 @@
+{
+  "id": "xl-13",
+  "level": 3,
+  "title": "Filtering",
+  "explanation": "You're helping a friend find an apartment near campus. There are 12 listings, but they only care about some of them. A **filter** hides the rows you don't want, without deleting anything. Turn it off and every row comes back.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Listings",
+        "header": true,
+        "column_widths": [
+          120,
+          100,
+          90,
+          70,
+          60,
+          30,
+          110,
+          50,
+          80,
+          110
+        ],
+        "rows": [
+          [
+            "Address",
+            "Neighborhood",
+            "Bedrooms",
+            "Rent",
+            "Pets OK",
+            null,
+            "Listings shown",
+            null,
+            "Cheapest",
+            null
+          ],
+          [
+            "12 Elm St",
+            "Downtown",
+            2,
+            1650,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "48 Oak Ave",
+            "North End",
+            1,
+            1100,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "7 Pine Rd",
+            "Downtown",
+            1,
+            1450,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "230 Main St",
+            "Campus",
+            3,
+            2100,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "19 Birch Ln",
+            "Campus",
+            2,
+            1500,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "5 Cedar Ct",
+            "North End",
+            2,
+            1250,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "88 Maple Dr",
+            "Downtown",
+            3,
+            2300,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "61 Walnut St",
+            "Campus",
+            1,
+            1200,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "3 Spruce Way",
+            "North End",
+            3,
+            1800,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "140 Ash St",
+            "Downtown",
+            2,
+            1550,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "27 Willow Pl",
+            "Campus",
+            2,
+            1400,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "9 Hazel Rd",
+            "North End",
+            1,
+            950,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Turn on the filter, then show only the Downtown listings. Click a cell in the table, click Filter in the toolbar, then use the arrow on the Neighborhood header.",
+      "teach": "**Filter** adds a small arrow to each header. Click an arrow to choose which values to show. The other rows are **hidden**, not deleted, and the row numbers skip to show it.",
+      "hidden_rows": [
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        12,
+        13
+      ],
+      "hints": [
+        "Turn on Filter, click the arrow in B1, and keep only Downtown ticked.",
+        "4 listings should be left."
+      ],
+      "answer": "Filter → Neighborhood → only Downtown"
+    },
+    {
+      "prompt": "How many listings are showing? Type the number into H1.",
+      "cell": "H1",
+      "expected": 4,
+      "hints": [
+        "Count the rows that are still visible.",
+        "12 Elm St, 7 Pine Rd, 88 Maple Dr and 140 Ash St."
+      ],
+      "highlight": [
+        "H1"
+      ],
+      "answer": "4"
+    },
+    {
+      "prompt": "Clear the Neighborhood filter so all 12 listings show again.",
+      "hidden_rows": [],
+      "hints": [
+        "Click the arrow on B1 again and select all, or use Clear filter.",
+        "No rows should be hidden."
+      ],
+      "answer": "Clear the filter on Neighborhood"
+    },
+    {
+      "prompt": "Your friend's budget is $1,500. Filter the Rent column to show only listings with rent of 1500 or less.",
+      "teach": "Number columns have **number filters**, like \"less than or equal to\". They're more useful than ticking values one by one.",
+      "hidden_rows": [
+        2,
+        5,
+        8,
+        10,
+        11
+      ],
+      "hints": [
+        "Click the arrow on D1, choose By Conditions, then Less Than Or Equal To, and type 1500.",
+        "7 listings should be left."
+      ],
+      "answer": "Filter → Rent → less than or equal to 1500"
+    },
+    {
+      "prompt": "They also have a dog. Keep the rent filter, and add a filter on Pets OK to show only Yes.",
+      "teach": "Filters on different columns work together: a row only shows if it passes **every** filter.",
+      "hidden_rows": [
+        2,
+        3,
+        5,
+        8,
+        9,
+        10,
+        11
+      ],
+      "hints": [
+        "Leave the Rent filter on. Click the arrow on E1 and keep only Yes.",
+        "5 listings should be left."
+      ],
+      "answer": "Keep Rent ≤ 1500, then Filter → Pets OK → only Yes"
+    },
+    {
+      "prompt": "Last one: of the listings showing, type the address of the cheapest one into J1.",
+      "cell": "J1",
+      "expected": "9 Hazel Rd",
+      "hints": [
+        "Look at the Rent column of the visible rows.",
+        "It's $950."
+      ],
+      "highlight": [
+        "J1"
+      ],
+      "answer": "9 Hazel Rd"
+    }
+  ],
+  "recap": "A filter hides the rows you don't want, without deleting them. Use the header arrows to pick values or number rules, and filters on several columns work together."
+}

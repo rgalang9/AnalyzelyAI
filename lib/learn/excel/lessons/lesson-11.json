@@ -1,0 +1,299 @@
+{
+  "id": "xl-11",
+  "level": 2,
+  "title": "Review: The intramural league",
+  "explanation": "**Level 2 review!** You run the campus intramural basketball league, and the standings sheet is a mess: a typo, a team entered twice, and no win percentages yet. Tidy it up and make it easy to read. There's nothing new here, just everything from Level 2: shortcuts, editing, Paste Special, number formatting and conditional formatting.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Standings",
+        "header": true,
+        "column_widths": [
+          110,
+          60,
+          60,
+          90,
+          110,
+          70,
+          80,
+          130
+        ],
+        "rows": [
+          [
+            "Team",
+            "Wins",
+            "Losses",
+            "Points for",
+            "Points against",
+            "Win %",
+            "Point diff",
+            "Last week's Win %"
+          ],
+          [
+            "Ballers",
+            7,
+            1,
+            412,
+            330,
+            null,
+            null,
+            null
+          ],
+          [
+            "Net Rippers",
+            6,
+            2,
+            398,
+            350,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hoop Dreems",
+            5,
+            3,
+            380,
+            372,
+            null,
+            null,
+            null
+          ],
+          [
+            "Dunk Tank",
+            4,
+            4,
+            365,
+            360,
+            null,
+            null,
+            null
+          ],
+          [
+            "Air Raid",
+            3,
+            5,
+            340,
+            371,
+            null,
+            null,
+            null
+          ],
+          [
+            "Net Rippers",
+            6,
+            2,
+            398,
+            350,
+            null,
+            null,
+            null
+          ],
+          [
+            "Fast Break",
+            2,
+            6,
+            310,
+            390,
+            null,
+            null,
+            null
+          ],
+          [
+            "Bench Mob",
+            1,
+            7,
+            290,
+            402,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click A1, then jump to the last team at the bottom of the list with a shortcut.",
+      "selected": "A9",
+      "shortcut": "jump_down",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "hints": [
+        "Hold Ctrl (⌘ on Mac) and press the down arrow.",
+        "You should land on A9, Bench Mob."
+      ]
+    },
+    {
+      "prompt": "A4 says \"Hoop Dreems\". Edit the cell and fix it to Hoop Dreams.",
+      "cell": "A4",
+      "expected": "Hoop Dreams",
+      "shortcut": "edit_cell",
+      "shortcut_help": "none",
+      "hints": [
+        "Click A4 and use the edit-cell keys from Lesson 7, or just retype it.",
+        "It should read: Hoop Dreams"
+      ],
+      "highlight": [
+        "A4"
+      ],
+      "answer": "Hoop Dreams"
+    },
+    {
+      "prompt": "One team was entered twice. Highlight duplicate values in A2:A9 to find it.",
+      "cell": "A2:A9",
+      "expected": [
+        "Ballers",
+        "Net Rippers",
+        "Hoop Dreams",
+        "Dunk Tank",
+        "Air Raid",
+        "Net Rippers",
+        "Fast Break",
+        "Bench Mob"
+      ],
+      "conditional_format": {
+        "range": "A2:A9",
+        "type": "duplicate"
+      },
+      "hints": [
+        "Select A2:A9, then use the Duplicate Values rule.",
+        "Net Rippers lights up twice."
+      ],
+      "highlight": [
+        "A2:A9"
+      ],
+      "answer": "Select A2:A9 → Conditional Formatting → Duplicate values"
+    },
+    {
+      "prompt": "Delete the second Net Rippers row (row 7): right-click the row number and choose Delete.",
+      "cell": "A7",
+      "expected": "Fast Break",
+      "hints": [
+        "Right-click the grey 7 at the far left, then Delete.",
+        "Fast Break should move up into row 7."
+      ],
+      "highlight": [
+        "A7"
+      ],
+      "answer": "Right-click row 7's number, then Delete"
+    },
+    {
+      "prompt": "In F2 to F8, work out each team's win percentage: wins ÷ (wins + losses). Write it once, then copy it down.",
+      "cell": "F2:F8",
+      "expected": [
+        0.875,
+        0.75,
+        0.625,
+        0.5,
+        0.375,
+        0.25,
+        0.125
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Excel divides before adding, so you need brackets: =B2/(B2+C2)",
+        "Then copy F2 down to F8."
+      ],
+      "highlight": [
+        "B2:C8"
+      ],
+      "answer": "=B2/(B2+C2) in F2, then copy down to F8"
+    },
+    {
+      "prompt": "Show F2:F8 as percents with 1 decimal place, like 87.5%.",
+      "cell": "F2:F8",
+      "expected": [
+        0.875,
+        0.75,
+        0.625,
+        0.5,
+        0.375,
+        0.25,
+        0.125
+      ],
+      "number_format": "0.0%",
+      "hints": [
+        "Select F2:F8, click %, then adjust the decimals.",
+        "Ballers should read 87.5%."
+      ],
+      "highlight": [
+        "F2:F8"
+      ],
+      "answer": "Select F2:F8, then apply 0.0%"
+    },
+    {
+      "prompt": "Highlight the teams with a win percentage over 60%: a greater-than rule on F2:F8 with the value 0.6.",
+      "teach": "Remember, 60% is stored as 0.6, so the rule's value is 0.6.",
+      "cell": "F2:F8",
+      "expected": [
+        0.875,
+        0.75,
+        0.625,
+        0.5,
+        0.375,
+        0.25,
+        0.125
+      ],
+      "conditional_format": {
+        "range": "F2:F8",
+        "type": "greater_than",
+        "value": 0.6
+      },
+      "hints": [
+        "Select F2:F8, then use the Greater Than rule.",
+        "Type 0.6, not 60."
+      ],
+      "highlight": [
+        "F2:F8"
+      ],
+      "answer": "Select F2:F8 → Conditional Formatting → Greater than 0.6"
+    },
+    {
+      "prompt": "In G2 to G8, work out each team's point difference: points for − points against.",
+      "cell": "G2:G8",
+      "expected": [
+        82,
+        48,
+        8,
+        5,
+        -31,
+        -80,
+        -112
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "G2 is =D2-E2, then copy it down.",
+        "Ballers should be 82 and Bench Mob −112."
+      ],
+      "highlight": [
+        "D2:E8"
+      ],
+      "answer": "=D2-E2 in G2, then copy down to G8"
+    },
+    {
+      "prompt": "Last one: save this week's win percentages as a snapshot. Copy F2:F8 and use Paste Special → Values into H2:H8.",
+      "cell": "H2:H8",
+      "expected": [
+        0.875,
+        0.75,
+        0.625,
+        0.5,
+        0.375,
+        0.25,
+        0.125
+      ],
+      "must_be_value": true,
+      "hints": [
+        "Copy F2:F8, right-click H2, Paste Special, then Values.",
+        "Click H2 afterwards: it should be a number, not a formula."
+      ],
+      "highlight": [
+        "H2:H8"
+      ],
+      "answer": "Copy F2:F8, right-click H2, Paste Special → Values"
+    }
+  ],
+  "recap": "Level 2 done! You can move with shortcuts, edit and restructure a sheet, freeze results with Paste Special, format numbers, and highlight what matters with conditional formatting. Next up: sorting, filtering and tables."
+}

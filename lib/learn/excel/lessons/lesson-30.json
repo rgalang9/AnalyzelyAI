@@ -1,0 +1,255 @@
+{
+  "id": "xl-30",
+  "level": 5,
+  "title": "COUNTIF, SUMIF and AVERAGEIF",
+  "explanation": "A campus coffee shop's manager has questions: how many lattes were sold? How much did they bring in? Counting by eye works for 12 orders, but not for 12,000. COUNTIF, SUMIF and AVERAGEIF count, add up or average only the rows that match a condition.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Orders",
+        "header": true,
+        "column_widths": [
+          60,
+          90,
+          60,
+          60,
+          80,
+          30,
+          150,
+          80,
+          80
+        ],
+        "rows": [
+          [
+            "Order",
+            "Drink",
+            "Size",
+            "Price",
+            "Barista",
+            null,
+            "Question",
+            "Answer",
+            "Name"
+          ],
+          [
+            1,
+            "Latte",
+            "Large",
+            5.75,
+            "Maya",
+            null,
+            "Latte orders",
+            null,
+            null
+          ],
+          [
+            2,
+            "Mocha",
+            "Small",
+            4.5,
+            "Leo",
+            null,
+            "Orders over $5",
+            null,
+            null
+          ],
+          [
+            3,
+            "Latte",
+            "Small",
+            4.75,
+            "Leo",
+            null,
+            "Latte revenue",
+            null,
+            null
+          ],
+          [
+            4,
+            "Cold brew",
+            "Large",
+            5.25,
+            "Maya",
+            null,
+            "Average Large price",
+            null,
+            null
+          ],
+          [
+            5,
+            "Latte",
+            "Large",
+            5.75,
+            "Sam",
+            null,
+            "Maya's orders",
+            null,
+            "Maya"
+          ],
+          [
+            6,
+            "Tea",
+            "Small",
+            3.0,
+            "Maya",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            7,
+            "Mocha",
+            "Large",
+            5.5,
+            "Sam",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            8,
+            "Latte",
+            "Small",
+            4.75,
+            "Maya",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            9,
+            "Cold brew",
+            "Small",
+            4.25,
+            "Leo",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            10,
+            "Tea",
+            "Large",
+            3.5,
+            "Sam",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            11,
+            "Latte",
+            "Large",
+            5.75,
+            "Leo",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            12,
+            "Mocha",
+            "Small",
+            4.5,
+            "Maya",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In H2, count the Latte orders: =COUNTIF(B2:B13, \"Latte\").",
+      "teach": "**COUNTIF(range, criteria)** counts the cells in a range that match the criteria. Text criteria go in quotes.",
+      "cell": "H2",
+      "expected": 5,
+      "function": "COUNTIF",
+      "hints": [
+        "Range: the drinks in B2:B13. Criteria: \"Latte\".",
+        "=COUNTIF(B2:B13, \"Latte\")"
+      ],
+      "highlight": [
+        "B2:B13"
+      ],
+      "answer": "=COUNTIF(B2:B13, \"Latte\")"
+    },
+    {
+      "prompt": "In H3, count the orders that cost more than $5: =COUNTIF(D2:D13, \">5\").",
+      "teach": "For number conditions, put the comparison **and** the number inside quotes together: `\">5\"`, `\"<=4\"`, `\"<>0\"`.",
+      "cell": "H3",
+      "expected": 5,
+      "function": "COUNTIF",
+      "formula_contains": [
+        ">5"
+      ],
+      "hints": [
+        "The criteria is \">5\", with the sign inside the quotes.",
+        "=COUNTIF(D2:D13, \">5\")"
+      ],
+      "highlight": [
+        "D2:D13"
+      ],
+      "answer": "=COUNTIF(D2:D13, \">5\")"
+    },
+    {
+      "prompt": "In H4, add up the price of every Latte with SUMIF: =SUMIF(B2:B13, \"Latte\", D2:D13).",
+      "teach": "**SUMIF(range, criteria, sum_range)** checks the condition in one column, then adds up the matching rows from **another** column. Here it checks the drinks (B) and adds up the prices (D).",
+      "cell": "H4",
+      "expected": 26.75,
+      "function": "SUMIF",
+      "hints": [
+        "Check B2:B13 for \"Latte\", then add up D2:D13.",
+        "=SUMIF(B2:B13, \"Latte\", D2:D13)"
+      ],
+      "highlight": [
+        "B2:B13",
+        "D2:D13"
+      ],
+      "answer": "=SUMIF(B2:B13, \"Latte\", D2:D13)"
+    },
+    {
+      "prompt": "In H5, find the average price of Large drinks, using AVERAGEIF.",
+      "cell": "H5",
+      "expected": 5.25,
+      "function": "AVERAGEIF",
+      "hints": [
+        "AVERAGEIF works like SUMIF: check the sizes in C, average the prices in D.",
+        "=AVERAGEIF(C2:C13, \"Large\", D2:D13)"
+      ],
+      "highlight": [
+        "C2:D13"
+      ],
+      "answer": "=AVERAGEIF(C2:C13, \"Large\", D2:D13)"
+    },
+    {
+      "prompt": "Last one: in H6, count Maya's orders. Her name is already typed in I6, so point the criteria at that cell: =COUNTIF(E2:E13, I6).",
+      "teach": "The criteria can be a **cell** instead of typed text. Change the name in I6 later and the count updates, which is how analysts build little dashboards.",
+      "cell": "H6",
+      "expected": 5,
+      "function": "COUNTIF",
+      "formula_contains": [
+        "I6"
+      ],
+      "hints": [
+        "No quotes around I6: =COUNTIF(E2:E13, I6).",
+        "Maya made 5 orders."
+      ],
+      "highlight": [
+        "E2:E13",
+        "I6"
+      ],
+      "answer": "=COUNTIF(E2:E13, I6)"
+    }
+  ],
+  "recap": "COUNTIF counts matching cells, SUMIF adds up a column for matching rows, and AVERAGEIF averages it. Number conditions go in quotes like \">5\", and criteria can point at a cell."
+}

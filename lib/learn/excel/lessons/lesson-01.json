@@ -1,0 +1,216 @@
+{
+  "id": "xl-01",
+  "level": 1,
+  "title": "Your first formulas",
+  "explanation": "You run a bubble tea stand, and this sheet has last weekend's sales. Instead of working things out on a calculator, you'll make Excel do the maths with **formulas**. The best part: if a number changes, every formula updates by itself.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sales",
+        "header": true,
+        "column_widths": [
+          150,
+          80,
+          90,
+          90,
+          90,
+          90
+        ],
+        "rows": [
+          [
+            "Drink",
+            "Price",
+            "Cups sold",
+            "Revenue",
+            "Profit",
+            null
+          ],
+          [
+            "Classic Milk Tea",
+            5.5,
+            40,
+            null,
+            null,
+            null
+          ],
+          [
+            "Taro",
+            6,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Mango",
+            6.25,
+            32,
+            null,
+            null,
+            null
+          ],
+          [
+            "Matcha",
+            6.5,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Try one: in G2, type =10+5 and press Enter.",
+      "teach": "A **formula** starts with `=`. That tells Excel to work something out instead of storing what you typed. The cell shows the answer, and the formula bar shows the formula.",
+      "cell": "G2",
+      "expected": 15,
+      "must_be_formula": true,
+      "hints": [
+        "Start with the = sign.",
+        "Type =10+5 then press Enter. The cell should show 15."
+      ],
+      "highlight": [
+        "G2"
+      ],
+      "answer": "=10+5"
+    },
+    {
+      "prompt": "In D2, work out Classic Milk Tea's revenue: price × cups sold. Use the cell names, not the numbers.",
+      "teach": "Formulas can use **cell names** instead of numbers. `=B2*C2` means \"whatever is in B2, times whatever is in C2\". In Excel, `*` means times and `/` means divided by. If B2 changes later, the answer updates by itself.",
+      "cell": "D2",
+      "expected": 220,
+      "must_be_formula": true,
+      "formula_contains": [
+        "B2",
+        "C2"
+      ],
+      "hints": [
+        "Price is in B2 and cups sold are in C2. Times is *.",
+        "=B2*C2"
+      ],
+      "highlight": [
+        "B2:C2"
+      ],
+      "answer": "=B2*C2"
+    },
+    {
+      "prompt": "Now do the same for the other 3 drinks, in D3, D4 and D5. Each row uses its own price and cups.",
+      "cell": "D3:D5",
+      "expected": [
+        150,
+        200.0,
+        117.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "D3 uses row 3's cells, D4 uses row 4's, and so on.",
+        "D3: =B3*C3, D4: =B4*C4, D5: =B5*C5"
+      ],
+      "highlight": [
+        "B3:C5"
+      ],
+      "answer": "=B3*C3 in D3, =B4*C4 in D4, =B5*C5 in D5"
+    },
+    {
+      "prompt": "Excel follows maths order: × and ÷ before + and −. In G3, type =2+3*4 and see what you get.",
+      "teach": "Like in maths class, Excel does `*` and `/` before `+` and `-`. So `=2+3*4` is 2 + 12 = 14, not 20. To do something first, put it in **round brackets**.",
+      "cell": "G3",
+      "expected": 14,
+      "must_be_formula": true,
+      "hints": [
+        "Type exactly =2+3*4",
+        "3*4 happens first, then +2."
+      ],
+      "highlight": [
+        "G3"
+      ],
+      "answer": "=2+3*4"
+    },
+    {
+      "prompt": "In G4, use brackets so the adding happens first: (2+3) × 4. You should get 20.",
+      "cell": "G4",
+      "expected": 20,
+      "must_be_formula": true,
+      "formula_contains": [
+        "("
+      ],
+      "hints": [
+        "Put round brackets around 2+3.",
+        "=(2+3)*4"
+      ],
+      "highlight": [
+        "G4"
+      ],
+      "answer": "=(2+3)*4"
+    },
+    {
+      "prompt": "Each cup costs $2 to make. In E2, work out Classic Milk Tea's profit: (price − 2) × cups sold. You'll need brackets!",
+      "teach": "Profit per cup is the price minus the $2 cost. Then multiply by the cups sold. Without brackets, `=B2-2*C2` would do `2*C2` first and give the wrong answer.",
+      "cell": "E2",
+      "expected": 140.0,
+      "must_be_formula": true,
+      "formula_contains": [
+        "(",
+        "B2",
+        "C2"
+      ],
+      "hints": [
+        "Brackets around B2-2, then times C2.",
+        "=(B2-2)*C2"
+      ],
+      "highlight": [
+        "B2:C2"
+      ],
+      "answer": "=(B2-2)*C2"
+    },
+    {
+      "prompt": "Work out the profit for the other 3 drinks, in E3, E4 and E5.",
+      "cell": "E3:E5",
+      "expected": [
+        100,
+        136.0,
+        81.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Same as E2, but with each row's own cells.",
+        "E3: =(B3-2)*C3, E4: =(B4-2)*C4, E5: =(B5-2)*C5"
+      ],
+      "highlight": [
+        "B3:C5"
+      ],
+      "answer": "=(B3-2)*C3 in E3, =(B4-2)*C4 in E4, =(B5-2)*C5 in E5"
+    },
+    {
+      "prompt": "Last one: in C6, add up all the cups sold, using + between the 4 cells.",
+      "teach": "You can add up cells with + like this. Next lesson you'll learn a much faster way.",
+      "cell": "C6",
+      "expected": 115,
+      "must_be_formula": true,
+      "formula_contains": [
+        "C2",
+        "C5"
+      ],
+      "hints": [
+        "Add C2, C3, C4 and C5.",
+        "=C2+C3+C4+C5"
+      ],
+      "highlight": [
+        "C2:C5"
+      ],
+      "answer": "=C2+C3+C4+C5"
+    }
+  ],
+  "recap": "Formulas start with =. Use cell names like B2 so answers update by themselves. * is times and / is divide. Excel does * and / before + and -, unless you use brackets."
+}

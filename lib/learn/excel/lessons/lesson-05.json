@@ -1,0 +1,257 @@
+{
+  "id": "xl-05",
+  "level": 1,
+  "title": "Review: The Coffee Cart",
+  "explanation": "**Level 1 review!** You run a coffee cart on campus, and the owner wants a report on last week. Coffee costs $3.50 a cup on weekdays and $4 at the weekend, and each cup costs $1.25 to make (stored in H1). There's nothing new here, just everything from Level 1: formulas, functions, copying down and locking with $.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Week",
+        "header": true,
+        "column_widths": [
+          80,
+          90,
+          70,
+          90,
+          90,
+          30,
+          100,
+          60
+        ],
+        "rows": [
+          [
+            "Day",
+            "Cups sold",
+            "Price",
+            "Revenue",
+            "Profit",
+            null,
+            "Cost per cup",
+            1.25
+          ],
+          [
+            "Mon",
+            48,
+            3.5,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Tue",
+            52,
+            3.5,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Wed",
+            61,
+            3.5,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Thu",
+            55,
+            3.5,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Fri",
+            74,
+            3.5,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sat",
+            90,
+            4,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sun",
+            38,
+            4,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Average",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Best",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2 to D8, work out each day's revenue: cups sold × price. Write it once in D2, then copy it down.",
+      "cell": "D2:D8",
+      "expected": [
+        168.0,
+        182.0,
+        213.5,
+        192.5,
+        259.0,
+        360,
+        152
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "D2 is =B2*C2, then copy it down to D8.",
+        "Both references should move, so no $ needed."
+      ],
+      "highlight": [
+        "B2:C8"
+      ],
+      "answer": "=B2*C2 in D2, then copy down to D8"
+    },
+    {
+      "prompt": "In E2 to E8, work out each day's profit: revenue − cups sold × the cost per cup in H1. Lock H1 so it doesn't move when you copy.",
+      "cell": "E2:E8",
+      "expected": [
+        108.0,
+        117.0,
+        137.25,
+        123.75,
+        166.5,
+        247.5,
+        104.5
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$H$1"
+      ],
+      "hints": [
+        "Excel does × before −, so no brackets needed: =D2-B2*$H$1",
+        "Lock H1 with $ signs, then copy E2 down to E8."
+      ],
+      "highlight": [
+        "D2:D8",
+        "H1"
+      ],
+      "answer": "=D2-B2*$H$1 in E2, then copy down to E8"
+    },
+    {
+      "prompt": "In B9, add up the cups sold for the week.",
+      "cell": "B9",
+      "expected": 418,
+      "function": "SUM",
+      "hints": [
+        "SUM the cups in B2 to B8.",
+        "=SUM(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=SUM(B2:B8)"
+    },
+    {
+      "prompt": "In D9, add up the revenue for the week.",
+      "cell": "D9",
+      "expected": 1527.0,
+      "function": "SUM",
+      "hints": [
+        "SUM the revenue in D2 to D8.",
+        "=SUM(D2:D8)"
+      ],
+      "highlight": [
+        "D2:D8"
+      ],
+      "answer": "=SUM(D2:D8)"
+    },
+    {
+      "prompt": "In E9, add up the profit for the week.",
+      "cell": "E9",
+      "expected": 1004.5,
+      "function": "SUM",
+      "hints": [
+        "SUM the profit in E2 to E8.",
+        "=SUM(E2:E8)"
+      ],
+      "highlight": [
+        "E2:E8"
+      ],
+      "answer": "=SUM(E2:E8)"
+    },
+    {
+      "prompt": "In B10, work out the average cups sold per day.",
+      "cell": "B10",
+      "expected": 59.7142857143,
+      "function": "AVERAGE",
+      "hints": [
+        "Use AVERAGE on the cups sold.",
+        "=AVERAGE(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=AVERAGE(B2:B8)"
+    },
+    {
+      "prompt": "Last one: in E11, find the best day's profit, using MAX.",
+      "cell": "E11",
+      "expected": 247.5,
+      "function": "MAX",
+      "hints": [
+        "The profits are in E2 to E8.",
+        "=MAX(E2:E8)"
+      ],
+      "highlight": [
+        "E2:E8"
+      ],
+      "answer": "=MAX(E2:E8)"
+    }
+  ],
+  "recap": "Level 1 done! You can write formulas, use SUM, AVERAGE, MIN, MAX and COUNT, copy formulas down, and lock cells with $. Next up: moving fast and organizing data."
+}

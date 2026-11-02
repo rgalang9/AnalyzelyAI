@@ -1,0 +1,330 @@
+{
+  "id": "xl-12",
+  "level": 3,
+  "title": "Sorting",
+  "explanation": "**Welcome to Level 3: organizing data!** A music blog wants this week's top 10 songs ranked in different ways. **Sorting** puts rows in order, and the whole row moves together, so every song keeps its own artist and numbers.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Charts",
+        "header": true,
+        "column_widths": [
+          130,
+          110,
+          80,
+          100,
+          110,
+          30,
+          30,
+          150
+        ],
+        "rows": [
+          [
+            "Song",
+            "Artist",
+            "Genre",
+            "Streams (M)",
+            "Weeks on chart",
+            null,
+            null,
+            "Top Rock song"
+          ],
+          [
+            "Neon Nights",
+            "Luma",
+            "Pop",
+            412,
+            18
+          ],
+          [
+            "Gravity",
+            "The Arcades",
+            "Rock",
+            256,
+            9
+          ],
+          [
+            "Paper Planes",
+            "Kiko",
+            "Hip-Hop",
+            388,
+            15
+          ],
+          [
+            "Slow Burn",
+            "Ivy Rose",
+            "Pop",
+            301,
+            12
+          ],
+          [
+            "Run It Up",
+            "DJ Coda",
+            "Hip-Hop",
+            274,
+            7
+          ],
+          [
+            "Golden Hour",
+            "Luma",
+            "Pop",
+            455,
+            22
+          ],
+          [
+            "Static",
+            "The Arcades",
+            "Rock",
+            198,
+            5
+          ],
+          [
+            "Midnight Drive",
+            "Nova Lane",
+            "Pop",
+            367,
+            14
+          ],
+          [
+            "Back Block",
+            "Kiko",
+            "Hip-Hop",
+            341,
+            11
+          ],
+          [
+            "Wildfire",
+            "Sable",
+            "Rock",
+            289,
+            10
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Rank the songs from most to fewest streams. Click any cell in the Streams column (D), then open the sort menu in the toolbar and choose Descending (largest first).",
+      "teach": "To sort, click **one cell** in the column you want to sort by, then choose **Descending** (largest first, Z→A) or **Ascending** (smallest first, A→Z) from the toolbar's sort menu. Excel works out where the table is and moves whole rows. Never select just one column, or that column gets sorted on its own and the data gets scrambled. If that happens, press **Reset task**.",
+      "cell": "A2:E11",
+      "expected": [
+        "Golden Hour",
+        "Luma",
+        "Pop",
+        455,
+        22,
+        "Neon Nights",
+        "Luma",
+        "Pop",
+        412,
+        18,
+        "Paper Planes",
+        "Kiko",
+        "Hip-Hop",
+        388,
+        15,
+        "Midnight Drive",
+        "Nova Lane",
+        "Pop",
+        367,
+        14,
+        "Back Block",
+        "Kiko",
+        "Hip-Hop",
+        341,
+        11,
+        "Slow Burn",
+        "Ivy Rose",
+        "Pop",
+        301,
+        12,
+        "Wildfire",
+        "Sable",
+        "Rock",
+        289,
+        10,
+        "Run It Up",
+        "DJ Coda",
+        "Hip-Hop",
+        274,
+        7,
+        "Gravity",
+        "The Arcades",
+        "Rock",
+        256,
+        9,
+        "Static",
+        "The Arcades",
+        "Rock",
+        198,
+        5
+      ],
+      "hints": [
+        "Click D2, then open the toolbar's sort menu and choose Descending.",
+        "Golden Hour should end up on top, with 455."
+      ],
+      "highlight": [
+        "D1:D11"
+      ],
+      "answer": "Click a cell in column D, then sort Z→A"
+    },
+    {
+      "prompt": "Now sort the songs alphabetically by song name, A to Z.",
+      "cell": "A2:E11",
+      "expected": [
+        "Back Block",
+        "Kiko",
+        "Hip-Hop",
+        341,
+        11,
+        "Golden Hour",
+        "Luma",
+        "Pop",
+        455,
+        22,
+        "Gravity",
+        "The Arcades",
+        "Rock",
+        256,
+        9,
+        "Midnight Drive",
+        "Nova Lane",
+        "Pop",
+        367,
+        14,
+        "Neon Nights",
+        "Luma",
+        "Pop",
+        412,
+        18,
+        "Paper Planes",
+        "Kiko",
+        "Hip-Hop",
+        388,
+        15,
+        "Run It Up",
+        "DJ Coda",
+        "Hip-Hop",
+        274,
+        7,
+        "Slow Burn",
+        "Ivy Rose",
+        "Pop",
+        301,
+        12,
+        "Static",
+        "The Arcades",
+        "Rock",
+        198,
+        5,
+        "Wildfire",
+        "Sable",
+        "Rock",
+        289,
+        10
+      ],
+      "hints": [
+        "Click a cell in column A, then choose Ascending from the sort menu.",
+        "Back Block should be first and Wildfire last."
+      ],
+      "highlight": [
+        "A1:A11"
+      ],
+      "answer": "Click a cell in column A, then sort A→Z"
+    },
+    {
+      "prompt": "Sort by two columns: Genre A→Z, and within each genre, Streams largest first. Open Custom Sort from the toolbar's sort menu, tick \"First row does not participate\" so you see the column names, then use \"Add condition\" for the second level.",
+      "teach": "**Custom sort** lets you sort by more than one column. The first level decides the main order (Genre), and the second level breaks ties inside each group (Streams).",
+      "cell": "A2:E11",
+      "expected": [
+        "Paper Planes",
+        "Kiko",
+        "Hip-Hop",
+        388,
+        15,
+        "Back Block",
+        "Kiko",
+        "Hip-Hop",
+        341,
+        11,
+        "Run It Up",
+        "DJ Coda",
+        "Hip-Hop",
+        274,
+        7,
+        "Golden Hour",
+        "Luma",
+        "Pop",
+        455,
+        22,
+        "Neon Nights",
+        "Luma",
+        "Pop",
+        412,
+        18,
+        "Midnight Drive",
+        "Nova Lane",
+        "Pop",
+        367,
+        14,
+        "Slow Burn",
+        "Ivy Rose",
+        "Pop",
+        301,
+        12,
+        "Wildfire",
+        "Sable",
+        "Rock",
+        289,
+        10,
+        "Gravity",
+        "The Arcades",
+        "Rock",
+        256,
+        9,
+        "Static",
+        "The Arcades",
+        "Rock",
+        198,
+        5
+      ],
+      "hints": [
+        "Custom Sort: first condition Genre, A→Z. Click Add condition: Streams (M), largest to smallest (Z→A).",
+        "Hip-Hop comes first, led by Paper Planes (388)."
+      ],
+      "highlight": [
+        "C1:D11"
+      ],
+      "answer": "Custom sort: Genre A→Z, then Streams (M) largest to smallest"
+    },
+    {
+      "prompt": "Last one: with the songs sorted, type the name of the most-streamed Rock song into H2.",
+      "cell": "H2",
+      "expected": "Wildfire",
+      "hints": [
+        "The Rock songs are grouped together, with the most streams first.",
+        "It's the first Rock song in the list."
+      ],
+      "highlight": [
+        "A2:D11"
+      ],
+      "answer": "Wildfire"
+    }
+  ],
+  "recap": "Click one cell in a column and sort to reorder whole rows. Use custom sort to sort by two columns, where the second level breaks ties."
+}

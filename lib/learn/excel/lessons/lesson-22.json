@@ -1,0 +1,197 @@
+{
+  "id": "xl-22",
+  "level": 4,
+  "title": "SUBSTITUTE, REPLACE, and Find & Replace",
+  "explanation": "An online store exported its orders, and the text needs fixing: dashes in phone numbers, $ signs and commas in prices, old product codes, and a city misspelled the same way everywhere. This lesson shows 3 ways to swap one piece of text for another.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Export",
+        "header": true,
+        "column_widths": [
+          110,
+          80,
+          120,
+          90,
+          90,
+          110,
+          100,
+          120,
+          90
+        ],
+        "rows": [
+          [
+            "Phone",
+            "Price",
+            "Product",
+            "Code",
+            "City",
+            "Phone digits",
+            "Price number",
+            "Product label",
+            "New code"
+          ],
+          [
+            "860-555-0142",
+            "$1,200",
+            "Hoodie - Blue",
+            "OLD-1042",
+            "Hartfrod",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "203-555-0187",
+            "$850",
+            "Cap - Black",
+            "OLD-1043",
+            "Boston",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "401-555-0123",
+            "$2,300",
+            "Mug - White",
+            "OLD-1044",
+            "Hartfrod",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "617-555-0199",
+            "$475",
+            "Socks - Red",
+            "OLD-1045",
+            "Providence",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "212-555-0110",
+            "$1,640",
+            "Tote - Green",
+            "OLD-1046",
+            "Hartfrod",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2, remove the dashes from the phone number: =SUBSTITUTE(A2, \"-\", \"\").",
+      "teach": "**SUBSTITUTE(text, old, new)** swaps every **old** for **new**. Using `\"\"` (two quotes with nothing between) as the new text deletes the old text.",
+      "cell": "F2",
+      "expected": "8605550142",
+      "function": "SUBSTITUTE",
+      "hints": [
+        "Old text is \"-\" and new text is \"\".",
+        "=SUBSTITUTE(A2, \"-\", \"\")"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=SUBSTITUTE(A2, \"-\", \"\")"
+    },
+    {
+      "prompt": "In G2, remove both the $ and the comma from the price. Put one SUBSTITUTE inside another: =SUBSTITUTE(SUBSTITUTE(B2, \"$\", \"\"), \",\", \"\").",
+      "teach": "To remove 2 different things, nest SUBSTITUTE: the inside one removes the $, and the outside one removes the comma from that result. (The answer is still text. Lesson 24 turns it into a real number.)",
+      "cell": "G2",
+      "expected": "1200",
+      "function": "SUBSTITUTE",
+      "hints": [
+        "The inner SUBSTITUTE removes \"$\". The outer one removes \",\".",
+        "=SUBSTITUTE(SUBSTITUTE(B2, \"$\", \"\"), \",\", \"\")"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=SUBSTITUTE(SUBSTITUTE(B2, \"$\", \"\"), \",\", \"\")"
+    },
+    {
+      "prompt": "In H2, turn \"Hoodie - Blue\" into \"Hoodie, Blue\" by swapping \" - \" for \", \". Then copy F2:H2 down to row 6.",
+      "cell": "F2:H6",
+      "expected": [
+        "8605550142",
+        "1200",
+        "Hoodie, Blue",
+        "2035550187",
+        "850",
+        "Cap, Black",
+        "4015550123",
+        "2300",
+        "Mug, White",
+        "6175550199",
+        "475",
+        "Socks, Red",
+        "2125550110",
+        "1640",
+        "Tote, Green"
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "H2 is =SUBSTITUTE(C2, \" - \", \", \"). Then select F2:H2, copy, and paste into F3:H6.",
+        "Include the spaces inside the quotes."
+      ],
+      "highlight": [
+        "C2:C6"
+      ],
+      "answer": "=SUBSTITUTE(C2, \" - \", \", \") in H2, then copy F2:H2 down to row 6"
+    },
+    {
+      "prompt": "Every code starts with OLD, which should become NEW. In I2, use REPLACE to swap the first 3 characters: =REPLACE(D2, 1, 3, \"NEW\"). Then copy it down to I6.",
+      "teach": "**REPLACE(text, start, n, new)** swaps characters by **position**, not by matching text: start at character 1, remove 3 characters, and put \"NEW\" there. Use SUBSTITUTE when you know the text, and REPLACE when you know the position.",
+      "cell": "I2:I6",
+      "expected": [
+        "NEW-1042",
+        "NEW-1043",
+        "NEW-1044",
+        "NEW-1045",
+        "NEW-1046"
+      ],
+      "function": "REPLACE",
+      "hints": [
+        "Start at 1, replace 3 characters, with \"NEW\".",
+        "=REPLACE(D2, 1, 3, \"NEW\"), then copy it down."
+      ],
+      "highlight": [
+        "D2:D6"
+      ],
+      "answer": "=REPLACE(D2, 1, 3, \"NEW\") in I2, then copy down to I6"
+    },
+    {
+      "prompt": "Last one: \"Hartfrod\" is misspelled in column E. Fix every one at once with Find & Replace (the search icon in the toolbar): find Hartfrod, replace with Hartford, and click Replace All.",
+      "teach": "**Find & Replace** fixes the cells themselves, all at once, with no formula. In real Excel it's **Ctrl+H**, but in a browser that key may be taken, so use the toolbar's search icon here. It's perfect for a typo repeated many times.",
+      "cell": "E2:E6",
+      "expected": [
+        "Hartford",
+        "Boston",
+        "Hartford",
+        "Providence",
+        "Hartford"
+      ],
+      "hints": [
+        "Click the search icon in the toolbar, choose Replace, type Hartfrod and Hartford, then Replace All.",
+        "All 3 should change at once."
+      ],
+      "highlight": [
+        "E2:E6"
+      ],
+      "answer": "Find & Replace: Hartfrod → Hartford, Replace All"
+    }
+  ],
+  "recap": "SUBSTITUTE swaps text by matching it, and \"\" deletes it. REPLACE swaps characters by position. Find & Replace fixes the cells themselves, all at once."
+}

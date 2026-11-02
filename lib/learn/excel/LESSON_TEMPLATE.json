@@ -1,0 +1,168 @@
+{
+  "//": "Excel lesson format. Save each lesson as lib/learn/excel/lessons/lesson-NN.json (lesson-01.json, lesson-02.json, ...); the number in the file name sets the order. Keys starting with // are comments and are ignored, so they can be left out of real lessons.",
+
+  "//id": "Unique id, used in the web address: /learn/excel/xl-01",
+  "id": "xl-01",
+  "//level": "Curriculum level, 1 to 5",
+  "level": 1,
+  "//title": "Lesson title shown in the lesson list",
+  "title": "Your first formulas",
+  "//explanation": "Shown before the tasks; the learner presses Got it to start. Line breaks are kept.",
+  "explanation": "A formula starts with = and works something out for you...",
+
+  "//workbook": "The spreadsheet the lesson starts with. One workbook per lesson: tasks build on each other.",
+  "workbook": {
+    "sheets": [
+      {
+        "//name": "Sheet tab name. Tasks use it in \"sheet\" when there's more than one sheet.",
+        "name": "Sales",
+        "//header": "Optional, default true: the first row is bold",
+        "header": true,
+        "//column_widths": "Optional: widths in pixels, starting from column A",
+        "column_widths": [130, 80, 90, 90],
+        "//number_formats": "Optional: number formats put on cells when the workbook loads, as {\"range\": \"format\"}, like {\"B2:B6\": \"yyyy-mm-dd\", \"D2:D5\": \"mmm yyyy\", \"E2\": \"$#,##0.00\"}. Empty cells in the range get it too, so results typed there later (by the learner or Show answer) show in that format. Dates are day numbers (46023 is 2026-01-01) with a date format, so date formulas work on them.",
+        "number_formats": { "B2:B4": "$#,##0.00" },
+        "//rows": "The cells, row by row from A1. Numbers stay numbers, null is an empty cell, and text starting with = is a formula. Anything in quotes stays text, even \"1200\" (a number stored as text: SUM skips it, VALUE turns it into a number). \\n puts a line break inside a cell.",
+        "rows": [
+          ["Item", "Price", "Cups sold", "Revenue"],
+          ["Coffee", 3.5, 42, null],
+          ["Latte", 4.25, 30, null],
+          ["Tea", 2.75, 18, "=B4*C4"]
+        ]
+      }
+    ]
+  },
+
+  "//tasks": "One at a time, in order. A task checks a cell, a selection, a shortcut being pressed, or a mix.",
+  "tasks": [
+    {
+      "//teach": "Optional: text shown above the prompt, for introducing a new idea mid-lesson. Supports **bold**, `code` and line breaks (\\n).",
+      "teach": "To **multiply** in Excel, use a star: `*`.\nFor example, `=B2*C2` multiplies B2 by C2.",
+      "//prompt": "What to do, in plain words",
+      "prompt": "In D2, work out the revenue for Coffee: price × cups sold.",
+      "//sheet": "Optional: which sheet the cell is on (default: the first sheet). When the task starts, this sheet's tab comes to the front.",
+      "sheet": "Sales",
+      "//cell": "The cell to check (\"D2\"), or a range (\"D2:D4\") to check several cells. During the task only these cells (plus any the answer types or pastes into) can be changed; everything else is locked. Tasks with no cell lock every cell.",
+      "cell": "D2",
+      "//expected": "The value the cell should show. A number, text, true/false or null (empty). For a range: a list, one value per cell, row by row. Numbers match even with tiny rounding differences. Text starting with # is an Excel error the cell must show, like \"#N/A\" or \"#DIV/0!\" (for tasks that make an error on purpose).",
+      "expected": 147,
+      "//must_be_formula": "Optional, default false: the cell must hold a formula, not a typed-in number",
+      "must_be_formula": true,
+      "//formula_contains": "Optional: bits the formula must contain, like [\"$F$1\"] (capitals and spaces don't matter). If one is missing: \"Close! Your number is right, but the formula needs to use ...\"",
+      "formula_contains": ["B2", "C2"],
+      "//exact_text": "Optional, default false: text answers must match exactly, capitals and spaces included (for TRIM, PROPER, UPPER and the like). Without it, \"maya lee \" passes for \"Maya Lee\". If only capitals or spaces are off: \"So close! D2 needs to match exactly, capitals and spaces included.\" Numbers aren't affected.",
+      "exact_text": false,
+      "//font_color": "Optional: \"blue\" (for input cells, by model convention). Every cell in \"cell\" must have a blue font: any colour where blue is clearly the strongest (#0000FF, #0070C0, #4472C4...), not cyan or purple. Still black isn't a miss yet; another colour is. Use with expected (the cells keep their values) or leave expected out. The font colour button is Text color on the Start tab. Show answer makes the font #0000FF.",
+      "//keyboard_only": "Optional, default false: clicks on the grid are blocked during the task (\"Keyboard only! Use the keys instead of the mouse.\"), so nothing moves and the selection stays put. The task panel's buttons still work. For speed rounds.",
+      "//spill": "Optional, default false: for formulas that spill (UNIQUE, SORT, FILTER, SEQUENCE...). The formula goes only in the top-left cell of \"cell\" and its results fill the rest: every cell of the range is compared to \"expected\" (a list, row by row), while function, formula_contains and must_be_formula check the top-left cell only. Write the answer as \"=UNIQUE(A2:A13) in D2\" or just the formula: Show answer types it into the top-left cell only. If something is in the way, Excel shows #SPILL!.",
+      "//hints": "Help ladder, step 1: hints shown one at a time (after a wrong answer or a Need help? click)",
+      "hints": ["Start with = so Excel knows it's a formula.", "Multiply B2 by C2. In Excel, × is *."],
+      "//highlight": "Help ladder, step 2 (optional): cells to light up in the sheet",
+      "highlight": ["B2:C2"],
+      "//answer": "Needed when the task has a cell. Show answer (the last help step) puts it into the sheet and marks the task done, so write it in one of these forms: a formula or value for a single cell (\"=B2*C2\", \"Water\"); \"=B3*C3 in D3, =B4*C4 in D4\"; \"Type 0.1 in G1\"; \"=B2*C2 in D2, then copy down to D8\"; \"Copy C2, select C3:C6, then paste\"; \"Right-click row 5's number, then Delete\" (or Insert); \"Insert a column at B, then type Owner in B1\"; \"Type 999 in B2, then press Ctrl+Z\". Inserting or deleting rows and columns is only allowed in tasks whose answer does it. Check every lesson with npm run test:excel.",
+      "answer": "=B2*C2"
+    },
+    {
+      "prompt": "Fill in D3 and D4 the same way.",
+      "cell": "D3:D4",
+      "expected": [127.5, 49.5],
+      "must_be_formula": true,
+      "answer": "=B3*C3 in D3 and =B4*C4 in D4"
+    },
+    {
+      "prompt": "Click A1, then jump to the bottom of the Item column.",
+      "//shortcut": "Optional: a shortcut id from lib/learn/excel/shortcuts.ts. With no cell or selected, the task is done when the learner presses it. Ids: jump_down, jump_up, jump_left, jump_right, select_down, select_up, select_left, select_right, select_all, copy, cut, paste, undo, bold, italic, underline, edit_cell, new_line_in_cell, autosum, lock_reference. The Windows and Mac keys come from that file.",
+      "shortcut": "jump_down",
+      "//shortcut_help": "Optional, default \"badge\": \"badge\" shows big key badges, \"hint\" shows only the action with a Show the keys button, \"none\" shows nothing until the answer step. Use badge the first time, then hint, then none.",
+      "shortcut_help": "badge"
+    },
+    {
+      "prompt": "Click B2, then select all the prices down to the bottom of the data.",
+      "//selected": "Optional: a cell or range (\"C4\" or \"B2:B4\"). The task is done when the learner's selection matches it exactly. Works with no cell; with a cell, both must be right.",
+      "selected": "B2:B4",
+      "shortcut": "select_down",
+      "shortcut_help": "hint"
+    },
+    {
+      "prompt": "In D5, add up the revenue with SUM.",
+      "cell": "D5",
+      "expected": 324,
+      "//function": "Optional: a function the formula must use, like \"SUM\", or a list like [\"IF\", \"AND\"]",
+      "function": "SUM",
+      "shortcut": "autosum",
+      "shortcut_help": "hint",
+      "//shortcut_required": "Optional, default false: with a cell, the learner must also have pressed the shortcut during this task",
+      "shortcut_required": false,
+      "answer": "=SUM(D2:D4)"
+    },
+    {
+      "prompt": "Turn the revenue formulas in D2:D4 into plain numbers: copy them, then Paste Special > Values.",
+      "cell": "D2:D4",
+      "expected": [147, 127.5, 49.5],
+      "//must_be_value": "Optional, default false: the cell must hold a plain value, not a formula (for Paste Special > Values). Needs an expected value, and can't be used with must_be_formula, function or formula_contains. If a formula is still there: \"Right number, but D2 still holds a formula...\"",
+      "must_be_value": true,
+      "answer": "147 in D2, 127.5 in D3, 49.5 in D4"
+    },
+    {
+      "prompt": "Format the prices in B2:B4 as currency.",
+      "cell": "B2:B4",
+      "//number_format": "Optional: the number format the cells must have, like \"$#,##0.00\", \"0%\", \"0.0\" or \"#,##0\". Formats that look the same count as the same: Excel's currency button gives \"$\"#,##0.00_);[Red](\"$\"#,##0.00), which matches \"$#,##0.00\" (only the part before the first ; is compared; quotes, colours like [Red], padding like _) and spaces are ignored). Decimals still count: \"0%\" isn't \"0.00%\". expected can be left out, then only the format is checked. Show answer applies the format itself, so the answer can be plain words (\"Type ...\" steps and formulas in it still happen).",
+      "number_format": "$#,##0.00",
+      "answer": "Select B2:B4, then click the $ button on the toolbar"
+    },
+    {
+      "prompt": "Highlight the items that sold more than 25 cups: add a conditional format to C2:C4.",
+      "//conditional_format": "Optional: a rule the learner must add with Conditional Formatting > Highlight Cell Rules. range: the cells the rule covers (exactly). type: greater_than, less_than, between, equal_to, text_contains or duplicate. value: a number (greater_than, less_than, equal_to), [low, high] (between), text (text_contains, equal_to), or left out (duplicate). fill: optional colour like \"#FFC7CE\"; left out, any fill passes. Works with no cell. Show answer adds the rule itself (in the fill colour, or light red), so answer is optional here.",
+      "conditional_format": { "range": "C2:C4", "type": "greater_than", "value": 25, "fill": "#FFC7CE" },
+      "answer": "Select C2:C4, then Conditional Formatting > Highlight Cell Rules > Greater Than, type 25 and pick light red"
+    },
+    {
+      "prompt": "Turn on the filter and show only the items that sold more than 25 cups.",
+      "//hidden_rows": "Optional: the row numbers (as on screen) that must be hidden, by a filter or by hiding them. Exactly these: [] means no rows hidden. Hiding only some of them isn't a miss yet (filters can be added one at a time); hiding any other row is. Works with no cell. Show answer hides them with value filters where it can (otherwise it hides the rows), so answer is optional here and can be plain words. Sorting, filtering, freezing, hiding and adding data validation are never locked, in any task.",
+      "hidden_rows": [4],
+      "answer": "Filter → Cups sold → greater than 25"
+    },
+    {
+      "prompt": "Hide column C: right-click its letter and choose Hide.",
+      "//hidden_columns": "Optional: the column letters that must be hidden, exactly these ([] means none). Hiding only some of them isn't a miss yet; hiding any other column is. Works with no cell; Show answer hides them.",
+      "hidden_columns": ["C"],
+      "answer": "Right-click column C, then Hide"
+    },
+    {
+      "prompt": "Freeze the top row so the headers stay visible.",
+      "//frozen": "Optional: how many rows (from the top) and columns (from the left) must be frozen. {\"rows\": 0, \"columns\": 0} means nothing frozen. Freezing fewer isn't a miss yet; freezing more is. Works with no cell; Show answer freezes them. In Univer, Freeze is on the right-click menu.",
+      "frozen": { "rows": 1, "columns": 0 },
+      "answer": "Right-click a cell in row 2, then Freeze first row"
+    },
+    {
+      "prompt": "Add a dropdown to A2:A4 with Coffee, Latte and Tea.",
+      "//validation": "Optional: a data validation rule that must cover exactly this range. A dropdown: {\"range\": \"A2:A4\", \"type\": \"list\", \"values\": [...]} (choices match ignoring order and capitals). Whole numbers: {\"range\": \"C2:C4\", \"type\": \"whole_number\", \"min\": 0, \"max\": 100} (min, max or both). Works with no cell. Show answer adds the rule and makes it block wrong entries.",
+      "validation": { "range": "A2:A4", "type": "list", "values": ["Coffee", "Latte", "Tea"] },
+      "answer": "Data validation on A2:A4: dropdown of Coffee, Latte, Tea"
+    },
+    {
+      "prompt": "Turn the data into a table named Cart: select A1:D4, then right-click and choose Insert Table.",
+      "//table": "Optional: a table (Insert Table) must cover exactly this range, header row included. With \"name\", it must also have that name (capitals don't matter); leave name out to accept any (a new table is called Table1, Table2...). Names start with a letter and have no spaces. Insert Table and Rename Table are on the right-click menu (and Table in the toolbar). Works with no cell; Show answer makes the table, or renames the one on that range.",
+      "table": { "range": "A1:D4", "name": "Cart" },
+      "answer": "Select A1:D4, Insert Table, then Rename Table to Cart"
+    },
+    {
+      "prompt": "Click a cell in the data, then Insert > Pivot table. Show the revenue for each item: Rows Item, Values Revenue, Summarize by Sum.",
+      "//pivot": "Optional: the Insights panel's pivot table must have these settings. Only the keys given are checked: rows, columns (null = none), values (field names from the header row, capitals don't matter), agg (sum, count, average, max or min), percent_of_total and group_by_month (true/false), and slicers ({\"Field\": [the values ticked]}; {} means no slicer filtering). The fields must be headers on the task's sheet. Changing settings never counts as a miss: the task waits until they match. Works with no cell; Show answer opens the panel and sets it (on the data around the selected cell, or around A1).",
+      "pivot": { "rows": "Item", "columns": null, "values": "Revenue", "agg": "sum" },
+      "answer": "Insert > Pivot table: Rows Item, Values Revenue, Summarize by Sum"
+    },
+    {
+      "prompt": "Now draw it: Insert > Chart, a Column chart of Revenue by Item, titled Revenue by item.",
+      "//chart": "Optional: the Insights panel's chart must have these settings. Only the keys given are checked: type (column, bar, line, pie, scatter or combo), x and y (field names; for combo, y is the bar field), line (combo's line field, or null), agg (sum, count, average, max or min) and title (exact text, capitals and spaces included). Works with no cell; Show answer opens the panel and sets it.",
+      "chart": { "type": "column", "x": "Item", "y": "Revenue", "agg": "sum", "title": "Revenue by item" },
+      "answer": "Insert > Chart: Column, X Item, Y Revenue, Sum, title Revenue by item"
+    }
+  ],
+
+  "//speed_round": "Optional, default false: a running timer next to the task steps, from Got it until the last task's Next, and the final time when the lesson is done.",
+  "speed_round": false,
+
+  "//recap": "Shown when the lesson is finished: \"You just learned...\" in one or two sentences",
+  "recap": "You just wrote your first formulas and added up a column with SUM."
+}

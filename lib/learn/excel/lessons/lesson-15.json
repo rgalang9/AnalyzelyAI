@@ -1,0 +1,401 @@
+{
+  "id": "xl-15",
+  "level": 3,
+  "title": "Freeze panes and hiding",
+  "explanation": "You're organizing 30 student job applicants. The sheet is long and wide, so when you scroll down, the headers disappear, and some columns, like phone numbers, just get in the way. **Freezing** keeps headers on screen, and **hiding** tucks columns away without deleting them.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Applicants",
+        "header": true,
+        "column_widths": [
+          90,
+          130,
+          60,
+          90,
+          80,
+          140,
+          110,
+          140
+        ],
+        "rows": [
+          [
+            "Student",
+            "Major",
+            "Year",
+            "Hours/week",
+            "Pay rate",
+            "Email",
+            "Phone",
+            "Notes"
+          ],
+          [
+            "Maya",
+            "Computer Science",
+            2027,
+            12,
+            15,
+            "maya@wes.edu",
+            "860-555-1186",
+            "Strong interview"
+          ],
+          [
+            "Leo",
+            "Computer Science",
+            2026,
+            15,
+            16,
+            "leo@wes.edu",
+            "860-555-0614",
+            "Strong interview"
+          ],
+          [
+            "Sam",
+            "History",
+            2029,
+            6,
+            16,
+            "sam@wes.edu",
+            "860-555-1486",
+            "Weekend only"
+          ],
+          [
+            "Ava",
+            "Economics",
+            2026,
+            8,
+            15,
+            "ava@wes.edu",
+            "860-555-9455",
+            "Weekend only"
+          ],
+          [
+            "Noah",
+            "Economics",
+            2027,
+            6,
+            16,
+            "noah@wes.edu",
+            "860-555-4744",
+            "Weekend only"
+          ],
+          [
+            "Zoe",
+            "Biology",
+            2026,
+            15,
+            17.5,
+            "zoe@wes.edu",
+            "860-555-9179",
+            "Needs training"
+          ],
+          [
+            "Ben",
+            "Economics",
+            2027,
+            10,
+            15,
+            "ben@wes.edu",
+            "860-555-8974",
+            "Strong interview"
+          ],
+          [
+            "Chloe",
+            "Psychology",
+            2026,
+            15,
+            16,
+            "chloe@wes.edu",
+            "860-555-8133",
+            "Weekend only"
+          ],
+          [
+            "Dev",
+            "Computer Science",
+            2029,
+            15,
+            18,
+            "dev@wes.edu",
+            "860-555-5924",
+            "Returning"
+          ],
+          [
+            "Ella",
+            "Biology",
+            2027,
+            8,
+            15,
+            "ella@wes.edu",
+            "860-555-9411",
+            "Returning"
+          ],
+          [
+            "Finn",
+            "Psychology",
+            2029,
+            10,
+            18,
+            "finn@wes.edu",
+            "860-555-4717",
+            "Strong interview"
+          ],
+          [
+            "Gia",
+            "Economics",
+            2029,
+            8,
+            17.5,
+            "gia@wes.edu",
+            "860-555-2490",
+            "Weekend only"
+          ],
+          [
+            "Hugo",
+            "History",
+            2026,
+            6,
+            17.5,
+            "hugo@wes.edu",
+            "860-555-5572",
+            "Returning"
+          ],
+          [
+            "Isla",
+            "Psychology",
+            2029,
+            15,
+            18,
+            "isla@wes.edu",
+            "860-555-1126",
+            "Strong interview"
+          ],
+          [
+            "Jay",
+            "Computer Science",
+            2029,
+            6,
+            15,
+            "jay@wes.edu",
+            "860-555-5072",
+            "Weekend only"
+          ],
+          [
+            "Kai",
+            "Computer Science",
+            2029,
+            10,
+            15,
+            "kai@wes.edu",
+            "860-555-7564",
+            "Returning"
+          ],
+          [
+            "Lena",
+            "Biology",
+            2026,
+            12,
+            15,
+            "lena@wes.edu",
+            "860-555-3575",
+            "Returning"
+          ],
+          [
+            "Mia",
+            "Biology",
+            2027,
+            12,
+            18,
+            "mia@wes.edu",
+            "860-555-8134",
+            "Strong interview"
+          ],
+          [
+            "Omar",
+            "Biology",
+            2029,
+            12,
+            17.5,
+            "omar@wes.edu",
+            "860-555-2243",
+            "Weekend only"
+          ],
+          [
+            "Priya",
+            "Psychology",
+            2028,
+            12,
+            17.5,
+            "priya@wes.edu",
+            "860-555-6233",
+            "Needs training"
+          ],
+          [
+            "Quinn",
+            "Biology",
+            2026,
+            8,
+            16,
+            "quinn@wes.edu",
+            "860-555-3800",
+            "Needs training"
+          ],
+          [
+            "Rosa",
+            "Economics",
+            2029,
+            15,
+            16,
+            "rosa@wes.edu",
+            "860-555-4304",
+            "Returning"
+          ],
+          [
+            "Theo",
+            "Economics",
+            2027,
+            12,
+            17.5,
+            "theo@wes.edu",
+            "860-555-9991",
+            "Returning"
+          ],
+          [
+            "Uma",
+            "Biology",
+            2026,
+            12,
+            18,
+            "uma@wes.edu",
+            "860-555-6521",
+            "Weekend only"
+          ],
+          [
+            "Vic",
+            "History",
+            2026,
+            12,
+            18,
+            "vic@wes.edu",
+            "860-555-1019",
+            "Needs training"
+          ],
+          [
+            "Will",
+            "Economics",
+            2027,
+            12,
+            16,
+            "will@wes.edu",
+            "860-555-1801",
+            "Returning"
+          ],
+          [
+            "Xin",
+            "Psychology",
+            2026,
+            6,
+            15,
+            "xin@wes.edu",
+            "860-555-9286",
+            "Needs training"
+          ],
+          [
+            "Yara",
+            "Psychology",
+            2026,
+            10,
+            15,
+            "yara@wes.edu",
+            "860-555-1152",
+            "Needs training"
+          ],
+          [
+            "Zack",
+            "Psychology",
+            2029,
+            8,
+            17.5,
+            "zack@wes.edu",
+            "860-555-5691",
+            "Returning"
+          ],
+          [
+            "Amir",
+            "History",
+            2026,
+            6,
+            18,
+            "amir@wes.edu",
+            "860-555-7634",
+            "Weekend only"
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Scroll down to the bottom of the list. The headers scroll away! Freeze the top row so the headers always stay visible: right-click any cell and choose Freeze first row.",
+      "teach": "**Freeze** pins rows or columns in place while the rest of the sheet scrolls. Freezing the **top row** keeps your headers on screen, which matters once a sheet has more rows than fit on the screen.",
+      "frozen": {
+        "rows": 1,
+        "columns": 0
+      },
+      "hints": [
+        "Right-click a cell, then choose Freeze first row.",
+        "Scroll down to check: row 1 should stay at the top."
+      ],
+      "answer": "Freeze the first row"
+    },
+    {
+      "prompt": "Now freeze the first column as well, so the student names stay visible when you scroll right. Click B2, right-click it, and choose Freeze to active cell.",
+      "teach": "To freeze rows **and** columns, click the cell just below and to the right of what you want frozen (here **B2**), then right-click and choose **Freeze to active cell**. Everything above and to the left of B2 stays put.",
+      "frozen": {
+        "rows": 1,
+        "columns": 1
+      },
+      "hints": [
+        "Click B2, right-click, then Freeze to active cell.",
+        "Row 1 and column A should both stay put when you scroll."
+      ],
+      "answer": "Click B2, then freeze panes there"
+    },
+    {
+      "prompt": "The hiring manager doesn't need the Phone column. Hide column G: right-click the column letter G and choose Hide.",
+      "teach": "**Hiding** a column tucks it away without deleting it. Formulas that use it still work. The column letters skip a letter (F, then H), which shows something is hidden.",
+      "hidden_columns": [
+        "G"
+      ],
+      "hints": [
+        "Right-click the grey G at the top, then Hide.",
+        "The letters should now go F, H."
+      ],
+      "answer": "Right-click column G, then Hide"
+    },
+    {
+      "prompt": "Hide the Email column (F) as well.",
+      "hidden_columns": [
+        "F",
+        "G"
+      ],
+      "hints": [
+        "Right-click the grey F at the top, then Hide.",
+        "The letters should now go E, H."
+      ],
+      "answer": "Right-click column F, then Hide"
+    },
+    {
+      "prompt": "Last one: the manager wants the emails back, but not the phone numbers. Select columns E to H, right-click and choose Unhide. That brings back both F and G, so then hide G again.",
+      "teach": "To **unhide**, select the columns on both sides of the hidden ones, right-click and choose **Unhide**. It brings back everything in between, which is why you'll need to hide G again.",
+      "hidden_columns": [
+        "G"
+      ],
+      "hints": [
+        "Select columns E to H by their letters, right-click, Unhide. Then right-click G and Hide.",
+        "Only G should be hidden at the end."
+      ],
+      "answer": "Unhide F (and keep G hidden)"
+    }
+  ],
+  "recap": "Freeze panes keeps headers or names on screen while you scroll. Hiding tucks columns away without deleting them, and unhiding brings them back."
+}

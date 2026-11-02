@@ -1,0 +1,250 @@
+{
+  "id": "xl-72",
+  "level": 11,
+  "title": "Speed round 1: move and select",
+  "explanation": "**Speed round!** Analysts who never touch the mouse work several times faster. Every task here must be done with the **keyboard only**: if you click in the grid, the task asks you to try again. The timer shows how fast you go.\n\nThe keys are hidden. Press **Show the keys** only if you're stuck.",
+  "speed_round": true,
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sales reps",
+        "header": true,
+        "column_widths": [
+          90,
+          80,
+          60,
+          90
+        ],
+        "rows": [
+          [
+            "Rep",
+            "Region",
+            "Deals",
+            "Revenue"
+          ],
+          [
+            "Maya",
+            "South",
+            12,
+            21000
+          ],
+          [
+            "Leo",
+            "South",
+            8,
+            23000
+          ],
+          [
+            "Sam",
+            "West",
+            13,
+            22500
+          ],
+          [
+            "Ava",
+            "North",
+            12,
+            4000
+          ],
+          [
+            "Noah",
+            "West",
+            7,
+            21500
+          ],
+          [
+            "Zoe",
+            "South",
+            6,
+            26500
+          ],
+          [
+            "Ben",
+            "West",
+            11,
+            21500
+          ],
+          [
+            "Chloe",
+            "West",
+            9,
+            24000
+          ],
+          [
+            "Dev",
+            "South",
+            6,
+            24000
+          ],
+          [
+            "Ella",
+            "South",
+            11,
+            16000
+          ],
+          [
+            "Finn",
+            "North",
+            13,
+            28500
+          ],
+          [
+            "Gia",
+            "North",
+            5,
+            28000
+          ],
+          [
+            "Hugo",
+            "North",
+            7,
+            28500
+          ],
+          [
+            "Isla",
+            "North",
+            7,
+            19000
+          ],
+          [
+            "Jay",
+            "West",
+            14,
+            29000
+          ],
+          [
+            "Kai",
+            "West",
+            9,
+            27000
+          ],
+          [
+            "Lena",
+            "West",
+            5,
+            15500
+          ],
+          [
+            "Mia",
+            "North",
+            3,
+            8000
+          ],
+          [
+            "Omar",
+            "West",
+            6,
+            12000
+          ],
+          [
+            "Priya",
+            "West",
+            13,
+            13500
+          ],
+          [
+            "Quinn",
+            "West",
+            11,
+            16000
+          ],
+          [
+            "Rosa",
+            "East",
+            11,
+            22500
+          ],
+          [
+            "Theo",
+            "West",
+            12,
+            11000
+          ],
+          [
+            "Uma",
+            "East",
+            13,
+            4500
+          ],
+          [
+            "Vic",
+            "East",
+            12,
+            25000
+          ]
+        ],
+        "number_formats": {
+          "D2:D27": "$#,##0"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "You start on A1. Jump to the last rep at the bottom of the list.",
+      "selected": "A26",
+      "shortcut": "jump_down",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl (⌘ on Mac) + down arrow."
+      ]
+    },
+    {
+      "prompt": "Jump to the last column of that row (Revenue).",
+      "selected": "D26",
+      "shortcut": "jump_right",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl (⌘ on Mac) + right arrow."
+      ]
+    },
+    {
+      "prompt": "Jump back up to the Revenue header, D1.",
+      "selected": "D1",
+      "shortcut": "jump_up",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl (⌘ on Mac) + up arrow."
+      ]
+    },
+    {
+      "prompt": "Move down one cell to D2 with the arrow key, then select all the revenue down to the bottom in one go.",
+      "selected": "D2:D26",
+      "shortcut": "select_down",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "keyboard_only": true,
+      "hints": [
+        "Down arrow once, then Ctrl+Shift (⌘+Shift on Mac) + down arrow."
+      ]
+    },
+    {
+      "prompt": "Move to D27 (the first empty cell under the revenue) using only the keyboard, and type =SUM(D2:D26), then press Enter.",
+      "cell": "D27",
+      "expected": 492000,
+      "function": "SUM",
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl+down arrow takes you to D26, then one more down arrow.",
+        "=SUM(D2:D26)"
+      ],
+      "answer": "=SUM(D2:D26)"
+    },
+    {
+      "prompt": "Last one: select the whole table in one keystroke.",
+      "shortcut": "select_all",
+      "shortcut_help": "hint",
+      "keyboard_only": true,
+      "hints": [
+        "Click nothing! Use Ctrl+A (⌘+A on Mac)."
+      ]
+    }
+  ],
+  "recap": "Ctrl or ⌘ plus an arrow jumps to the edge of the data, adding Shift selects along the way, and Ctrl+A or ⌘+A selects the table. Practise until you don't need to think about them."
+}

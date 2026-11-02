@@ -1,0 +1,196 @@
+{
+  "id": "xl-18",
+  "level": 4,
+  "title": "TRIM and CLEAN: removing hidden junk",
+  "explanation": "**Welcome to Level 4: cleaning text!** This sign-up list came from a web form, and people typed extra spaces before, after and in the middle of their names. Some cities also have invisible line breaks copied from a website. You can't always see this junk, but it breaks sorting, matching and counting. Text functions clean it with a formula, and you'll write the clean version next to the original.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sign-ups",
+        "header": true,
+        "column_widths": [
+          130,
+          110,
+          30,
+          120,
+          110,
+          100,
+          110
+        ],
+        "rows": [
+          [
+            "Raw name",
+            "Raw city",
+            null,
+            "Clean name",
+            "Length before",
+            "Length after",
+            "Clean city"
+          ],
+          [
+            "  Maya Lee",
+            "Boston",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo Park  ",
+            " Hartford",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam   Ortiz",
+            "New Haven ",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            " Ava  Chen ",
+            "Boston\n",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah Kim",
+            "Providence",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe Ali   ",
+            "Hartford\n",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, clean Maya's name with TRIM: =TRIM(A2).",
+      "teach": "**TRIM** removes spaces at the start and end of text, and turns any run of spaces in the middle into a single space. So `\"  Maya   Lee \"` becomes `\"Maya Lee\"`.",
+      "cell": "D2",
+      "expected": "Maya Lee",
+      "function": "TRIM",
+      "exact_text": true,
+      "hints": [
+        "TRIM takes one cell inside its brackets.",
+        "=TRIM(A2)"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=TRIM(A2)"
+    },
+    {
+      "prompt": "Copy D2 down to D7 to clean every name.",
+      "cell": "D3:D7",
+      "expected": [
+        "Leo Park",
+        "Sam Ortiz",
+        "Ava Chen",
+        "Noah Kim",
+        "Zoe Ali"
+      ],
+      "function": "TRIM",
+      "exact_text": true,
+      "hints": [
+        "Copy D2, select D3:D7, then paste. Or use the fill handle.",
+        "Sam's name should become Sam Ortiz, with one space."
+      ],
+      "highlight": [
+        "D3:D7"
+      ],
+      "answer": "Copy D2 down to D7"
+    },
+    {
+      "prompt": "You can't see spaces, but you can count them. In E2, count the characters in Maya's raw name with =LEN(A2).",
+      "teach": "**LEN** counts every character in a cell, spaces included. Comparing LEN before and after TRIM shows exactly how much junk was removed.",
+      "cell": "E2",
+      "expected": 10,
+      "function": "LEN",
+      "hints": [
+        "LEN takes one cell, like TRIM.",
+        "=LEN(A2). It counts the 2 spaces at the start too."
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=LEN(A2)"
+    },
+    {
+      "prompt": "In F2, count the characters in Maya's clean name (D2). Then copy E2:F2 down to row 7.",
+      "cell": "E2:F7",
+      "expected": [
+        10,
+        8,
+        10,
+        8,
+        11,
+        9,
+        11,
+        8,
+        8,
+        8,
+        10,
+        7
+      ],
+      "function": "LEN",
+      "hints": [
+        "F2 is =LEN(D2). Then select E2:F2, copy, and paste into E3:F7.",
+        "Maya goes from 10 characters to 8."
+      ],
+      "highlight": [
+        "E2:F7"
+      ],
+      "answer": "=LEN(D2) in F2, then copy E2:F2 down to row 7"
+    },
+    {
+      "prompt": "Some cities have an invisible line break at the end. In G2, clean the city with TRIM and CLEAN together: =TRIM(CLEAN(B2)). Then copy it down to G7.",
+      "teach": "**CLEAN** removes invisible characters like line breaks. In real Excel, TRIM only removes spaces, so you need both. (This practice sheet's TRIM happens to remove line breaks too, but real Excel's doesn't, so build the habit.) You can put one function **inside** another: `=TRIM(CLEAN(B2))` cleans first, then trims the result. Excel works from the inside out.",
+      "cell": "G2:G7",
+      "expected": [
+        "Boston",
+        "Hartford",
+        "New Haven",
+        "Boston",
+        "Providence",
+        "Hartford"
+      ],
+      "function": [
+        "TRIM",
+        "CLEAN"
+      ],
+      "exact_text": true,
+      "hints": [
+        "CLEAN goes inside TRIM's brackets.",
+        "=TRIM(CLEAN(B2)), then copy it down to G7."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=TRIM(CLEAN(B2)) in G2, then copy down to G7"
+    }
+  ],
+  "recap": "TRIM removes extra spaces, CLEAN removes invisible characters like line breaks, and LEN counts characters so you can see the junk. Functions can go inside each other, and Excel works from the inside out."
+}

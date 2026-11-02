@@ -1,0 +1,143 @@
+{
+  "id": "xl-16",
+  "level": 3,
+  "title": "Dropdown lists and input rules",
+  "explanation": "You're running sign-ups for a campus gala. When people type into a shared sheet, they make typos like \"vip\", \"V.I.P\" or \"Vip\", which breaks sorting and counting. **Data validation** stops this: a dropdown lets people pick from a list, and rules reject bad entries.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "RSVPs",
+        "header": true,
+        "column_widths": [
+          100,
+          100,
+          100,
+          80
+        ],
+        "rows": [
+          [
+            "Name",
+            "Ticket",
+            "Meal",
+            "Guests"
+          ],
+          [
+            "Maya",
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Add a dropdown to B2:B7 with 3 choices: General, VIP and Student. Select B2:B7, click Data validation in the toolbar, and choose the Dropdown type.",
+      "teach": "**Data validation** controls what can go into a cell. A **dropdown list** rule shows a small arrow, and people pick from your choices instead of typing.",
+      "validation": {
+        "range": "B2:B7",
+        "type": "list",
+        "values": [
+          "General",
+          "VIP",
+          "Student"
+        ]
+      },
+      "hints": [
+        "Select B2:B7, open Data validation, choose Dropdown, and add the 3 choices.",
+        "Type the choices exactly: General, VIP, Student."
+      ],
+      "answer": "Data validation on B2:B7: list of General, VIP, Student"
+    },
+    {
+      "prompt": "Use the new dropdown: set Maya's ticket in B2 to VIP.",
+      "cell": "B2",
+      "expected": "VIP",
+      "hints": [
+        "Click B2, then click its little arrow and pick VIP.",
+        "B2 should say VIP."
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "Pick VIP from B2's dropdown"
+    },
+    {
+      "prompt": "Add a dropdown for meals to C2:C7, with Veggie, Chicken and Fish.",
+      "validation": {
+        "range": "C2:C7",
+        "type": "list",
+        "values": [
+          "Veggie",
+          "Chicken",
+          "Fish"
+        ]
+      },
+      "hints": [
+        "Same steps as the ticket dropdown, on C2:C7 (type: Dropdown).",
+        "The choices are Veggie, Chicken and Fish."
+      ],
+      "answer": "Data validation on C2:C7: list of Veggie, Chicken, Fish"
+    },
+    {
+      "prompt": "Each person can bring 0 to 3 guests. Add a rule to D2:D7 that only allows whole numbers between 0 and 3: choose the Integer type, between 0 and 3, and set it to reject invalid input.",
+      "teach": "Validation isn't just dropdowns. The **Integer** type only accepts whole numbers, between the limits you set. By default a rule only **warns**, so choose the option to **reject** invalid input if you want it to block bad entries.",
+      "validation": {
+        "range": "D2:D7",
+        "type": "whole_number",
+        "min": 0,
+        "max": 3
+      },
+      "hints": [
+        "Select D2:D7, open Data validation, choose Integer, between 0 and 3, and pick the reject option.",
+        "Minimum 0, maximum 3."
+      ],
+      "answer": "Data validation on D2:D7: whole number between 0 and 3"
+    },
+    {
+      "prompt": "Last one: try typing 10 in D3 to see the rule block it. Then type Leo's real number of guests, 2.",
+      "cell": "D3",
+      "expected": 2,
+      "hints": [
+        "Type 10 and press Enter. You should get a warning. Then type 2.",
+        "D3 should end up as 2."
+      ],
+      "highlight": [
+        "D3"
+      ],
+      "answer": "2"
+    }
+  ],
+  "recap": "Data validation controls what goes into cells. Dropdown lists stop typos, and rules like whole numbers between 0 and 3 reject bad entries."
+}

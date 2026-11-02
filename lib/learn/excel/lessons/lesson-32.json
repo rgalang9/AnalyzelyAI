@@ -1,0 +1,170 @@
+{
+  "id": "xl-32",
+  "level": 5,
+  "title": "Reading errors and IFERROR",
+  "explanation": "A merch shop's sheet is full of strange messages like **#DIV/0!**. These are **errors**: Excel's way of saying a formula can't give an answer. Each one has a meaning, and once you can read them, they're easy to fix or hide.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Merch",
+        "header": true,
+        "column_widths": [
+          90,
+          80,
+          60,
+          80,
+          120,
+          30,
+          150,
+          90
+        ],
+        "rows": [
+          [
+            "Product",
+            "Revenue",
+            "Units",
+            "Per unit",
+            "Per unit (safe)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Hoodie",
+            900,
+            20,
+            "=B2/C2",
+            null,
+            null,
+            "Total revenue",
+            "=SUMM(B2:B7)"
+          ],
+          [
+            "Cap",
+            0,
+            0,
+            "=B3/C3",
+            null,
+            null,
+            "Error type in D3",
+            null
+          ],
+          [
+            "Mug",
+            280,
+            14,
+            "=B4/C4",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sticker",
+            45,
+            0,
+            "=B5/C5",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Poster",
+            160,
+            8,
+            "=B6/C6",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Socks",
+            "n/a",
+            10,
+            "=B7/C7",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click D3 and look at its error.",
+      "teach": "The common errors: **#DIV/0!** means dividing by zero. **#NAME?** means Excel doesn't recognise a name, usually a misspelled function. **#VALUE!** means the wrong kind of data, like doing maths with text. **#N/A** means a lookup couldn't find a match (you'll meet it in Level 6). **#REF!** means a formula points at a cell that was deleted.",
+      "selected": "D3",
+      "hints": [
+        "Column D, row 3: the Cap.",
+        "Cap has 0 units, so it divides by zero."
+      ]
+    },
+    {
+      "prompt": "Which kind of error is in D3? Type DIV/0 into H3 (without the # or !).",
+      "cell": "H3",
+      "expected": "DIV/0",
+      "hints": [
+        "The Cap sold 0 units, and you can't divide by 0.",
+        "Type DIV/0"
+      ],
+      "highlight": [
+        "H3"
+      ],
+      "answer": "DIV/0"
+    },
+    {
+      "prompt": "H2 should add up the revenue, but it shows #NAME?. Click it and fix the misspelled function.",
+      "cell": "H2",
+      "expected": 1385,
+      "function": "SUM",
+      "hints": [
+        "SUM is spelled with one M.",
+        "=SUM(B2:B7)"
+      ],
+      "highlight": [
+        "H2"
+      ],
+      "answer": "=SUM(B2:B7)"
+    },
+    {
+      "prompt": "In E2, work out the price per unit, but show \"Check\" instead of an error: =IFERROR(B2/C2, \"Check\"). Then copy it down to E7.",
+      "teach": "**IFERROR(formula, if_error)** shows the formula's answer normally, but if it would be an error, it shows your message instead. It keeps reports clean. Use it carefully, though: hiding errors can hide real problems.",
+      "cell": "E2:E7",
+      "expected": [
+        45,
+        "Check",
+        20,
+        "Check",
+        20,
+        "Check"
+      ],
+      "function": "IFERROR",
+      "hints": [
+        "=IFERROR(B2/C2, \"Check\"), then copy it down.",
+        "Cap, Sticker and Socks should say Check."
+      ],
+      "highlight": [
+        "B2:C7"
+      ],
+      "answer": "=IFERROR(B2/C2, \"Check\") in E2, then copy down to E7"
+    },
+    {
+      "prompt": "Last one: Socks shows #VALUE! because its revenue is the text \"n/a\". The real revenue was 300. Fix B7, and watch D7, E7 and the total update.",
+      "cell": "B7",
+      "expected": 300,
+      "hints": [
+        "Click B7 and type 300.",
+        "D7 and E7 become 30, and H2 becomes 1685."
+      ],
+      "highlight": [
+        "B7"
+      ],
+      "answer": "Type 300 in B7"
+    }
+  ],
+  "recap": "#DIV/0! is dividing by zero, #NAME? is a misspelled name, #VALUE! is the wrong kind of data, #N/A is a failed lookup, and #REF! is a deleted cell. IFERROR shows a message instead of an error."
+}

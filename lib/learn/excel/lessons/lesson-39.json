@@ -1,0 +1,173 @@
+{
+  "id": "xl-39",
+  "level": 6,
+  "title": "INDEX and MATCH",
+  "explanation": "Before XLOOKUP existed, analysts used **INDEX and MATCH** together, and you'll still find them in most company spreadsheets and interview questions. MATCH finds **where** something is, and INDEX brings back **what's at** a position.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Roster",
+        "header": true,
+        "column_widths": [
+          60,
+          80,
+          100,
+          60,
+          30,
+          160,
+          90
+        ],
+        "rows": [
+          [
+            "ID",
+            "Name",
+            "Major",
+            "GPA",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            301,
+            "Maya",
+            "Economics",
+            3.8,
+            null,
+            "3rd name in the list",
+            null
+          ],
+          [
+            302,
+            "Leo",
+            "Biology",
+            3.4,
+            null,
+            "Position of Ava",
+            null
+          ],
+          [
+            303,
+            "Sam",
+            "History",
+            3.6,
+            null,
+            "Ava's GPA",
+            null
+          ],
+          [
+            304,
+            "Ava",
+            "Math",
+            3.9,
+            null,
+            "Zoe's major",
+            null
+          ],
+          [
+            305,
+            "Noah",
+            "Economics",
+            3.2,
+            null,
+            "Name of ID 305",
+            null
+          ],
+          [
+            306,
+            "Zoe",
+            "Biology",
+            3.7,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, get the 3rd name in the list: =INDEX(B2:B7, 3).",
+      "teach": "**INDEX(range, n)** brings back the **n-th** cell in a range. The 3rd cell of B2:B7 is B4, which is Sam.",
+      "cell": "G2",
+      "expected": "Sam",
+      "function": "INDEX",
+      "hints": [
+        "The names are B2:B7, and you want number 3.",
+        "=INDEX(B2:B7, 3)"
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=INDEX(B2:B7, 3)"
+    },
+    {
+      "prompt": "In G3, find which position Ava is at in the name list: =MATCH(\"Ava\", B2:B7, 0).",
+      "teach": "**MATCH(value, range, 0)** gives the **position** of a value in a range. The 0 means exact match. Ava is the 4th name.",
+      "cell": "G3",
+      "expected": 4,
+      "function": "MATCH",
+      "hints": [
+        "Search the names B2:B7 for \"Ava\", with 0 for exact.",
+        "=MATCH(\"Ava\", B2:B7, 0)"
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=MATCH(\"Ava\", B2:B7, 0)"
+    },
+    {
+      "prompt": "Now combine them. In G4, find Ava's GPA: =INDEX(D2:D7, MATCH(\"Ava\", B2:B7, 0)).",
+      "teach": "MATCH finds Ava's position (4), and INDEX brings back the 4th GPA. Together they look up any column, left or right, just like XLOOKUP.",
+      "cell": "G4",
+      "expected": 3.9,
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "hints": [
+        "MATCH goes where INDEX's number goes.",
+        "=INDEX(D2:D7, MATCH(\"Ava\", B2:B7, 0))"
+      ],
+      "highlight": [
+        "B2:D7"
+      ],
+      "answer": "=INDEX(D2:D7, MATCH(\"Ava\", B2:B7, 0))"
+    },
+    {
+      "prompt": "In G5, find Zoe's major with INDEX and MATCH.",
+      "cell": "G5",
+      "expected": "Biology",
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "hints": [
+        "INDEX on the majors, MATCH on the names.",
+        "=INDEX(C2:C7, MATCH(\"Zoe\", B2:B7, 0))"
+      ],
+      "highlight": [
+        "B2:C7"
+      ],
+      "answer": "=INDEX(C2:C7, MATCH(\"Zoe\", B2:B7, 0))"
+    },
+    {
+      "prompt": "Last one: in G6, find the name of student ID 305. Search the IDs with MATCH, and bring back the name with INDEX.",
+      "cell": "G6",
+      "expected": "Noah",
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "hints": [
+        "INDEX on the names, MATCH 305 in the IDs. Numbers don't need quotes.",
+        "=INDEX(B2:B7, MATCH(305, A2:A7, 0))"
+      ],
+      "highlight": [
+        "A2:B7"
+      ],
+      "answer": "=INDEX(B2:B7, MATCH(305, A2:A7, 0))"
+    }
+  ],
+  "recap": "MATCH(value, range, 0) finds a position, and INDEX(range, n) brings back what's at that position. INDEX(return column, MATCH(value, lookup column, 0)) is a lookup that works in any direction."
+}

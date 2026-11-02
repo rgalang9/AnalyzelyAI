@@ -1,0 +1,170 @@
+{
+  "id": "xl-37",
+  "level": 6,
+  "title": "XLOOKUP",
+  "explanation": "**XLOOKUP** is the modern replacement for VLOOKUP. Instead of counting columns, you point at the column to search and the column to bring back. It can look left or right, and it doesn't break when columns are inserted. If you only learn one lookup, learn this one.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Products",
+        "header": true,
+        "column_widths": [
+          60,
+          110,
+          60,
+          90,
+          30,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "SKU",
+            "Product",
+            "Price",
+            "Category",
+            null,
+            "Find",
+            "Answer"
+          ],
+          [
+            "S101",
+            "Hoodie",
+            45,
+            "Clothing",
+            null,
+            "S105",
+            null
+          ],
+          [
+            "S102",
+            "Cap",
+            18,
+            "Clothing",
+            null,
+            "Backpack",
+            null
+          ],
+          [
+            "S103",
+            "Mug",
+            12,
+            "Home",
+            null,
+            "Tote",
+            null
+          ],
+          [
+            "S104",
+            "Tote",
+            15,
+            "Bags",
+            null,
+            "Socks",
+            null
+          ],
+          [
+            "S105",
+            "Water bottle",
+            22,
+            "Home",
+            null,
+            null,
+            null
+          ],
+          [
+            "S106",
+            "Backpack",
+            60,
+            "Bags",
+            null,
+            null,
+            null
+          ],
+          [
+            "S107",
+            "Socks",
+            9,
+            "Clothing",
+            null,
+            null,
+            null
+          ],
+          [
+            "S108",
+            "Poster",
+            8,
+            "Home",
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, find the price of S105: =XLOOKUP(F2, A2:A9, C2:C9).",
+      "teach": "**XLOOKUP(lookup_value, lookup_array, return_array)**: find the value in one column, and bring back the matching row from another column. Exact match is the default, so there's no TRUE/FALSE to remember.",
+      "cell": "G2",
+      "expected": 22,
+      "function": "XLOOKUP",
+      "hints": [
+        "Search the SKUs in A2:A9, bring back the prices in C2:C9.",
+        "=XLOOKUP(F2, A2:A9, C2:C9)"
+      ],
+      "highlight": [
+        "F2",
+        "A2:C9"
+      ],
+      "answer": "=XLOOKUP(F2, A2:A9, C2:C9)"
+    },
+    {
+      "prompt": "In G3, find the SKU of Backpack. This looks to the LEFT, which VLOOKUP couldn't do: search the Product column and bring back the SKU column.",
+      "cell": "G3",
+      "expected": "S106",
+      "function": "XLOOKUP",
+      "hints": [
+        "Search B2:B9 (Product), bring back A2:A9 (SKU).",
+        "=XLOOKUP(F3, B2:B9, A2:A9)"
+      ],
+      "highlight": [
+        "F3",
+        "A2:B9"
+      ],
+      "answer": "=XLOOKUP(F3, B2:B9, A2:A9)"
+    },
+    {
+      "prompt": "In G4, find the category of Tote.",
+      "cell": "G4",
+      "expected": "Bags",
+      "function": "XLOOKUP",
+      "hints": [
+        "Search the Product column, bring back the Category column.",
+        "=XLOOKUP(F4, B2:B9, D2:D9)"
+      ],
+      "highlight": [
+        "F4",
+        "B2:D9"
+      ],
+      "answer": "=XLOOKUP(F4, B2:B9, D2:D9)"
+    },
+    {
+      "prompt": "Last one: in G5, find the price of Socks.",
+      "cell": "G5",
+      "expected": 9,
+      "function": "XLOOKUP",
+      "hints": [
+        "Search the Product column, bring back the Price column.",
+        "=XLOOKUP(F5, B2:B9, C2:C9)"
+      ],
+      "highlight": [
+        "F5",
+        "B2:C9"
+      ],
+      "answer": "=XLOOKUP(F5, B2:B9, C2:C9)"
+    }
+  ],
+  "recap": "XLOOKUP(value, lookup column, return column) finds a value and brings back the matching row from any column, left or right. Exact match is the default."
+}

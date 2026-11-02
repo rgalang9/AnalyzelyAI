@@ -1,0 +1,348 @@
+{
+  "id": "xl-55",
+  "level": 8,
+  "title": "Review: The box office dashboard",
+  "explanation": "**Level 8 review!** The studio's head wants a quick dashboard for the board meeting: a few summaries and charts that answer their questions. Use the Insights panel for each one, and type the answers into column J. There's nothing new here, just everything from Level 8.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          230,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Genre with most profit",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "Best month for Animation",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            "R-rated movies (count)",
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            "Biggest-grossing rating",
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "First, see each genre's typical movie: build a pivot of average gross by genre (Rows: Genre, Values: Gross ($M), Summarize by: Average).",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Gross ($M)",
+        "agg": "average"
+      },
+      "hints": [
+        "Insert → Pivot table.",
+        "Rows: Genre, Values: Gross ($M), Summarize by: Average."
+      ],
+      "answer": "Rows: Genre, Values: Gross ($M), Average"
+    },
+    {
+      "prompt": "Which genre made the most profit (gross − budget) in total? Work it out any way you like, for example with a helper column in H and a pivot, and type the genre into J2.",
+      "cell": "J2",
+      "expected": "Horror",
+      "hints": [
+        "Add =F2-G2 in H2:H19 (give H1 a header like Profit), then pivot it by genre (click Use selected cells so the panel sees column H).",
+        "It's Horror, with 158."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "Horror"
+    },
+    {
+      "prompt": "Make a pivot of gross by month, with a Genre slicer showing only Animation.",
+      "pivot": {
+        "rows": "Month",
+        "values": "Gross ($M)",
+        "agg": "sum",
+        "slicers": {
+          "Genre": [
+            "Animation"
+          ]
+        }
+      },
+      "hints": [
+        "Rows: Month, Values: Gross ($M), Sum, then add a Genre slicer.",
+        "Untick everything except Animation."
+      ],
+      "answer": "Rows: Month, Gross Sum, slicer on Genre with only Animation"
+    },
+    {
+      "prompt": "Which month was best for Animation? Type its 3-letter name into J3.",
+      "cell": "J3",
+      "expected": "May",
+      "hints": [
+        "Read the biggest month.",
+        "May: Little Giants made 175."
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "May"
+    },
+    {
+      "prompt": "How many R-rated movies are there? Use a pivot or COUNTIF, and type the number into J4.",
+      "cell": "J4",
+      "expected": 5,
+      "hints": [
+        "A pivot with Rows: Rating, Values: Movie, Count works. So does =COUNTIF(E2:E19, \"R\").",
+        "There are 5."
+      ],
+      "highlight": [
+        "J4"
+      ],
+      "answer": "5"
+    },
+    {
+      "prompt": "Last one: make a pie chart of gross by rating with the title Gross by rating, and type the biggest slice's rating into J5.",
+      "cell": "J5",
+      "expected": "PG-13",
+      "chart": {
+        "type": "pie",
+        "x": "Rating",
+        "y": "Gross ($M)",
+        "title": "Gross by rating"
+      },
+      "hints": [
+        "Chart tab: Pie, Slices: Rating, Values: Gross ($M), Title: Gross by rating.",
+        "The biggest slice is PG-13."
+      ],
+      "highlight": [
+        "J5"
+      ],
+      "answer": "PG-13"
+    }
+  ],
+  "recap": "Level 8 done! You can summarise data with pivot tables, group by month, show shares, filter with slicers, and pick and build the right chart. Next up: dates."
+}

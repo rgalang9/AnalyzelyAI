@@ -1,0 +1,643 @@
+{
+  "id": "xl-74",
+  "level": 11,
+  "title": "Final Case Study: The startup's first 6 months",
+  "explanation": "**Final case study!** You've joined a small software startup as its first analyst. It sells 3 subscription plans, and it has a log of every signup from its first 6 months. The founders want a monthly summary, a few key numbers, and a check that everything adds up. There are 4 sheets: **Signups**, **Plans**, **Assumptions** and **Summary**. No new tools: use everything you've learned. Congratulations on making it this far!",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Signups",
+        "header": true,
+        "column_widths": [
+          110,
+          70,
+          90,
+          110
+        ],
+        "rows": [
+          [
+            "Signup date",
+            "Plan",
+            "Channel",
+            "Monthly price"
+          ],
+          [
+            46026,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46027,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46028,
+            "Team",
+            "Referral",
+            null
+          ],
+          [
+            46035,
+            "Pro",
+            "Organic",
+            null
+          ],
+          [
+            46039,
+            "Team",
+            "Ads",
+            null
+          ],
+          [
+            46040,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46043,
+            "Team",
+            "Ads",
+            null
+          ],
+          [
+            46048,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46054,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46056,
+            "Basic",
+            "Ads",
+            null
+          ],
+          [
+            46060,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46068,
+            "Team",
+            "Ads",
+            null
+          ],
+          [
+            46070,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46073,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46084,
+            "Pro",
+            "Organic",
+            null
+          ],
+          [
+            46084,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46090,
+            "Pro",
+            "Organic",
+            null
+          ],
+          [
+            46091,
+            "Basic",
+            "Ads",
+            null
+          ],
+          [
+            46097,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46100,
+            "Basic",
+            "Referral",
+            null
+          ],
+          [
+            46106,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46113,
+            "Basic",
+            "Ads",
+            null
+          ],
+          [
+            46115,
+            "Team",
+            "Organic",
+            null
+          ],
+          [
+            46119,
+            "Basic",
+            "Referral",
+            null
+          ],
+          [
+            46122,
+            "Pro",
+            "Ads",
+            null
+          ],
+          [
+            46125,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46143,
+            "Pro",
+            "Ads",
+            null
+          ],
+          [
+            46145,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46146,
+            "Basic",
+            "Ads",
+            null
+          ],
+          [
+            46147,
+            "Basic",
+            "Organic",
+            null
+          ],
+          [
+            46157,
+            "Pro",
+            "Ads",
+            null
+          ],
+          [
+            46167,
+            "Pro",
+            "Referral",
+            null
+          ],
+          [
+            46174,
+            "Pro",
+            "Organic",
+            null
+          ],
+          [
+            46183,
+            "Basic",
+            "Ads",
+            null
+          ],
+          [
+            46186,
+            "Pro",
+            "Ads",
+            null
+          ],
+          [
+            46188,
+            "Team",
+            "Ads",
+            null
+          ],
+          [
+            46194,
+            "Pro",
+            "Ads",
+            null
+          ],
+          [
+            46197,
+            "Basic",
+            "Referral",
+            null
+          ]
+        ],
+        "number_formats": {
+          "A2:A39": "yyyy-mm-dd",
+          "D2:D39": "$#,##0"
+        }
+      },
+      {
+        "name": "Plans",
+        "header": true,
+        "column_widths": [
+          80,
+          110
+        ],
+        "rows": [
+          [
+            "Plan",
+            "Monthly price"
+          ],
+          [
+            "Basic",
+            9
+          ],
+          [
+            "Pro",
+            19
+          ],
+          [
+            "Team",
+            49
+          ]
+        ],
+        "number_formats": {
+          "B2:B4": "$#,##0"
+        }
+      },
+      {
+        "name": "Assumptions",
+        "header": true,
+        "column_widths": [
+          220,
+          90
+        ],
+        "rows": [
+          [
+            "Assumption",
+            "Value"
+          ],
+          [
+            "Monthly cost per customer",
+            4
+          ],
+          [
+            "Fixed costs per month",
+            1500
+          ],
+          [
+            "Discount rate (yearly)",
+            0.12
+          ],
+          [
+            "Investment needed",
+            20000
+          ]
+        ],
+        "number_formats": {
+          "B2:B3": "$#,##0",
+          "B4": "0.0%",
+          "B5": "$#,##0"
+        }
+      },
+      {
+        "name": "Summary",
+        "header": true,
+        "column_widths": [
+          220,
+          120,
+          100,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "Month",
+            "New customers",
+            "New MRR",
+            "Costs",
+            "Profit"
+          ],
+          [
+            46023,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46054,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46082,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46113,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46143,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46174,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Best channel (most signups)",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Share of Pro + Team",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Check",
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "A2:A7": "mmm yyyy",
+          "C2:E8": "$#,##0",
+          "B11": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "On the Signups sheet, fill in D2:D39 with each signup's monthly price, looked up from the Plans sheet.",
+      "sheet": "Signups",
+      "cell": "D2:D39",
+      "expected": [
+        19,
+        9,
+        49,
+        19,
+        49,
+        19,
+        49,
+        9,
+        19,
+        9,
+        9,
+        49,
+        9,
+        9,
+        19,
+        19,
+        19,
+        9,
+        9,
+        9,
+        9,
+        9,
+        49,
+        9,
+        19,
+        19,
+        19,
+        19,
+        9,
+        9,
+        19,
+        19,
+        19,
+        9,
+        19,
+        49,
+        19,
+        9
+      ],
+      "function": "XLOOKUP",
+      "hints": [
+        "XLOOKUP the plan in Plans!$A$2:$A$4, return Plans!$B$2:$B$4.",
+        "=XLOOKUP(B2, Plans!$A$2:$A$4, Plans!$B$2:$B$4), then copy it down."
+      ],
+      "highlight": [
+        "B2:B39"
+      ],
+      "answer": "=XLOOKUP(B2, Plans!$A$2:$A$4, Plans!$B$2:$B$4) in D2, then copy down to D39"
+    },
+    {
+      "prompt": "On the Summary sheet, in B2:B7, count the new customers each month, using COUNTIFS on the signup dates.",
+      "sheet": "Summary",
+      "cell": "B2:B7",
+      "expected": [
+        8,
+        6,
+        7,
+        5,
+        6,
+        6
+      ],
+      "function": "COUNTIFS",
+      "hints": [
+        "Between A2 and the end of A2's month, on Signups!$A$2:$A$39.",
+        "=COUNTIFS(Signups!$A$2:$A$39, \">=\"&A2, Signups!$A$2:$A$39, \"<=\"&EOMONTH(A2, 0)), then copy it down."
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=COUNTIFS(Signups!$A$2:$A$39, \">=\"&A2, Signups!$A$2:$A$39, \"<=\"&EOMONTH(A2, 0)) in B2, then copy down to B7"
+    },
+    {
+      "prompt": "In C2:C7, add up the new monthly recurring revenue (MRR) each month: the monthly prices of that month's signups.",
+      "sheet": "Summary",
+      "cell": "C2:C7",
+      "expected": [
+        222,
+        104,
+        93,
+        105,
+        94,
+        124
+      ],
+      "function": "SUMIFS",
+      "hints": [
+        "SUMIFS on Signups!$D$2:$D$39, with the same 2 date conditions.",
+        "=SUMIFS(Signups!$D$2:$D$39, Signups!$A$2:$A$39, \">=\"&A2, Signups!$A$2:$A$39, \"<=\"&EOMONTH(A2, 0))"
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=SUMIFS(Signups!$D$2:$D$39, Signups!$A$2:$A$39, \">=\"&A2, Signups!$A$2:$A$39, \"<=\"&EOMONTH(A2, 0)) in C2, then copy down to C7"
+    },
+    {
+      "prompt": "In D2:D7, work out each month's costs: new customers × the cost per customer, plus the fixed costs, both from the Assumptions sheet.",
+      "sheet": "Summary",
+      "cell": "D2:D7",
+      "expected": [
+        1532,
+        1524,
+        1528,
+        1520,
+        1524,
+        1524
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "Assumptions!"
+      ],
+      "hints": [
+        "=B2*Assumptions!$B$2+Assumptions!$B$3",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=B2*Assumptions!$B$2+Assumptions!$B$3 in D2, then copy down to D7"
+    },
+    {
+      "prompt": "In E2:E7, work out profit: new MRR − costs.",
+      "sheet": "Summary",
+      "cell": "E2:E7",
+      "expected": [
+        -1310,
+        -1420,
+        -1435,
+        -1415,
+        -1430,
+        -1400
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=C2-D2",
+        "Then copy it down. Every month loses money so far: normal for a brand-new startup, because fixed costs come first."
+      ],
+      "highlight": [
+        "C2:D7"
+      ],
+      "answer": "=C2-D2 in E2, then copy down to E7"
+    },
+    {
+      "prompt": "In B8:E8, add up each column for the 6 months.",
+      "sheet": "Summary",
+      "cell": "B8:E8",
+      "expected": [
+        38,
+        742,
+        9152,
+        -8410
+      ],
+      "function": "SUM",
+      "hints": [
+        "=SUM(B2:B7), then copy it across to E8."
+      ],
+      "highlight": [
+        "B2:E7"
+      ],
+      "answer": "=SUM(B2:B7) in B8, then copy across to E8"
+    },
+    {
+      "prompt": "In B10, find the channel that brought the most signups. Type it, or work it out with COUNTIF.",
+      "sheet": "Summary",
+      "cell": "B10",
+      "expected": "Ads",
+      "hints": [
+        "Count each channel with COUNTIF on Signups!C:C, or build a pivot table of Channel.",
+        "It's Ads."
+      ],
+      "highlight": [
+        "B10"
+      ],
+      "answer": "Ads"
+    },
+    {
+      "prompt": "In B11, work out the share of signups on the Pro or Team plans: =(COUNTIF(Signups!B2:B39, \"Pro\")+COUNTIF(Signups!B2:B39, \"Team\"))/COUNTA(Signups!B2:B39).",
+      "sheet": "Summary",
+      "cell": "B11",
+      "expected": 0.5789473684210527,
+      "function": [
+        "COUNTIF",
+        "COUNTA"
+      ],
+      "hints": [
+        "Two COUNTIFs added, divided by the number of signups.",
+        "=(COUNTIF(Signups!B2:B39, \"Pro\")+COUNTIF(Signups!B2:B39, \"Team\"))/COUNTA(Signups!B2:B39)"
+      ],
+      "highlight": [
+        "B11"
+      ],
+      "answer": "=(COUNTIF(Signups!B2:B39, \"Pro\")+COUNTIF(Signups!B2:B39, \"Team\"))/COUNTA(Signups!B2:B39)"
+    },
+    {
+      "prompt": "Last one: in B12, add a check that the customers in B8 equal the number of signups on the Signups sheet. Show \"OK\" or \"Check\".",
+      "sheet": "Summary",
+      "cell": "B12",
+      "expected": "OK",
+      "function": [
+        "IF",
+        "COUNTA"
+      ],
+      "hints": [
+        "Compare B8 with COUNTA(Signups!A2:A39).",
+        "=IF(B8=COUNTA(Signups!A2:A39), \"OK\", \"Check\")"
+      ],
+      "highlight": [
+        "B8"
+      ],
+      "answer": "=IF(B8=COUNTA(Signups!A2:A39), \"OK\", \"Check\")"
+    }
+  ],
+  "recap": "You finished the Excel course! 🎉 You looked up prices across sheets, summarised a log by month, built costs and profit from an assumptions sheet, found the key numbers, and checked your own work. That's real analyst work, the kind finance and data interviews test."
+}

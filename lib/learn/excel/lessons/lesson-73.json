@@ -1,0 +1,156 @@
+{
+  "id": "xl-73",
+  "level": 11,
+  "title": "Speed round 2: edit and fill",
+  "explanation": "**Speed round 2!** This time it's editing: fixing cells, typing across rows, copying formulas, and undoing mistakes, all without the mouse. Keyboard only, and the timer is running.",
+  "speed_round": true,
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Order",
+        "header": true,
+        "column_widths": [
+          90,
+          60,
+          60,
+          80
+        ],
+        "rows": [
+          [
+            "Item",
+            "Qty",
+            "Price",
+            "Total"
+          ],
+          [
+            "Hoodie",
+            3,
+            45,
+            null
+          ],
+          [
+            "Cap",
+            5,
+            18,
+            null
+          ],
+          [
+            "Mug",
+            8,
+            12,
+            null
+          ],
+          [
+            "Tote",
+            4,
+            15,
+            null
+          ],
+          [
+            "Socks",
+            10,
+            9,
+            null
+          ],
+          [
+            "Poster",
+            6,
+            8,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Tax rate",
+            0.08,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "C2:D8": "$#,##0.00",
+          "B9": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Move to D2 with the arrow keys and type =B2*C2, then press Enter.",
+      "cell": "D2",
+      "expected": 135,
+      "must_be_formula": true,
+      "keyboard_only": true,
+      "hints": [
+        "Use the arrow keys to reach D2.",
+        "=B2*C2"
+      ],
+      "answer": "=B2*C2"
+    },
+    {
+      "prompt": "Copy D2, select D3:D7 with the keyboard, and paste.",
+      "cell": "D3:D7",
+      "expected": [
+        90,
+        96,
+        60,
+        90,
+        48
+      ],
+      "must_be_formula": true,
+      "shortcut": "paste",
+      "shortcut_help": "none",
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl+C on D2, down arrow, Shift+down arrow to D7, then Ctrl+V. (⌘ on Mac.)"
+      ],
+      "answer": "Copy D2, select D3:D7, paste"
+    },
+    {
+      "prompt": "The Mug quantity should be 9, not 8. Move to B4, press the edit key, change it to 9, and press Enter.",
+      "cell": "B4",
+      "expected": 9,
+      "shortcut": "edit_cell",
+      "shortcut_help": "none",
+      "keyboard_only": true,
+      "hints": [
+        "F2 on Windows, Ctrl+U on Mac. Then Backspace and type 9."
+      ],
+      "answer": "9"
+    },
+    {
+      "prompt": "Undo that change, so Mug goes back to 8.",
+      "cell": "B4",
+      "expected": 8,
+      "shortcut": "undo",
+      "shortcut_help": "none",
+      "shortcut_required": true,
+      "keyboard_only": true,
+      "hints": [
+        "Ctrl+Z (⌘+Z on Mac)."
+      ],
+      "answer": "Press undo"
+    },
+    {
+      "prompt": "Last one: in A8, type a new row across with Tab: Stickers, Tab, 20, Tab, 2, Tab, =B8*C8, then Enter.",
+      "cell": "A8:D8",
+      "expected": [
+        "Stickers",
+        20,
+        2,
+        40
+      ],
+      "keyboard_only": true,
+      "hints": [
+        "Tab moves right, Enter finishes.",
+        "Stickers → Tab → 20 → Tab → 2 → Tab → =B8*C8 → Enter"
+      ],
+      "answer": "Stickers, 20, 2, =B8*C8 across row 8"
+    }
+  ],
+  "recap": "F2 (Ctrl+U on Mac) edits a cell, Ctrl+Z undoes, Tab types across a row, and copy and paste with Shift+arrows fill formulas, all without the mouse."
+}

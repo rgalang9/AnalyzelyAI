@@ -1,0 +1,272 @@
+{
+  "id": "xl-35",
+  "level": 6,
+  "title": "VLOOKUP",
+  "explanation": "**Welcome to Level 6: lookups!** A campus store's orders only list a product code (SKU), like S103. The product names, prices and categories live in a separate list on the right. A **lookup** finds a code in one table and brings back information about it. It's the formula interviewers ask about most.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Store",
+        "header": true,
+        "column_widths": [
+          60,
+          60,
+          50,
+          110,
+          60,
+          90,
+          60,
+          30,
+          60,
+          110,
+          60,
+          90
+        ],
+        "rows": [
+          [
+            "Order",
+            "SKU",
+            "Qty",
+            "Product",
+            "Price",
+            "Category",
+            "Total",
+            null,
+            "SKU",
+            "Product",
+            "Price",
+            "Category"
+          ],
+          [
+            1001,
+            "S103",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S101",
+            "Hoodie",
+            45,
+            "Clothing"
+          ],
+          [
+            1002,
+            "S101",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S102",
+            "Cap",
+            18,
+            "Clothing"
+          ],
+          [
+            1003,
+            "S106",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S103",
+            "Mug",
+            12,
+            "Home"
+          ],
+          [
+            1004,
+            "S107",
+            3,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S104",
+            "Tote",
+            15,
+            "Bags"
+          ],
+          [
+            1005,
+            "S102",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S105",
+            "Water bottle",
+            22,
+            "Home"
+          ],
+          [
+            1006,
+            "S105",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S106",
+            "Backpack",
+            60,
+            "Bags"
+          ],
+          [
+            1007,
+            "S101",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S107",
+            "Socks",
+            9,
+            "Clothing"
+          ],
+          [
+            1008,
+            "S108",
+            4,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "S108",
+            "Poster",
+            8,
+            "Home"
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, look up the product name for SKU S103: =VLOOKUP(B2, $I$2:$L$9, 2, FALSE).",
+      "teach": "**VLOOKUP(lookup_value, table, column_number, FALSE)** finds the lookup value in the **first column** of the table, then goes across to the column you name and brings back what's there.\n\n- **B2:** the SKU to find.\n- **$I$2:$L$9:** the product list, locked with $ so it doesn't move when copied.\n- **2:** bring back the 2nd column of that table (Product).\n- **FALSE:** exact match only.",
+      "cell": "D2",
+      "expected": "Mug",
+      "function": "VLOOKUP",
+      "formula_contains": [
+        "$I$2:$L$9"
+      ],
+      "hints": [
+        "The table is I2:L9, locked with $. Product is its 2nd column.",
+        "=VLOOKUP(B2, $I$2:$L$9, 2, FALSE)"
+      ],
+      "highlight": [
+        "B2",
+        "I2:L9"
+      ],
+      "answer": "=VLOOKUP(B2, $I$2:$L$9, 2, FALSE)"
+    },
+    {
+      "prompt": "Copy D2 down to D9.",
+      "cell": "D3:D9",
+      "expected": [
+        "Hoodie",
+        "Backpack",
+        "Socks",
+        "Cap",
+        "Water bottle",
+        "Hoodie",
+        "Poster"
+      ],
+      "function": "VLOOKUP",
+      "formula_contains": [
+        "$I$2:$L$9"
+      ],
+      "hints": [
+        "Copy D2, then paste into D3:D9.",
+        "If you see wrong names or errors, check the table has $ signs."
+      ],
+      "highlight": [
+        "D3:D9"
+      ],
+      "answer": "Copy D2 down to D9"
+    },
+    {
+      "prompt": "In E2, look up the price. It's the 3rd column of the product list. Then copy it down to E9.",
+      "cell": "E2:E9",
+      "expected": [
+        12,
+        45,
+        60,
+        9,
+        18,
+        22,
+        45,
+        8
+      ],
+      "function": "VLOOKUP",
+      "hints": [
+        "Same formula as D2, with 3 instead of 2.",
+        "=VLOOKUP(B2, $I$2:$L$9, 3, FALSE), then copy it down."
+      ],
+      "highlight": [
+        "I2:L9"
+      ],
+      "answer": "=VLOOKUP(B2, $I$2:$L$9, 3, FALSE) in E2, then copy down to E9"
+    },
+    {
+      "prompt": "In F2, look up the category (the 4th column), then copy it down to F9.",
+      "cell": "F2:F9",
+      "expected": [
+        "Home",
+        "Clothing",
+        "Bags",
+        "Clothing",
+        "Clothing",
+        "Home",
+        "Clothing",
+        "Home"
+      ],
+      "function": "VLOOKUP",
+      "hints": [
+        "Column number 4.",
+        "=VLOOKUP(B2, $I$2:$L$9, 4, FALSE), then copy it down."
+      ],
+      "highlight": [
+        "I2:L9"
+      ],
+      "answer": "=VLOOKUP(B2, $I$2:$L$9, 4, FALSE) in F2, then copy down to F9"
+    },
+    {
+      "prompt": "Last one: in G2, work out each order's total (qty × price), then copy it down to G9.",
+      "cell": "G2:G9",
+      "expected": [
+        24,
+        45,
+        60,
+        27,
+        36,
+        22,
+        90,
+        32
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=C2*E2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "C2:E9"
+      ],
+      "answer": "=C2*E2 in G2, then copy down to G9"
+    }
+  ],
+  "recap": "VLOOKUP(value, table, column number, FALSE) finds a value in the table's first column and brings back another column from the same row. Lock the table with $ before copying."
+}

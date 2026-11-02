@@ -1,0 +1,277 @@
+{
+  "id": "xl-36",
+  "level": 6,
+  "title": "When VLOOKUP breaks, and approximate match",
+  "explanation": "VLOOKUP is popular, but it has limits that trip people up in interviews. This lesson shows what happens when it can't find something, why it can't look to the left, and its other mode: **approximate match**, which handles tiers like shipping prices or tax brackets.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Limits",
+        "header": true,
+        "column_widths": [
+          90,
+          60,
+          30,
+          60,
+          110,
+          60,
+          30,
+          80,
+          120
+        ],
+        "rows": [
+          [
+            "Product",
+            "SKU",
+            null,
+            "SKU",
+            "Product",
+            "Price",
+            null,
+            "Look up",
+            "Result"
+          ],
+          [
+            "Backpack",
+            null,
+            null,
+            "S101",
+            "Hoodie",
+            45,
+            null,
+            "S109",
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S102",
+            "Cap",
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S103",
+            "Mug",
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S104",
+            "Tote",
+            15,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S105",
+            "Water bottle",
+            22,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S106",
+            "Backpack",
+            60,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S107",
+            "Socks",
+            9,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            "S108",
+            "Poster",
+            8,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      {
+        "name": "Shipping",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          80,
+          30,
+          80,
+          60
+        ],
+        "rows": [
+          [
+            "Package",
+            "Weight (kg)",
+            "Shipping",
+            null,
+            "From (kg)",
+            "Cost"
+          ],
+          [
+            "Order 1",
+            1.5,
+            null,
+            null,
+            0,
+            5
+          ],
+          [
+            "Order 2",
+            2,
+            null,
+            null,
+            2,
+            8
+          ],
+          [
+            "Order 3",
+            4.2,
+            null,
+            null,
+            5,
+            12
+          ],
+          [
+            "Order 4",
+            7.8,
+            null,
+            null,
+            10,
+            20
+          ],
+          [
+            "Order 5",
+            12,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Someone asks for SKU S109, which isn't in the list. In I2, look it up with =VLOOKUP(H2, $D$2:$F$9, 2, FALSE) and see what happens.",
+      "teach": "When an exact match isn't found, VLOOKUP gives **#N/A** (\"not available\"). It's the most common lookup error, usually caused by a typo, an extra space, or an item that really is missing.",
+      "cell": "I2",
+      "expected": "#N/A",
+      "function": "VLOOKUP",
+      "hints": [
+        "=VLOOKUP(H2, $D$2:$F$9, 2, FALSE)",
+        "You'll get #N/A. That's expected this time!"
+      ],
+      "highlight": [
+        "H2",
+        "D2:F9"
+      ],
+      "answer": "=VLOOKUP(H2, $D$2:$F$9, 2, FALSE)"
+    },
+    {
+      "prompt": "Wrap I2 in IFERROR so it shows Not found instead: =IFERROR(VLOOKUP(H2, $D$2:$F$9, 2, FALSE), \"Not found\").",
+      "cell": "I2",
+      "expected": "Not found",
+      "function": [
+        "IFERROR",
+        "VLOOKUP"
+      ],
+      "hints": [
+        "IFERROR goes around the whole VLOOKUP.",
+        "=IFERROR(VLOOKUP(H2, $D$2:$F$9, 2, FALSE), \"Not found\")"
+      ],
+      "highlight": [
+        "I2"
+      ],
+      "answer": "=IFERROR(VLOOKUP(H2, $D$2:$F$9, 2, FALSE), \"Not found\")"
+    },
+    {
+      "prompt": "Now try to find the SKU for Backpack. In B2, try =VLOOKUP(A2, $D$2:$F$9, 1, FALSE). It fails, because VLOOKUP only searches the first column (SKU), not Product.",
+      "teach": "VLOOKUP always searches the table's **first** column and can only bring back columns to its **right**. Here the SKU is left of the Product, so VLOOKUP can't find a SKU by product name. Next lesson's XLOOKUP fixes this. VLOOKUP also breaks if someone inserts a column, because its column number (2, 3...) doesn't update.",
+      "cell": "B2",
+      "expected": "#N/A",
+      "function": "VLOOKUP",
+      "hints": [
+        "=VLOOKUP(A2, $D$2:$F$9, 1, FALSE)",
+        "You'll get #N/A, because \"Backpack\" isn't in column D."
+      ],
+      "highlight": [
+        "A2",
+        "D2:F9"
+      ],
+      "answer": "=VLOOKUP(A2, $D$2:$F$9, 1, FALSE)"
+    },
+    {
+      "prompt": "Switch to the Shipping sheet. In C2, find the shipping cost for a 1.5 kg package with approximate match: =VLOOKUP(B2, $E$2:$F$5, 2, TRUE).",
+      "teach": "With **TRUE** at the end, VLOOKUP finds the **biggest value that's less than or equal to** the lookup value. A 1.5 kg package falls in the \"from 0 kg\" tier, so it costs $5. The first column must be sorted smallest to largest for this to work.",
+      "sheet": "Shipping",
+      "cell": "C2",
+      "expected": 5,
+      "function": "VLOOKUP",
+      "hints": [
+        "Click the Shipping tab. The tiers are E2:F5, and the last argument is TRUE.",
+        "=VLOOKUP(B2, $E$2:$F$5, 2, TRUE)"
+      ],
+      "highlight": [
+        "B2",
+        "E2:F5"
+      ],
+      "answer": "=VLOOKUP(B2, $E$2:$F$5, 2, TRUE)"
+    },
+    {
+      "prompt": "Last one: copy C2 down to C6. A package of exactly 2 kg should land in the 2 kg tier, and 12 kg in the 10 kg tier.",
+      "sheet": "Shipping",
+      "cell": "C3:C6",
+      "expected": [
+        8,
+        8,
+        12,
+        20
+      ],
+      "function": "VLOOKUP",
+      "hints": [
+        "Copy C2, then paste into C3:C6.",
+        "The costs should be 8, 8, 12 and 20."
+      ],
+      "highlight": [
+        "C3:C6"
+      ],
+      "answer": "Copy C2 down to C6"
+    }
+  ],
+  "recap": "VLOOKUP gives #N/A when it can't find a match, and IFERROR can replace it. VLOOKUP can only look to the right of its first column. With TRUE, it finds the right tier in a sorted table."
+}

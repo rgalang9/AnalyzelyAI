@@ -1,0 +1,353 @@
+{
+  "id": "xl-54",
+  "level": 8,
+  "title": "Choosing the right chart",
+  "explanation": "Picking the wrong chart hides the story. Here's the rule of thumb:\n- **Column or bar:** compare categories.\n- **Line:** change over time.\n- **Pie:** parts of a whole, with only a few slices.\n- **Scatter:** whether two numbers move together.\n\nThis lesson tries pie and scatter, then asks you to choose.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          260,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Biggest slice",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "Bigger budgets mean bigger gross? (Yes/No)",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            "Best chart: sales over 12 months",
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            "Best chart: share of 3 ratings",
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            "Best chart: compare 10 products",
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Make a pie chart of gross by rating. Click any cell inside the data, open the **Insert** tab, and click **Chart**. (If the panel is already open, just click its **Chart** tab.) Set Chart type to Pie, Slices to Rating, Values to Gross ($M), Summarize by to Sum.",
+      "teach": "A **pie** shows how a total splits into parts. Keep it to a few slices: more than about 5 and the slices become impossible to compare.",
+      "chart": {
+        "type": "pie",
+        "x": "Rating",
+        "y": "Gross ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "For Pie, the dropdowns are called Slices and Values.",
+        "Type: Pie, Slices: Rating, Values: Gross ($M), Sum."
+      ],
+      "answer": "Pie chart, Slices: Rating, Values: Gross ($M), Sum"
+    },
+    {
+      "prompt": "Which rating is the biggest slice? Type it into J2.",
+      "cell": "J2",
+      "expected": "PG-13",
+      "hints": [
+        "Find the biggest slice.",
+        "PG-13 made 1115."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "PG-13"
+    },
+    {
+      "prompt": "Do bigger budgets lead to bigger gross? Make a Scatter chart with X field Budget ($M) and Y field Gross ($M).",
+      "teach": "A **scatter** chart puts one dot per row. If the dots climb from bottom-left to top-right, the two numbers rise together (like a positive correlation).",
+      "chart": {
+        "type": "scatter",
+        "x": "Budget ($M)",
+        "y": "Gross ($M)"
+      },
+      "hints": [
+        "Scatter needs two number fields.",
+        "Type: Scatter, X: Budget ($M), Y: Gross ($M)."
+      ],
+      "answer": "Scatter chart, X: Budget ($M), Y: Gross ($M)"
+    },
+    {
+      "prompt": "Looking at the dots: do bigger budgets go with bigger gross? Type Yes or No into J3.",
+      "cell": "J3",
+      "expected": "Yes",
+      "hints": [
+        "Do the dots climb from left to right?",
+        "They do, so Yes. (Though horror films made money on tiny budgets!)"
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "Yes"
+    },
+    {
+      "prompt": "Choose the chart: which type best shows sales over 12 months? Type Column, Line, Pie or Scatter into J4.",
+      "cell": "J4",
+      "expected": "Line",
+      "hints": [
+        "Over time...",
+        "Line"
+      ],
+      "highlight": [
+        "J4"
+      ],
+      "answer": "Line"
+    },
+    {
+      "prompt": "Which type best shows the share of 3 ratings? Type it into J5.",
+      "cell": "J5",
+      "expected": "Pie",
+      "hints": [
+        "Parts of a whole, with only 3 parts.",
+        "Pie"
+      ],
+      "highlight": [
+        "J5"
+      ],
+      "answer": "Pie"
+    },
+    {
+      "prompt": "Last one: which type best compares the sales of 10 products? Type it into J6.",
+      "cell": "J6",
+      "expected": "Column",
+      "hints": [
+        "Comparing categories.",
+        "Column (a bar chart works too, but type Column)."
+      ],
+      "highlight": [
+        "J6"
+      ],
+      "answer": "Column"
+    }
+  ],
+  "recap": "Column and bar charts compare categories, lines show time, pies show parts of a whole with few slices, and scatter charts show whether two numbers move together."
+}

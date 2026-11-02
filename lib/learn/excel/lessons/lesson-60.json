@@ -1,0 +1,240 @@
+{
+  "id": "xl-60",
+  "level": 9,
+  "title": "Review: The gym membership log",
+  "explanation": "**Level 9 review!** A campus gym wants to spot members who haven't visited in a while, see when plans renew, and count new members this year. Everything is measured from the report date in B9. There's nothing new here, just everything from Level 9.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Members",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          100,
+          100,
+          100,
+          120,
+          90,
+          130
+        ],
+        "rows": [
+          [
+            "Member",
+            "Joined",
+            "Plan (months)",
+            "Last visit",
+            "Renews on",
+            "Days since visit",
+            "Status",
+            "Months as member"
+          ],
+          [
+            "Maya",
+            45820,
+            12,
+            46325,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            46056,
+            6,
+            46279,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            45981,
+            12,
+            46323,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            46173,
+            3,
+            46236,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            46249,
+            3,
+            46327,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            45544,
+            24,
+            46300,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Report date",
+            46328,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Joined in 2026",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:B7": "yyyy-mm-dd",
+          "D2:E7": "yyyy-mm-dd",
+          "B9": "yyyy-mm-dd"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2:E7, find each member's renewal date: the join date plus the plan's months.",
+      "cell": "E2:E7",
+      "expected": [
+        46185,
+        46237,
+        46346,
+        46265,
+        46341,
+        46274
+      ],
+      "function": "EDATE",
+      "hints": [
+        "EDATE with the join date and the plan.",
+        "=EDATE(B2, C2), then copy it down."
+      ],
+      "highlight": [
+        "B2:C7"
+      ],
+      "answer": "=EDATE(B2, C2) in E2, then copy down to E7"
+    },
+    {
+      "prompt": "In F2:F7, count the days since each member's last visit, using the report date in B9.",
+      "cell": "F2:F7",
+      "expected": [
+        3,
+        49,
+        5,
+        92,
+        1,
+        28
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$B$9"
+      ],
+      "hints": [
+        "Report date minus last visit, with B9 locked.",
+        "=$B$9-D2, then copy it down."
+      ],
+      "highlight": [
+        "D2:D7",
+        "B9"
+      ],
+      "answer": "=$B$9-D2 in F2, then copy down to F7"
+    },
+    {
+      "prompt": "In G2:G7, show \"At risk\" if a member hasn't visited for more than 30 days, otherwise \"Active\".",
+      "cell": "G2:G7",
+      "expected": [
+        "Active",
+        "At risk",
+        "Active",
+        "At risk",
+        "Active",
+        "Active"
+      ],
+      "function": "IF",
+      "hints": [
+        "IF on the days in column F.",
+        "=IF(F2>30, \"At risk\", \"Active\"), then copy it down."
+      ],
+      "highlight": [
+        "F2:F7"
+      ],
+      "answer": "=IF(F2>30, \"At risk\", \"Active\") in G2, then copy down to G7"
+    },
+    {
+      "prompt": "In H2:H7, count how many complete months each person has been a member, up to the report date.",
+      "cell": "H2:H7",
+      "expected": [
+        16,
+        8,
+        11,
+        5,
+        2,
+        25
+      ],
+      "function": "DATEDIF",
+      "hints": [
+        "DATEDIF with \"m\".",
+        "=DATEDIF(B2, $B$9, \"m\"), then copy it down."
+      ],
+      "highlight": [
+        "B2:B7",
+        "B9"
+      ],
+      "answer": "=DATEDIF(B2, $B$9, \"m\") in H2, then copy down to H7"
+    },
+    {
+      "prompt": "Last one: in B10, count how many members joined in 2026, using COUNTIFS with two date conditions and DATE.",
+      "cell": "B10",
+      "expected": 3,
+      "function": [
+        "COUNTIFS",
+        "DATE"
+      ],
+      "hints": [
+        "On or after DATE(2026,1,1), and on or before DATE(2026,12,31).",
+        "=COUNTIFS(B2:B7, \">=\"&DATE(2026,1,1), B2:B7, \"<=\"&DATE(2026,12,31))"
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=COUNTIFS(B2:B7, \">=\"&DATE(2026,1,1), B2:B7, \"<=\"&DATE(2026,12,31))"
+    }
+  ],
+  "recap": "Level 9 done! You can pull dates apart and build them, add months with EDATE, find month ends with EOMONTH, count work days, measure ages with DATEDIF, and total by month. Next up: finance."
+}

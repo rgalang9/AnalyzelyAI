@@ -5,6 +5,7 @@ import { findReleasedLanguage, isOpen, LEARN_LANGUAGES, PYTHON_VIEW } from "@/li
 import {
   getDatasetCsv,
   getDatasetSql,
+  getExcelLessons,
   getLessons,
   getLessonSummaries,
   getNotebookLessons,
@@ -18,6 +19,7 @@ import CodingLessonPlayer from "../../coding-lesson";
 import TourLessonPlayer from "../../tour-lesson";
 import PythonLessonPlayer from "../../python-lesson";
 import NotebookPlayer from "../../notebook-lesson";
+import ExcelLessonPlayer from "../../excel-lesson";
 
 // Build a page for every lesson of every open language ahead of time
 export function generateStaticParams() {
@@ -48,6 +50,7 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
       <PythonLesson lessonId={lessonId} langName={lang.name} />
     );
   }
+  if (language === "excel") return <ExcelLessonPage lessonId={lessonId} langName={lang.name} />;
 
   const lessons = getLessons(language);
   const index = lessons.findIndex((l) => l.id === lessonId);
@@ -167,6 +170,37 @@ function NotebookLessonPage({ lessonId, langName }: { lessonId: string; langName
           <pre className="mt-3 whitespace-pre-wrap font-mono text-xs">{entry.problem}</pre>
         </div>
       )}
+    </main>
+  );
+}
+
+// Excel lessons: a task panel beside a real spreadsheet
+function ExcelLessonPage({ lessonId, langName }: { lessonId: string; langName: string }) {
+  const lessons = getExcelLessons();
+  const index = lessons.findIndex((l) => l.id === lessonId);
+  if (index === -1) notFound();
+
+  const lesson = lessons[index];
+  const summaries = summarize(lessons);
+
+  return (
+    <main className="flex w-full flex-1 flex-col px-4 py-6 lg:px-6">
+      <Link href="/learn/excel" className="text-sm text-zinc-500 hover:text-foreground">
+        ← All {langName} lessons
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">
+        <span className="text-zinc-500">Lesson {index}: </span>
+        {lesson.title}
+      </h1>
+
+      <LessonGate language="excel" previous={summaries[index - 1] ?? null}>
+        <ExcelLessonPlayer
+          key={lesson.id} // a fresh workbook for each lesson
+          lesson={lesson}
+          lessons={summaries}
+          nextLesson={summaries[index + 1] ?? null}
+        />
+      </LessonGate>
     </main>
   );
 }

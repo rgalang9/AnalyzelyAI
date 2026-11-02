@@ -1,0 +1,195 @@
+{
+  "id": "xl-38",
+  "level": 6,
+  "title": "XLOOKUP extras: not found, last match and tiers",
+  "explanation": "XLOOKUP has 3 optional extras that solve common problems in one formula: a message when nothing is found, searching from the bottom to get the **latest** match, and finding the right tier, like a discount level. Here's a coffee club's purchase log.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Purchases",
+        "header": true,
+        "column_widths": [
+          100,
+          80,
+          70,
+          30,
+          170,
+          80,
+          30,
+          90,
+          80
+        ],
+        "rows": [
+          [
+            "Date",
+            "Customer",
+            "Amount",
+            null,
+            "Question",
+            "Answer",
+            null,
+            "Spend from",
+            "Discount"
+          ],
+          [
+            "2026-09-02",
+            "Maya",
+            24,
+            null,
+            "Maya's first purchase",
+            null,
+            null,
+            0,
+            0
+          ],
+          [
+            "2026-09-05",
+            "Leo",
+            18,
+            null,
+            "Maya's latest purchase",
+            null,
+            null,
+            50,
+            0.05
+          ],
+          [
+            "2026-09-09",
+            "Maya",
+            31,
+            null,
+            "Ava's first purchase",
+            null,
+            null,
+            100,
+            0.1
+          ],
+          [
+            "2026-09-12",
+            "Sam",
+            12,
+            null,
+            "Discount for $120 spend",
+            null,
+            null,
+            200,
+            0.15
+          ],
+          [
+            "2026-09-15",
+            "Leo",
+            27,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "2026-09-20",
+            "Maya",
+            15,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "2026-09-24",
+            "Sam",
+            40,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "2026-09-28",
+            "Leo",
+            9,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2, find Maya's first purchase amount: =XLOOKUP(\"Maya\", B2:B9, C2:C9).",
+      "teach": "Normally XLOOKUP searches from the top and stops at the **first** match. Maya appears 3 times, so this gives her earliest purchase.",
+      "cell": "F2",
+      "expected": 24,
+      "function": "XLOOKUP",
+      "hints": [
+        "Search the customers in B2:B9, bring back the amounts in C2:C9.",
+        "=XLOOKUP(\"Maya\", B2:B9, C2:C9)"
+      ],
+      "highlight": [
+        "B2:C9"
+      ],
+      "answer": "=XLOOKUP(\"Maya\", B2:B9, C2:C9)"
+    },
+    {
+      "prompt": "In F3, find Maya's LATEST purchase by searching from the bottom: =XLOOKUP(\"Maya\", B2:B9, C2:C9, , 0, -1).",
+      "teach": "XLOOKUP's full form is **XLOOKUP(value, lookup, return, if_not_found, match_mode, search_mode)**. A **search_mode** of **-1** searches from the bottom up. The log is in date order, so the bottom match is the latest. The empty space between the two commas skips if_not_found, and 0 means exact match.",
+      "cell": "F3",
+      "expected": 15,
+      "function": "XLOOKUP",
+      "formula_contains": [
+        "-1"
+      ],
+      "hints": [
+        "Add 3 more arguments: skip one with an empty comma, then 0, then -1.",
+        "=XLOOKUP(\"Maya\", B2:B9, C2:C9, , 0, -1)"
+      ],
+      "highlight": [
+        "B2:C9"
+      ],
+      "answer": "=XLOOKUP(\"Maya\", B2:B9, C2:C9, , 0, -1)"
+    },
+    {
+      "prompt": "Ava hasn't bought anything. In F4, look up Ava's first purchase, but show \"No purchases\" instead of #N/A, using the 4th argument.",
+      "teach": "The 4th argument, **if_not_found**, is what to show when there's no match. It's built in, so you don't need IFERROR.",
+      "cell": "F4",
+      "expected": "No purchases",
+      "function": "XLOOKUP",
+      "hints": [
+        "The 4th argument is \"No purchases\".",
+        "=XLOOKUP(\"Ava\", B2:B9, C2:C9, \"No purchases\")"
+      ],
+      "highlight": [
+        "B2:C9"
+      ],
+      "answer": "=XLOOKUP(\"Ava\", B2:B9, C2:C9, \"No purchases\")"
+    },
+    {
+      "prompt": "Last one: members get a discount based on their spend (the tiers in H2:I5). In F5, find the discount for $120 of spending: =XLOOKUP(120, H2:H5, I2:I5, , -1).",
+      "teach": "A **match_mode** of **-1** means \"exact match, or the next smaller value\". $120 isn't in the list, so it uses the 100 tier, which is a 0.1 (10%) discount. Unlike VLOOKUP's approximate match, the list doesn't even need to be sorted.",
+      "cell": "F5",
+      "expected": 0.1,
+      "function": "XLOOKUP",
+      "formula_contains": [
+        "-1"
+      ],
+      "hints": [
+        "Skip if_not_found with an empty comma, then use -1 as match_mode.",
+        "=XLOOKUP(120, H2:H5, I2:I5, , -1)"
+      ],
+      "highlight": [
+        "H2:I5"
+      ],
+      "answer": "=XLOOKUP(120, H2:H5, I2:I5, , -1)"
+    }
+  ],
+  "recap": "XLOOKUP's extras: if_not_found shows a message instead of #N/A, match_mode -1 finds the right tier, and search_mode -1 searches from the bottom to get the latest match."
+}

@@ -1,0 +1,226 @@
+{
+  "id": "xl-04",
+  "level": 1,
+  "title": "Locking cells with $",
+  "explanation": "The campus bookstore charges 8% sales tax, and the rate is stored in one cell, G1. Keeping it in one place means you can change it later in one spot. But copying a formula that points at G1 has a catch. Let's find it.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Bookstore",
+        "header": true,
+        "column_widths": [
+          120,
+          70,
+          70,
+          110,
+          30,
+          80,
+          60
+        ],
+        "rows": [
+          [
+            "Item",
+            "Price",
+            "Tax",
+            "Price with tax",
+            null,
+            "Tax rate",
+            0.08
+          ],
+          [
+            "Hoodie",
+            45,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Notebook",
+            4,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Mug",
+            12,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Water bottle",
+            18,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Backpack",
+            60,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In C2, work out the Hoodie's tax: its price × the tax rate in G1.",
+      "teach": "8% is stored as 0.08, because percent means \"out of 100\".",
+      "cell": "C2",
+      "expected": 3.6,
+      "must_be_formula": true,
+      "formula_contains": [
+        "B2",
+        "G1"
+      ],
+      "hints": [
+        "Price is in B2 and the rate is in G1.",
+        "=B2*G1"
+      ],
+      "highlight": [
+        "B2",
+        "G1"
+      ],
+      "answer": "=B2*G1"
+    },
+    {
+      "prompt": "Copy C2 down to C6. Something will go wrong. Look at the results!",
+      "cell": "C3:C6",
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Copy C2, select C3:C6, then paste.",
+        "The answers will be 0. That's expected this time!"
+      ],
+      "highlight": [
+        "C3:C6"
+      ],
+      "answer": "Copy C2, select C3:C6, then paste"
+    },
+    {
+      "prompt": "Click C3 and look at its formula.",
+      "teach": "C3 says `=B3*G2`. Excel shifted G1 down to G2, just like it shifted B2 to B3, but G2 is empty, so the tax is 0. The price should move with each row, but the rate shouldn't.",
+      "selected": "C3",
+      "hints": [
+        "Column C, row 3: the Notebook's tax.",
+        "The formula bar shows =B3*G2. G2 is empty!"
+      ]
+    },
+    {
+      "prompt": "Fix C2 so the rate stays put: change it to =B2*$G$1.",
+      "teach": "A `$` sign **locks** a reference. `$G$1` means \"always G1\", no matter where the formula is copied. The $ before G locks the column, and the $ before 1 locks the row.\n\n**Shortcut:** on Windows, click on G1 inside the formula and press **F4** to add the $ signs. On a Mac, real Excel uses ⌘+T, but in a browser that opens a new tab, so here just **type the $ signs** yourself.",
+      "cell": "C2",
+      "expected": 3.6,
+      "must_be_formula": true,
+      "formula_contains": [
+        "$G$1"
+      ],
+      "hints": [
+        "Keep B2 as it is, because it should move. Add $ signs to G1 only.",
+        "=B2*$G$1"
+      ],
+      "highlight": [
+        "G1"
+      ],
+      "answer": "=B2*$G$1"
+    },
+    {
+      "prompt": "Now copy the fixed C2 down to C6 again. This time the tax is right.",
+      "cell": "C3:C6",
+      "expected": [
+        0.32,
+        0.96,
+        1.44,
+        4.8
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$G$1"
+      ],
+      "hints": [
+        "Copy C2, select C3:C6, then paste over the zeros.",
+        "Each cell should now point at $G$1."
+      ],
+      "highlight": [
+        "C3:C6"
+      ],
+      "answer": "Copy C2, select C3:C6, then paste"
+    },
+    {
+      "prompt": "In D2 to D6, work out each price with tax: price + tax.",
+      "cell": "D2:D6",
+      "expected": [
+        48.6,
+        4.32,
+        12.96,
+        19.44,
+        64.8
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "D2 is =B2+C2. Then copy it down.",
+        "Both references should move, so no $ needed here."
+      ],
+      "highlight": [
+        "B2:C6"
+      ],
+      "answer": "=B2+C2 in D2, then copy down to D6"
+    },
+    {
+      "prompt": "In D7, add up all the prices with tax, using SUM.",
+      "cell": "D7",
+      "expected": 150.12,
+      "function": "SUM",
+      "hints": [
+        "The prices with tax are in D2 to D6.",
+        "=SUM(D2:D6)"
+      ],
+      "highlight": [
+        "D2:D6"
+      ],
+      "answer": "=SUM(D2:D6)"
+    },
+    {
+      "prompt": "Last one: the tax rate goes up to 10%. Change G1 to 0.1, and watch every tax and total update. Then check D7.",
+      "cell": "G1",
+      "expected": 0.1,
+      "hints": [
+        "Click G1, type 0.1 and press Enter.",
+        "Then look at D7: it updates on its own to 152.9."
+      ],
+      "highlight": [
+        "G1"
+      ],
+      "answer": "Type 0.1 in G1"
+    }
+  ],
+  "recap": "Relative references like B2 move when copied, while absolute references like $G$1 stay locked. Keep values like rates in one cell, and lock it with $."
+}

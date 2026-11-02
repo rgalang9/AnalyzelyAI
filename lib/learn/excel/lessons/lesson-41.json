@@ -1,0 +1,245 @@
+{
+  "id": "xl-41",
+  "level": 6,
+  "title": "Lookups across sheets",
+  "explanation": "In real workbooks, data is split across tabs: orders on one sheet, customers on another, prices on a third. Lookups can reach into another sheet, as long as you say which one. This workbook has 3 sheets: **Orders**, **Customers** and **Tiers**.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Orders",
+        "header": true,
+        "column_widths": [
+          70,
+          100,
+          70,
+          80,
+          70,
+          80
+        ],
+        "rows": [
+          [
+            "Order",
+            "Customer ID",
+            "Amount",
+            "Name",
+            "Tier",
+            "Discount"
+          ],
+          [
+            5001,
+            "C03",
+            42,
+            null,
+            null,
+            null
+          ],
+          [
+            5002,
+            "C01",
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            5003,
+            "C05",
+            65,
+            null,
+            null,
+            null
+          ],
+          [
+            5004,
+            "C02",
+            30,
+            null,
+            null,
+            null
+          ],
+          [
+            5005,
+            "C04",
+            22,
+            null,
+            null,
+            null
+          ],
+          [
+            5006,
+            "C01",
+            51,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      {
+        "name": "Customers",
+        "header": true,
+        "column_widths": [
+          60,
+          80,
+          70
+        ],
+        "rows": [
+          [
+            "ID",
+            "Name",
+            "Tier"
+          ],
+          [
+            "C01",
+            "Maya",
+            "Gold"
+          ],
+          [
+            "C02",
+            "Leo",
+            "Basic"
+          ],
+          [
+            "C03",
+            "Sam",
+            "Gold"
+          ],
+          [
+            "C04",
+            "Ava",
+            "Basic"
+          ],
+          [
+            "C05",
+            "Noah",
+            "Gold"
+          ]
+        ]
+      },
+      {
+        "name": "Tiers",
+        "header": true,
+        "column_widths": [
+          70,
+          80
+        ],
+        "rows": [
+          [
+            "Tier",
+            "Discount"
+          ],
+          [
+            "Gold",
+            0.1
+          ],
+          [
+            "Basic",
+            0
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click the Customers tab and look at it, then come back to Orders. Click cell A1 on the Customers sheet to continue.",
+      "sheet": "Customers",
+      "selected": "A1",
+      "hints": [
+        "The sheet tabs are at the bottom of the grid.",
+        "Click Customers, then click A1."
+      ]
+    },
+    {
+      "prompt": "On the Orders sheet, in D2, look up the customer's name from the Customers sheet: =XLOOKUP(B2, Customers!A2:A6, Customers!B2:B6).",
+      "teach": "To point at another sheet, write its name, then **!**, then the cells: `Customers!A2:A6`. If a sheet name has a space, wrap it in single quotes: `'Price list'!A2`. You can also just click the other tab while typing the formula, and Excel writes this for you.",
+      "sheet": "Orders",
+      "cell": "D2",
+      "expected": "Sam",
+      "function": "XLOOKUP",
+      "formula_contains": [
+        "Customers!"
+      ],
+      "hints": [
+        "Search Customers!A2:A6 for B2, and bring back Customers!B2:B6.",
+        "=XLOOKUP(B2, Customers!A2:A6, Customers!B2:B6)"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=XLOOKUP(B2, Customers!A2:A6, Customers!B2:B6)"
+    },
+    {
+      "prompt": "Lock the ranges with $ and copy D2 down to D7.",
+      "sheet": "Orders",
+      "cell": "D3:D7",
+      "expected": [
+        "Maya",
+        "Noah",
+        "Leo",
+        "Ava",
+        "Maya"
+      ],
+      "function": "XLOOKUP",
+      "formula_contains": [
+        "$"
+      ],
+      "hints": [
+        "=XLOOKUP(B2, Customers!$A$2:$A$6, Customers!$B$2:$B$6), then copy it down.",
+        "Without the $ signs, the ranges slide down and miss customers."
+      ],
+      "highlight": [
+        "D2:D7"
+      ],
+      "answer": "=XLOOKUP(B2, Customers!$A$2:$A$6, Customers!$B$2:$B$6) in D2, then copy down to D7"
+    },
+    {
+      "prompt": "In E2:E7, look up each customer's tier (the 3rd column on Customers).",
+      "sheet": "Orders",
+      "cell": "E2:E7",
+      "expected": [
+        "Gold",
+        "Gold",
+        "Gold",
+        "Basic",
+        "Basic",
+        "Gold"
+      ],
+      "function": "XLOOKUP",
+      "hints": [
+        "Same as the names, but bring back Customers!$C$2:$C$6.",
+        "=XLOOKUP(B2, Customers!$A$2:$A$6, Customers!$C$2:$C$6), then copy it down."
+      ],
+      "highlight": [
+        "E2:E7"
+      ],
+      "answer": "=XLOOKUP(B2, Customers!$A$2:$A$6, Customers!$C$2:$C$6) in E2, then copy down to E7"
+    },
+    {
+      "prompt": "Last one: in F2:F7, look up each tier's discount from the Tiers sheet.",
+      "sheet": "Orders",
+      "cell": "F2:F7",
+      "expected": [
+        0.1,
+        0.1,
+        0.1,
+        0,
+        0,
+        0.1
+      ],
+      "function": "XLOOKUP",
+      "formula_contains": [
+        "Tiers!"
+      ],
+      "hints": [
+        "Look up E2 in Tiers!$A$2:$A$3, and bring back Tiers!$B$2:$B$3.",
+        "=XLOOKUP(E2, Tiers!$A$2:$A$3, Tiers!$B$2:$B$3), then copy it down."
+      ],
+      "highlight": [
+        "E2:E7"
+      ],
+      "answer": "=XLOOKUP(E2, Tiers!$A$2:$A$3, Tiers!$B$2:$B$3) in F2, then copy down to F7"
+    }
+  ],
+  "recap": "To use another sheet in a formula, write SheetName!A1:A10, with single quotes if the name has a space. Lookups across sheets work exactly like lookups on one sheet."
+}

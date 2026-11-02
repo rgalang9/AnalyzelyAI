@@ -1,0 +1,139 @@
+{
+  "id": "xl-00",
+  "level": 1,
+  "title": "Meet the grid",
+  "explanation": "Welcome to Excel! Excel is a spreadsheet: a big grid for storing numbers and text, and for working things out with them. Analysts, bankers and accountants use it every day.\n\nIn this course you'll work in a real spreadsheet on the right. Do one task at a time from this panel. Each task turns green when it's right.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Snacks",
+        "header": true,
+        "column_widths": [
+          120,
+          80,
+          80
+        ],
+        "rows": [
+          [
+            "Item",
+            "Price",
+            "Stock"
+          ],
+          [
+            "Chips",
+            1.5,
+            20
+          ],
+          [
+            "Cookie",
+            2,
+            15
+          ],
+          [
+            "Gum",
+            0.75,
+            40
+          ],
+          [
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click cell B3.",
+      "teach": "The grid has **columns** named by letters (A, B, C...) across the top, and **rows** named by numbers (1, 2, 3...) down the side. Each box is a **cell**, named by its column then its row. So **B3** is column B, row 3.",
+      "selected": "B3",
+      "hints": [
+        "Find column B at the top, then go down to row 3.",
+        "It's the cell holding Cookie's price, 2."
+      ]
+    },
+    {
+      "prompt": "Click C2 and look at the formula bar above the grid. It shows what's inside the cell you've selected.",
+      "teach": "The long white bar above the grid is the **formula bar**. It always shows exactly what's in the selected cell. To its left, the **Name Box** shows the cell's name, like C2.",
+      "selected": "C2",
+      "hints": [
+        "Column C, row 2.",
+        "It's the cell holding Chips' stock, 20."
+      ]
+    },
+    {
+      "prompt": "Select all the prices, B2 to B4: click B2, hold the mouse button, and drag down to B4.",
+      "teach": "A group of cells is called a **range**. You write it as the first cell, a colon, then the last cell: `B2:B4` means B2, B3 and B4.",
+      "selected": "B2:B4",
+      "hints": [
+        "Start on B2 and drag down to B4 before letting go.",
+        "The 3 prices should be highlighted: 1.5, 2 and 0.75."
+      ]
+    },
+    {
+      "prompt": "Add a new snack. Click A5, type Water, then press Enter.",
+      "teach": "To type into a cell, click it and start typing. Press **Enter** to save it and move down a row.",
+      "cell": "A5",
+      "expected": "Water",
+      "hints": [
+        "Click A5 first, so you don't type over another cell.",
+        "Type Water with a capital W, then press Enter."
+      ],
+      "highlight": [
+        "A5"
+      ],
+      "answer": "Water"
+    },
+    {
+      "prompt": "In B5, type Water's price: 1.25. Type just the number, with no $ sign.",
+      "teach": "Type numbers on their own, without $ or commas. Excel can show them as money later, using formatting.",
+      "cell": "B5",
+      "expected": 1.25,
+      "hints": [
+        "Click B5, type 1.25, then press Enter.",
+        "Just 1.25, with no $ sign."
+      ],
+      "highlight": [
+        "B5"
+      ],
+      "answer": "1.25"
+    },
+    {
+      "prompt": "In C5, type Water's stock: 30.",
+      "cell": "C5",
+      "expected": 30,
+      "hints": [
+        "Click C5, type 30, then press Enter.",
+        "30"
+      ],
+      "highlight": [
+        "C5"
+      ],
+      "answer": "30"
+    },
+    {
+      "prompt": "Someone counted the cookies wrong. Click C3 and type 18 to replace the 15.",
+      "teach": "Typing into a cell that already has something in it **replaces** what was there. No need to delete it first.",
+      "cell": "C3",
+      "expected": 18,
+      "hints": [
+        "Click C3, type 18, press Enter.",
+        "The old 15 disappears when you type."
+      ],
+      "highlight": [
+        "C3"
+      ],
+      "answer": "18"
+    },
+    {
+      "prompt": "Last one: select the whole table, from A1 to C5.",
+      "selected": "A1:C5",
+      "hints": [
+        "Click A1, hold, and drag to C5.",
+        "The range is A1:C5: 3 columns and 5 rows."
+      ]
+    }
+  ],
+  "recap": "Cells are named by column letter and row number, like B3. A range like B2:B4 is a group of cells. The formula bar shows what's in the selected cell, and typing replaces what's there."
+}

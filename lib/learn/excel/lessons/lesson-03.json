@@ -1,0 +1,211 @@
+{
+  "id": "xl-03",
+  "level": 1,
+  "title": "Copying formulas down",
+  "explanation": "A pizza place has 8 orders to total up. Typing the same formula 8 times would be slow, and real sheets have thousands of rows. In this lesson you'll write a formula once and copy it down, and see how Excel adjusts it for each row.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Orders",
+        "header": true,
+        "column_widths": [
+          110,
+          70,
+          90,
+          80,
+          110
+        ],
+        "rows": [
+          [
+            "Customer",
+            "Pizzas",
+            "Price each",
+            "Total",
+            "With delivery"
+          ],
+          [
+            "Ava",
+            2,
+            12.5,
+            null,
+            null
+          ],
+          [
+            "Ben",
+            1,
+            15,
+            null,
+            null
+          ],
+          [
+            "Chloe",
+            3,
+            11,
+            null,
+            null
+          ],
+          [
+            "Dev",
+            2,
+            14,
+            null,
+            null
+          ],
+          [
+            "Ella",
+            4,
+            10.5,
+            null,
+            null
+          ],
+          [
+            "Finn",
+            1,
+            18,
+            null,
+            null
+          ],
+          [
+            "Gia",
+            2,
+            13,
+            null,
+            null
+          ],
+          [
+            "Hugo",
+            3,
+            12,
+            null,
+            null
+          ],
+          [
+            "All orders",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, work out Ava's total: pizzas × price each.",
+      "cell": "D2",
+      "expected": 25.0,
+      "must_be_formula": true,
+      "formula_contains": [
+        "B2",
+        "C2"
+      ],
+      "hints": [
+        "Pizzas are in B2 and the price is in C2.",
+        "=B2*C2"
+      ],
+      "highlight": [
+        "B2:C2"
+      ],
+      "answer": "=B2*C2"
+    },
+    {
+      "prompt": "Click D2 and copy it.",
+      "teach": "To use a formula in other rows, **copy** it and **paste** it into them. First, copy.",
+      "shortcut": "copy",
+      "shortcut_help": "badge",
+      "hints": [
+        "Click D2 first, then press the keys shown."
+      ]
+    },
+    {
+      "prompt": "Now select D3 to D9 and paste. Every order gets its total.",
+      "cell": "D3:D9",
+      "expected": [
+        15,
+        33,
+        28,
+        42.0,
+        18,
+        26,
+        36
+      ],
+      "must_be_formula": true,
+      "shortcut": "paste",
+      "shortcut_help": "badge",
+      "hints": [
+        "Drag from D3 down to D9 to select them, then paste.",
+        "You can also drag the small square at the bottom-right corner of D2 (the fill handle) down to D9."
+      ],
+      "highlight": [
+        "D3:D9"
+      ],
+      "answer": "Copy D2, select D3:D9, then paste"
+    },
+    {
+      "prompt": "Click D5 and look at its formula in the formula bar.",
+      "teach": "You copied `=B2*C2`, but D5 doesn't say that. Excel moved the row numbers along with the formula, so D5 says `=B5*C5`. These are called **relative references**: they're relative to where the formula sits. That's what makes copying down work.",
+      "selected": "D5",
+      "hints": [
+        "Column D, row 5: Dev's total.",
+        "The formula bar should show =B5*C5."
+      ]
+    },
+    {
+      "prompt": "Delivery is a flat $3 per order. In E2, add 3 to Ava's total.",
+      "cell": "E2",
+      "expected": 28.0,
+      "must_be_formula": true,
+      "formula_contains": [
+        "D2"
+      ],
+      "hints": [
+        "Use Ava's total in D2, plus 3.",
+        "=D2+3"
+      ],
+      "highlight": [
+        "D2"
+      ],
+      "answer": "=D2+3"
+    },
+    {
+      "prompt": "Copy E2 down to E9, using copy and paste or the fill handle.",
+      "shortcut": "paste",
+      "shortcut_help": "hint",
+      "cell": "E3:E9",
+      "expected": [
+        18,
+        36,
+        31,
+        45.0,
+        21,
+        29,
+        39
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Copy E2, select E3:E9, then paste.",
+        "Or drag E2's fill handle (the small corner square) down to E9."
+      ],
+      "highlight": [
+        "E3:E9"
+      ],
+      "answer": "Copy E2, select E3:E9, then paste"
+    },
+    {
+      "prompt": "Last one: in D10, add up all the order totals with SUM.",
+      "cell": "D10",
+      "expected": 223.0,
+      "function": "SUM",
+      "hints": [
+        "The totals are in D2 to D9.",
+        "=SUM(D2:D9)"
+      ],
+      "highlight": [
+        "D2:D9"
+      ],
+      "answer": "=SUM(D2:D9)"
+    }
+  ],
+  "recap": "Write a formula once, then copy it down with copy and paste or the fill handle. Relative references like B2 shift to each new row automatically."
+}

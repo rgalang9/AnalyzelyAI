@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LessonSummary, NotebookCell, NotebookLesson } from "@/lib/learn/lesson-types";
 import {
   getPythonSession,
@@ -13,7 +13,7 @@ import {
 import { useLearnProgress } from "./progress-context";
 import CodeEditor from "./code-editor";
 import LessonSidebar from "./lesson-sidebar";
-import { Feedback, HINT_PAUSE_MS, LessonDone, nudge } from "./lesson-parts";
+import { Feedback, HINT_PAUSE_MS, LessonDone, Markdown, nudge } from "./lesson-parts";
 import { FillCode, PyOutputView, PythonStatusBar, usePythonStatus } from "./python-lesson";
 
 // The notebook view for Python: one lesson is one scrolling notebook, like JupyterLab.
@@ -403,39 +403,3 @@ function Cell({
 // The cell ran fine but printed and showed nothing (e.g. it only defines a function)
 const ranQuietly = (output: PyOutput) =>
   !output.stdout && !output.table && !output.value && !output.error && output.charts.length === 0;
-
-// Just enough markdown for lesson text: paragraphs, ``` code blocks, **bold** and `code`
-function Markdown({ text }: { text: string }) {
-  // Odd pieces are the insides of ``` blocks (the language name after ``` is dropped)
-  const pieces = text.split(/```[^\n]*\n([\s\S]*?)\n?```/);
-  return (
-    <div className="flex flex-col gap-3">
-      {pieces.flatMap((piece, b) =>
-        b % 2 === 1
-          ? [
-              <pre key={b} className="overflow-x-auto rounded bg-zinc-100 px-4 py-3 font-mono text-sm leading-6">
-                {piece}
-              </pre>,
-            ]
-          : piece
-              .split(/\n\s*\n/)
-              .filter((paragraph) => paragraph.trim())
-              .map((paragraph, p) => (
-                <p key={`${b}-${p}`}>
-                  {paragraph.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, i) =>
-                    part.startsWith("**") && part.endsWith("**") ? (
-                      <strong key={i}>{part.slice(2, -2)}</strong>
-                    ) : part.startsWith("`") && part.endsWith("`") ? (
-                      <code key={i} className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-[0.9em]">
-                        {part.slice(1, -1)}
-                      </code>
-                    ) : (
-                      <Fragment key={i}>{part}</Fragment>
-                    )
-                  )}
-                </p>
-              ))
-      )}
-    </div>
-  );
-}

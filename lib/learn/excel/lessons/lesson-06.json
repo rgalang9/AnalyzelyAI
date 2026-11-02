@@ -1,0 +1,408 @@
+{
+  "id": "xl-06",
+  "level": 2,
+  "title": "Jump and select with shortcuts",
+  "explanation": "**Welcome to Level 2!** Real spreadsheets have thousands of rows, so scrolling and dragging gets slow. Analysts move around with the keyboard instead. This lesson teaches the shortcuts they use most, using a library's list of 30 late books.\n\nEach new shortcut shows its keys on screen the first time. Press them along, and watch the small box in the corner to see what you pressed.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Late books",
+        "header": true,
+        "column_widths": [
+          190,
+          90,
+          80,
+          70,
+          30,
+          120,
+          80
+        ],
+        "rows": [
+          [
+            "Book",
+            "Borrower",
+            "Days late",
+            "Fine",
+            null,
+            "Summary",
+            null
+          ],
+          [
+            "The Hunger Games",
+            "Maya",
+            3,
+            0.75,
+            null,
+            "Total fines",
+            null
+          ],
+          [
+            "Dune",
+            "Leo",
+            7,
+            1.75,
+            null,
+            "Most days late",
+            null
+          ],
+          [
+            "Atomic Habits",
+            "Sam",
+            1,
+            0.25,
+            null,
+            "Books late",
+            null
+          ],
+          [
+            "1984",
+            "Ava",
+            10,
+            2.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Great Gatsby",
+            "Noah",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Educated",
+            "Zoe",
+            5,
+            1.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Becoming",
+            "Ben",
+            4,
+            1.0,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sapiens",
+            "Chloe",
+            6,
+            1.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Alchemist",
+            "Dev",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Project Hail Mary",
+            "Ella",
+            3,
+            0.75,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Women",
+            "Finn",
+            8,
+            2.0,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Hobbit",
+            "Gia",
+            1,
+            0.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Normal People",
+            "Hugo",
+            4,
+            1.0,
+            null,
+            null,
+            null
+          ],
+          [
+            "Circe",
+            "Isla",
+            5,
+            1.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Pride and Prejudice",
+            "Jay",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Freakonomics",
+            "Kai",
+            6,
+            1.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moneyball",
+            "Lena",
+            3,
+            0.75,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Martian",
+            "Mia",
+            9,
+            2.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beloved",
+            "Omar",
+            1,
+            0.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Steve Jobs",
+            "Priya",
+            4,
+            1.0,
+            null,
+            null,
+            null
+          ],
+          [
+            "Outliers",
+            "Quinn",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Frankenstein",
+            "Rosa",
+            5,
+            1.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Dracula",
+            "Theo",
+            3,
+            0.75,
+            null,
+            null,
+            null
+          ],
+          [
+            "Holes",
+            "Uma",
+            7,
+            1.75,
+            null,
+            null,
+            null
+          ],
+          [
+            "Wonder",
+            "Vic",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Matilda",
+            "Will",
+            4,
+            1.0,
+            null,
+            null,
+            null
+          ],
+          [
+            "Coraline",
+            "Xin",
+            1,
+            0.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hamlet",
+            "Yara",
+            3,
+            0.75,
+            null,
+            null,
+            null
+          ],
+          [
+            "Emma",
+            "Zack",
+            5,
+            1.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Thinking, Fast and Slow",
+            "Amir",
+            2,
+            0.5,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click A1, then jump to the last book at the bottom of the list with the keys shown.",
+      "teach": "Holding **Ctrl** (⌘ on Mac) and pressing an **arrow key** jumps to the edge of the data in that direction, however long it is.",
+      "selected": "A31",
+      "shortcut": "jump_down",
+      "shortcut_help": "badge",
+      "shortcut_required": true,
+      "hints": [
+        "Click A1 first, then hold Ctrl (⌘ on Mac) and press the down arrow.",
+        "You should land on A31, the last book."
+      ]
+    },
+    {
+      "prompt": "Now jump back up to A1.",
+      "selected": "A1",
+      "shortcut": "jump_up",
+      "shortcut_help": "hint",
+      "shortcut_required": true,
+      "hints": [
+        "It's the same idea, with the up arrow.",
+        "Hold Ctrl (⌘ on Mac) and press the up arrow."
+      ]
+    },
+    {
+      "prompt": "From A1, jump right to the last column of the table, D1 (Fine).",
+      "selected": "D1",
+      "shortcut": "jump_right",
+      "shortcut_help": "badge",
+      "shortcut_required": true,
+      "hints": [
+        "Hold Ctrl (⌘ on Mac) and press the right arrow.",
+        "It stops at D1, because E1 is empty."
+      ]
+    },
+    {
+      "prompt": "Click D2, then select all the fines down to D31 in one go.",
+      "teach": "Add **Shift** to a jump and it **selects** everything along the way. Ctrl+Shift+↓ (⌘+Shift+↓ on Mac) selects from where you are down to the bottom of the data.",
+      "selected": "D2:D31",
+      "shortcut": "select_down",
+      "shortcut_help": "badge",
+      "shortcut_required": true,
+      "hints": [
+        "Click D2 first, then add Shift to the jump-down keys.",
+        "Hold Ctrl+Shift (⌘+Shift on Mac) and press the down arrow."
+      ]
+    },
+    {
+      "prompt": "In G2, add up all the fines with SUM. Tip: after typing =SUM( you can click D2 and use the select-down keys to pick the range.",
+      "cell": "G2",
+      "expected": 30.0,
+      "function": "SUM",
+      "shortcut": "select_down",
+      "shortcut_help": "hint",
+      "shortcut_required": false,
+      "hints": [
+        "The fines are in D2 to D31.",
+        "=SUM(D2:D31)"
+      ],
+      "highlight": [
+        "D2:D31"
+      ],
+      "answer": "=SUM(D2:D31)"
+    },
+    {
+      "prompt": "In G3, find the most days any book was late, using MAX.",
+      "cell": "G3",
+      "expected": 10,
+      "function": "MAX",
+      "hints": [
+        "Days late are in C2 to C31.",
+        "=MAX(C2:C31)"
+      ],
+      "highlight": [
+        "C2:C31"
+      ],
+      "answer": "=MAX(C2:C31)"
+    },
+    {
+      "prompt": "In G4, count how many books are late, using COUNT on the days late.",
+      "cell": "G4",
+      "expected": 30,
+      "function": "COUNT",
+      "hints": [
+        "COUNT the numbers in C2 to C31.",
+        "=COUNT(C2:C31)"
+      ],
+      "highlight": [
+        "C2:C31"
+      ],
+      "answer": "=COUNT(C2:C31)"
+    },
+    {
+      "prompt": "Last one: click any cell inside the table, then select the whole table at once.",
+      "teach": "**Ctrl+A** (⌘+A on Mac) selects all the data around the cell you're on. It's the fastest way to grab a whole table.",
+      "shortcut": "select_all",
+      "shortcut_help": "badge",
+      "hints": [
+        "Click a cell in the table first, like B5.",
+        "Hold Ctrl (⌘ on Mac) and press A."
+      ]
+    }
+  ],
+  "recap": "Ctrl or ⌘ plus an arrow jumps to the edge of the data. Add Shift to select along the way, and Ctrl+A or ⌘+A selects the whole table."
+}

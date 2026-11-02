@@ -1,0 +1,207 @@
+{
+  "id": "xl-27",
+  "level": 5,
+  "title": "IF: making decisions",
+  "explanation": "A teaching assistant needs to mark 8 exam scores as Pass or Fail, and give a bonus to top scores. **IF** lets a formula make a decision: if a comparison is TRUE, show one thing, otherwise show another.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Grades",
+        "header": true,
+        "column_widths": [
+          90,
+          70,
+          80,
+          70,
+          70,
+          110
+        ],
+        "rows": [
+          [
+            "Student",
+            "Score",
+            "Result",
+            "Bonus",
+            "Final",
+            "Next step"
+          ],
+          [
+            "Maya",
+            92,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            58,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            75,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            88,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            45,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            97,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ben",
+            60,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Chloe",
+            81,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In C2, show Pass if Maya scored 60 or more, otherwise Fail: =IF(B2>=60, \"Pass\", \"Fail\").",
+      "teach": "**IF(test, if_true, if_false)** has 3 parts, separated by commas: a comparison, what to show if it's TRUE, and what to show if it's FALSE. Text answers go in quotes.",
+      "cell": "C2",
+      "expected": "Pass",
+      "function": "IF",
+      "hints": [
+        "Test: B2>=60. If true: \"Pass\". If false: \"Fail\".",
+        "=IF(B2>=60, \"Pass\", \"Fail\")"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=IF(B2>=60, \"Pass\", \"Fail\")"
+    },
+    {
+      "prompt": "Copy C2 down to C9.",
+      "cell": "C3:C9",
+      "expected": [
+        "Fail",
+        "Pass",
+        "Pass",
+        "Fail",
+        "Pass",
+        "Pass",
+        "Pass"
+      ],
+      "function": "IF",
+      "hints": [
+        "Copy C2, then paste into C3:C9.",
+        "Leo (58) and Noah (45) should fail. Ben (60) passes, because the test is >=."
+      ],
+      "highlight": [
+        "C3:C9"
+      ],
+      "answer": "Copy C2 down to C9"
+    },
+    {
+      "prompt": "Scores of 90 or more get 5 bonus points, and everyone else gets 0. In D2, use IF to give the bonus, then copy it down to D9.",
+      "teach": "IF can give back numbers too. Numbers don't need quotes.",
+      "cell": "D2:D9",
+      "expected": [
+        5,
+        0,
+        0,
+        0,
+        0,
+        5,
+        0,
+        0
+      ],
+      "function": "IF",
+      "hints": [
+        "=IF(B2>=90, 5, 0)",
+        "Then copy it down. Maya and Zoe get 5."
+      ],
+      "highlight": [
+        "B2:B9"
+      ],
+      "answer": "=IF(B2>=90, 5, 0) in D2, then copy down to D9"
+    },
+    {
+      "prompt": "In E2, work out the final score: score + bonus. Then copy it down to E9.",
+      "cell": "E2:E9",
+      "expected": [
+        97,
+        58,
+        75,
+        88,
+        45,
+        102,
+        60,
+        81
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=B2+D2",
+        "Then copy it down. Zoe's final is 102."
+      ],
+      "highlight": [
+        "B2:D9"
+      ],
+      "answer": "=B2+D2 in E2, then copy down to E9"
+    },
+    {
+      "prompt": "Last one: in F2, show \"Office hours\" if the result in C2 is Fail, otherwise \"On track\". Then copy it down to F9.",
+      "teach": "The test can compare text too, including the result of another formula: `C2=\"Fail\"`.",
+      "cell": "F2:F9",
+      "expected": [
+        "On track",
+        "Office hours",
+        "On track",
+        "On track",
+        "Office hours",
+        "On track",
+        "On track",
+        "On track"
+      ],
+      "function": "IF",
+      "hints": [
+        "Test: C2=\"Fail\".",
+        "=IF(C2=\"Fail\", \"Office hours\", \"On track\"), then copy it down."
+      ],
+      "highlight": [
+        "C2:C9"
+      ],
+      "answer": "=IF(C2=\"Fail\", \"Office hours\", \"On track\") in F2, then copy down to F9"
+    }
+  ],
+  "recap": "IF(test, if_true, if_false) shows one thing when the test is TRUE and another when it's FALSE. Text answers go in quotes, numbers don't."
+}

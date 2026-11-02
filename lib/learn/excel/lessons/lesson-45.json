@@ -1,0 +1,310 @@
+{
+  "id": "xl-45",
+  "level": 7,
+  "title": "FILTER",
+  "explanation": "You're job hunting, with 10 analyst postings in a sheet. In Level 3, a filter **hid** rows. The **FILTER** function is different: it spills a separate list of just the matching rows, which you can keep next to the full list and build more formulas on.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Jobs",
+        "header": true,
+        "column_widths": [
+          100,
+          130,
+          80,
+          70,
+          60,
+          30,
+          100,
+          130,
+          80,
+          70,
+          60
+        ],
+        "rows": [
+          [
+            "Company",
+            "Role",
+            "City",
+            "Salary",
+            "Hybrid",
+            null,
+            "Results"
+          ],
+          [
+            "Stripe",
+            "Data Analyst",
+            "Boston",
+            82000,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Nimbus",
+            "Finance Intern",
+            "New York",
+            45000,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Harbor Bank",
+            "Analyst",
+            "Boston",
+            75000,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Lumen",
+            "BI Developer",
+            "Remote",
+            90000,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Peak Co",
+            "Data Analyst",
+            "Hartford",
+            68000,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit",
+            "Financial Analyst",
+            "Boston",
+            71000,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Vista",
+            "Ops Analyst",
+            "New York",
+            64000,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Crest",
+            "Data Scientist",
+            "Boston",
+            98000,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Quill",
+            "Marketing Analyst",
+            "Hartford",
+            59000,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Atlas",
+            "Analyst",
+            "New York",
+            77000,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, list only the Boston jobs: =FILTER(A2:E11, C2:C11=\"Boston\").",
+      "teach": "**FILTER(range, condition)** spills every row of the range where the condition is TRUE. The condition is a comparison on a column of the same height.",
+      "cell": "G2:K5",
+      "spill": true,
+      "expected": [
+        "Stripe",
+        "Data Analyst",
+        "Boston",
+        82000,
+        "Yes",
+        "Harbor Bank",
+        "Analyst",
+        "Boston",
+        75000,
+        "No",
+        "Orbit",
+        "Financial Analyst",
+        "Boston",
+        71000,
+        "Yes",
+        "Crest",
+        "Data Scientist",
+        "Boston",
+        98000,
+        "No"
+      ],
+      "function": "FILTER",
+      "hints": [
+        "Range A2:E11, condition C2:C11=\"Boston\".",
+        "=FILTER(A2:E11, C2:C11=\"Boston\")"
+      ],
+      "highlight": [
+        "A2:E11"
+      ],
+      "answer": "=FILTER(A2:E11, C2:C11=\"Boston\") in G2"
+    },
+    {
+      "prompt": "Change G2 so it only shows Boston jobs paying at least 75,000: =FILTER(A2:E11, (C2:C11=\"Boston\")*(D2:D11>=75000)).",
+      "teach": "To need **both** conditions (AND), put each in brackets and **multiply** them. TRUE counts as 1 and FALSE as 0, so a row only survives if both are 1. To accept **either** (OR), add them with **+** instead.",
+      "cell": "G2:K4",
+      "spill": true,
+      "expected": [
+        "Stripe",
+        "Data Analyst",
+        "Boston",
+        82000,
+        "Yes",
+        "Harbor Bank",
+        "Analyst",
+        "Boston",
+        75000,
+        "No",
+        "Crest",
+        "Data Scientist",
+        "Boston",
+        98000,
+        "No"
+      ],
+      "function": "FILTER",
+      "formula_contains": [
+        "*"
+      ],
+      "hints": [
+        "Each condition in brackets, multiplied together.",
+        "=FILTER(A2:E11, (C2:C11=\"Boston\")*(D2:D11>=75000))"
+      ],
+      "highlight": [
+        "C2:D11"
+      ],
+      "answer": "=FILTER(A2:E11, (C2:C11=\"Boston\")*(D2:D11>=75000)) in G2"
+    },
+    {
+      "prompt": "Last one: in G14, look for Chicago jobs, and show \"None found\" if there aren't any: =FILTER(A2:E11, C2:C11=\"Chicago\", \"None found\").",
+      "teach": "If nothing matches, FILTER gives a **#CALC!** error. Its 3rd argument, **if_empty**, shows a message instead.",
+      "cell": "G14",
+      "expected": "None found",
+      "function": "FILTER",
+      "hints": [
+        "Add \"None found\" as the 3rd argument.",
+        "=FILTER(A2:E11, C2:C11=\"Chicago\", \"None found\")"
+      ],
+      "highlight": [
+        "C2:C11"
+      ],
+      "answer": "=FILTER(A2:E11, C2:C11=\"Chicago\", \"None found\")"
+    }
+  ],
+  "recap": "FILTER(range, condition, if_empty) spills the matching rows. Multiply conditions for AND, add them for OR, and use if_empty to avoid a #CALC! error."
+}

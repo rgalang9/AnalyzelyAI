@@ -1,0 +1,195 @@
+{
+  "id": "xl-33",
+  "level": 5,
+  "title": "SUMPRODUCT",
+  "explanation": "A grocery receipt has quantities and prices. To get the total, you'd normally make a qty × price column, then SUM it. **SUMPRODUCT** does both in one formula: it multiplies two columns row by row, then adds up the results. It's also how you work out a weighted average, like a course grade.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Cart",
+        "header": true,
+        "column_widths": [
+          90,
+          90,
+          50,
+          60,
+          30,
+          120,
+          80
+        ],
+        "rows": [
+          [
+            "Item",
+            "Category",
+            "Qty",
+            "Price",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Apples",
+            "Produce",
+            6,
+            0.75,
+            null,
+            "Cart total",
+            null
+          ],
+          [
+            "Milk",
+            "Dairy",
+            2,
+            3.49,
+            null,
+            "Produce total",
+            null
+          ],
+          [
+            "Bread",
+            "Bakery",
+            1,
+            2.99,
+            null,
+            null,
+            null
+          ],
+          [
+            "Bananas",
+            "Produce",
+            8,
+            0.25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Cheese",
+            "Dairy",
+            1,
+            5.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Spinach",
+            "Produce",
+            2,
+            2.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Bagels",
+            "Bakery",
+            6,
+            0.9,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      {
+        "name": "Grade",
+        "header": true,
+        "column_widths": [
+          130,
+          70,
+          70
+        ],
+        "rows": [
+          [
+            "Part",
+            "Score",
+            "Weight"
+          ],
+          [
+            "Homework",
+            92,
+            0.2
+          ],
+          [
+            "Midterm",
+            78,
+            0.3
+          ],
+          [
+            "Final",
+            85,
+            0.4
+          ],
+          [
+            "Participation",
+            100,
+            0.1
+          ],
+          [
+            null,
+            null,
+            null
+          ],
+          [
+            "Weighted grade",
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, work out the cart total in one formula: =SUMPRODUCT(C2:C8, D2:D8).",
+      "teach": "**SUMPRODUCT(range1, range2)** multiplies the first cells together, then the second cells, and so on, and adds up all the results. The ranges must be the same size.",
+      "cell": "G2",
+      "expected": 32.37,
+      "function": "SUMPRODUCT",
+      "hints": [
+        "The quantities are in C2:C8 and the prices in D2:D8.",
+        "=SUMPRODUCT(C2:C8, D2:D8)"
+      ],
+      "highlight": [
+        "C2:D8"
+      ],
+      "answer": "=SUMPRODUCT(C2:C8, D2:D8)"
+    },
+    {
+      "prompt": "In G3, work out the Produce total only: =SUMPRODUCT((B2:B8=\"Produce\")*C2:C8*D2:D8).",
+      "teach": "A comparison over a range gives TRUE or FALSE for each row, and in maths TRUE counts as **1** and FALSE as **0**. Multiplying by it keeps the Produce rows and zeroes out the rest.",
+      "cell": "G3",
+      "expected": 11.5,
+      "function": "SUMPRODUCT",
+      "formula_contains": [
+        "Produce"
+      ],
+      "hints": [
+        "The comparison goes in brackets: (B2:B8=\"Produce\"), then multiply by the 2 columns.",
+        "=SUMPRODUCT((B2:B8=\"Produce\")*C2:C8*D2:D8)"
+      ],
+      "highlight": [
+        "B2:D8"
+      ],
+      "answer": "=SUMPRODUCT((B2:B8=\"Produce\")*C2:C8*D2:D8)"
+    },
+    {
+      "prompt": "Last one: switch to the Grade sheet (tab at the bottom). In B7, work out the weighted course grade: =SUMPRODUCT(B2:B5, C2:C5).",
+      "teach": "A **weighted average** counts some parts more than others. Here the final is worth 40% and participation only 10%. Score × weight for each part, added up, gives the grade. (The weights add up to 1, so there's no need to divide.)",
+      "sheet": "Grade",
+      "cell": "B7",
+      "expected": 85.8,
+      "function": "SUMPRODUCT",
+      "hints": [
+        "Click the Grade tab first. Scores are in B2:B5 and weights in C2:C5.",
+        "=SUMPRODUCT(B2:B5, C2:C5)"
+      ],
+      "highlight": [
+        "B2:C5"
+      ],
+      "answer": "=SUMPRODUCT(B2:B5, C2:C5)"
+    }
+  ],
+  "recap": "SUMPRODUCT multiplies ranges row by row and adds up the results. Use it for totals, weighted averages, and conditional sums with (range=\"text\")."
+}

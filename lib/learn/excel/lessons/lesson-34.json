@@ -1,0 +1,349 @@
+{
+  "id": "xl-34",
+  "level": 5,
+  "title": "Review: The basketball stat sheet",
+  "explanation": "**Level 5 review!** You're the student analyst for the campus basketball team (the players are made up). The coach wants per-game stats, player roles, and a few team totals. There's nothing new here, just everything from Level 5: comparisons, IF, AND, IFERROR and the IF-family of functions.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Season",
+        "header": true,
+        "column_widths": [
+          100,
+          80,
+          60,
+          60,
+          80,
+          70,
+          50,
+          50,
+          60,
+          70,
+          130,
+          60
+        ],
+        "rows": [
+          [
+            "Player",
+            "Position",
+            "Games",
+            "Points",
+            "Rebounds",
+            "Assists",
+            "3PM",
+            "3PA",
+            "PPG",
+            "Role",
+            "Double-double avg",
+            "3P%"
+          ],
+          [
+            "J. Carter",
+            "Guard",
+            30,
+            780,
+            120,
+            210,
+            72,
+            190,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "M. Okafor",
+            "Center",
+            28,
+            476,
+            336,
+            56,
+            0,
+            0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "D. Silva",
+            "Forward",
+            30,
+            615,
+            240,
+            90,
+            45,
+            130,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "T. Nguyen",
+            "Guard",
+            25,
+            425,
+            75,
+            175,
+            60,
+            150,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "R. Brooks",
+            "Forward",
+            29,
+            348,
+            203,
+            58,
+            20,
+            70,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "K. Ellis",
+            "Center",
+            22,
+            198,
+            176,
+            22,
+            0,
+            0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "L. Moreno",
+            "Guard",
+            30,
+            330,
+            90,
+            150,
+            55,
+            140,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "A. Grant",
+            "Forward",
+            18,
+            162,
+            108,
+            36,
+            9,
+            30,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Guards",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Guard points",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Most rebounds (Forward)",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In I2:I9, work out points per game (PPG): points ÷ games.",
+      "cell": "I2:I9",
+      "expected": [
+        26.0,
+        17.0,
+        20.5,
+        17.0,
+        12.0,
+        9.0,
+        11.0,
+        9.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=D2/C2, then copy it down.",
+        "J. Carter scores 26 a game."
+      ],
+      "highlight": [
+        "C2:D9"
+      ],
+      "answer": "=D2/C2 in I2, then copy down to I9"
+    },
+    {
+      "prompt": "In J2:J9, label each player \"Starter\" if their PPG is at least 15, otherwise \"Bench\".",
+      "cell": "J2:J9",
+      "expected": [
+        "Starter",
+        "Starter",
+        "Starter",
+        "Starter",
+        "Bench",
+        "Bench",
+        "Bench",
+        "Bench"
+      ],
+      "function": "IF",
+      "hints": [
+        "Use IF with the PPG in column I.",
+        "=IF(I2>=15, \"Starter\", \"Bench\"), then copy it down."
+      ],
+      "highlight": [
+        "I2:I9"
+      ],
+      "answer": "=IF(I2>=15, \"Starter\", \"Bench\") in J2, then copy down to J9"
+    },
+    {
+      "prompt": "A double-double average means at least 10 points AND at least 10 rebounds per game. In K2:K9, show TRUE or FALSE for each player.",
+      "cell": "K2:K9",
+      "expected": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "function": "AND",
+      "hints": [
+        "Both tests divide by games: D2/C2>=10 and E2/C2>=10.",
+        "=AND(D2/C2>=10, E2/C2>=10), then copy it down."
+      ],
+      "highlight": [
+        "C2:E9"
+      ],
+      "answer": "=AND(D2/C2>=10, E2/C2>=10) in K2, then copy down to K9"
+    },
+    {
+      "prompt": "In L2:L9, work out 3-point percentage (3PM ÷ 3PA). Some centers took no 3-pointers, so show 0 instead of an error.",
+      "cell": "L2:L9",
+      "expected": [
+        0.3789473684,
+        0,
+        0.3461538462,
+        0.4,
+        0.2857142857,
+        0,
+        0.3928571429,
+        0.3
+      ],
+      "function": "IFERROR",
+      "hints": [
+        "Wrap the division in IFERROR, with 0 as the backup.",
+        "=IFERROR(G2/H2, 0), then copy it down."
+      ],
+      "highlight": [
+        "G2:H9"
+      ],
+      "answer": "=IFERROR(G2/H2, 0) in L2, then copy down to L9"
+    },
+    {
+      "prompt": "In B11, count the guards on the team.",
+      "cell": "B11",
+      "expected": 3,
+      "function": "COUNTIF",
+      "hints": [
+        "COUNTIF on the positions in B2:B9.",
+        "=COUNTIF(B2:B9, \"Guard\")"
+      ],
+      "highlight": [
+        "B2:B9"
+      ],
+      "answer": "=COUNTIF(B2:B9, \"Guard\")"
+    },
+    {
+      "prompt": "In B12, add up the total points scored by guards.",
+      "cell": "B12",
+      "expected": 1535,
+      "function": "SUMIF",
+      "hints": [
+        "SUMIF: check the positions in B, add up the points in D.",
+        "=SUMIF(B2:B9, \"Guard\", D2:D9)"
+      ],
+      "highlight": [
+        "B2:D9"
+      ],
+      "answer": "=SUMIF(B2:B9, \"Guard\", D2:D9)"
+    },
+    {
+      "prompt": "Last one: in B13, find the most rebounds by any forward.",
+      "cell": "B13",
+      "expected": 240,
+      "function": "MAXIFS",
+      "hints": [
+        "MAXIFS: the rebounds first, then the position condition.",
+        "=MAXIFS(E2:E9, B2:B9, \"Forward\")"
+      ],
+      "highlight": [
+        "B2:E9"
+      ],
+      "answer": "=MAXIFS(E2:E9, B2:B9, \"Forward\")"
+    }
+  ],
+  "recap": "Level 5 done! You can compare values, make decisions with IF, IFS and SWITCH, combine rules with AND, OR and NOT, handle errors with IFERROR, and summarise with COUNTIFS, SUMIFS and SUMPRODUCT. Next up: lookups."
+}

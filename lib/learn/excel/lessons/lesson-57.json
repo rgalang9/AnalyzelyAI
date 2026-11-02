@@ -1,0 +1,193 @@
+{
+  "id": "xl-57",
+  "level": 9,
+  "title": "TODAY, EDATE and EOMONTH",
+  "explanation": "A streaming service sells plans of 1, 3, 6 or 12 months. You need each member's renewal date and how many days are left. Adding months is trickier than adding days, because months have different lengths. **EDATE** and **EOMONTH** handle that for you.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Plans",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          100,
+          100,
+          130,
+          130,
+          140
+        ],
+        "rows": [
+          [
+            "Member",
+            "Start date",
+            "Plan (months)",
+            "Renews on",
+            "Days until renewal",
+            "End of start month",
+            "First of start month"
+          ],
+          [
+            "Maya",
+            46037,
+            12,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            46112,
+            6,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            46239,
+            3,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            46011,
+            12,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            46295,
+            1,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Report date",
+            46328,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:B6": "yyyy-mm-dd",
+          "D2:D6": "yyyy-mm-dd",
+          "F2:G6": "yyyy-mm-dd",
+          "B8": "yyyy-mm-dd"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, find Maya's renewal date: her start date plus her plan's months: =EDATE(B2, C2). Copy it down to D6.",
+      "teach": "**EDATE(date, months)** moves a date forward (or back, with a negative number) by whole months. It's smart about short months: March 31 plus 6 months is September 30, because September has no 31st.",
+      "cell": "D2:D6",
+      "expected": [
+        46402,
+        46295,
+        46331,
+        46376,
+        46325
+      ],
+      "function": "EDATE",
+      "hints": [
+        "=EDATE(B2, C2), then copy it down.",
+        "Leo's should be 2026-09-30."
+      ],
+      "highlight": [
+        "B2:C6"
+      ],
+      "answer": "=EDATE(B2, C2) in D2, then copy down to D6"
+    },
+    {
+      "prompt": "In E2, count the days until each renewal, from the report date in B8: =D2-$B$8. Copy it down to E6.",
+      "teach": "**TODAY()** gives today's date, and it updates every day. That's handy, but it makes reports change when you reopen them, so analysts often type a fixed **report date** in a cell instead, like B8 here. In your own sheets, =D2-TODAY() works the same way.",
+      "cell": "E2:E6",
+      "expected": [
+        74,
+        -33,
+        3,
+        48,
+        -3
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$B$8"
+      ],
+      "hints": [
+        "Renewal date minus the locked report date.",
+        "=D2-$B$8, then copy it down. A negative number means it already renewed."
+      ],
+      "highlight": [
+        "D2:D6",
+        "B8"
+      ],
+      "answer": "=D2-$B$8 in E2, then copy down to E6"
+    },
+    {
+      "prompt": "In F2, find the last day of each member's start month: =EOMONTH(B2, 0). Copy it down to F6.",
+      "teach": "**EOMONTH(date, months)** gives the **end of the month**, some number of months away. 0 means this month, 1 means next month, and -1 means last month. Billing often runs to the end of a month.",
+      "cell": "F2:F6",
+      "expected": [
+        46053,
+        46112,
+        46265,
+        46022,
+        46295
+      ],
+      "function": "EOMONTH",
+      "hints": [
+        "=EOMONTH(B2, 0), then copy it down.",
+        "Maya's should be 2026-01-31."
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=EOMONTH(B2, 0) in F2, then copy down to F6"
+    },
+    {
+      "prompt": "Last one: in G2, find the first day of each start month. Trick: the end of LAST month, plus 1 day: =EOMONTH(B2, -1) + 1. Copy it down to G6.",
+      "cell": "G2:G6",
+      "expected": [
+        46023,
+        46082,
+        46235,
+        45992,
+        46266
+      ],
+      "function": "EOMONTH",
+      "hints": [
+        "EOMONTH with -1, then add 1.",
+        "=EOMONTH(B2, -1) + 1, then copy it down."
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=EOMONTH(B2, -1) + 1 in G2, then copy down to G6"
+    }
+  ],
+  "recap": "TODAY() is today's date, but a fixed report date keeps reports stable. EDATE adds whole months, and EOMONTH finds the end of a month, so EOMONTH(date, -1) + 1 is the first of the month."
+}

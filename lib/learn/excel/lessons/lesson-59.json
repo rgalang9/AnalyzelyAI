@@ -1,0 +1,191 @@
+{
+  "id": "xl-59",
+  "level": 9,
+  "title": "Month-by-month totals with SUMIFS",
+  "explanation": "Managers ask \"how much did we sell each month?\" all the time. The data is a list of individual sales with dates. SUMIFS can add up everything **between two dates**: on or after the first of the month, and on or before the last day. Combine it with EOMONTH, and one formula works for every month.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sales",
+        "header": true,
+        "column_widths": [
+          100,
+          70,
+          30,
+          120,
+          70,
+          70
+        ],
+        "rows": [
+          [
+            "Date",
+            "Amount",
+            null,
+            "Month starting",
+            "Sales",
+            "Orders"
+          ],
+          [
+            46028,
+            120,
+            null,
+            46023,
+            null,
+            null
+          ],
+          [
+            46041,
+            85,
+            null,
+            46054,
+            null,
+            null
+          ],
+          [
+            46050,
+            140,
+            null,
+            46082,
+            null,
+            null
+          ],
+          [
+            46056,
+            60,
+            null,
+            46113,
+            null,
+            null
+          ],
+          [
+            46067,
+            210,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46078,
+            95,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46083,
+            180,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46092,
+            75,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46105,
+            130,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46112,
+            55,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46120,
+            160,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46134,
+            90,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "A2:A13": "yyyy-mm-dd",
+          "D2:D5": "mmm yyyy"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, add up January's sales: amounts where the date is on or after D2 and on or before the end of that month: =SUMIFS($B$2:$B$13, $A$2:$A$13, \">=\"&D2, $A$2:$A$13, \"<=\"&EOMONTH(D2, 0)).",
+      "teach": "To use a cell in a SUMIFS condition, join the comparison and the cell with **&**: `\">=\"&D2` means \"on or after the date in D2\". Two conditions on the same date column give a range: the start of the month to `EOMONTH(D2, 0)`, its last day.",
+      "cell": "E2",
+      "expected": 345,
+      "function": [
+        "SUMIFS",
+        "EOMONTH"
+      ],
+      "hints": [
+        "Sum range first, then 2 conditions on the date column.",
+        "=SUMIFS($B$2:$B$13, $A$2:$A$13, \">=\"&D2, $A$2:$A$13, \"<=\"&EOMONTH(D2, 0))"
+      ],
+      "highlight": [
+        "A2:B13",
+        "D2"
+      ],
+      "answer": "=SUMIFS($B$2:$B$13, $A$2:$A$13, \">=\"&D2, $A$2:$A$13, \"<=\"&EOMONTH(D2, 0))"
+    },
+    {
+      "prompt": "Copy E2 down to E5 for February, March and April.",
+      "cell": "E3:E5",
+      "expected": [
+        365,
+        440,
+        250
+      ],
+      "function": "SUMIFS",
+      "hints": [
+        "The ranges are locked, and D2 moves to D3, D4, D5.",
+        "March should be 440."
+      ],
+      "highlight": [
+        "E3:E5"
+      ],
+      "answer": "Copy E2 down to E5"
+    },
+    {
+      "prompt": "Last one: in F2, count the orders in each month the same way, using COUNTIFS with the same two date conditions. Copy it down to F5.",
+      "cell": "F2:F5",
+      "expected": [
+        3,
+        3,
+        4,
+        2
+      ],
+      "function": "COUNTIFS",
+      "hints": [
+        "COUNTIFS has no sum range: just the condition pairs.",
+        "=COUNTIFS($A$2:$A$13, \">=\"&D2, $A$2:$A$13, \"<=\"&EOMONTH(D2, 0)), then copy it down."
+      ],
+      "highlight": [
+        "A2:A13"
+      ],
+      "answer": "=COUNTIFS($A$2:$A$13, \">=\"&D2, $A$2:$A$13, \"<=\"&EOMONTH(D2, 0)) in F2, then copy down to F5"
+    }
+  ],
+  "recap": "SUMIFS and COUNTIFS can filter by a date range: \">=\"&start and \"<=\"&EOMONTH(start, 0). With a column of month starts, one formula gives every month's total."
+}

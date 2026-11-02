@@ -1,0 +1,160 @@
+{
+  "id": "xl-20",
+  "level": 4,
+  "title": "LEFT, RIGHT, MID and LEN",
+  "explanation": "A shipping company packs 3 facts into each order code: the city, the year and the order number, like **NYC-2026-0457**. To analyse orders by city or year, you need those pieces in their own columns. LEFT, RIGHT and MID pull out part of a piece of text by position.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Orders",
+        "header": true,
+        "column_widths": [
+          140,
+          70,
+          70,
+          80,
+          70
+        ],
+        "rows": [
+          [
+            "Order code",
+            "City",
+            "Year",
+            "Order #",
+            "Length"
+          ],
+          [
+            "NYC-2026-0457",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "BOS-2025-1180",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "LAX-2026-0032",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "CHI-2024-2219",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SEA-2026-0871",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B2, pull out the city: the first 3 characters. Use =LEFT(A2, 3).",
+      "teach": "**LEFT(text, n)** takes the first **n** characters from the left. So `=LEFT(\"NYC-2026-0457\", 3)` gives NYC.",
+      "cell": "B2",
+      "expected": "NYC",
+      "function": "LEFT",
+      "hints": [
+        "The city is the first 3 characters.",
+        "=LEFT(A2, 3)"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=LEFT(A2, 3)"
+    },
+    {
+      "prompt": "In D2, pull out the order number: the last 4 characters. Use RIGHT.",
+      "teach": "**RIGHT(text, n)** takes the last **n** characters. The result is text, so a leading zero like 0457 is kept.",
+      "cell": "D2",
+      "expected": "0457",
+      "function": "RIGHT",
+      "hints": [
+        "RIGHT works like LEFT, from the other end.",
+        "=RIGHT(A2, 4)"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=RIGHT(A2, 4)"
+    },
+    {
+      "prompt": "In C2, pull out the year from the middle: =MID(A2, 5, 4).",
+      "teach": "**MID(text, start, n)** takes **n** characters starting at position **start**. Count the characters: N=1, Y=2, C=3, -=4, so the year starts at position **5** and is 4 characters long.",
+      "cell": "C2",
+      "expected": "2026",
+      "function": "MID",
+      "hints": [
+        "The year starts at character 5 and is 4 characters long.",
+        "=MID(A2, 5, 4)"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=MID(A2, 5, 4)"
+    },
+    {
+      "prompt": "Copy B2:D2 down to row 6, so every order is split up.",
+      "cell": "B3:D6",
+      "expected": [
+        "BOS",
+        "2025",
+        "1180",
+        "LAX",
+        "2026",
+        "0032",
+        "CHI",
+        "2024",
+        "2219",
+        "SEA",
+        "2026",
+        "0871"
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Select B2:D2, copy, select B3:D6, paste.",
+        "Row 6 should read SEA, 2026, 0871."
+      ],
+      "highlight": [
+        "B3:D6"
+      ],
+      "answer": "Copy B2:D2 down to row 6"
+    },
+    {
+      "prompt": "Last one: in E2, count the characters in the code with LEN, then copy it down to E6. Every code should have the same length, which is a quick way to spot a typo.",
+      "cell": "E2:E6",
+      "expected": [
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "function": "LEN",
+      "hints": [
+        "=LEN(A2), then copy it down.",
+        "Each code has 13 characters."
+      ],
+      "highlight": [
+        "A2:A6"
+      ],
+      "answer": "=LEN(A2) in E2, then copy down to E6"
+    }
+  ],
+  "recap": "LEFT takes characters from the start, RIGHT from the end, and MID from any position. LEN counts characters, which helps you check codes are the right length."
+}

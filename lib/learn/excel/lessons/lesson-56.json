@@ -1,0 +1,209 @@
+{
+  "id": "xl-56",
+  "level": 9,
+  "title": "Dates are numbers: DATE, YEAR, MONTH, DAY",
+  "explanation": "**Welcome to Level 9: dates!** You saw in Lesson 9 that Excel stores every date as a **number**: the count of days since January 1, 1900. That's why you can subtract dates to count the days between them, or add 7 to move a week ahead. This lesson pulls dates apart and builds them back up, using a student events calendar.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Events",
+        "header": true,
+        "column_widths": [
+          110,
+          100,
+          70,
+          60,
+          60,
+          50,
+          150,
+          30,
+          60,
+          60,
+          50,
+          110
+        ],
+        "rows": [
+          [
+            "Event",
+            "Date",
+            "Tickets",
+            "Year",
+            "Month",
+            "Day",
+            "Days until Film Fest",
+            null,
+            "Year",
+            "Month",
+            "Day",
+            "Built date"
+          ],
+          [
+            "Spring Fling",
+            46130,
+            850,
+            null,
+            null,
+            null,
+            null,
+            null,
+            2026,
+            9,
+            4,
+            null
+          ],
+          [
+            "Jazz Night",
+            46060,
+            320,
+            null,
+            null,
+            null,
+            null,
+            null,
+            2026,
+            10,
+            16,
+            null
+          ],
+          [
+            "Hack Day",
+            46082,
+            410,
+            null,
+            null,
+            null,
+            null,
+            null,
+            2026,
+            11,
+            20,
+            null
+          ],
+          [
+            "Film Fest",
+            46164,
+            600,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Senior Gala",
+            46172,
+            720,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:B6": "yyyy-mm-dd",
+          "L2:L4": "yyyy-mm-dd"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, get the year of Spring Fling's date: =YEAR(B2).",
+      "teach": "**YEAR(date)**, **MONTH(date)** and **DAY(date)** pull out one part of a date as a plain number. MONTH gives 1 to 12, so April is 4.",
+      "cell": "D2",
+      "expected": 2026,
+      "function": "YEAR",
+      "hints": [
+        "YEAR takes the date cell.",
+        "=YEAR(B2)"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=YEAR(B2)"
+    },
+    {
+      "prompt": "In E2 and F2, get the month and the day. Then copy D2:F2 down to row 6.",
+      "cell": "D2:F6",
+      "expected": [
+        2026,
+        4,
+        18,
+        2026,
+        2,
+        7,
+        2026,
+        3,
+        1,
+        2026,
+        5,
+        22,
+        2026,
+        5,
+        30
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "E2 is =MONTH(B2) and F2 is =DAY(B2). Then copy D2:F2 down.",
+        "Spring Fling should read 2026, 4, 18."
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=MONTH(B2) in E2, =DAY(B2) in F2, then copy D2:F2 down to row 6"
+    },
+    {
+      "prompt": "In G2, count the days from Spring Fling until Film Fest by subtracting the dates: =$B$5-B2. Copy it down to G6.",
+      "teach": "Because dates are numbers, **later date − earlier date** gives the number of days between them. A negative answer means the event is after Film Fest.",
+      "cell": "G2:G6",
+      "expected": [
+        34,
+        104,
+        82,
+        0,
+        -8
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$B$5"
+      ],
+      "hints": [
+        "Film Fest's date is in B5, locked with $.",
+        "=$B$5-B2, then copy it down."
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=$B$5-B2 in G2, then copy down to G6"
+    },
+    {
+      "prompt": "Last one: in L2, build a real date from the year, month and day in I2:K2: =DATE(I2, J2, K2). Then copy it down to L4.",
+      "teach": "**DATE(year, month, day)** builds a date from 3 numbers. It's how you rebuild dates that came split into separate columns.",
+      "cell": "L2:L4",
+      "expected": [
+        46269,
+        46311,
+        46346
+      ],
+      "function": "DATE",
+      "hints": [
+        "Year, month, day, in that order.",
+        "=DATE(I2, J2, K2), then copy it down."
+      ],
+      "highlight": [
+        "I2:K4"
+      ],
+      "answer": "=DATE(I2, J2, K2) in L2, then copy down to L4"
+    }
+  ],
+  "recap": "Dates are numbers, so subtracting them counts days. YEAR, MONTH and DAY pull dates apart, and DATE(year, month, day) builds them back up."
+}

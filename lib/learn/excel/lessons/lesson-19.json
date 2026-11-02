@@ -1,0 +1,191 @@
+{
+  "id": "xl-19",
+  "level": 4,
+  "title": "UPPER, LOWER and PROPER",
+  "explanation": "The same contact list has a capital-letter problem: \"mAYA lEE\", \"LEO PARK\" and emails in random capitals. Three functions fix capitals instantly, and they're often combined with TRIM from last lesson.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Contacts",
+        "header": true,
+        "column_widths": [
+          110,
+          160,
+          60,
+          30,
+          110,
+          160,
+          90
+        ],
+        "rows": [
+          [
+            "Raw name",
+            "Raw email",
+            "State",
+            null,
+            "Name",
+            "Email",
+            "State code"
+          ],
+          [
+            "mAYA lEE",
+            "Maya.Lee@Wes.EDU",
+            "ct",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "LEO PARK",
+            "LEO@YALE.EDU",
+            "ct",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "sam ortiz",
+            "Sam.Ortiz@UConn.edu",
+            "ct",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava chen",
+            "ava.CHEN@wes.edu",
+            "ma",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            " nOAH  kim",
+            "Noah@Brown.Edu",
+            "ri",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "zoe ALI",
+            "ZOE.ALI@WES.EDU",
+            "ny",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, fix Maya's name so each word starts with a capital: =PROPER(A2).",
+      "teach": "**PROPER** capitalises the first letter of each word and makes the rest lowercase. **UPPER** makes everything CAPITALS, and **LOWER** makes everything lowercase.",
+      "cell": "E2",
+      "expected": "Maya Lee",
+      "function": "PROPER",
+      "exact_text": true,
+      "hints": [
+        "PROPER takes one cell.",
+        "=PROPER(A2)"
+      ],
+      "highlight": [
+        "A2"
+      ],
+      "answer": "=PROPER(A2)"
+    },
+    {
+      "prompt": "Copy E2 down to E7.",
+      "cell": "E3:E7",
+      "expected": [
+        "Leo Park",
+        "Sam Ortiz",
+        "Ava Chen",
+        " Noah  Kim",
+        "Zoe Ali"
+      ],
+      "function": "PROPER",
+      "exact_text": true,
+      "hints": [
+        "Copy E2, then paste into E3:E7.",
+        "Look at Noah's name in E6: it still has extra spaces. You'll fix that next."
+      ],
+      "highlight": [
+        "E3:E7"
+      ],
+      "answer": "Copy E2 down to E7"
+    },
+    {
+      "prompt": "Noah's name still has extra spaces. Fix E6 by combining both: =PROPER(TRIM(A6)).",
+      "teach": "Cleaning usually needs several functions at once. Put TRIM inside PROPER, and Excel trims first, then fixes the capitals.",
+      "cell": "E6",
+      "expected": "Noah Kim",
+      "function": [
+        "PROPER",
+        "TRIM"
+      ],
+      "exact_text": true,
+      "hints": [
+        "TRIM goes inside PROPER's brackets.",
+        "=PROPER(TRIM(A6))"
+      ],
+      "highlight": [
+        "A6"
+      ],
+      "answer": "=PROPER(TRIM(A6))"
+    },
+    {
+      "prompt": "Emails should be all lowercase. In F2, use LOWER on the raw email, then copy it down to F7.",
+      "cell": "F2:F7",
+      "expected": [
+        "maya.lee@wes.edu",
+        "leo@yale.edu",
+        "sam.ortiz@uconn.edu",
+        "ava.chen@wes.edu",
+        "noah@brown.edu",
+        "zoe.ali@wes.edu"
+      ],
+      "function": "LOWER",
+      "exact_text": true,
+      "hints": [
+        "=LOWER(B2), then copy it down.",
+        "Every email should be lowercase, like maya.lee@wes.edu."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=LOWER(B2) in F2, then copy down to F7"
+    },
+    {
+      "prompt": "Last one: state codes should be capitals. In G2, use UPPER on the state, then copy it down to G7.",
+      "cell": "G2:G7",
+      "expected": [
+        "CT",
+        "CT",
+        "CT",
+        "MA",
+        "RI",
+        "NY"
+      ],
+      "function": "UPPER",
+      "exact_text": true,
+      "hints": [
+        "=UPPER(C2), then copy it down.",
+        "They should read CT, CT, CT, MA, RI, NY."
+      ],
+      "highlight": [
+        "C2:C7"
+      ],
+      "answer": "=UPPER(C2) in G2, then copy down to G7"
+    }
+  ],
+  "recap": "PROPER capitalises each word, UPPER makes everything capitals, and LOWER makes everything lowercase. Combine them with TRIM, like =PROPER(TRIM(A2))."
+}

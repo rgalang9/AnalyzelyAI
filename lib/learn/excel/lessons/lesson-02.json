@@ -1,0 +1,188 @@
+{
+  "id": "xl-02",
+  "level": 1,
+  "title": "SUM, AVERAGE, MIN, MAX and COUNT",
+  "explanation": "Here's a week of step counts from a fitness app. Adding cells with + gets slow when there are lots of them. **Functions** are ready-made formulas that do common jobs for you, like adding up a whole column in one go.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Steps",
+        "header": true,
+        "column_widths": [
+          80,
+          90,
+          30,
+          110,
+          100
+        ],
+        "rows": [
+          [
+            "Day",
+            "Steps",
+            null,
+            "Summary",
+            null
+          ],
+          [
+            "Mon",
+            8200,
+            null,
+            "Total",
+            null
+          ],
+          [
+            "Tue",
+            10450,
+            null,
+            "Average",
+            null
+          ],
+          [
+            "Wed",
+            6300,
+            null,
+            "Best day",
+            null
+          ],
+          [
+            "Thu",
+            12000,
+            null,
+            "Worst day",
+            null
+          ],
+          [
+            "Fri",
+            9100,
+            null,
+            "Days logged",
+            null
+          ],
+          [
+            "Sat",
+            15400,
+            null,
+            "Range",
+            null
+          ],
+          [
+            "Sun",
+            4800,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, add up all the steps with SUM.",
+      "teach": "A function has a **name**, then **round brackets** with what it works on inside. `=SUM(B2:B8)` adds up every cell in the range B2 to B8. Remember, B2:B8 means B2 through B8.",
+      "cell": "E2",
+      "expected": 66250,
+      "function": "SUM",
+      "hints": [
+        "The steps are in B2 to B8.",
+        "=SUM(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=SUM(B2:B8)"
+    },
+    {
+      "prompt": "In E3, work out the average steps per day with AVERAGE.",
+      "teach": "**AVERAGE** works the same way as SUM: the name, then the range in brackets. It adds the cells up and divides by how many there are.",
+      "cell": "E3",
+      "expected": 9464.2857142857,
+      "function": "AVERAGE",
+      "hints": [
+        "Same range as SUM, different name.",
+        "=AVERAGE(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=AVERAGE(B2:B8)"
+    },
+    {
+      "prompt": "In E4, find the best day (the most steps) with MAX.",
+      "teach": "**MAX** gives the biggest number in a range, and **MIN** gives the smallest.",
+      "cell": "E4",
+      "expected": 15400,
+      "function": "MAX",
+      "hints": [
+        "Biggest means MAX.",
+        "=MAX(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=MAX(B2:B8)"
+    },
+    {
+      "prompt": "In E5, find the worst day (the fewest steps) with MIN.",
+      "cell": "E5",
+      "expected": 4800,
+      "function": "MIN",
+      "hints": [
+        "Smallest means MIN.",
+        "=MIN(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=MIN(B2:B8)"
+    },
+    {
+      "prompt": "In E6, count how many days have a step count, with COUNT.",
+      "teach": "**COUNT** counts how many cells in a range hold **numbers**. It skips empty cells and text. (Its cousin **COUNTA** counts every cell that isn't empty, text included.)",
+      "cell": "E6",
+      "expected": 7,
+      "function": "COUNT",
+      "hints": [
+        "COUNT works on the same range.",
+        "=COUNT(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=COUNT(B2:B8)"
+    },
+    {
+      "prompt": "The app missed a walk on Saturday: it was really 16400 steps. Change B7 to 16400, then look at E2. The total should update by itself.",
+      "teach": "This is why formulas beat typing answers in: change one number, and everything that uses it updates instantly.",
+      "cell": "B7",
+      "expected": 16400,
+      "hints": [
+        "Click B7 (Saturday), type 16400 and press Enter.",
+        "Then look at E2: its SUM updates on its own to 67250."
+      ],
+      "highlight": [
+        "B7"
+      ],
+      "answer": "Type 16400 in B7. E2 keeps =SUM(B2:B8)"
+    },
+    {
+      "prompt": "Last one: in E7, work out the range: the best day minus the worst day. Use MAX and MIN in one formula.",
+      "teach": "You can use several functions in one formula, with maths between them, like `=MAX(...)-MIN(...)`.",
+      "cell": "E7",
+      "expected": 11600,
+      "function": [
+        "MAX",
+        "MIN"
+      ],
+      "hints": [
+        "Start with =MAX(B2:B8), then subtract MIN of the same range.",
+        "=MAX(B2:B8)-MIN(B2:B8)"
+      ],
+      "highlight": [
+        "B2:B8"
+      ],
+      "answer": "=MAX(B2:B8)-MIN(B2:B8)"
+    }
+  ],
+  "recap": "SUM adds up, AVERAGE gives the average, MAX and MIN give the biggest and smallest, and COUNT counts the numbers in a range. Functions update by themselves when the data changes."
+}

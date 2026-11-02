@@ -1,0 +1,322 @@
+{
+  "id": "xl-17",
+  "level": 3,
+  "title": "Review: The concert ticket list",
+  "explanation": "**Level 3 review!** You manage ticket sales for a 2-night concert. The box office wants the list sorted, easy to scroll, filtered for questions, and protected from typos. There's nothing new here, just everything from Level 3: sorting, filtering, freeze panes, hiding and data validation.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Tickets",
+        "header": true,
+        "column_widths": [
+          70,
+          80,
+          100,
+          70,
+          100,
+          100,
+          110,
+          30,
+          170,
+          70
+        ],
+        "rows": [
+          [
+            "Order",
+            "Buyer",
+            "Section",
+            "Price",
+            "Show date",
+            "Status",
+            "Internal note",
+            null,
+            "Floor tickets on Dec 6",
+            null
+          ],
+          [
+            1001,
+            "Ava",
+            "Floor",
+            120,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1002,
+            "Ben",
+            "Balcony",
+            65,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1003,
+            "Chloe",
+            "Floor",
+            125,
+            "2026-12-06",
+            null,
+            "ok"
+          ],
+          [
+            1004,
+            "Dev",
+            "Lower Bowl",
+            90,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1005,
+            "Ella",
+            "Balcony",
+            60,
+            "2026-12-06",
+            null,
+            "ok"
+          ],
+          [
+            1006,
+            "Finn",
+            "Floor",
+            135,
+            "2026-12-06",
+            null,
+            "ok"
+          ],
+          [
+            1007,
+            "Gia",
+            "Lower Bowl",
+            95,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1008,
+            "Hugo",
+            "Balcony",
+            55,
+            "2026-12-06",
+            null,
+            "ok"
+          ],
+          [
+            1009,
+            "Isla",
+            "Floor",
+            150,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1010,
+            "Jay",
+            "Lower Bowl",
+            85,
+            "2026-12-06",
+            null,
+            "ok"
+          ],
+          [
+            1011,
+            "Kai",
+            "Balcony",
+            70,
+            "2026-12-05",
+            null,
+            "ok"
+          ],
+          [
+            1012,
+            "Lena",
+            "Floor",
+            140,
+            "2026-12-06",
+            null,
+            "ok"
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Freeze the top row so the headers stay visible.",
+      "frozen": {
+        "rows": 1,
+        "columns": 0
+      },
+      "hints": [
+        "Right-click any cell.",
+        "Choose Freeze first row."
+      ],
+      "answer": "Freeze the first row"
+    },
+    {
+      "prompt": "The Internal note column shouldn't be seen by the box office. Hide column G.",
+      "hidden_columns": [
+        "G"
+      ],
+      "hints": [
+        "Right-click the grey G at the top, then Hide.",
+        "The letters should skip from F to H."
+      ],
+      "answer": "Right-click column G, then Hide"
+    },
+    {
+      "prompt": "Sort the tickets by price, most expensive first.",
+      "cell": "A2:F13",
+      "expected": [
+        1009,
+        "Isla",
+        "Floor",
+        150,
+        "2026-12-05",
+        null,
+        1012,
+        "Lena",
+        "Floor",
+        140,
+        "2026-12-06",
+        null,
+        1006,
+        "Finn",
+        "Floor",
+        135,
+        "2026-12-06",
+        null,
+        1003,
+        "Chloe",
+        "Floor",
+        125,
+        "2026-12-06",
+        null,
+        1001,
+        "Ava",
+        "Floor",
+        120,
+        "2026-12-05",
+        null,
+        1007,
+        "Gia",
+        "Lower Bowl",
+        95,
+        "2026-12-05",
+        null,
+        1004,
+        "Dev",
+        "Lower Bowl",
+        90,
+        "2026-12-05",
+        null,
+        1010,
+        "Jay",
+        "Lower Bowl",
+        85,
+        "2026-12-06",
+        null,
+        1011,
+        "Kai",
+        "Balcony",
+        70,
+        "2026-12-05",
+        null,
+        1002,
+        "Ben",
+        "Balcony",
+        65,
+        "2026-12-05",
+        null,
+        1005,
+        "Ella",
+        "Balcony",
+        60,
+        "2026-12-06",
+        null,
+        1008,
+        "Hugo",
+        "Balcony",
+        55,
+        "2026-12-06",
+        null
+      ],
+      "hints": [
+        "Click a cell in the Price column (D), then sort largest to smallest.",
+        "Isla's $150 Floor ticket should be on top."
+      ],
+      "highlight": [
+        "D1:D13"
+      ],
+      "answer": "Click a cell in column D, then sort Z→A"
+    },
+    {
+      "prompt": "Add a dropdown to F2:F13 for the payment status, with Paid, Pending and Refunded.",
+      "validation": {
+        "range": "F2:F13",
+        "type": "list",
+        "values": [
+          "Paid",
+          "Pending",
+          "Refunded"
+        ]
+      },
+      "hints": [
+        "Select F2:F13, open Data validation in the toolbar, and choose Dropdown.",
+        "The choices are Paid, Pending, Refunded."
+      ],
+      "answer": "Data validation on F2:F13: list of Paid, Pending, Refunded"
+    },
+    {
+      "prompt": "Mark the top ticket (in row 2) as Paid, using the dropdown.",
+      "cell": "F2",
+      "expected": "Paid",
+      "hints": [
+        "Click F2 and pick Paid from its arrow.",
+        "F2 should say Paid."
+      ],
+      "highlight": [
+        "F2"
+      ],
+      "answer": "Pick Paid from F2's dropdown"
+    },
+    {
+      "prompt": "The box office asks: who's on the Floor on December 6? Filter Section to Floor and Show date to 2026-12-06.",
+      "hidden_rows": [
+        2,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "hints": [
+        "Click Filter in the toolbar, then use the arrows on Section (C) and Show date (E).",
+        "3 tickets should be left: Lena, Finn and Chloe."
+      ],
+      "answer": "Filter → Section: Floor, Show date: 2026-12-06"
+    },
+    {
+      "prompt": "Last one: type how many Floor tickets were sold for December 6 into J1.",
+      "cell": "J1",
+      "expected": 3,
+      "hints": [
+        "Count the visible rows.",
+        "Lena, Finn and Chloe."
+      ],
+      "highlight": [
+        "J1"
+      ],
+      "answer": "3"
+    }
+  ],
+  "recap": "Level 3 done! You can sort by one or more columns, filter rows, freeze headers, hide columns, and add dropdowns and input rules. Next up: cleaning text."
+}

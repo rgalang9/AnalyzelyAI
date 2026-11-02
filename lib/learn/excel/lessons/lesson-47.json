@@ -1,0 +1,182 @@
+{
+  "id": "xl-47",
+  "level": 7,
+  "title": "LET: naming parts of a formula",
+  "explanation": "Long formulas get hard to read, especially when the same piece appears twice. **LET** lets you give a piece of a formula a **name**, then use that name. It makes formulas shorter, easier to check, and faster for Excel to work out. Here, a design agency pays freelancers a commission on their sales, minus a platform fee.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Payouts",
+        "header": true,
+        "column_widths": [
+          100,
+          110,
+          120,
+          30,
+          100,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "Freelancer",
+            "Monthly sales",
+            "Commission rate",
+            null,
+            "Commission",
+            "Take-home",
+            "Bonus check"
+          ],
+          [
+            "Maya",
+            3200,
+            0.06,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            1850,
+            0.05,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            4100,
+            0.07,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            2600,
+            0.05,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            3900,
+            0.06,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Fee rate",
+            0.1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, work out Maya's commission with LET: =LET(sales, B2, rate, C2, sales*rate).",
+      "teach": "**LET(name1, value1, name2, value2, ..., calculation)** gives names to values, then uses them in the last part. `=LET(sales, B2, rate, C2, sales*rate)` reads like a sentence: let sales be B2, let rate be C2, then multiply them.",
+      "cell": "E2",
+      "expected": 192.0,
+      "function": "LET",
+      "hints": [
+        "Names and values in pairs, then the calculation last.",
+        "=LET(sales, B2, rate, C2, sales*rate)"
+      ],
+      "highlight": [
+        "B2:C2"
+      ],
+      "answer": "=LET(sales, B2, rate, C2, sales*rate)"
+    },
+    {
+      "prompt": "Copy E2 down to E6.",
+      "cell": "E3:E6",
+      "expected": [
+        92.5,
+        287.0,
+        130.0,
+        234.0
+      ],
+      "function": "LET",
+      "hints": [
+        "Copy E2, then paste into E3:E6.",
+        "Sam's commission is 287."
+      ],
+      "highlight": [
+        "E3:E6"
+      ],
+      "answer": "Copy E2 down to E6"
+    },
+    {
+      "prompt": "Take-home is the commission minus a 10% platform fee (the rate in B9). In F2, use LET to name the commission once, then use it twice: =LET(c, B2*C2, fee, $B$9, c - c*fee). Copy it down to F6.",
+      "teach": "This is where LET shines: the commission `B2*C2` appears twice in the maths, but you only write it once, as **c**.",
+      "cell": "F2:F6",
+      "expected": [
+        172.8,
+        83.25,
+        258.3,
+        117.0,
+        210.6
+      ],
+      "function": "LET",
+      "formula_contains": [
+        "$B$9"
+      ],
+      "hints": [
+        "Name c and fee, then calculate c - c*fee. Lock B9.",
+        "=LET(c, B2*C2, fee, $B$9, c - c*fee), then copy it down."
+      ],
+      "highlight": [
+        "B2:C6",
+        "B9"
+      ],
+      "answer": "=LET(c, B2*C2, fee, $B$9, c - c*fee) in F2, then copy down to F6"
+    },
+    {
+      "prompt": "Last one: in G2, use LET with IF: name the commission c, then show \"Bonus\" if c is over 200, otherwise \"No bonus\". Copy it down to G6.",
+      "cell": "G2:G6",
+      "expected": [
+        "No bonus",
+        "No bonus",
+        "Bonus",
+        "No bonus",
+        "Bonus"
+      ],
+      "function": [
+        "LET",
+        "IF"
+      ],
+      "hints": [
+        "The calculation part of LET can be an IF.",
+        "=LET(c, B2*C2, IF(c>200, \"Bonus\", \"No bonus\")), then copy it down."
+      ],
+      "highlight": [
+        "B2:C6"
+      ],
+      "answer": "=LET(c, B2*C2, IF(c>200, \"Bonus\", \"No bonus\")) in G2, then copy down to G6"
+    }
+  ],
+  "recap": "LET(name, value, ..., calculation) names parts of a formula so you write them once and read them easily. The calculation can be anything, including IF."
+}

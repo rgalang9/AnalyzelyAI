@@ -1,0 +1,158 @@
+{
+  "id": "xl-70",
+  "level": 11,
+  "title": "Checking formulas for mistakes",
+  "explanation": "**Welcome to Level 11: pro skills!** A colleague built this sales summary, and the boss is about to present it. It **looks** fine, but it has 3 hidden mistakes. Spreadsheet errors are famous for costing companies millions, so pros check formulas before anything goes out. The trick: click each cell and read its formula in the formula bar.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Summary",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          100,
+          90,
+          90
+        ],
+        "rows": [
+          [
+            "Region",
+            "This year",
+            "Last year",
+            "Change",
+            "Change %",
+            null,
+            "Total check"
+          ],
+          [
+            "North",
+            42000,
+            38000,
+            "=B2-C2",
+            "=D2/C2",
+            null,
+            null
+          ],
+          [
+            "South",
+            35500,
+            36200,
+            "=B3-C3",
+            "=D3/C3",
+            null,
+            null
+          ],
+          [
+            "East",
+            51200,
+            47800,
+            13400,
+            "=D4/C4",
+            null,
+            null
+          ],
+          [
+            "West",
+            28900,
+            30100,
+            "=B5-C5",
+            "=D5/C4",
+            null,
+            null
+          ],
+          [
+            "Total",
+            "=SUM(B2:B4)",
+            "=SUM(C2:C5)",
+            "=B6-C6",
+            "=D6/C6",
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:D6": "$#,##0",
+          "E2:E6": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Start with the totals. Click B6 and read its formula. Does it include every region?",
+      "teach": "To check a formula, click the cell and read the **formula bar**. Better still, press **F2** (Ctrl+U on Mac) to edit it: each cell it uses lights up in a colour, so you can **see** what it adds up. The real Excel tool for this is called **Trace Precedents**.",
+      "selected": "B6",
+      "hints": [
+        "Click B6 and look at the formula bar.",
+        "It says =SUM(B2:B4). West, in row 5, is missing!"
+      ]
+    },
+    {
+      "prompt": "Mistake 1: B6 leaves out West. Fix it so it adds up B2:B5.",
+      "cell": "B6",
+      "expected": 157600,
+      "function": "SUM",
+      "formula_contains": [
+        "B5"
+      ],
+      "hints": [
+        "Change B4 to B5 in the range.",
+        "=SUM(B2:B5)"
+      ],
+      "highlight": [
+        "B2:B5"
+      ],
+      "answer": "=SUM(B2:B5)"
+    },
+    {
+      "prompt": "Mistake 2: one cell in column D isn't a formula at all. Someone typed a number over it. Find it and replace it with the right formula.",
+      "teach": "A **hardcoded** number sitting among formulas is a classic trap. Someone typed over the formula, and here they even typed the wrong number. Click down the column and watch the formula bar for a cell with no = sign.",
+      "cell": "D4",
+      "expected": 3400,
+      "must_be_formula": true,
+      "hints": [
+        "Click D2, D3, D4 and D5 in turn. One shows just a number.",
+        "D4 should be =B4-C4."
+      ],
+      "highlight": [
+        "D2:D5"
+      ],
+      "answer": "=B4-C4"
+    },
+    {
+      "prompt": "Mistake 3: one Change % divides by the wrong row. Check E2:E5 and fix the one that's wrong.",
+      "teach": "When a formula is copied, every reference should shift together. If one row points at a different row than its neighbours, it was probably typed by hand and got it wrong.",
+      "cell": "E5",
+      "expected": -0.03986710963455149,
+      "must_be_formula": true,
+      "formula_contains": [
+        "C5"
+      ],
+      "hints": [
+        "Each row should divide its own D by its own C.",
+        "E5 divides by C4. It should be =D5/C5."
+      ],
+      "highlight": [
+        "E2:E5"
+      ],
+      "answer": "=D5/C5"
+    },
+    {
+      "prompt": "Last one: add a check cell. In G2, show \"OK\" if the total in B6 equals the sum of the 4 regions, otherwise \"Check\": =IF(B6=SUM(B2:B5), \"OK\", \"Check\").",
+      "teach": "A **check cell** is a formula that tests your own work. Pros add them to models so mistakes show up automatically, instead of waiting for someone to notice.",
+      "cell": "G2",
+      "expected": "OK",
+      "function": "IF",
+      "hints": [
+        "Compare B6 with SUM(B2:B5).",
+        "=IF(B6=SUM(B2:B5), \"OK\", \"Check\")"
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=IF(B6=SUM(B2:B5), \"OK\", \"Check\")"
+    }
+  ],
+  "recap": "Check formulas by clicking each cell and reading the formula bar, or pressing F2 to see what it uses. Watch for missing rows in totals, hardcoded numbers, and one row that doesn't match its neighbours. Add check cells to catch mistakes automatically."
+}

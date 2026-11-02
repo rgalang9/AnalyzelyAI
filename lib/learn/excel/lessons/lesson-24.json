@@ -1,0 +1,183 @@
+{
+  "id": "xl-24",
+  "level": 4,
+  "title": "Numbers stored as text: VALUE and TEXT",
+  "explanation": "A store imported its sales from another system, and the amounts came in as **text** that only looks like numbers. Excel can't add up text, so the totals are wrong without any warning. This lesson fixes that with VALUE, then goes the other way with TEXT, which turns numbers into nicely formatted text for labels.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Imported",
+        "header": true,
+        "column_widths": [
+          100,
+          140,
+          80,
+          90,
+          30,
+          130,
+          170
+        ],
+        "rows": [
+          [
+            "Order date",
+            "Amount (imported)",
+            "Amount",
+            "Month",
+            null,
+            "Summary",
+            null
+          ],
+          [
+            46036,
+            "1200",
+            null,
+            null,
+            null,
+            "SUM of imported",
+            null
+          ],
+          [
+            46056,
+            "850",
+            null,
+            null,
+            null,
+            "Real total",
+            null
+          ],
+          [
+            46080,
+            "2300",
+            null,
+            null,
+            null,
+            "Label",
+            null
+          ],
+          [
+            46090,
+            "475",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46103,
+            "1640",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            46117,
+            "990",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, add up the imported amounts with =SUM(B2:B7). See what happens!",
+      "teach": "Numbers stored as text often sit on the **left** of the cell, while real numbers sit on the right. SUM skips text, so this total will be wrong.",
+      "cell": "G2",
+      "expected": 0,
+      "function": "SUM",
+      "hints": [
+        "=SUM(B2:B7)",
+        "You'll get 0. That's expected this time!"
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=SUM(B2:B7)"
+    },
+    {
+      "prompt": "In C2, turn the text into a real number with =VALUE(B2). Then copy it down to C7.",
+      "teach": "**VALUE** converts text that looks like a number into a real number that Excel can do maths with.",
+      "cell": "C2:C7",
+      "expected": [
+        1200,
+        850,
+        2300,
+        475,
+        1640,
+        990
+      ],
+      "function": "VALUE",
+      "hints": [
+        "=VALUE(B2), then copy it down.",
+        "They should now sit on the right of their cells."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=VALUE(B2) in C2, then copy down to C7"
+    },
+    {
+      "prompt": "In G3, add up the real amounts in C2:C7.",
+      "cell": "G3",
+      "expected": 7455,
+      "function": "SUM",
+      "hints": [
+        "SUM the new column.",
+        "=SUM(C2:C7)"
+      ],
+      "highlight": [
+        "C2:C7"
+      ],
+      "answer": "=SUM(C2:C7)"
+    },
+    {
+      "prompt": "Now the opposite. In D2, get the month name from the date with =TEXT(A2, \"mmmm\"). Then copy it down to D7.",
+      "teach": "**TEXT(number, format)** turns a number into text, shown in the format you give in quotes. Dates are numbers (remember Lesson 9), and `\"mmmm\"` means the full month name.",
+      "cell": "D2:D7",
+      "expected": [
+        "January",
+        "February",
+        "February",
+        "March",
+        "March",
+        "April"
+      ],
+      "function": "TEXT",
+      "hints": [
+        "=TEXT(A2, \"mmmm\"), then copy it down.",
+        "Row 2 should say January."
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=TEXT(A2, \"mmmm\") in D2, then copy down to D7"
+    },
+    {
+      "prompt": "Last one: in G4, make a label that reads \"Total: $7,455.00\". Join the text \"Total: \" with TEXT(G3, \"$#,##0.00\").",
+      "teach": "Joining a number straight onto text loses its formatting (you'd get \"Total: 7455\"). Wrapping it in TEXT with a format keeps the $ sign, comma and decimals.",
+      "cell": "G4",
+      "expected": "Total: $7,455.00",
+      "function": "TEXT",
+      "formula_contains": [
+        "&"
+      ],
+      "exact_text": true,
+      "hints": [
+        "=\"Total: \" & TEXT(G3, \"$#,##0.00\")",
+        "Don't forget the space after the colon."
+      ],
+      "highlight": [
+        "G3"
+      ],
+      "answer": "=\"Total: \" & TEXT(G3, \"$#,##0.00\")"
+    }
+  ],
+  "recap": "Numbers stored as text break SUM without warning, and VALUE turns them into real numbers. TEXT does the opposite, turning a number or date into formatted text for labels."
+}

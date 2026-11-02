@@ -1,0 +1,237 @@
+{
+  "id": "xl-21",
+  "level": 4,
+  "title": "FIND and SEARCH",
+  "explanation": "Last lesson, every code had the same length, so you always knew where to cut. Names and emails are different lengths, so you need to **find** where to cut first, like the @ in an email or the space in a name. FIND and SEARCH tell you the position of a character, and you combine them with LEFT and MID.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "People",
+        "header": true,
+        "column_widths": [
+          140,
+          170,
+          90,
+          100,
+          100,
+          90,
+          90
+        ],
+        "rows": [
+          [
+            "Name",
+            "Email",
+            "@ position",
+            "Username",
+            "School",
+            "First name",
+            "Last name"
+          ],
+          [
+            "Maya Lee",
+            "maya.lee@wes.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo Park",
+            "leo.park@yale.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam Ortiz",
+            "sam.ortiz@uconn.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava Chen",
+            "ava.chen@wes.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah Kim",
+            "noah.kim@brown.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe Ali",
+            "zoe.ali@wes.edu",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Analyzely PRO plan",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In C2, find the position of the @ in Maya's email: =FIND(\"@\", B2).",
+      "teach": "**FIND(what, text)** gives the position of the first match. In maya.lee@wes.edu the @ is the **9th** character. Text you search for goes in quotes.",
+      "cell": "C2",
+      "expected": 9,
+      "function": "FIND",
+      "hints": [
+        "The @ goes in quotes.",
+        "=FIND(\"@\", B2)"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=FIND(\"@\", B2)"
+    },
+    {
+      "prompt": "In D2, take everything before the @ to get the username: =LEFT(B2, FIND(\"@\", B2) - 1). Then copy it down to D7.",
+      "teach": "The username stops one character **before** the @, so take FIND's position minus 1. Putting FIND inside LEFT works for every email, whatever its length.",
+      "cell": "D2:D7",
+      "expected": [
+        "maya.lee",
+        "leo.park",
+        "sam.ortiz",
+        "ava.chen",
+        "noah.kim",
+        "zoe.ali"
+      ],
+      "function": [
+        "LEFT",
+        "FIND"
+      ],
+      "hints": [
+        "=LEFT(B2, FIND(\"@\", B2) - 1), then copy it down.",
+        "Maya's should be maya.lee."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=LEFT(B2, FIND(\"@\", B2) - 1) in D2, then copy down to D7"
+    },
+    {
+      "prompt": "In E2, take everything after the @ to get the school: =MID(B2, FIND(\"@\", B2) + 1, 100). Then copy it down to E7.",
+      "teach": "MID starts one character **after** the @. The 100 just means \"take up to 100 characters\", which is more than enough to reach the end.",
+      "cell": "E2:E7",
+      "expected": [
+        "wes.edu",
+        "yale.edu",
+        "uconn.edu",
+        "wes.edu",
+        "brown.edu",
+        "wes.edu"
+      ],
+      "function": [
+        "MID",
+        "FIND"
+      ],
+      "hints": [
+        "=MID(B2, FIND(\"@\", B2) + 1, 100), then copy it down.",
+        "Maya's should be wes.edu."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=MID(B2, FIND(\"@\", B2) + 1, 100) in E2, then copy down to E7"
+    },
+    {
+      "prompt": "Same trick for names. In F2, take the first name: everything before the space. Then copy it down to F7.",
+      "cell": "F2:F7",
+      "expected": [
+        "Maya",
+        "Leo",
+        "Sam",
+        "Ava",
+        "Noah",
+        "Zoe"
+      ],
+      "function": [
+        "LEFT",
+        "FIND"
+      ],
+      "hints": [
+        "Find the space with FIND(\" \", A2).",
+        "=LEFT(A2, FIND(\" \", A2) - 1), then copy it down."
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=LEFT(A2, FIND(\" \", A2) - 1) in F2, then copy down to F7"
+    },
+    {
+      "prompt": "In G2, take the last name: everything after the space. Then copy it down to G7.",
+      "cell": "G2:G7",
+      "expected": [
+        "Lee",
+        "Park",
+        "Ortiz",
+        "Chen",
+        "Kim",
+        "Ali"
+      ],
+      "function": [
+        "MID",
+        "FIND"
+      ],
+      "hints": [
+        "Start one character after the space, like the school column.",
+        "=MID(A2, FIND(\" \", A2) + 1, 100), then copy it down."
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=MID(A2, FIND(\" \", A2) + 1, 100) in G2, then copy down to G7"
+    },
+    {
+      "prompt": "Last one: FIND cares about capitals, SEARCH doesn't. In C9, use SEARCH to find \"pro\" in A9 (which says PRO in capitals).",
+      "teach": "**FIND** is case-sensitive, so `FIND(\"pro\", A9)` gives an error, because A9 says PRO. **SEARCH** works the same way but ignores capitals, so it finds it at position 11.",
+      "cell": "C9",
+      "expected": 11,
+      "function": "SEARCH",
+      "hints": [
+        "SEARCH works exactly like FIND.",
+        "=SEARCH(\"pro\", A9)"
+      ],
+      "highlight": [
+        "A9"
+      ],
+      "answer": "=SEARCH(\"pro\", A9)"
+    }
+  ],
+  "recap": "FIND and SEARCH give the position of a character, and SEARCH ignores capitals. Combine them with LEFT and MID to split text at an @, a space or a comma, whatever its length."
+}

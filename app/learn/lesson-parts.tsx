@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
 import type { CodeLine } from "@/lib/learn/lesson-types";
 import type { QueryResult } from "@/lib/learn/sql/runner";
@@ -130,6 +130,42 @@ export function LessonDone({
           All lessons
         </Link>
       </div>
+    </div>
+  );
+}
+
+// Just enough markdown for lesson text: paragraphs, ``` code blocks, **bold** and `code`
+export function Markdown({ text }: { text: string }) {
+  // Odd pieces are the insides of ``` blocks (the language name after ``` is dropped)
+  const pieces = text.split(/```[^\n]*\n([\s\S]*?)\n?```/);
+  return (
+    <div className="flex flex-col gap-3">
+      {pieces.flatMap((piece, b) =>
+        b % 2 === 1
+          ? [
+              <pre key={b} className="overflow-x-auto rounded bg-zinc-100 px-4 py-3 font-mono text-sm leading-6">
+                {piece}
+              </pre>,
+            ]
+          : piece
+              .split(/\n\s*\n/)
+              .filter((paragraph) => paragraph.trim())
+              .map((paragraph, p) => (
+                <p key={`${b}-${p}`}>
+                  {paragraph.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, i) =>
+                    part.startsWith("**") && part.endsWith("**") ? (
+                      <strong key={i}>{part.slice(2, -2)}</strong>
+                    ) : part.startsWith("`") && part.endsWith("`") ? (
+                      <code key={i} className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-[0.9em]">
+                        {part.slice(1, -1)}
+                      </code>
+                    ) : (
+                      <Fragment key={i}>{part}</Fragment>
+                    )
+                  )}
+                </p>
+              ))
+      )}
     </div>
   );
 }

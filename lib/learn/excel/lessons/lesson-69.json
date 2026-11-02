@@ -1,0 +1,320 @@
+{
+  "id": "xl-69",
+  "level": 10,
+  "title": "Review: Should the food truck buy a second truck?",
+  "explanation": "**Level 10 review!** A food truck owner is thinking about buying a second truck for $60,000. The inputs are on the left. Build the cash flows, value the investment with NPV and IRR, make the call, then use Goal Seek to find the break-even number of customers. There's nothing new here, just everything from Level 10.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Second truck",
+        "header": true,
+        "column_widths": [
+          200,
+          90,
+          30,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ],
+        "rows": [
+          [
+            "Input",
+            "Value",
+            null,
+            "Year",
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            "Investment",
+            60000,
+            null,
+            "Cash flow",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Days open per year",
+            300,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Customers per day",
+            40,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Average spend",
+            11,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Food cost (% of sales)",
+            0.4,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Fixed costs per year",
+            48000,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Discount rate",
+            0.12,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Yearly cash flow",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "NPV",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "IRR",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Decision",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Loan payment (7%, 4 years)",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2": "$#,##0",
+          "B5": "$#,##0.00",
+          "B6": "0.0%",
+          "B7": "$#,##0",
+          "B8": "0.0%",
+          "B10:B11": "$#,##0",
+          "B12": "0.0%",
+          "B14": "$#,##0.00",
+          "E2:J2": "$#,##0"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B10, work out the yearly cash flow: days × customers × spend × (1 − food cost %) − fixed costs.",
+      "cell": "B10",
+      "expected": 31200.0,
+      "must_be_formula": true,
+      "hints": [
+        "=B3*B4*B5*(1-B6)-B7",
+        "It should be $31,200."
+      ],
+      "highlight": [
+        "B3:B7"
+      ],
+      "answer": "=B3*B4*B5*(1-B6)-B7"
+    },
+    {
+      "prompt": "Fill in the cash flow row: in E2, the year-0 investment as a negative number (=-B2). In F2:J2, each year's cash flow (=$B$10).",
+      "cell": "E2:J2",
+      "expected": [
+        -60000,
+        31200.0,
+        31200.0,
+        31200.0,
+        31200.0,
+        31200.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "E2: =-B2. F2: =$B$10, then copy it across to J2.",
+        "Year 0 should be −$60,000."
+      ],
+      "highlight": [
+        "B2",
+        "B10"
+      ],
+      "answer": "=-B2 in E2, and =$B$10 in F2 copied across to J2"
+    },
+    {
+      "prompt": "In B11, work out the NPV at the discount rate in B8, the right way.",
+      "cell": "B11",
+      "expected": 52469.01751316413,
+      "function": "NPV",
+      "formula_contains": [
+        "E2"
+      ],
+      "hints": [
+        "NPV of years 1 to 5, then add year 0.",
+        "=NPV(B8, F2:J2) + E2"
+      ],
+      "highlight": [
+        "B8",
+        "E2:J2"
+      ],
+      "answer": "=NPV(B8, F2:J2) + E2"
+    },
+    {
+      "prompt": "In B12, work out the IRR of the cash flows.",
+      "cell": "B12",
+      "expected": 0.4343499191404888,
+      "function": "IRR",
+      "hints": [
+        "Include year 0.",
+        "=IRR(E2:J2)"
+      ],
+      "highlight": [
+        "E2:J2"
+      ],
+      "answer": "=IRR(E2:J2)"
+    },
+    {
+      "prompt": "In B13, show \"Buy\" if NPV is above 0, otherwise \"Don't buy\".",
+      "cell": "B13",
+      "expected": "Buy",
+      "function": "IF",
+      "hints": [
+        "IF on B11.",
+        "=IF(B11>0, \"Buy\", \"Don't buy\")"
+      ],
+      "highlight": [
+        "B11"
+      ],
+      "answer": "=IF(B11>0, \"Buy\", \"Don't buy\")"
+    },
+    {
+      "prompt": "If the owner borrows the $60,000 at 7% for 4 years, what's the monthly payment? Work it out in B14.",
+      "cell": "B14",
+      "expected": 1436.774679746569,
+      "function": "PMT",
+      "hints": [
+        "Monthly rate 0.07/12, 48 months, loan -B2.",
+        "=PMT(0.07/12, 48, -B2)"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=PMT(0.07/12, 48, -B2)"
+    },
+    {
+      "prompt": "Last one: how many customers a day does the truck need for NPV to be exactly 0? Click the **Data** tab, then **Goal Seek**: set B11 to 0 by changing B4.",
+      "cell": "B4",
+      "expected": 32.648779755789356,
+      "hints": [
+        "Data tab → Goal Seek. Set cell: B11. To value: 0. By changing cell: B4.",
+        "It should land at about 33 customers a day."
+      ],
+      "highlight": [
+        "B4",
+        "B11"
+      ],
+      "answer": "Goal Seek: set B11 to 0 by changing B4"
+    }
+  ],
+  "recap": "Level 10 done! You can measure growth, margins and unit economics, use FV, PV and PMT, value projects with NPV, IRR, XNPV and XIRR, build a model from inputs, and answer what-ifs with Goal Seek and sensitivity tables. Next up: pro skills."
+}

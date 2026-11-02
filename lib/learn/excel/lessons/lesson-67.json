@@ -1,0 +1,239 @@
+{
+  "id": "xl-67",
+  "level": 10,
+  "title": "Building a 3-year revenue model",
+  "explanation": "Startups and analysts build **models**: small spreadsheets that forecast revenue and profit from a few assumptions. The golden rule: put every **input** (an assumption you type) on its own sheet, and make everything else a **formula** that points at it. Then changing one assumption updates the whole model. This one is a subscription meal-kit startup.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Model",
+        "header": true,
+        "column_widths": [
+          130,
+          100,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "",
+            "Year 1",
+            "Year 2",
+            "Year 3"
+          ],
+          [
+            "Customers",
+            null,
+            null,
+            null
+          ],
+          [
+            "Revenue",
+            null,
+            null,
+            null
+          ],
+          [
+            "Variable costs",
+            null,
+            null,
+            null
+          ],
+          [
+            "Fixed costs",
+            null,
+            null,
+            null
+          ],
+          [
+            "Profit",
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:D2": "#,##0",
+          "B3:D6": "$#,##0"
+        }
+      },
+      {
+        "name": "Assumptions",
+        "header": true,
+        "column_widths": [
+          190,
+          100
+        ],
+        "rows": [
+          [
+            "Assumption",
+            "Value"
+          ],
+          [
+            "Starting customers",
+            500
+          ],
+          [
+            "Yearly customer growth",
+            0.4
+          ],
+          [
+            "Price per month",
+            15
+          ],
+          [
+            "Costs (% of revenue)",
+            0.35
+          ],
+          [
+            "Fixed costs per year",
+            70000
+          ]
+        ],
+        "number_formats": {
+          "B3": "0.0%",
+          "B4": "$#,##0.00",
+          "B5": "0.0%",
+          "B6": "$#,##0"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Look at the Assumptions sheet: every input lives there. Back on Model, in B2, point Year 1's customers at the starting customers: =Assumptions!B2.",
+      "teach": "Never type an assumption straight into a formula, like `=500*15`. If it lives in one cell, you can change it once and the whole model follows. Analysts call these **inputs**, and everything else **calculations**.",
+      "sheet": "Model",
+      "cell": "B2",
+      "expected": 500,
+      "formula_contains": [
+        "Assumptions!"
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Point at the other sheet: Assumptions!B2.",
+        "=Assumptions!B2"
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "=Assumptions!B2"
+    },
+    {
+      "prompt": "In C2, grow customers by the growth rate: =B2*(1+Assumptions!$B$3). Copy it to D2.",
+      "cell": "C2:D2",
+      "expected": [
+        700.0,
+        979.9999999999999
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "Assumptions!$B$3"
+      ],
+      "hints": [
+        "Last year × (1 + growth). Lock the growth cell.",
+        "=B2*(1+Assumptions!$B$3), then copy it to D2."
+      ],
+      "highlight": [
+        "B2:D2"
+      ],
+      "answer": "=B2*(1+Assumptions!$B$3) in C2, then copy to D2"
+    },
+    {
+      "prompt": "In B3:D3, work out yearly revenue: customers × monthly price × 12.",
+      "cell": "B3:D3",
+      "expected": [
+        90000.0,
+        126000.0,
+        176399.99999999997
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "Assumptions!$B$4"
+      ],
+      "hints": [
+        "=B2*Assumptions!$B$4*12",
+        "Then copy it across to D3."
+      ],
+      "highlight": [
+        "B2:D2"
+      ],
+      "answer": "=B2*Assumptions!$B$4*12 in B3, then copy across to D3"
+    },
+    {
+      "prompt": "In B4:D4, work out variable costs: revenue × the cost percentage.",
+      "cell": "B4:D4",
+      "expected": [
+        31499.999999999996,
+        44100.0,
+        61739.999999999985
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "Assumptions!$B$5"
+      ],
+      "hints": [
+        "=B3*Assumptions!$B$5",
+        "Then copy it across."
+      ],
+      "highlight": [
+        "B3:D3"
+      ],
+      "answer": "=B3*Assumptions!$B$5 in B4, then copy across to D4"
+    },
+    {
+      "prompt": "In B5:D5, point each year's fixed costs at the Assumptions sheet.",
+      "cell": "B5:D5",
+      "expected": [
+        70000,
+        70000,
+        70000
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "Assumptions!$B$6"
+      ],
+      "hints": [
+        "=Assumptions!$B$6",
+        "Then copy it across."
+      ],
+      "highlight": [
+        "B5:D5"
+      ],
+      "answer": "=Assumptions!$B$6 in B5, then copy across to D5"
+    },
+    {
+      "prompt": "In B6:D6, work out profit: revenue − variable costs − fixed costs.",
+      "cell": "B6:D6",
+      "expected": [
+        -11500.0,
+        11900.0,
+        44659.999999999985
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=B3-B4-B5",
+        "Then copy it across. Year 1 loses money, then it turns profitable."
+      ],
+      "highlight": [
+        "B3:D5"
+      ],
+      "answer": "=B3-B4-B5 in B6, then copy across to D6"
+    },
+    {
+      "prompt": "Last one: test the model. On the Assumptions sheet, change growth to 0.5 (50%). Every year updates by itself.",
+      "sheet": "Assumptions",
+      "cell": "B3",
+      "expected": 0.5,
+      "hints": [
+        "Click the Assumptions tab, then type 0.5 in B3.",
+        "Then look back at Model: Year 3's profit jumps."
+      ],
+      "highlight": [
+        "B3"
+      ],
+      "answer": "Type 0.5 in Assumptions!B3"
+    }
+  ],
+  "recap": "Keep inputs on their own sheet, and make everything else formulas that point at them. Then one change to an assumption flows through the whole model."
+}

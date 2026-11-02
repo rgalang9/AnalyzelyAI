@@ -1,0 +1,236 @@
+{
+  "id": "xl-31",
+  "level": 5,
+  "title": "COUNTIFS, SUMIFS, AVERAGEIFS, MAXIFS and MINIFS",
+  "explanation": "A food delivery app wants answers with **two** conditions, like \"Boston orders at the weekend\". The IFS versions of last lesson's functions (with an S at the end) take as many conditions as you like. Interviewers love SUMIFS: it's one of the most-used formulas in finance.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Deliveries",
+        "header": true,
+        "column_widths": [
+          110,
+          80,
+          80,
+          60,
+          30,
+          170,
+          80
+        ],
+        "rows": [
+          [
+            "Restaurant",
+            "City",
+            "Day",
+            "Total",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Taco Town",
+            "Boston",
+            "Weekday",
+            24.5,
+            null,
+            "Boston weekend orders",
+            null
+          ],
+          [
+            "Pizza Palace",
+            "Boston",
+            "Weekend",
+            38,
+            null,
+            "Boston weekday sales",
+            null
+          ],
+          [
+            "Sushi Spot",
+            "Hartford",
+            "Weekend",
+            52,
+            null,
+            "Avg Boston weekend order",
+            null
+          ],
+          [
+            "Taco Town",
+            "Hartford",
+            "Weekday",
+            18,
+            null,
+            "Biggest Hartford order",
+            null
+          ],
+          [
+            "Pizza Palace",
+            "Boston",
+            "Weekday",
+            29,
+            null,
+            "Smallest Boston order",
+            null
+          ],
+          [
+            "Sushi Spot",
+            "Boston",
+            "Weekend",
+            61,
+            null,
+            null,
+            null
+          ],
+          [
+            "Burger Barn",
+            "Hartford",
+            "Weekday",
+            15.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Taco Town",
+            "Boston",
+            "Weekend",
+            33,
+            null,
+            null,
+            null
+          ],
+          [
+            "Burger Barn",
+            "Boston",
+            "Weekday",
+            21,
+            null,
+            null,
+            null
+          ],
+          [
+            "Pizza Palace",
+            "Hartford",
+            "Weekend",
+            44,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sushi Spot",
+            "Boston",
+            "Weekday",
+            47,
+            null,
+            null,
+            null
+          ],
+          [
+            "Taco Town",
+            "Hartford",
+            "Weekend",
+            27.5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Burger Barn",
+            "Boston",
+            "Weekend",
+            26,
+            null,
+            null,
+            null
+          ],
+          [
+            "Pizza Palace",
+            "Hartford",
+            "Weekday",
+            31,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, count the Boston orders at the weekend: =COUNTIFS(B2:B15, \"Boston\", C2:C15, \"Weekend\").",
+      "teach": "**COUNTIFS(range1, criteria1, range2, criteria2, ...)** counts rows that match **every** condition. Each condition is a range and its criteria, as a pair.",
+      "cell": "G2",
+      "expected": 4,
+      "function": "COUNTIFS",
+      "hints": [
+        "Two pairs: B2:B15 with \"Boston\", and C2:C15 with \"Weekend\".",
+        "=COUNTIFS(B2:B15, \"Boston\", C2:C15, \"Weekend\")"
+      ],
+      "highlight": [
+        "B2:C15"
+      ],
+      "answer": "=COUNTIFS(B2:B15, \"Boston\", C2:C15, \"Weekend\")"
+    },
+    {
+      "prompt": "In G3, add up the Boston weekday sales: =SUMIFS(D2:D15, B2:B15, \"Boston\", C2:C15, \"Weekday\").",
+      "teach": "Careful: **SUMIFS** puts the column to add up **first**, then the condition pairs. (That's the opposite of SUMIF, a classic interview trap.)",
+      "cell": "G3",
+      "expected": 121.5,
+      "function": "SUMIFS",
+      "hints": [
+        "Sum range first: D2:D15. Then the 2 condition pairs.",
+        "=SUMIFS(D2:D15, B2:B15, \"Boston\", C2:C15, \"Weekday\")"
+      ],
+      "highlight": [
+        "B2:D15"
+      ],
+      "answer": "=SUMIFS(D2:D15, B2:B15, \"Boston\", C2:C15, \"Weekday\")"
+    },
+    {
+      "prompt": "In G4, find the average Boston weekend order with AVERAGEIFS. It works like SUMIFS: the column to average comes first.",
+      "cell": "G4",
+      "expected": 39.5,
+      "function": "AVERAGEIFS",
+      "hints": [
+        "Average range first, then the pairs.",
+        "=AVERAGEIFS(D2:D15, B2:B15, \"Boston\", C2:C15, \"Weekend\")"
+      ],
+      "highlight": [
+        "B2:D15"
+      ],
+      "answer": "=AVERAGEIFS(D2:D15, B2:B15, \"Boston\", C2:C15, \"Weekend\")"
+    },
+    {
+      "prompt": "In G5, find the biggest order in Hartford with MAXIFS: =MAXIFS(D2:D15, B2:B15, \"Hartford\").",
+      "teach": "**MAXIFS** and **MINIFS** find the biggest or smallest value among the matching rows. Same order as SUMIFS: the values first, then the conditions.",
+      "cell": "G5",
+      "expected": 52,
+      "function": "MAXIFS",
+      "hints": [
+        "Values D2:D15 first, then B2:B15 with \"Hartford\".",
+        "=MAXIFS(D2:D15, B2:B15, \"Hartford\")"
+      ],
+      "highlight": [
+        "B2:D15"
+      ],
+      "answer": "=MAXIFS(D2:D15, B2:B15, \"Hartford\")"
+    },
+    {
+      "prompt": "Last one: in G6, find the smallest order in Boston, using MINIFS.",
+      "cell": "G6",
+      "expected": 21,
+      "function": "MINIFS",
+      "hints": [
+        "Same as MAXIFS, with MINIFS and \"Boston\".",
+        "=MINIFS(D2:D15, B2:B15, \"Boston\")"
+      ],
+      "highlight": [
+        "B2:D15"
+      ],
+      "answer": "=MINIFS(D2:D15, B2:B15, \"Boston\")"
+    }
+  ],
+  "recap": "COUNTIFS, SUMIFS, AVERAGEIFS, MAXIFS and MINIFS take several range-and-criteria pairs. For all except COUNTIFS, the column to calculate comes first."
+}

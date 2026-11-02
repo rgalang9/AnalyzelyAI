@@ -1,0 +1,183 @@
+{
+  "id": "xl-26",
+  "level": 5,
+  "title": "Comparisons: TRUE and FALSE",
+  "explanation": "**Welcome to Level 5: logic!** A gym wants to know which members hit their monthly visit goal. Before Excel can make decisions with IF, it needs to ask yes-or-no questions. A **comparison** asks one, and the answer is always **TRUE** or **FALSE**.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Members",
+        "header": true,
+        "column_widths": [
+          90,
+          70,
+          60,
+          70,
+          30,
+          90,
+          100,
+          80
+        ],
+        "rows": [
+          [
+            "Member",
+            "Visits",
+            "Goal",
+            "Plan",
+            null,
+            "Hit goal?",
+            "Gold plan?",
+            "Visited?"
+          ],
+          [
+            "Maya",
+            14,
+            12,
+            "Gold",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            6,
+            12,
+            "Basic",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            20,
+            16,
+            "Gold",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            9,
+            8,
+            "Basic",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            0,
+            8,
+            "Basic",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            12,
+            12,
+            "Gold",
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2, check whether Maya hit her goal: did her visits reach the goal? Type =B2>=C2.",
+      "teach": "A comparison uses one of these signs: `=` equal, `<>` not equal, `>` more than, `<` less than, `>=` at least, `<=` at most. Excel answers **TRUE** or **FALSE**. Maya visited 14 times with a goal of 12, so this gives TRUE.",
+      "cell": "F2",
+      "expected": true,
+      "must_be_formula": true,
+      "formula_contains": [
+        ">="
+      ],
+      "hints": [
+        "Visits are in B2 and the goal is in C2. At least means >=.",
+        "=B2>=C2"
+      ],
+      "highlight": [
+        "B2:C2"
+      ],
+      "answer": "=B2>=C2"
+    },
+    {
+      "prompt": "Copy F2 down to F7.",
+      "cell": "F3:F7",
+      "expected": [
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Copy F2, then paste into F3:F7.",
+        "Leo and Noah should be FALSE."
+      ],
+      "highlight": [
+        "F3:F7"
+      ],
+      "answer": "Copy F2 down to F7"
+    },
+    {
+      "prompt": "In G2, check whether Maya is on the Gold plan: =D2=\"Gold\". Then copy it down to G7.",
+      "teach": "To compare with text, put the text in quotes. The first = starts the formula, and the second = asks \"is it equal?\". Text comparisons ignore capitals, so \"gold\" matches \"Gold\".",
+      "cell": "G2:G7",
+      "expected": [
+        true,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=D2=\"Gold\", then copy it down.",
+        "Maya, Sam and Zoe should be TRUE."
+      ],
+      "highlight": [
+        "D2:D7"
+      ],
+      "answer": "=D2=\"Gold\" in G2, then copy down to G7"
+    },
+    {
+      "prompt": "Last one: in H2, check whether Maya visited at all (visits more than 0). Then copy it down to H7.",
+      "cell": "H2:H7",
+      "expected": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        ">"
+      ],
+      "hints": [
+        "More than 0 means >0.",
+        "=B2>0, then copy it down."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=B2>0 in H2, then copy down to H7"
+    }
+  ],
+  "recap": "Comparisons use =, <>, >, <, >= and <=, and always answer TRUE or FALSE. Text goes in quotes, and text comparisons ignore capitals."
+}

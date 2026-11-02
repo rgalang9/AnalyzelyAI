@@ -1,0 +1,183 @@
+{
+  "id": "xl-71",
+  "level": 11,
+  "title": "Model habits: inputs, formulas and checks",
+  "explanation": "Banks and consulting firms all follow the same habits so anyone can read their models:\n- **Blue font** for inputs you type.\n- **Black font** for formulas.\n- **No numbers typed inside formulas.** Point at an input cell instead.\n- **Check cells** that test the model.\n\nThis small revenue forecast needs tidying up the pro way.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Forecast",
+        "header": true,
+        "column_widths": [
+          230,
+          100,
+          30,
+          90,
+          100,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "Input",
+            "Value",
+            null,
+            "Year",
+            "1",
+            "2",
+            "3"
+          ],
+          [
+            "Starting revenue",
+            200000,
+            null,
+            "Revenue",
+            null,
+            null,
+            null
+          ],
+          [
+            "Growth per year",
+            0.25,
+            null,
+            "Costs",
+            null,
+            null,
+            null
+          ],
+          [
+            "Cost (% of revenue)",
+            0.6,
+            null,
+            "Profit",
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Check: profit = revenue − costs",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2": "$#,##0",
+          "B3:B4": "0.0%",
+          "E2:G4": "$#,##0"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Mark the inputs: select B2:B4 and make the font blue, using **Text color** on the Start tab of the toolbar.",
+      "teach": "**Blue = input, black = formula.** It's the most common colour code in finance. Anyone opening the model knows exactly which cells they're allowed to change.",
+      "cell": "B2:B4",
+      "expected": [
+        200000,
+        0.25,
+        0.6
+      ],
+      "font_color": "blue",
+      "hints": [
+        "Select B2:B4, then click Text color (an A with a coloured bar) on the Start tab.",
+        "Pick a blue colour."
+      ],
+      "highlight": [
+        "B2:B4"
+      ],
+      "answer": "Select B2:B4 and set the font colour to blue"
+    },
+    {
+      "prompt": "In E2, Year 1 revenue is the starting revenue: =B2. In F2, grow it: =E2*(1+$B$3). Copy F2 to G2.",
+      "cell": "E2:G2",
+      "expected": [
+        200000.0,
+        250000.0,
+        312500.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "E2: =B2. F2: =E2*(1+$B$3), then copy to G2.",
+        "Don't type 1.25 or 200000 into the formulas."
+      ],
+      "highlight": [
+        "B2:B3"
+      ],
+      "answer": "=B2 in E2, =E2*(1+$B$3) in F2, copied to G2"
+    },
+    {
+      "prompt": "In E3:G3, work out costs: revenue × the cost % in B4. Point at B4, don't type 0.6.",
+      "teach": "If you type `=E2*0.6`, the cost % is **hidden** inside the formula. When it changes, someone has to hunt through every formula to update it. `=E2*$B$4` changes everywhere at once.",
+      "cell": "E3:G3",
+      "expected": [
+        120000.0,
+        150000.0,
+        187500.0
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$B$4"
+      ],
+      "hints": [
+        "=E2*$B$4",
+        "Then copy it across to G3."
+      ],
+      "highlight": [
+        "B4",
+        "E2:G2"
+      ],
+      "answer": "=E2*$B$4 in E3, then copy across to G3"
+    },
+    {
+      "prompt": "In E4:G4, work out profit: revenue − costs.",
+      "cell": "E4:G4",
+      "expected": [
+        80000.0,
+        100000.0,
+        125000.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=E2-E3",
+        "Then copy it across."
+      ],
+      "highlight": [
+        "E2:G3"
+      ],
+      "answer": "=E2-E3 in E4, then copy across to G4"
+    },
+    {
+      "prompt": "Last one: in B6, add a check that total profit equals total revenue minus total costs: =IF(ABS(SUM(E4:G4)-(SUM(E2:G2)-SUM(E3:G3)))<0.01, \"OK\", \"ERROR\").",
+      "teach": "Checks compare two ways of getting the same number. **ABS** removes the minus sign, and `< 0.01` allows for tiny rounding differences. If anything breaks later, this cell turns to ERROR straight away.",
+      "cell": "B6",
+      "expected": "OK",
+      "function": [
+        "IF",
+        "ABS"
+      ],
+      "hints": [
+        "Compare SUM(E4:G4) with SUM(E2:G2)-SUM(E3:G3).",
+        "=IF(ABS(SUM(E4:G4)-(SUM(E2:G2)-SUM(E3:G3)))<0.01, \"OK\", \"ERROR\")"
+      ],
+      "highlight": [
+        "E2:G4"
+      ],
+      "answer": "=IF(ABS(SUM(E4:G4)-(SUM(E2:G2)-SUM(E3:G3)))<0.01, \"OK\", \"ERROR\")"
+    }
+  ],
+  "recap": "Blue for inputs, black for formulas, no typed numbers inside formulas, and check cells that compare two ways of getting the same answer. These habits make models easy to read and hard to break."
+}

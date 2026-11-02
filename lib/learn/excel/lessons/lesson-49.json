@@ -1,0 +1,339 @@
+{
+  "id": "xl-49",
+  "level": 8,
+  "title": "Pivot tables: the basics",
+  "explanation": "**Welcome to Level 8: summaries and charts!** A film studio's analyst has 18 movies from the first half of the year. Questions like \"which genre made the most money?\" would take lots of SUMIFs. A **pivot table** answers them in a few clicks: pick what goes down the side, pick a number to summarise, and it builds the summary table for you.\n\nIn this course, pivot tables and charts are built in the **Insights panel** beside the grid. (In real Excel they appear inside the sheet, but the choices you make are exactly the same.)",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          190,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Top genre by gross",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "Genre with most movies",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            "Rating with best average",
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Build a pivot table of total gross by genre. Click any cell inside the data, open the **Insert** tab at the top of the toolbar, and click **Pivot table**. The Insights panel opens on the right. Set **Rows** to Genre, **Values** to Gross ($M), and **Summarize by** to Sum.",
+      "teach": "A pivot table has 3 main choices:\n- **Rows:** the field whose values go down the side (one row per genre).\n- **Values:** the number to summarise.\n- **Summarize by:** how to combine the numbers: Sum, Count, Average, Max or Min.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Gross ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "Open the panel from Insert → Pivot table, then use the 3 dropdowns.",
+        "Rows: Genre. Values: Gross ($M). Summarize by: Sum."
+      ],
+      "answer": "Rows: Genre, Values: Gross ($M), Summarize by: Sum"
+    },
+    {
+      "prompt": "Read your pivot table: which genre made the most money in total? Type it into J2.",
+      "cell": "J2",
+      "expected": "Action",
+      "hints": [
+        "Look for the biggest number in the pivot's Sum column.",
+        "It's Action, with 605."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "Action"
+    },
+    {
+      "prompt": "Now count the movies in each genre: keep Rows as Genre, set Values to Movie, and Summarize by to Count.",
+      "teach": "**Count** counts how many rows are in each group. It works on any field, even text, so counting movie titles counts movies.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Movie",
+        "agg": "count"
+      },
+      "hints": [
+        "Change Values to Movie, and Summarize by to Count.",
+        "Animation should show 4."
+      ],
+      "answer": "Rows: Genre, Values: Movie, Summarize by: Count"
+    },
+    {
+      "prompt": "Which genre has the most movies? Type it into J3.",
+      "cell": "J3",
+      "expected": "Animation",
+      "hints": [
+        "Look for the biggest count.",
+        "Animation has 4."
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "Animation"
+    },
+    {
+      "prompt": "Switch the pivot to average gross by rating: Rows to Rating, Values to Gross ($M), Summarize by to Average.",
+      "pivot": {
+        "rows": "Rating",
+        "values": "Gross ($M)",
+        "agg": "average"
+      },
+      "hints": [
+        "Three changes: Rows, Values and Summarize by.",
+        "Rows: Rating. Values: Gross ($M). Summarize by: Average."
+      ],
+      "answer": "Rows: Rating, Values: Gross ($M), Summarize by: Average"
+    },
+    {
+      "prompt": "Last one: which rating has the best average gross? Type it into J4.",
+      "cell": "J4",
+      "expected": "PG",
+      "hints": [
+        "Compare the averages for PG, PG-13 and R.",
+        "PG movies average 143."
+      ],
+      "highlight": [
+        "J4"
+      ],
+      "answer": "PG"
+    }
+  ],
+  "recap": "A pivot table summarises data in a few clicks: Rows go down the side, Values are the numbers, and Summarize by chooses Sum, Count, Average, Max or Min. Changing one dropdown re-builds the whole summary."
+}

@@ -1,0 +1,263 @@
+{
+  "id": "xl-62",
+  "level": 10,
+  "title": "Margins and unit economics",
+  "explanation": "A campus café wants to know which products actually make money. **Revenue** is what customers pay. **Gross profit** is revenue minus the cost of the product itself. **Margins** turn those into percentages, so products of different sizes can be compared. This is the language of every finance team.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Café",
+        "header": true,
+        "column_widths": [
+          160,
+          60,
+          80,
+          80,
+          90,
+          100,
+          100,
+          110
+        ],
+        "rows": [
+          [
+            "Product",
+            "Price",
+            "Unit cost",
+            "Units sold",
+            "Revenue",
+            "Gross profit",
+            "Gross margin",
+            "Profit per unit"
+          ],
+          [
+            "Latte",
+            5.5,
+            1.6,
+            4200,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Cold brew",
+            5.0,
+            1.1,
+            3100,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Muffin",
+            3.75,
+            1.4,
+            1800,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Tea",
+            3.0,
+            0.45,
+            1500,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Fixed costs (rent, staff)",
+            30000,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Operating profit",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Operating margin",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:C5": "$#,##0.00",
+          "E2:F6": "$#,##0",
+          "G2:G5": "0.0%",
+          "H2:H5": "$#,##0.00",
+          "B8:B9": "$#,##0",
+          "B10": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2:E5, work out each product's revenue: price × units sold.",
+      "cell": "E2:E5",
+      "expected": [
+        23100.0,
+        15500.0,
+        6750.0,
+        4500.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=B2*D2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "B2:D5"
+      ],
+      "answer": "=B2*D2 in E2, then copy down to E5"
+    },
+    {
+      "prompt": "In F2:F5, work out gross profit: (price − unit cost) × units sold.",
+      "teach": "**Gross profit** = revenue − cost of goods sold (COGS). Per unit, that's price − unit cost.",
+      "cell": "F2:F5",
+      "expected": [
+        16380.0,
+        12090.0,
+        4230.0,
+        3824.9999999999995
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=(B2-C2)*D2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "B2:D5"
+      ],
+      "answer": "=(B2-C2)*D2 in F2, then copy down to F5"
+    },
+    {
+      "prompt": "In G2:G5, work out each gross margin: gross profit ÷ revenue.",
+      "teach": "**Gross margin** = gross profit ÷ revenue. It says how many cents of each dollar are left after paying for the product. Tea's margin is highest, even though it sells the least.",
+      "cell": "G2:G5",
+      "expected": [
+        0.7090909090909091,
+        0.78,
+        0.6266666666666667,
+        0.8499999999999999
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=F2/E2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "E2:F5"
+      ],
+      "answer": "=F2/E2 in G2, then copy down to G5"
+    },
+    {
+      "prompt": "In H2:H5, work out the profit per unit: price − unit cost.",
+      "cell": "H2:H5",
+      "expected": [
+        3.9,
+        3.9,
+        2.35,
+        2.55
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=B2-C2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "B2:C5"
+      ],
+      "answer": "=B2-C2 in H2, then copy down to H5"
+    },
+    {
+      "prompt": "In E6 and F6, add up the total revenue and total gross profit.",
+      "cell": "E6:F6",
+      "expected": [
+        49850.0,
+        36525.0
+      ],
+      "function": "SUM",
+      "hints": [
+        "=SUM(E2:E5) in E6, and =SUM(F2:F5) in F6.",
+        "Or copy E6 across to F6."
+      ],
+      "highlight": [
+        "E2:F5"
+      ],
+      "answer": "=SUM(E2:E5) in E6 and =SUM(F2:F5) in F6"
+    },
+    {
+      "prompt": "In B9, work out the operating profit: total gross profit − fixed costs.",
+      "teach": "**Operating profit** subtracts the costs you pay no matter what you sell, like rent and salaries, called **fixed costs**.",
+      "cell": "B9",
+      "expected": 6525.0,
+      "must_be_formula": true,
+      "hints": [
+        "Total gross profit is in F6, fixed costs in B8.",
+        "=F6-B8"
+      ],
+      "highlight": [
+        "F6",
+        "B8"
+      ],
+      "answer": "=F6-B8"
+    },
+    {
+      "prompt": "Last one: in B10, work out the operating margin: operating profit ÷ total revenue.",
+      "cell": "B10",
+      "expected": 0.13089267803410232,
+      "must_be_formula": true,
+      "hints": [
+        "Operating profit is in B9, total revenue in E6.",
+        "=B9/E6"
+      ],
+      "highlight": [
+        "B9",
+        "E6"
+      ],
+      "answer": "=B9/E6"
+    }
+  ],
+  "recap": "Gross profit is revenue minus product costs, and operating profit also subtracts fixed costs. Margins divide a profit by revenue, so you can compare products and companies of any size."
+}

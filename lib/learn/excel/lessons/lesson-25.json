@@ -1,0 +1,312 @@
+{
+  "id": "xl-25",
+  "level": 4,
+  "title": "Review: The messy club sign-up sheet",
+  "explanation": "**Level 4 review!** Six students signed up for campus clubs through a form, and every column is a mess: spaces, random capitals, and fees typed as text with $ signs. Clean it into new columns, then use the clean data to make name badges and total the fees. There's nothing new here, just everything from Level 4.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sign-ups",
+        "header": true,
+        "column_widths": [
+          110,
+          160,
+          90,
+          70,
+          30,
+          100,
+          160,
+          90,
+          60,
+          90,
+          160
+        ],
+        "rows": [
+          [
+            "Raw name",
+            "Raw email",
+            "Raw club",
+            "Raw fee",
+            null,
+            "Name",
+            "Email",
+            "Club",
+            "Fee",
+            "First name",
+            "Badge"
+          ],
+          [
+            "  maya LEE",
+            "Maya.Lee@WES.edu",
+            " chess",
+            "$10",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "LEO park ",
+            "leo.park@Yale.EDU",
+            "Chess ",
+            "$10",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "sam   ORTIZ",
+            "SAM.ORTIZ@uconn.edu",
+            "robotics",
+            "$25",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            " ava chen",
+            "ava.chen@wes.edu",
+            "ROBOTICS ",
+            "$25",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "noah KIM",
+            "Noah.Kim@Brown.edu",
+            "debate",
+            "$5",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "ZOE ali ",
+            "zoe.ali@WES.EDU",
+            " Debate",
+            "$5",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total fees",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2:F7, clean the names: remove extra spaces and fix the capitals, so \"  maya LEE\" becomes \"Maya Lee\".",
+      "cell": "F2:F7",
+      "expected": [
+        "Maya Lee",
+        "Leo Park",
+        "Sam Ortiz",
+        "Ava Chen",
+        "Noah Kim",
+        "Zoe Ali"
+      ],
+      "function": [
+        "PROPER",
+        "TRIM"
+      ],
+      "exact_text": true,
+      "hints": [
+        "Put TRIM inside PROPER.",
+        "=PROPER(TRIM(A2)), then copy it down."
+      ],
+      "highlight": [
+        "A2:A7"
+      ],
+      "answer": "=PROPER(TRIM(A2)) in F2, then copy down to F7"
+    },
+    {
+      "prompt": "In G2:G7, clean the emails: remove spaces and make them all lowercase.",
+      "cell": "G2:G7",
+      "expected": [
+        "maya.lee@wes.edu",
+        "leo.park@yale.edu",
+        "sam.ortiz@uconn.edu",
+        "ava.chen@wes.edu",
+        "noah.kim@brown.edu",
+        "zoe.ali@wes.edu"
+      ],
+      "function": [
+        "LOWER",
+        "TRIM"
+      ],
+      "exact_text": true,
+      "hints": [
+        "Put TRIM inside LOWER.",
+        "=LOWER(TRIM(B2)), then copy it down."
+      ],
+      "highlight": [
+        "B2:B7"
+      ],
+      "answer": "=LOWER(TRIM(B2)) in G2, then copy down to G7"
+    },
+    {
+      "prompt": "In H2:H7, clean the club names, so they read Chess, Robotics and Debate.",
+      "cell": "H2:H7",
+      "expected": [
+        "Chess",
+        "Chess",
+        "Robotics",
+        "Robotics",
+        "Debate",
+        "Debate"
+      ],
+      "function": [
+        "PROPER",
+        "TRIM"
+      ],
+      "exact_text": true,
+      "hints": [
+        "Same as the names.",
+        "=PROPER(TRIM(C2)), then copy it down."
+      ],
+      "highlight": [
+        "C2:C7"
+      ],
+      "answer": "=PROPER(TRIM(C2)) in H2, then copy down to H7"
+    },
+    {
+      "prompt": "In I2:I7, turn the fees into real numbers: remove the $, then convert with VALUE.",
+      "cell": "I2:I7",
+      "expected": [
+        10,
+        10,
+        25,
+        25,
+        5,
+        5
+      ],
+      "function": [
+        "VALUE",
+        "SUBSTITUTE"
+      ],
+      "hints": [
+        "SUBSTITUTE removes the $, and VALUE goes around it.",
+        "=VALUE(SUBSTITUTE(D2, \"$\", \"\")), then copy it down."
+      ],
+      "highlight": [
+        "D2:D7"
+      ],
+      "answer": "=VALUE(SUBSTITUTE(D2, \"$\", \"\")) in I2, then copy down to I7"
+    },
+    {
+      "prompt": "In J2:J7, take each student's first name from the clean name in column F.",
+      "cell": "J2:J7",
+      "expected": [
+        "Maya",
+        "Leo",
+        "Sam",
+        "Ava",
+        "Noah",
+        "Zoe"
+      ],
+      "function": [
+        "LEFT",
+        "FIND"
+      ],
+      "exact_text": true,
+      "hints": [
+        "Everything before the space.",
+        "=LEFT(F2, FIND(\" \", F2) - 1), then copy it down."
+      ],
+      "highlight": [
+        "F2:F7"
+      ],
+      "answer": "=LEFT(F2, FIND(\" \", F2) - 1) in J2, then copy down to J7"
+    },
+    {
+      "prompt": "In K2:K7, make a name badge like \"Maya Lee (Chess)\": the clean name, a space, then the club in brackets.",
+      "cell": "K2:K7",
+      "expected": [
+        "Maya Lee (Chess)",
+        "Leo Park (Chess)",
+        "Sam Ortiz (Robotics)",
+        "Ava Chen (Robotics)",
+        "Noah Kim (Debate)",
+        "Zoe Ali (Debate)"
+      ],
+      "formula_contains": [
+        "&"
+      ],
+      "must_be_formula": true,
+      "exact_text": true,
+      "hints": [
+        "Join F2, \" (\", H2 and \")\".",
+        "=F2 & \" (\" & H2 & \")\", then copy it down."
+      ],
+      "highlight": [
+        "F2:H7"
+      ],
+      "answer": "=F2 & \" (\" & H2 & \")\" in K2, then copy down to K7"
+    },
+    {
+      "prompt": "Last one: in I9, add up all the clean fees.",
+      "cell": "I9",
+      "expected": 80,
+      "function": "SUM",
+      "hints": [
+        "SUM the fees in I2:I7.",
+        "=SUM(I2:I7)"
+      ],
+      "highlight": [
+        "I2:I7"
+      ],
+      "answer": "=SUM(I2:I7)"
+    }
+  ],
+  "recap": "Level 4 done! You can clean spaces, capitals and invisible characters, cut text apart with LEFT, MID and FIND, swap text with SUBSTITUTE, join it with & and TEXTJOIN, and fix numbers stored as text. Next up: logic with IF."
+}

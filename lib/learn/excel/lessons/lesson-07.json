@@ -1,0 +1,167 @@
+{
+  "id": "xl-07",
+  "level": 2,
+  "title": "Editing like a pro",
+  "explanation": "You're the treasurer of a campus club, and the budget needs fixing before the meeting: a typo, an item to remove, a new item to add, and a new column. This lesson shows how to edit a sheet quickly and safely.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Budget",
+        "header": true,
+        "column_widths": [
+          140,
+          80,
+          90
+        ],
+        "rows": [
+          [
+            "Item",
+            "Cost"
+          ],
+          [
+            "Pizza night",
+            180
+          ],
+          [
+            "Guest speeker",
+            400
+          ],
+          [
+            "Posters",
+            80
+          ],
+          [
+            "Old banner",
+            75
+          ],
+          [
+            "T-shirts",
+            350
+          ],
+          [
+            "Total",
+            "=SUM(B2:B6)"
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "A3 has a typo: \"speeker\". Click A3, press the keys shown to edit the cell, and fix it to Guest speaker.",
+      "teach": "Typing into a cell replaces everything. To change just **part** of a cell, press **F2** on Windows (**Ctrl+U** on Mac). Your cursor appears inside the cell, so you can use the arrow keys and fix one letter.",
+      "cell": "A3",
+      "expected": "Guest speaker",
+      "shortcut": "edit_cell",
+      "shortcut_help": "badge",
+      "shortcut_required": false,
+      "hints": [
+        "Click A3, press the edit keys, move to the typo, and fix it. Then press Enter.",
+        "It should read: Guest speaker"
+      ],
+      "highlight": [
+        "A3"
+      ],
+      "answer": "Guest speaker"
+    },
+    {
+      "prompt": "Practise undo: type 999 into B2 by mistake and press Enter. Then undo it, so Pizza night is back to 180.",
+      "teach": "**Undo** (Ctrl+Z, or ⌘+Z on Mac) takes back your last change. Press it again to go back further. It's the most useful shortcut there is.",
+      "cell": "B2",
+      "expected": 180,
+      "shortcut": "undo",
+      "shortcut_help": "badge",
+      "shortcut_required": true,
+      "hints": [
+        "Type 999 in B2, press Enter, then press the undo keys.",
+        "Hold Ctrl (⌘ on Mac) and press Z."
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "Type 999 in B2, then press Ctrl+Z (⌘+Z on Mac)"
+    },
+    {
+      "prompt": "The club doesn't need the old banner. Delete row 5: right-click the row number 5 on the left, and choose Delete.",
+      "teach": "To remove a whole row, right-click its **number** on the left edge and choose **Delete**. The rows below move up to fill the gap, and formulas update to match.",
+      "cell": "A5:B5",
+      "expected": [
+        "T-shirts",
+        350
+      ],
+      "hints": [
+        "Right-click the grey 5 at the far left, not a cell.",
+        "After deleting, T-shirts should move up into row 5."
+      ],
+      "highlight": [
+        "A5:B5"
+      ],
+      "answer": "Right-click row 5's number, then Delete"
+    },
+    {
+      "prompt": "Add a row for snacks above Total: right-click the row number 6 (Total) and choose Insert.",
+      "teach": "**Insert** adds an empty row above the one you right-clicked, and pushes everything below it down.",
+      "cell": "A7",
+      "expected": "Total",
+      "hints": [
+        "Right-click the grey 6 at the far left, then choose the option to insert a row above.",
+        "Total should move down to row 7, leaving row 6 empty."
+      ],
+      "highlight": [
+        "A6"
+      ],
+      "answer": "Right-click row 6's number, then Insert"
+    },
+    {
+      "prompt": "In the new row 6, type Snacks in A6, press Tab, type 240, then press Enter.",
+      "teach": "**Enter** saves and moves **down**, but **Tab** saves and moves **right**. Use Tab to fill in a row across, without touching the mouse.",
+      "cell": "A6:B6",
+      "expected": [
+        "Snacks",
+        240
+      ],
+      "hints": [
+        "Click A6, type Snacks, press Tab, type 240, press Enter.",
+        "Row 6 should read: Snacks, 240."
+      ],
+      "highlight": [
+        "A6:B6"
+      ],
+      "answer": "Snacks in A6, then Tab, then 240 in B6"
+    },
+    {
+      "prompt": "Click B7 and look at the Total's formula. A row added at the very end of a range is often left out. Make sure the total includes Snacks: retype it as =SUM(B2:B6). It should come to 1250.",
+      "teach": "When you add rows at the **edge** of a range, always check that your totals include them. It's one of the most common spreadsheet mistakes.",
+      "cell": "B7",
+      "expected": 1250,
+      "must_be_formula": true,
+      "function": "SUM",
+      "formula_contains": [
+        "B6"
+      ],
+      "hints": [
+        "The costs are now in B2 to B6.",
+        "=SUM(B2:B6)"
+      ],
+      "highlight": [
+        "B2:B6"
+      ],
+      "answer": "=SUM(B2:B6)"
+    },
+    {
+      "prompt": "Last one: add a column for who's in charge. Right-click the column letter B, choose Insert, then type Owner in the new B1.",
+      "teach": "Columns work the same way: right-click the **letter** at the top and choose Insert to add one to the left. Notice the costs and the total move to column C, and the formula follows them.",
+      "cell": "B1",
+      "expected": "Owner",
+      "hints": [
+        "Right-click the grey B at the top, then insert a column to the left.",
+        "The new column B is empty. Type Owner in B1, and Cost moves to C."
+      ],
+      "highlight": [
+        "B1"
+      ],
+      "answer": "Insert a column at B, then type Owner in B1"
+    }
+  ],
+  "recap": "F2 (Ctrl+U on Mac) edits inside a cell, and Ctrl+Z or ⌘+Z undoes. Tab moves right and Enter moves down. Right-click a row number or column letter to insert or delete, and check your totals afterwards."
+}

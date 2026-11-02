@@ -1,0 +1,329 @@
+{
+  "id": "xl-52",
+  "level": 8,
+  "title": "Column and bar charts",
+  "explanation": "Numbers in a table are hard to compare at a glance. Charts make the pattern obvious. **Column charts** (vertical bars) and **bar charts** (horizontal bars) are the go-to for comparing categories, like genres or movies.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          190,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Tallest column",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "Biggest movie",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            null,
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Make a column chart of total gross by genre. Click any cell inside the data, open the **Insert** tab, and click **Chart**. (If the panel is already open, just click its **Chart** tab.) Set Chart type to Column, X field to Genre, Y field to Gross ($M), and Summarize by to Sum.",
+      "teach": "On a chart, the **X field** gives the categories along the bottom, and the **Y field** gives the bar heights. **Summarize by** combines rows that share the same X value, like a pivot table does.",
+      "chart": {
+        "type": "column",
+        "x": "Genre",
+        "y": "Gross ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "Insert → Chart, then the dropdowns.",
+        "Type: Column, X: Genre, Y: Gross ($M), Sum."
+      ],
+      "answer": "Column chart, X: Genre, Y: Gross ($M), Sum"
+    },
+    {
+      "prompt": "Which genre has the tallest column? Type it into J2.",
+      "cell": "J2",
+      "expected": "Action",
+      "hints": [
+        "Find the tallest bar.",
+        "Action, at 605."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "Action"
+    },
+    {
+      "prompt": "Give the chart a title: type Gross by genre into the Title box.",
+      "teach": "Every chart needs a **title** that says what it shows. A chart without one gets misread.",
+      "chart": {
+        "type": "column",
+        "x": "Genre",
+        "y": "Gross ($M)",
+        "title": "Gross by genre"
+      },
+      "hints": [
+        "Type in the Title box exactly: Gross by genre",
+        "Capital G only."
+      ],
+      "answer": "Title: Gross by genre"
+    },
+    {
+      "prompt": "Long labels squash a column chart. Change it to a Bar chart of each movie's gross: Type Bar, X field Movie, Y field Gross ($M).",
+      "teach": "**Bar charts** turn the bars sideways, so long labels like movie titles have room to be read. Use them when you have many categories or long names.",
+      "chart": {
+        "type": "bar",
+        "x": "Movie",
+        "y": "Gross ($M)"
+      },
+      "hints": [
+        "Change Chart type to Bar and X field to Movie.",
+        "Type: Bar, X: Movie, Y: Gross ($M)."
+      ],
+      "answer": "Bar chart, X: Movie, Y: Gross ($M)"
+    },
+    {
+      "prompt": "Last one: which single movie made the most? Type its name into J3.",
+      "cell": "J3",
+      "expected": "Summer Heist",
+      "hints": [
+        "Find the longest bar.",
+        "It made 230."
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "Summer Heist"
+    }
+  ],
+  "recap": "Column charts compare categories with vertical bars, and bar charts turn them sideways for long labels. X gives the categories, Y gives the values, and every chart needs a title."
+}

@@ -1,0 +1,396 @@
+{
+  "id": "xl-50",
+  "level": 8,
+  "title": "Pivot tables: months, % of total, and helper columns",
+  "explanation": "Pivot tables can do more than add things up. They can group dates into months, show each group as a **share** of the total, and spread a second field across the top. And when the number you need isn't in the data, like profit, you add a **helper column** first, then pivot it.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          90,
+          30,
+          190,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            "Profit ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            null,
+            "Best month",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            null,
+            "Action's share of gross",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            null,
+            "Most profitable genre",
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Make a pivot of total gross by month, using the release dates. Click any cell inside the data, open the **Insert** tab at the top of the toolbar, and click **Pivot table**. The Insights panel opens on the right. Set Rows to Release date, Values to Gross ($M), Summarize by to Sum, and tick **Group dates by month**.",
+      "teach": "Each movie has its own release date, so a pivot by date would have 18 rows. **Group dates by month** rolls them up into one row per month, which shows the trend.",
+      "pivot": {
+        "rows": "Release date",
+        "values": "Gross ($M)",
+        "agg": "sum",
+        "group_by_month": true
+      },
+      "hints": [
+        "After setting Rows to Release date, the Group dates by month box becomes clickable.",
+        "Rows: Release date, Values: Gross ($M), Sum, and tick Group dates by month."
+      ],
+      "answer": "Rows: Release date, Values: Gross ($M), Sum, Group dates by month ticked"
+    },
+    {
+      "prompt": "Which month made the most money? Type its 3-letter name (like Jan) into K2.",
+      "cell": "K2",
+      "expected": "Jun",
+      "hints": [
+        "Look for the biggest monthly total.",
+        "June made 516."
+      ],
+      "highlight": [
+        "K2"
+      ],
+      "answer": "Jun"
+    },
+    {
+      "prompt": "Show each genre's share of all gross: Rows to Genre, Values to Gross ($M), Sum, untick Group dates by month, and tick **Show as % of total**.",
+      "teach": "**Show as % of total** turns each number into a share of the Grand Total. The shares add up to 100%.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Gross ($M)",
+        "agg": "sum",
+        "percent_of_total": true
+      },
+      "hints": [
+        "Change Rows to Genre, then tick Show as % of total.",
+        "Action should be about 30.7%."
+      ],
+      "answer": "Rows: Genre, Values: Gross ($M), Sum, Show as % of total ticked"
+    },
+    {
+      "prompt": "Type Action's share into K3 as a decimal, rounded to 2 places (for example, 25% is 0.25).",
+      "cell": "K3",
+      "expected": 0.31,
+      "hints": [
+        "Read Action's % from the pivot, then divide by 100 and round to 2 decimals.",
+        "It's about 30.7%, so 0.31."
+      ],
+      "highlight": [
+        "K3"
+      ],
+      "answer": "0.31"
+    },
+    {
+      "prompt": "Profit isn't in the data, so make a helper column. In H2, work out profit: gross − budget. Then copy it down to H19.",
+      "teach": "A **helper column** is a formula column you add so a pivot can use it. Real Excel also has \"calculated fields\" inside pivots, but analysts usually prefer helper columns, because you can see and check every number.",
+      "cell": "H2:H19",
+      "expected": [
+        32,
+        34,
+        18,
+        56,
+        35,
+        30,
+        20,
+        25,
+        46,
+        24,
+        5,
+        13,
+        55,
+        15,
+        30,
+        53,
+        56,
+        32
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=F2-G2",
+        "Then copy it down to H19."
+      ],
+      "highlight": [
+        "F2:G19"
+      ],
+      "answer": "=F2-G2 in H2, then copy down to H19"
+    },
+    {
+      "prompt": "Pivot the new column: Rows to Genre, Values to Profit ($M), Sum, and untick Show as % of total. If Profit doesn't appear in the Values list, click **Use selected cells** at the top of the panel to re-read the data.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Profit ($M)",
+        "agg": "sum",
+        "percent_of_total": false
+      },
+      "hints": [
+        "Click a cell in the data, then Use selected cells, so the panel sees column H.",
+        "Rows: Genre, Values: Profit ($M), Sum."
+      ],
+      "answer": "Rows: Genre, Values: Profit ($M), Sum"
+    },
+    {
+      "prompt": "Last one: which genre made the most profit? Type it into K4.",
+      "cell": "K4",
+      "expected": "Horror",
+      "hints": [
+        "Look for the biggest profit total.",
+        "Horror, with 158: small budgets, solid gross."
+      ],
+      "highlight": [
+        "K4"
+      ],
+      "answer": "Horror"
+    }
+  ],
+  "recap": "Group dates by month rolls daily dates into months, and Show as % of total turns numbers into shares. When a number isn't in the data, add a helper column, then pivot it."
+}

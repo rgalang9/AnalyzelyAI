@@ -1,0 +1,204 @@
+{
+  "id": "xl-46",
+  "level": 7,
+  "title": "SEQUENCE and combining array functions",
+  "explanation": "The real power of dynamic arrays is **combining** them: FILTER inside SORT, UNIQUE inside SORT, and so on, all in one cell. **SEQUENCE** helps too, by making a list of numbers, like 1, 2, 3, for ranks. Here's this week's music chart.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Chart",
+        "header": true,
+        "column_widths": [
+          130,
+          80,
+          100,
+          30,
+          50,
+          150,
+          90,
+          30,
+          120
+        ],
+        "rows": [
+          [
+            "Song",
+            "Genre",
+            "Streams (M)",
+            null,
+            "Rank",
+            "Pop songs, top first",
+            null,
+            null,
+            "Genres A to Z"
+          ],
+          [
+            "Neon Nights",
+            "Pop",
+            412,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Gravity",
+            "Rock",
+            256,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Planes",
+            "Hip-Hop",
+            388,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Slow Burn",
+            "Pop",
+            301,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Run It Up",
+            "Hip-Hop",
+            274,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Golden Hour",
+            "Pop",
+            455,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Static",
+            "Rock",
+            198,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Midnight Drive",
+            "Pop",
+            367,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, make the numbers 1 to 4 for ranks: =SEQUENCE(4).",
+      "teach": "**SEQUENCE(n)** spills the numbers 1 to n down a column. `SEQUENCE(rows, columns, start, step)` can do more, like `SEQUENCE(5, 1, 2026)` for 2026 to 2030.",
+      "cell": "E2:E5",
+      "spill": true,
+      "expected": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "function": "SEQUENCE",
+      "hints": [
+        "Just the number of rows.",
+        "=SEQUENCE(4)"
+      ],
+      "highlight": [
+        "E2:E5"
+      ],
+      "answer": "=SEQUENCE(4) in E2"
+    },
+    {
+      "prompt": "In F2, list the Pop songs and their streams, highest first, in one formula: =SORT(FILTER(A2:C9, B2:B9=\"Pop\"), 3, -1).",
+      "teach": "Excel works from the inside out: **FILTER** keeps the Pop rows, then **SORT** orders them by their 3rd column (streams), largest first. It spills 3 columns wide.",
+      "cell": "F2:H5",
+      "spill": true,
+      "expected": [
+        "Golden Hour",
+        "Pop",
+        455,
+        "Neon Nights",
+        "Pop",
+        412,
+        "Midnight Drive",
+        "Pop",
+        367,
+        "Slow Burn",
+        "Pop",
+        301
+      ],
+      "function": [
+        "SORT",
+        "FILTER"
+      ],
+      "hints": [
+        "FILTER goes inside SORT. Sort by column 3, with -1.",
+        "=SORT(FILTER(A2:C9, B2:B9=\"Pop\"), 3, -1)"
+      ],
+      "highlight": [
+        "A2:C9"
+      ],
+      "answer": "=SORT(FILTER(A2:C9, B2:B9=\"Pop\"), 3, -1) in F2"
+    },
+    {
+      "prompt": "Last one: in I2, list each genre once, in A to Z order: =SORT(UNIQUE(B2:B9)).",
+      "cell": "I2:I4",
+      "spill": true,
+      "expected": [
+        "Hip-Hop",
+        "Pop",
+        "Rock"
+      ],
+      "function": [
+        "SORT",
+        "UNIQUE"
+      ],
+      "hints": [
+        "UNIQUE goes inside SORT.",
+        "=SORT(UNIQUE(B2:B9))"
+      ],
+      "highlight": [
+        "B2:B9"
+      ],
+      "answer": "=SORT(UNIQUE(B2:B9)) in I2"
+    }
+  ],
+  "recap": "SEQUENCE makes a list of numbers. Array functions combine from the inside out, like SORT(FILTER(...)) or SORT(UNIQUE(...)), all spilling from one cell."
+}

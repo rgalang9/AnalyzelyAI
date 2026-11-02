@@ -1,0 +1,231 @@
+{
+  "id": "xl-64",
+  "level": 10,
+  "title": "PMT and a loan payment table",
+  "explanation": "You're buying a $20,000 car with a 5-year loan at 6%. What's the monthly payment, and how much of each payment is interest? **PMT** gives the payment, and a short **amortization table** shows where each payment goes. Every bank and mortgage calculator works this way.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Loan",
+        "header": true,
+        "column_widths": [
+          150,
+          110,
+          90,
+          90,
+          110
+        ],
+        "rows": [
+          [
+            "Car loan",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Loan amount",
+            20000,
+            null,
+            null,
+            null
+          ],
+          [
+            "Yearly interest rate",
+            0.06,
+            null,
+            null,
+            null
+          ],
+          [
+            "Years",
+            5,
+            null,
+            null,
+            null
+          ],
+          [
+            "Monthly payment",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Total interest",
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Month",
+            "Start balance",
+            "Interest",
+            "Principal",
+            "End balance"
+          ],
+          [
+            1,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            3,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            4,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            5,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            6,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2": "$#,##0.00",
+          "B3": "0.0%",
+          "B5:B6": "$#,##0.00",
+          "B9:E14": "$#,##0.00"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B5, find the monthly payment: =PMT(B3/12, B4*12, -B2).",
+      "teach": "**PMT(rate, periods, loan amount)** gives the fixed payment that pays off a loan. Monthly payments mean a monthly rate and number of months. The loan is money you receive, but making it negative gives a positive payment, which is easier to read.",
+      "cell": "B5",
+      "expected": 386.6560305885654,
+      "function": "PMT",
+      "hints": [
+        "Monthly rate B3/12, months B4*12, loan -B2.",
+        "=PMT(B3/12, B4*12, -B2)"
+      ],
+      "highlight": [
+        "B2:B4"
+      ],
+      "answer": "=PMT(B3/12, B4*12, -B2)"
+    },
+    {
+      "prompt": "In B6, work out the total interest paid: all the payments minus the loan: =B5*B4*12-B2.",
+      "cell": "B6",
+      "expected": 3199.3618353139245,
+      "must_be_formula": true,
+      "hints": [
+        "Payment × number of months, minus the loan.",
+        "=B5*B4*12-B2"
+      ],
+      "highlight": [
+        "B2:B5"
+      ],
+      "answer": "=B5*B4*12-B2"
+    },
+    {
+      "prompt": "Start the table. In B9, the first month's start balance is the loan: =B2. In C9, the interest is the balance × the monthly rate: =B9*$B$3/12.",
+      "teach": "Each month, the bank charges interest on what you still owe. The rest of your payment, the **principal**, reduces the balance.",
+      "cell": "B9:C9",
+      "expected": [
+        20000,
+        100.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "B9: =B2. C9: =B9*$B$3/12.",
+        "Lock B3 so it doesn't move when you copy later."
+      ],
+      "highlight": [
+        "B2:B3"
+      ],
+      "answer": "=B2 in B9 and =B9*$B$3/12 in C9"
+    },
+    {
+      "prompt": "In D9, the principal is the payment minus the interest: =$B$5-C9. In E9, the end balance is the start balance minus the principal: =B9-D9.",
+      "cell": "D9:E9",
+      "expected": [
+        286.6560305885654,
+        19713.343969411435
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "D9: =$B$5-C9. E9: =B9-D9.",
+        "The balance should drop by about $286."
+      ],
+      "highlight": [
+        "B5",
+        "B9:C9"
+      ],
+      "answer": "=$B$5-C9 in D9 and =B9-D9 in E9"
+    },
+    {
+      "prompt": "Last one: in B10, each month starts where the last one ended: =E9. Then copy C9:E9 down to row 10, and copy B10:E10 down to row 14.",
+      "teach": "Notice the interest shrinks every month, so more of each payment goes to principal. That's why paying extra early saves so much interest.",
+      "cell": "B10:E14",
+      "expected": [
+        19713.343969411435,
+        98.56671984705717,
+        288.0893107415082,
+        19425.254658669928,
+        19425.254658669928,
+        97.12627329334964,
+        289.52975729521575,
+        19135.724901374713,
+        19135.724901374713,
+        95.67862450687356,
+        290.9774060816918,
+        18844.74749529302,
+        18844.74749529302,
+        94.2237374764651,
+        292.4322931121003,
+        18552.315202180922,
+        18552.315202180922,
+        92.7615760109046,
+        293.8944545776608,
+        18258.42074760326
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "B10 is =E9. Copy C9:E9 to C10:E10, then copy B10:E10 down to row 14.",
+        "Month 6 should end at about $18,258."
+      ],
+      "highlight": [
+        "B9:E14"
+      ],
+      "answer": "=E9 in B10, copy C9:E9 to row 10, then copy B10:E10 down to row 14"
+    }
+  ],
+  "recap": "PMT(rate, periods, -loan) gives a loan payment. In an amortization table, interest = balance × monthly rate, principal = payment − interest, and the new balance = old balance − principal."
+}

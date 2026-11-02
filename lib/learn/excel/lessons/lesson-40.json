@@ -1,0 +1,179 @@
+{
+  "id": "xl-40",
+  "level": 6,
+  "title": "Two-way lookups",
+  "explanation": "Sometimes the answer sits at a crossroads: a product down the side and a month across the top. A **two-way lookup** finds the right row **and** the right column. Here's 6 months of sales for a campus store.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Monthly sales",
+        "header": true,
+        "column_widths": [
+          90,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          30,
+          90,
+          60,
+          60
+        ],
+        "rows": [
+          [
+            "Product",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            null,
+            "Product",
+            "Month",
+            "Sales"
+          ],
+          [
+            "Hoodie",
+            120,
+            95,
+            140,
+            110,
+            160,
+            90,
+            null,
+            "Mug",
+            "Apr",
+            null
+          ],
+          [
+            "Cap",
+            60,
+            72,
+            55,
+            80,
+            64,
+            70,
+            null,
+            "Backpack",
+            "Jun",
+            null
+          ],
+          [
+            "Mug",
+            40,
+            38,
+            52,
+            45,
+            49,
+            61,
+            null,
+            "Cap",
+            "Mar",
+            null
+          ],
+          [
+            "Tote",
+            30,
+            44,
+            36,
+            50,
+            47,
+            39,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Backpack",
+            25,
+            18,
+            22,
+            30,
+            27,
+            35,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In K2, find Mug sales in Apr. Use INDEX on the whole grid, with one MATCH for the row and one for the column: =INDEX(B2:G6, MATCH(I2, A2:A6, 0), MATCH(J2, B1:G1, 0)).",
+      "teach": "INDEX can take **two** numbers: **INDEX(grid, row, column)**. The first MATCH finds the product's row, and the second finds the month's column. Notice the month MATCH searches across the header row, B1:G1.",
+      "cell": "K2",
+      "expected": 45,
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "hints": [
+        "Row: MATCH(I2, A2:A6, 0). Column: MATCH(J2, B1:G1, 0).",
+        "=INDEX(B2:G6, MATCH(I2, A2:A6, 0), MATCH(J2, B1:G1, 0))"
+      ],
+      "highlight": [
+        "A1:G6"
+      ],
+      "answer": "=INDEX(B2:G6, MATCH(I2, A2:A6, 0), MATCH(J2, B1:G1, 0))"
+    },
+    {
+      "prompt": "Copy K2 to K3 to find Backpack sales in Jun. Lock the ranges first, so they don't move when you copy.",
+      "cell": "K3",
+      "expected": 35,
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "formula_contains": [
+        "$"
+      ],
+      "hints": [
+        "Add $ signs to B2:G6, A2:A6 and B1:G1 in K2, then copy it to K3.",
+        "=INDEX($B$2:$G$6, MATCH(I3, $A$2:$A$6, 0), MATCH(J3, $B$1:$G$1, 0))"
+      ],
+      "highlight": [
+        "K2:K3"
+      ],
+      "answer": "=INDEX($B$2:$G$6, MATCH(I3, $A$2:$A$6, 0), MATCH(J3, $B$1:$G$1, 0))"
+    },
+    {
+      "prompt": "Change I2 to Hoodie and J2 to May. K2 updates by itself.",
+      "cell": "I2:J2",
+      "expected": [
+        "Hoodie",
+        "May"
+      ],
+      "hints": [
+        "Type Hoodie in I2 and May in J2.",
+        "K2 should become 160."
+      ],
+      "highlight": [
+        "I2:J2"
+      ],
+      "answer": "Type Hoodie in I2 and May in J2"
+    },
+    {
+      "prompt": "Last one: the XLOOKUP way. I4 and J4 already say Cap and Mar. In K4, use one XLOOKUP inside another: =XLOOKUP(J4, B1:G1, XLOOKUP(I4, A2:A6, B2:G6)).",
+      "teach": "The inside XLOOKUP finds the product and brings back its **whole row** of months. The outside XLOOKUP then picks the right month from that row.",
+      "cell": "K4",
+      "expected": 55,
+      "function": "XLOOKUP",
+      "hints": [
+        "The inside XLOOKUP gets Cap's whole row, and the outside one picks Mar.",
+        "=XLOOKUP(J4, B1:G1, XLOOKUP(I4, A2:A6, B2:G6))"
+      ],
+      "highlight": [
+        "A1:G6"
+      ],
+      "answer": "=XLOOKUP(J4, B1:G1, XLOOKUP(I4, A2:A6, B2:G6))"
+    }
+  ],
+  "recap": "A two-way lookup finds a row and a column: INDEX(grid, MATCH(row), MATCH(column)), or one XLOOKUP inside another. Change the inputs and the answer updates."
+}

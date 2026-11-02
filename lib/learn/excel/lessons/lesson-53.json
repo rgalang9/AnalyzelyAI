@@ -1,0 +1,316 @@
+{
+  "id": "xl-53",
+  "level": 8,
+  "title": "Line and combo charts",
+  "explanation": "**Line charts** show how something changes over **time**, like gross month by month. **Combo charts** put two measures on one chart, like gross as columns and budget as a line, so you can compare them.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          190,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Weakest month",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "Gross beat budget every month?",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            null,
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Make a line chart of total gross by month. Click any cell inside the data, open the **Insert** tab, and click **Chart**. (If the panel is already open, just click its **Chart** tab.) Set Chart type to Line, X field to Month, Y field to Gross ($M), Summarize by to Sum.",
+      "teach": "Use a **line** whenever the X field is time (days, months, years). The line's slope shows the trend: going up, going down, or flat.",
+      "chart": {
+        "type": "line",
+        "x": "Month",
+        "y": "Gross ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "Type: Line, X: Month.",
+        "Type: Line, X: Month, Y: Gross ($M), Sum."
+      ],
+      "answer": "Line chart, X: Month, Y: Gross ($M), Sum"
+    },
+    {
+      "prompt": "Which month was weakest? Type its 3-letter name into J2.",
+      "cell": "J2",
+      "expected": "Jan",
+      "hints": [
+        "Find the lowest point on the line.",
+        "January made 246."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "Jan"
+    },
+    {
+      "prompt": "Now compare gross with budget. Change Chart type to Combo: keep X as Month and Bar field as Gross ($M), and set the Line field to Budget ($M).",
+      "teach": "A **combo chart** draws one measure as bars and another as a line, with its own axis on the right. It's great for \"revenue vs cost\" questions.",
+      "chart": {
+        "type": "combo",
+        "x": "Month",
+        "y": "Gross ($M)",
+        "line": "Budget ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "Pick Combo, then a Line field appears.",
+        "X: Month, Bar field: Gross ($M), Line field: Budget ($M)."
+      ],
+      "answer": "Combo chart, X: Month, Bar: Gross ($M), Line: Budget ($M)"
+    },
+    {
+      "prompt": "Last one: in every month, did gross beat budget? Type Yes if gross was higher in every month, or No if not, into J3.",
+      "cell": "J3",
+      "expected": "Yes",
+      "hints": [
+        "Compare the bar and line in each month, or the totals in the data.",
+        "Gross was higher in every month."
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "Yes"
+    }
+  ],
+  "recap": "Line charts show change over time. Combo charts put two measures on one chart, as bars and a line with their own axes."
+}

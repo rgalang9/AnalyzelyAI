@@ -1,0 +1,304 @@
+{
+  "id": "xl-48",
+  "level": 7,
+  "title": "Review: The streaming charts",
+  "explanation": "**Level 7 review!** A music blog wants a live summary of this week's top 10 songs: the artists, the genres, the biggest hits, and some quick stats, all built with formulas that update when the chart changes. There's nothing new here, just everything from Level 7.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Top 10",
+        "header": true,
+        "column_widths": [
+          130,
+          110,
+          80,
+          100,
+          30,
+          110,
+          90,
+          30,
+          130,
+          30,
+          30,
+          130,
+          130
+        ],
+        "rows": [
+          [
+            "Song",
+            "Artist",
+            "Genre",
+            "Streams (M)",
+            null,
+            "Artists",
+            "Genres",
+            null,
+            "Songs over 300M",
+            null,
+            null,
+            "Number of artists",
+            "Share of top song"
+          ],
+          [
+            "Neon Nights",
+            "Luma",
+            "Pop",
+            412,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Gravity",
+            "The Arcades",
+            "Rock",
+            256,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Planes",
+            "Kiko",
+            "Hip-Hop",
+            388,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Slow Burn",
+            "Ivy Rose",
+            "Pop",
+            301,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Run It Up",
+            "DJ Coda",
+            "Hip-Hop",
+            274,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Golden Hour",
+            "Luma",
+            "Pop",
+            455,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Static",
+            "The Arcades",
+            "Rock",
+            198,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Midnight Drive",
+            "Nova Lane",
+            "Pop",
+            367,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Back Block",
+            "Kiko",
+            "Hip-Hop",
+            341,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Wildfire",
+            "Sable",
+            "Rock",
+            289,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2, list each artist once, in A to Z order.",
+      "cell": "F2:F8",
+      "spill": true,
+      "expected": [
+        "DJ Coda",
+        "Ivy Rose",
+        "Kiko",
+        "Luma",
+        "Nova Lane",
+        "Sable",
+        "The Arcades"
+      ],
+      "function": [
+        "SORT",
+        "UNIQUE"
+      ],
+      "hints": [
+        "UNIQUE inside SORT.",
+        "=SORT(UNIQUE(B2:B11))"
+      ],
+      "highlight": [
+        "B2:B11"
+      ],
+      "answer": "=SORT(UNIQUE(B2:B11)) in F2"
+    },
+    {
+      "prompt": "In G2, list each genre once, in the order they first appear.",
+      "cell": "G2:G4",
+      "spill": true,
+      "expected": [
+        "Pop",
+        "Rock",
+        "Hip-Hop"
+      ],
+      "function": "UNIQUE",
+      "hints": [
+        "Just UNIQUE.",
+        "=UNIQUE(C2:C11)"
+      ],
+      "highlight": [
+        "C2:C11"
+      ],
+      "answer": "=UNIQUE(C2:C11) in G2"
+    },
+    {
+      "prompt": "In I2, list the names of the songs with over 300M streams, biggest first: =SORTBY(FILTER(A2:A11, D2:D11>300), FILTER(D2:D11, D2:D11>300), -1).",
+      "cell": "I2:I7",
+      "spill": true,
+      "expected": [
+        "Golden Hour",
+        "Neon Nights",
+        "Paper Planes",
+        "Midnight Drive",
+        "Back Block",
+        "Slow Burn"
+      ],
+      "function": [
+        "SORTBY",
+        "FILTER"
+      ],
+      "hints": [
+        "FILTER the names and FILTER the streams the same way, then SORTBY one by the other.",
+        "=SORTBY(FILTER(A2:A11, D2:D11>300), FILTER(D2:D11, D2:D11>300), -1)"
+      ],
+      "highlight": [
+        "A2:D11"
+      ],
+      "answer": "=SORTBY(FILTER(A2:A11, D2:D11>300), FILTER(D2:D11, D2:D11>300), -1) in I2"
+    },
+    {
+      "prompt": "In L2, count the different artists in one formula.",
+      "cell": "L2",
+      "expected": 7,
+      "function": [
+        "COUNTA",
+        "UNIQUE"
+      ],
+      "hints": [
+        "UNIQUE inside COUNTA.",
+        "=COUNTA(UNIQUE(B2:B11))"
+      ],
+      "highlight": [
+        "B2:B11"
+      ],
+      "answer": "=COUNTA(UNIQUE(B2:B11))"
+    },
+    {
+      "prompt": "Last one: in M2, use LET to work out the top song's share of all streams: name top as the MAX of streams and total as the SUM, then divide.",
+      "cell": "M2",
+      "expected": 0.13867723255105152,
+      "function": [
+        "LET",
+        "MAX",
+        "SUM"
+      ],
+      "hints": [
+        "=LET(top, MAX(D2:D11), total, SUM(D2:D11), top/total)",
+        "It should be about 0.139 (13.9%)."
+      ],
+      "highlight": [
+        "D2:D11"
+      ],
+      "answer": "=LET(top, MAX(D2:D11), total, SUM(D2:D11), top/total)"
+    }
+  ],
+  "recap": "Level 7 done! You can spill lists with UNIQUE, SORT, SORTBY, FILTER and SEQUENCE, combine them in one formula, and name parts of formulas with LET. Next up: pivot tables and charts."
+}

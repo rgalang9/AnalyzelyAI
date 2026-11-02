@@ -1,0 +1,212 @@
+{
+  "id": "xl-58",
+  "level": 9,
+  "title": "WORKDAY, NETWORKDAYS and DATEDIF",
+  "explanation": "Project deadlines usually skip weekends and holidays, and HR needs ages and lengths of service. Counting those on a calendar is slow and easy to get wrong. WORKDAY, NETWORKDAYS and DATEDIF do it exactly.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Project",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          80,
+          120,
+          150,
+          120,
+          100
+        ],
+        "rows": [
+          [
+            "Task",
+            "Start",
+            "Work days",
+            "Due (WORKDAY)",
+            "Due (with holidays)",
+            "Work days, Nov",
+            "Holidays"
+          ],
+          [
+            "Research",
+            46328,
+            5,
+            null,
+            null,
+            null,
+            46352
+          ],
+          [
+            "Design",
+            46335,
+            8,
+            null,
+            null,
+            null,
+            46353
+          ],
+          [
+            "Build",
+            46346,
+            10,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Test",
+            46360,
+            4,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Intern",
+            "Birthday",
+            "Age on report date",
+            "Report date",
+            null,
+            null,
+            null
+          ],
+          [
+            "Maya",
+            38060,
+            null,
+            46328,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            38658,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            37832,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2:B5": "yyyy-mm-dd",
+          "D2:E5": "yyyy-mm-dd",
+          "G2:G3": "yyyy-mm-dd",
+          "B9:B11": "yyyy-mm-dd",
+          "D9": "yyyy-mm-dd"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, find when Research is due: 5 work days after its start, skipping weekends: =WORKDAY(B2, C2). Copy it down to D5.",
+      "teach": "**WORKDAY(start, days)** counts forward that many **weekdays**, skipping Saturdays and Sundays.",
+      "cell": "D2:D5",
+      "expected": [
+        46335,
+        46345,
+        46360,
+        46366
+      ],
+      "function": "WORKDAY",
+      "hints": [
+        "=WORKDAY(B2, C2), then copy it down.",
+        "Research starts on a Monday, so 5 work days later is the next Monday."
+      ],
+      "highlight": [
+        "B2:C5"
+      ],
+      "answer": "=WORKDAY(B2, C2) in D2, then copy down to D5"
+    },
+    {
+      "prompt": "Thanksgiving break is in G2:G3. In E2, add the holidays as a 3rd argument: =WORKDAY(B2, C2, $G$2:$G$3). Copy it down to E5.",
+      "teach": "WORKDAY's optional 3rd argument is a **list of holidays** to skip too. Lock it with $ so it doesn't move when you copy.",
+      "cell": "E2:E5",
+      "expected": [
+        46335,
+        46345,
+        46364,
+        46366
+      ],
+      "function": "WORKDAY",
+      "formula_contains": [
+        "$G$2:$G$3"
+      ],
+      "hints": [
+        "Add $G$2:$G$3 as the 3rd argument.",
+        "=WORKDAY(B2, C2, $G$2:$G$3), then copy it down."
+      ],
+      "highlight": [
+        "G2:G3"
+      ],
+      "answer": "=WORKDAY(B2, C2, $G$2:$G$3) in E2, then copy down to E5"
+    },
+    {
+      "prompt": "In F2, count the work days in November 2026, skipping the holidays: =NETWORKDAYS(DATE(2026,11,1), DATE(2026,11,30), G2:G3).",
+      "teach": "**NETWORKDAYS(start, end, holidays)** counts the weekdays between two dates, including both ends. It's how you count working days in a month or a contract.",
+      "cell": "F2",
+      "expected": 19,
+      "function": "NETWORKDAYS",
+      "hints": [
+        "Start and end can be built with DATE.",
+        "=NETWORKDAYS(DATE(2026,11,1), DATE(2026,11,30), G2:G3)"
+      ],
+      "highlight": [
+        "G2:G3"
+      ],
+      "answer": "=NETWORKDAYS(DATE(2026,11,1), DATE(2026,11,30), G2:G3)"
+    },
+    {
+      "prompt": "Last one: in C9, work out Maya's age on the report date in D9: =DATEDIF(B9, $D$9, \"y\"). Copy it down to C11.",
+      "teach": "**DATEDIF(start, end, unit)** counts complete years (\"y\"), months (\"m\") or days (\"d\") between two dates. It's a hidden Excel function: it works, but Excel doesn't suggest it as you type.",
+      "cell": "C9:C11",
+      "expected": [
+        22,
+        21,
+        23
+      ],
+      "function": "DATEDIF",
+      "hints": [
+        "The unit \"y\" goes in quotes.",
+        "=DATEDIF(B9, $D$9, \"y\"), then copy it down."
+      ],
+      "highlight": [
+        "B9:B11",
+        "D9"
+      ],
+      "answer": "=DATEDIF(B9, $D$9, \"y\") in C9, then copy down to C11"
+    }
+  ],
+  "recap": "WORKDAY finds a date some weekdays ahead, skipping holidays too. NETWORKDAYS counts weekdays between two dates. DATEDIF counts complete years, months or days."
+}

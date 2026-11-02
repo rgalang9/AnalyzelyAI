@@ -1,0 +1,200 @@
+{
+  "id": "xl-23",
+  "level": 4,
+  "title": "Joining text: &, CONCAT and TEXTJOIN",
+  "explanation": "Last lessons you split text apart. Now the opposite: a mailing list stores first name, last name, city and state in separate columns, and you need to **join** them into full names, locations and email addresses.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Mailing list",
+        "header": true,
+        "column_widths": [
+          70,
+          70,
+          100,
+          60,
+          30,
+          110,
+          130,
+          140,
+          220
+        ],
+        "rows": [
+          [
+            "First",
+            "Last",
+            "City",
+            "State",
+            null,
+            "Full name",
+            "Location",
+            "Email",
+            "Everything"
+          ],
+          [
+            "Maya",
+            "Lee",
+            "Boston",
+            "MA",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            "Park",
+            "New Haven",
+            "CT",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            "Ortiz",
+            "Hartford",
+            "CT",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            "Chen",
+            "Providence",
+            "RI",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            "Kim",
+            "Brooklyn",
+            "NY",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In F2, join Maya's first and last name with a space between: =A2 & \" \" & B2.",
+      "teach": "The **&** sign joins text together. Excel adds nothing between the pieces, so you add the space yourself, as text in quotes: `\" \"`.",
+      "cell": "F2",
+      "expected": "Maya Lee",
+      "formula_contains": [
+        "&"
+      ],
+      "must_be_formula": true,
+      "exact_text": true,
+      "hints": [
+        "Join A2, then a space in quotes, then B2.",
+        "=A2 & \" \" & B2"
+      ],
+      "highlight": [
+        "A2:B2"
+      ],
+      "answer": "=A2 & \" \" & B2"
+    },
+    {
+      "prompt": "In G2, make the location in the style \"Boston, MA\": the city, a comma and a space, then the state.",
+      "cell": "G2",
+      "expected": "Boston, MA",
+      "formula_contains": [
+        "&"
+      ],
+      "must_be_formula": true,
+      "exact_text": true,
+      "hints": [
+        "The bit in the middle is \", \" (a comma and a space, in quotes).",
+        "=C2 & \", \" & D2"
+      ],
+      "highlight": [
+        "C2:D2"
+      ],
+      "answer": "=C2 & \", \" & D2"
+    },
+    {
+      "prompt": "In H2, build Maya's email: first.last@wes.edu, all lowercase. Wrap the joined text in LOWER: =LOWER(A2 & \".\" & B2 & \"@wes.edu\").",
+      "teach": "You can put a whole join inside another function. Here LOWER makes the finished email lowercase.",
+      "cell": "H2",
+      "expected": "maya.lee@wes.edu",
+      "function": "LOWER",
+      "formula_contains": [
+        "&"
+      ],
+      "exact_text": true,
+      "hints": [
+        "Join first name, \".\", last name and \"@wes.edu\", all inside LOWER( ).",
+        "=LOWER(A2 & \".\" & B2 & \"@wes.edu\")"
+      ],
+      "highlight": [
+        "A2:B2"
+      ],
+      "answer": "=LOWER(A2 & \".\" & B2 & \"@wes.edu\")"
+    },
+    {
+      "prompt": "In I2, join all 4 columns with a comma and space between each, using TEXTJOIN: =TEXTJOIN(\", \", TRUE, A2:D2).",
+      "teach": "**TEXTJOIN(separator, ignore_empty, range)** joins a whole range at once, putting the separator between each piece. TRUE means skip empty cells. It's much shorter than lots of & signs.",
+      "cell": "I2",
+      "expected": "Maya, Lee, Boston, MA",
+      "function": "TEXTJOIN",
+      "exact_text": true,
+      "hints": [
+        "The separator is \", \", then TRUE, then the range A2:D2.",
+        "=TEXTJOIN(\", \", TRUE, A2:D2)"
+      ],
+      "highlight": [
+        "A2:D2"
+      ],
+      "answer": "=TEXTJOIN(\", \", TRUE, A2:D2)"
+    },
+    {
+      "prompt": "Last one: copy F2:I2 down to row 6, so everyone has a full name, location, email and summary.",
+      "cell": "F3:I6",
+      "expected": [
+        "Leo Park",
+        "New Haven, CT",
+        "leo.park@wes.edu",
+        "Leo, Park, New Haven, CT",
+        "Sam Ortiz",
+        "Hartford, CT",
+        "sam.ortiz@wes.edu",
+        "Sam, Ortiz, Hartford, CT",
+        "Ava Chen",
+        "Providence, RI",
+        "ava.chen@wes.edu",
+        "Ava, Chen, Providence, RI",
+        "Noah Kim",
+        "Brooklyn, NY",
+        "noah.kim@wes.edu",
+        "Noah, Kim, Brooklyn, NY"
+      ],
+      "must_be_formula": true,
+      "exact_text": true,
+      "hints": [
+        "Select F2:I2, copy, select F3:I6, paste.",
+        "Noah's email should be noah.kim@wes.edu."
+      ],
+      "highlight": [
+        "F3:I6"
+      ],
+      "answer": "Copy F2:I2 down to row 6"
+    }
+  ],
+  "recap": "The & sign joins text, and you add spaces or commas yourself in quotes. TEXTJOIN joins a whole range with a separator. Wrap a join in LOWER or PROPER to fix its capitals."
+}

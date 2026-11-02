@@ -1,0 +1,206 @@
+{
+  "id": "xl-28",
+  "level": 5,
+  "title": "AND, OR and NOT",
+  "explanation": "A campus scholarship has rules with more than one condition, like \"GPA of at least 3.5 **and** at least 40 service hours\". **AND**, **OR** and **NOT** combine comparisons into one TRUE or FALSE, and then IF can use the result.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Applicants",
+        "header": true,
+        "column_widths": [
+          90,
+          60,
+          110,
+          80,
+          80,
+          30,
+          90,
+          90,
+          120,
+          100
+        ],
+        "rows": [
+          [
+            "Applicant",
+            "GPA",
+            "Service hours",
+            "Class of",
+            "First-gen",
+            null,
+            "Both rules",
+            "Either rule",
+            "Not a first-year",
+            "Decision"
+          ],
+          [
+            "Maya",
+            3.9,
+            50,
+            2027,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            3.4,
+            60,
+            2026,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            3.6,
+            30,
+            2028,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            3.7,
+            45,
+            2029,
+            "Yes",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            3.2,
+            20,
+            2027,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            3.85,
+            10,
+            2028,
+            "No",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In G2, check both rules for Maya: GPA at least 3.5 AND at least 40 service hours. Type =AND(B2>=3.5, C2>=40), then copy it down to G7.",
+      "teach": "**AND(test1, test2, ...)** is TRUE only if **every** test is TRUE. Put the tests inside the brackets, separated by commas.",
+      "cell": "G2:G7",
+      "expected": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "function": "AND",
+      "hints": [
+        "=AND(B2>=3.5, C2>=40), then copy it down.",
+        "Only Maya and Ava pass both."
+      ],
+      "highlight": [
+        "B2:C7"
+      ],
+      "answer": "=AND(B2>=3.5, C2>=40) in G2, then copy down to G7"
+    },
+    {
+      "prompt": "A second award goes to anyone with a GPA of at least 3.8 OR who is first-gen. In H2, use OR, then copy it down to H7.",
+      "teach": "**OR(test1, test2, ...)** is TRUE if **at least one** test is TRUE.",
+      "cell": "H2:H7",
+      "expected": [
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "function": "OR",
+      "hints": [
+        "The tests are B2>=3.8 and E2=\"Yes\".",
+        "=OR(B2>=3.8, E2=\"Yes\"), then copy it down."
+      ],
+      "highlight": [
+        "B2:E7"
+      ],
+      "answer": "=OR(B2>=3.8, E2=\"Yes\") in H2, then copy down to H7"
+    },
+    {
+      "prompt": "First-years (class of 2029) can't apply yet. In I2, use NOT to check that the applicant is NOT class of 2029, then copy it down to I7.",
+      "teach": "**NOT(test)** flips TRUE to FALSE and FALSE to TRUE.",
+      "cell": "I2:I7",
+      "expected": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "function": "NOT",
+      "hints": [
+        "The test inside NOT is D2=2029.",
+        "=NOT(D2=2029), then copy it down."
+      ],
+      "highlight": [
+        "D2:D7"
+      ],
+      "answer": "=NOT(D2=2029) in I2, then copy down to I7"
+    },
+    {
+      "prompt": "Last one: in J2, use IF with AND inside it: show \"Award\" if both rules are met, otherwise \"No award\". Then copy it down to J7.",
+      "teach": "AND, OR and NOT are most useful **inside** IF, as its test: `=IF(AND(...), \"Award\", \"No award\")`.",
+      "cell": "J2:J7",
+      "expected": [
+        "Award",
+        "No award",
+        "No award",
+        "Award",
+        "No award",
+        "No award"
+      ],
+      "function": [
+        "IF",
+        "AND"
+      ],
+      "hints": [
+        "The AND from G2 goes where IF's test goes.",
+        "=IF(AND(B2>=3.5, C2>=40), \"Award\", \"No award\"), then copy it down."
+      ],
+      "highlight": [
+        "B2:C7"
+      ],
+      "answer": "=IF(AND(B2>=3.5, C2>=40), \"Award\", \"No award\") in J2, then copy down to J7"
+    }
+  ],
+  "recap": "AND is TRUE when every test is TRUE, OR when at least one is, and NOT flips the answer. Put them inside IF to make decisions with several rules."
+}

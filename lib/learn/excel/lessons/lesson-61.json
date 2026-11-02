@@ -1,0 +1,151 @@
+{
+  "id": "xl-61",
+  "level": 10,
+  "title": "Percent change and CAGR",
+  "explanation": "**Welcome to Level 10: finance!** A streaming startup is pitching investors, and its subscriber numbers need the two growth measures every finance interview asks about: **percent change** year over year, and **CAGR**, the steady yearly growth rate that would get you from start to finish.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Growth",
+        "header": true,
+        "column_widths": [
+          60,
+          130,
+          90,
+          30,
+          110,
+          80
+        ],
+        "rows": [
+          [
+            "Year",
+            "Subscribers (M)",
+            "Growth %",
+            null,
+            "Total growth",
+            "CAGR"
+          ],
+          [
+            2021,
+            12,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2022,
+            15.6,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2023,
+            18.2,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2024,
+            22.5,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2025,
+            26.1,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "number_formats": {
+          "C3:C6": "0.0%",
+          "E2": "0.0%",
+          "F2": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In C3, work out 2022's growth: (new − old) ÷ old: =(B3-B2)/B2.",
+      "teach": "**Percent change = (new − old) ÷ old.** The brackets matter: without them Excel would divide first. The cell is already formatted as a percent, so 0.3 shows as 30.0%.",
+      "cell": "C3",
+      "expected": 0.30000000000000004,
+      "must_be_formula": true,
+      "formula_contains": [
+        "("
+      ],
+      "hints": [
+        "New is B3, old is B2.",
+        "=(B3-B2)/B2"
+      ],
+      "highlight": [
+        "B2:B3"
+      ],
+      "answer": "=(B3-B2)/B2"
+    },
+    {
+      "prompt": "Copy C3 down to C6.",
+      "cell": "C4:C6",
+      "expected": [
+        0.16666666666666674,
+        0.2362637362637363,
+        0.16000000000000014
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Copy C3, then paste into C4:C6.",
+        "2024 should be about 23.6%."
+      ],
+      "highlight": [
+        "C4:C6"
+      ],
+      "answer": "Copy C3 down to C6"
+    },
+    {
+      "prompt": "In E2, work out the total growth from 2021 to 2025: =B6/B2-1.",
+      "teach": "**new ÷ old − 1** is the same as (new − old) ÷ old, just shorter. Subscribers more than doubled, so it's over 100%.",
+      "cell": "E2",
+      "expected": 1.1750000000000003,
+      "must_be_formula": true,
+      "hints": [
+        "2025 divided by 2021, minus 1.",
+        "=B6/B2-1"
+      ],
+      "highlight": [
+        "B2",
+        "B6"
+      ],
+      "answer": "=B6/B2-1"
+    },
+    {
+      "prompt": "Last one: in F2, work out the CAGR over the 4 years: =(B6/B2)^(1/4)-1.",
+      "teach": "**CAGR (compound annual growth rate) = (end ÷ start)^(1 ÷ years) − 1.** The **^** sign means \"to the power of\". From 2021 to 2025 is **4** years of growth, not 5: count the gaps, not the years. CAGR smooths out the bumpy year-by-year growth into one steady rate.",
+      "cell": "F2",
+      "expected": 0.2144085475552544,
+      "must_be_formula": true,
+      "formula_contains": [
+        "^"
+      ],
+      "hints": [
+        "4 years of growth, so the power is 1/4.",
+        "=(B6/B2)^(1/4)-1"
+      ],
+      "highlight": [
+        "B2",
+        "B6"
+      ],
+      "answer": "=(B6/B2)^(1/4)-1"
+    }
+  ],
+  "recap": "Percent change is (new − old) ÷ old. CAGR is (end ÷ start)^(1 ÷ years) − 1, counting the gaps between years. ^ means \"to the power of\"."
+}

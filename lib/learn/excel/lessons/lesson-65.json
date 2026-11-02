@@ -1,0 +1,137 @@
+{
+  "id": "xl-65",
+  "level": 10,
+  "title": "NPV",
+  "explanation": "Should a café spend $50,000 on a new espresso bar that brings in cash over 5 years? Adding up the cash isn't enough, because money later is worth less than money now. **NPV** (net present value) converts every future cash flow into today's dollars and adds them up. If NPV is positive, the project creates value.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Project",
+        "header": true,
+        "column_widths": [
+          170,
+          90,
+          80,
+          80,
+          80,
+          80,
+          80
+        ],
+        "rows": [
+          [
+            "Project: new espresso bar",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Discount rate",
+            0.1,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Year",
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            "Cash flow",
+            -50000,
+            12000,
+            15000,
+            18000,
+            18000,
+            15000
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "NPV (wrong way)",
+            null
+          ],
+          [
+            "NPV (right way)",
+            null
+          ],
+          [
+            "Decision",
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2": "0.0%",
+          "B4:G4": "$#,##0",
+          "B6:B7": "$#,##0.00"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B6, try the obvious formula: =NPV(B2, B4:G4). This is a classic mistake, so watch the result.",
+      "teach": "**NPV(rate, cash flows)** assumes the **first** cash flow happens **one year from now**. But the $50,000 is spent **today** (year 0), so this formula wrongly discounts it as if it were paid a year later.",
+      "cell": "B6",
+      "expected": 7670.4668933217545,
+      "function": "NPV",
+      "hints": [
+        "=NPV(B2, B4:G4)",
+        "It's the wrong answer on purpose."
+      ],
+      "highlight": [
+        "B2",
+        "B4:G4"
+      ],
+      "answer": "=NPV(B2, B4:G4)"
+    },
+    {
+      "prompt": "In B7, do it the right way: NPV of years 1 to 5 only, then add the year-0 cash flow: =NPV(B2, C4:G4) + B4.",
+      "teach": "Year-0 money is already in today's dollars, so it's added **outside** NPV. This is one of the most common finance interview questions.",
+      "cell": "B7",
+      "expected": 8437.513582653934,
+      "function": "NPV",
+      "formula_contains": [
+        "B4"
+      ],
+      "hints": [
+        "NPV on C4:G4, then + B4.",
+        "=NPV(B2, C4:G4) + B4"
+      ],
+      "highlight": [
+        "B2",
+        "B4:G4"
+      ],
+      "answer": "=NPV(B2, C4:G4) + B4"
+    },
+    {
+      "prompt": "Last one: in B8, show \"Invest\" if the right NPV is above 0, otherwise \"Pass\".",
+      "cell": "B8",
+      "expected": "Invest",
+      "function": "IF",
+      "hints": [
+        "IF on B7.",
+        "=IF(B7>0, \"Invest\", \"Pass\")"
+      ],
+      "highlight": [
+        "B7"
+      ],
+      "answer": "=IF(B7>0, \"Invest\", \"Pass\")"
+    }
+  ],
+  "recap": "NPV turns future cash flows into today's dollars. NPV assumes the first cash flow is a year away, so add the year-0 investment outside: =NPV(rate, years 1 to n) + year 0. Positive NPV means invest."
+}

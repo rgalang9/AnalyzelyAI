@@ -1,0 +1,252 @@
+{
+  "id": "xl-43",
+  "level": 7,
+  "title": "Spilling and UNIQUE",
+  "explanation": "**Welcome to Level 7: dynamic arrays!** Every formula so far gave back **one** answer. Modern Excel formulas can give back a whole list, which **spills** down into the cells below by itself. This club's attendance log lists the same people many times. UNIQUE pulls out each name once.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Attendance",
+        "header": true,
+        "column_widths": [
+          80,
+          110,
+          30,
+          90,
+          30,
+          110,
+          100,
+          30,
+          120
+        ],
+        "rows": [
+          [
+            "Name",
+            "Event",
+            null,
+            "Members",
+            null,
+            "Events",
+            "Times held",
+            null,
+            "Member count"
+          ],
+          [
+            "Maya",
+            "Movie night",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            "Trivia",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Maya",
+            "Trivia",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            "Movie night",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            "Karaoke",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            "Karaoke",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Maya",
+            "Karaoke",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            "Trivia",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            "Trivia",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            "Movie night",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            "Trivia",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            "Movie night",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, list every member once: =UNIQUE(A2:A13). Type it only in D2, and watch it spill down.",
+      "teach": "**UNIQUE(range)** gives back each different value once, in the order they first appear. You type it in **one** cell, and the answers **spill** into the cells below. The spilled cells are greyed in the formula bar: only D2 holds the formula. If something is blocking the spill, you get a **#SPILL!** error, so keep the cells below empty.",
+      "cell": "D2:D7",
+      "spill": true,
+      "expected": [
+        "Maya",
+        "Leo",
+        "Sam",
+        "Ava",
+        "Noah",
+        "Zoe"
+      ],
+      "function": "UNIQUE",
+      "hints": [
+        "Type the formula in D2 only. Don't copy it down.",
+        "=UNIQUE(A2:A13)"
+      ],
+      "highlight": [
+        "A2:A13"
+      ],
+      "answer": "=UNIQUE(A2:A13) in D2"
+    },
+    {
+      "prompt": "In F2, list each event once.",
+      "cell": "F2:F4",
+      "spill": true,
+      "expected": [
+        "Movie night",
+        "Trivia",
+        "Karaoke"
+      ],
+      "function": "UNIQUE",
+      "hints": [
+        "Same as D2, on the Event column.",
+        "=UNIQUE(B2:B13)"
+      ],
+      "highlight": [
+        "B2:B13"
+      ],
+      "answer": "=UNIQUE(B2:B13) in F2"
+    },
+    {
+      "prompt": "In G2:G4, count how many times each event was attended, using COUNTIF with the event names in F.",
+      "cell": "G2:G4",
+      "expected": [
+        4,
+        5,
+        3
+      ],
+      "function": "COUNTIF",
+      "hints": [
+        "=COUNTIF($B$2:$B$13, F2), then copy it down to G4.",
+        "Trivia should be 5."
+      ],
+      "highlight": [
+        "B2:B13",
+        "F2:F4"
+      ],
+      "answer": "=COUNTIF($B$2:$B$13, F2) in G2, then copy down to G4"
+    },
+    {
+      "prompt": "Last one: in I2, count how many different members there are, in one formula: =COUNTA(UNIQUE(A2:A13)).",
+      "teach": "**COUNTA** counts cells that aren't empty. Put UNIQUE inside it, and you count the different values without needing a helper list.",
+      "cell": "I2",
+      "expected": 6,
+      "function": [
+        "COUNTA",
+        "UNIQUE"
+      ],
+      "hints": [
+        "UNIQUE goes inside COUNTA.",
+        "=COUNTA(UNIQUE(A2:A13))"
+      ],
+      "highlight": [
+        "A2:A13"
+      ],
+      "answer": "=COUNTA(UNIQUE(A2:A13))"
+    }
+  ],
+  "recap": "Dynamic array formulas spill a whole list from one cell. UNIQUE lists each value once, and COUNTA(UNIQUE(...)) counts the different values. Keep the spill area empty, or you get #SPILL!."
+}

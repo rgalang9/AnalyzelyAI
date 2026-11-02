@@ -1,0 +1,118 @@
+{
+  "id": "xl-63",
+  "level": 10,
+  "title": "Time value of money: FV and PV",
+  "explanation": "A dollar today is worth more than a dollar later, because today's dollar can earn interest. This idea, the **time value of money**, is behind every loan, savings account and investment. **FV** (future value) says what money grows into, and **PV** (present value) says what future money is worth today.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Savings",
+        "header": true,
+        "column_widths": [
+          220,
+          110
+        ],
+        "rows": [
+          [
+            "Savings plan",
+            null
+          ],
+          [
+            "Yearly interest rate",
+            0.05
+          ],
+          [
+            "Years",
+            10
+          ],
+          [
+            "Saved each month",
+            200
+          ],
+          [
+            "Value after 10 years",
+            null
+          ],
+          [
+            "...if you start with $1,000",
+            null
+          ],
+          [
+            null,
+            null
+          ],
+          [
+            "Goal",
+            null
+          ],
+          [
+            "Needed in 5 years",
+            10000
+          ],
+          [
+            "Yearly interest rate",
+            0.06
+          ],
+          [
+            "Invest today",
+            null
+          ]
+        ],
+        "number_formats": {
+          "B2": "0.0%",
+          "B4:B6": "$#,##0.00",
+          "B9": "$#,##0.00",
+          "B10": "0.0%",
+          "B11": "$#,##0.00"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B5, find what saving $200 a month for 10 years at 5% grows to: =FV(B2/12, B3*12, -B4).",
+      "teach": "**FV(rate, periods, payment, [pv])**. Two rules trip everyone up:\n- **Match the periods.** You save **monthly**, so use the **monthly** rate (B2/12) and the number of **months** (B3*12).\n- **Signs show direction.** Money you pay out is **negative** (-B4), and money you get back is positive. That's why there's a minus sign.",
+      "cell": "B5",
+      "expected": 31056.45588913344,
+      "function": "FV",
+      "hints": [
+        "Monthly rate B2/12, months B3*12, payment -B4.",
+        "=FV(B2/12, B3*12, -B4)"
+      ],
+      "highlight": [
+        "B2:B4"
+      ],
+      "answer": "=FV(B2/12, B3*12, -B4)"
+    },
+    {
+      "prompt": "In B6, do the same, but you also start with $1,000 today. Add it as the 4th argument, also negative: =FV(B2/12, B3*12, -B4, -1000).",
+      "cell": "B6",
+      "expected": 32703.465386823722,
+      "function": "FV",
+      "hints": [
+        "The 4th argument is the starting amount, paid in, so negative.",
+        "=FV(B2/12, B3*12, -B4, -1000)"
+      ],
+      "highlight": [
+        "B2:B4"
+      ],
+      "answer": "=FV(B2/12, B3*12, -B4, -1000)"
+    },
+    {
+      "prompt": "Last one: you need $10,000 in 5 years, earning 6% a year. In B11, find how much to invest today, using PV: =PV(B10, 5, 0, -B9).",
+      "teach": "**PV(rate, periods, payment, fv)** works backwards from a future amount. There are no monthly payments here, so the payment is 0, and the future amount goes in the 4th spot. It's yearly this time, so the rate stays as it is.",
+      "cell": "B11",
+      "expected": 7472.58172866057,
+      "function": "PV",
+      "hints": [
+        "Rate B10, 5 years, payment 0, future value -B9.",
+        "=PV(B10, 5, 0, -B9)"
+      ],
+      "highlight": [
+        "B9:B10"
+      ],
+      "answer": "=PV(B10, 5, 0, -B9)"
+    }
+  ],
+  "recap": "FV says what money grows into, and PV says what future money is worth today. Match the rate to the periods (monthly rate for monthly payments), and use negative signs for money paid out."
+}

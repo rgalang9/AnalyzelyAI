@@ -1,0 +1,240 @@
+{
+  "id": "xl-44",
+  "level": 7,
+  "title": "SORT and SORTBY",
+  "explanation": "A game's leaderboard is in signup order, not score order. In Level 3 you sorted the cells themselves. **SORT** is different: it's a formula that makes a **sorted copy** and spills it, leaving the original untouched. When a new score comes in, the sorted copy updates by itself.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Leaderboard",
+        "header": true,
+        "column_widths": [
+          110,
+          70,
+          60,
+          30,
+          110,
+          70,
+          60,
+          30,
+          130,
+          30,
+          130
+        ],
+        "rows": [
+          [
+            "Player",
+            "Score",
+            "Level",
+            null,
+            "Ranked (SORT)",
+            null,
+            null,
+            null,
+            "Names by score",
+            null,
+            "Names A to Z"
+          ],
+          [
+            "NovaFox",
+            8420,
+            12,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "pixelqueen",
+            9150,
+            14,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Blockhead",
+            6300,
+            9,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "speedy_g",
+            7710,
+            11,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "CaptainCrit",
+            9860,
+            15,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "mochi",
+            5240,
+            8,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "TurboTaco",
+            8890,
+            13,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "luna_plays",
+            7020,
+            10,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In E2, make a copy of the whole leaderboard sorted by score, highest first: =SORT(A2:C9, 2, -1).",
+      "teach": "**SORT(range, column, order)**: the **column** is which column of the range to sort by (2 = Score), and the **order** is 1 for smallest first or **-1** for largest first. The result spills across and down.",
+      "cell": "E2:G9",
+      "spill": true,
+      "expected": [
+        "CaptainCrit",
+        9860,
+        15,
+        "pixelqueen",
+        9150,
+        14,
+        "TurboTaco",
+        8890,
+        13,
+        "NovaFox",
+        8420,
+        12,
+        "speedy_g",
+        7710,
+        11,
+        "luna_plays",
+        7020,
+        10,
+        "Blockhead",
+        6300,
+        9,
+        "mochi",
+        5240,
+        8
+      ],
+      "function": "SORT",
+      "hints": [
+        "Sort by column 2 of the range, with -1 for highest first.",
+        "=SORT(A2:C9, 2, -1)"
+      ],
+      "highlight": [
+        "A2:C9"
+      ],
+      "answer": "=SORT(A2:C9, 2, -1) in E2"
+    },
+    {
+      "prompt": "In I2, list just the player names, ordered by score from highest to lowest: =SORTBY(A2:A9, B2:B9, -1).",
+      "teach": "**SORTBY(range, by_range, order)** sorts one range using the values in **another** range. Here it shows the names, sorted by the scores, without showing the scores.",
+      "cell": "I2:I9",
+      "spill": true,
+      "expected": [
+        "CaptainCrit",
+        "pixelqueen",
+        "TurboTaco",
+        "NovaFox",
+        "speedy_g",
+        "luna_plays",
+        "Blockhead",
+        "mochi"
+      ],
+      "function": "SORTBY",
+      "hints": [
+        "Range: the names. By: the scores. Order: -1.",
+        "=SORTBY(A2:A9, B2:B9, -1)"
+      ],
+      "highlight": [
+        "A2:B9"
+      ],
+      "answer": "=SORTBY(A2:A9, B2:B9, -1) in I2"
+    },
+    {
+      "prompt": "Last one: in K2, list the player names in A to Z order: =SORT(A2:A9).",
+      "teach": "With no other arguments, SORT sorts the first column from smallest to largest, which for text means A to Z.",
+      "cell": "K2:K9",
+      "spill": true,
+      "expected": [
+        "Blockhead",
+        "CaptainCrit",
+        "luna_plays",
+        "mochi",
+        "NovaFox",
+        "pixelqueen",
+        "speedy_g",
+        "TurboTaco"
+      ],
+      "function": "SORT",
+      "hints": [
+        "Just the range of names.",
+        "=SORT(A2:A9)"
+      ],
+      "highlight": [
+        "A2:A9"
+      ],
+      "answer": "=SORT(A2:A9) in K2"
+    }
+  ],
+  "recap": "SORT(range, column, order) spills a sorted copy, with -1 for largest first. SORTBY sorts one range by the values in another. The original data stays as it is."
+}

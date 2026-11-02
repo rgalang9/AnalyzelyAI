@@ -1,0 +1,177 @@
+{
+  "id": "xl-08",
+  "level": 2,
+  "title": "Paste Special: values and transpose",
+  "explanation": "A sandwich chain tracks this week's sales by store. Revenue in column D is worked out with formulas. The manager wants a **snapshot** of this week's revenue that won't change when next week's numbers are typed in. Normal copy and paste can't do that, but **Paste Special** can.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Stores",
+        "header": true,
+        "column_widths": [
+          100,
+          70,
+          70,
+          90,
+          30,
+          90,
+          30,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ],
+        "rows": [
+          [
+            "Store",
+            "Units",
+            "Price",
+            "Revenue",
+            null,
+            "Snapshot"
+          ],
+          [
+            "Downtown",
+            120,
+            8.5,
+            "=B2*C2",
+            null,
+            null
+          ],
+          [
+            "Campus",
+            95,
+            8,
+            "=B3*C3",
+            null,
+            null
+          ],
+          [
+            "Airport",
+            60,
+            11,
+            "=B4*C4",
+            null,
+            null
+          ],
+          [
+            "Mall",
+            140,
+            8.5,
+            "=B5*C5",
+            null,
+            null
+          ],
+          [
+            "Station",
+            75,
+            9,
+            "=B6*C6",
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Click D2 and look at the formula bar. Revenue is a formula, not a typed number.",
+      "selected": "D2",
+      "hints": [
+        "Column D, row 2.",
+        "The formula bar shows =B2*C2."
+      ]
+    },
+    {
+      "prompt": "Copy D2:D6 and paste it normally into F2:F6. Something will go wrong. Look at the results!",
+      "teach": "Normal paste copies the **formula**, not the number. Remember, references are relative, so the formula shifts to its new spot.",
+      "cell": "F2:F6",
+      "expected": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "must_be_formula": true,
+      "shortcut": "paste",
+      "shortcut_help": "hint",
+      "hints": [
+        "Select D2:D6, copy, click F2, paste.",
+        "You'll get zeros. That's expected this time!"
+      ],
+      "highlight": [
+        "F2:F6"
+      ],
+      "answer": "Copy D2:D6, click F2, paste"
+    },
+    {
+      "prompt": "Click F2 and look at its formula.",
+      "teach": "F2 says `=D2*E2`. The formula moved 2 columns right, so it now multiplies D2 by the empty E2, which gives 0. To copy just the **numbers**, you need Paste Special.",
+      "selected": "F2",
+      "hints": [
+        "Column F, row 2.",
+        "The formula bar shows =D2*E2."
+      ]
+    },
+    {
+      "prompt": "Copy D2:D6 again, then right-click F2 and choose Paste Special, then Values. Now F2:F6 holds plain numbers.",
+      "teach": "**Paste Special → Values** pastes only what the cells **show**, not the formulas behind them. Use it to freeze a result, or to send numbers to someone without your formulas.",
+      "cell": "F2:F6",
+      "expected": [
+        1020.0,
+        760,
+        660,
+        1190.0,
+        675
+      ],
+      "must_be_value": true,
+      "hints": [
+        "Copy D2:D6, right-click F2, find Paste Special, then pick Values.",
+        "Click F2 afterwards: the formula bar should show a number, not a formula."
+      ],
+      "highlight": [
+        "F2:F6"
+      ],
+      "answer": "Copy D2:D6, right-click F2, Paste Special → Values"
+    },
+    {
+      "prompt": "Next week starts: Downtown sold 150 units. Change B2 to 150. D2 updates, but your snapshot in F2 keeps last week's number.",
+      "cell": "B2",
+      "expected": 150,
+      "hints": [
+        "Click B2, type 150, press Enter.",
+        "D2 becomes 1275, but F2 stays 1020."
+      ],
+      "highlight": [
+        "B2"
+      ],
+      "answer": "Type 150 in B2"
+    },
+    {
+      "prompt": "Last one: the manager wants the store names going across a row instead of down. Copy A1:A6, right-click H1, and choose Paste Special, then Transpose.",
+      "teach": "**Transpose** flips data: a column becomes a row, and a row becomes a column.",
+      "cell": "H1:M1",
+      "expected": [
+        "Store",
+        "Downtown",
+        "Campus",
+        "Airport",
+        "Mall",
+        "Station"
+      ],
+      "hints": [
+        "Copy A1:A6, right-click H1, Paste Special, then Transpose.",
+        "H1 to M1 should read: Store, Downtown, Campus, Airport, Mall, Station."
+      ],
+      "highlight": [
+        "H1:M1"
+      ],
+      "answer": "Copy A1:A6, right-click H1, Paste Special → Transpose"
+    }
+  ],
+  "recap": "Normal paste copies formulas. Paste Special → Values pastes only the numbers, so they never change. Paste Special → Transpose turns a column into a row."
+}

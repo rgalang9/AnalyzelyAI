@@ -1,0 +1,210 @@
+{
+  "id": "xl-09",
+  "level": 2,
+  "title": "Number formatting",
+  "explanation": "A streaming service wants a clean report of its 4 plans. The numbers are right, but they're hard to read: prices without $ signs, shares as long decimals, and launch dates showing as strange 5-digit numbers. **Number formatting** changes how a number **looks** without changing the number itself.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Plans",
+        "header": true,
+        "column_widths": [
+          90,
+          100,
+          80,
+          110,
+          80,
+          110
+        ],
+        "rows": [
+          [
+            "Plan",
+            "Subscribers",
+            "Price",
+            "Revenue",
+            "Share",
+            "Launched"
+          ],
+          [
+            "Basic",
+            1200,
+            6.99,
+            null,
+            null,
+            43781
+          ],
+          [
+            "Standard",
+            2500,
+            12.99,
+            null,
+            null,
+            44256
+          ],
+          [
+            "Premium",
+            900,
+            19.99,
+            null,
+            null,
+            44727
+          ],
+          [
+            "Student",
+            1500,
+            4.99,
+            null,
+            null,
+            45170
+          ],
+          [
+            "Total",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2 to D5, work out each plan's monthly revenue: subscribers × price.",
+      "cell": "D2:D5",
+      "expected": [
+        8388.0,
+        32475.0,
+        17991.0,
+        7485.0
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "D2 is =B2*C2, then copy it down.",
+        "Use copy and paste, or drag the fill handle."
+      ],
+      "highlight": [
+        "B2:C5"
+      ],
+      "answer": "=B2*C2 in D2, then copy down to D5"
+    },
+    {
+      "prompt": "In D6, add up the total revenue.",
+      "cell": "D6",
+      "expected": 66339.0,
+      "function": "SUM",
+      "hints": [
+        "SUM the revenue in D2 to D5.",
+        "=SUM(D2:D5)"
+      ],
+      "highlight": [
+        "D2:D5"
+      ],
+      "answer": "=SUM(D2:D5)"
+    },
+    {
+      "prompt": "Make the prices in C2:C5 look like money: dollars with 2 decimals, like $6.99. Select them and use the toolbar's currency ($) button.",
+      "teach": "Formatting is in the toolbar above the grid. The **$** button shows numbers as currency, the **%** button as a percent, and the decimal buttons add or remove decimal places. The number underneath doesn't change, only how it looks.",
+      "cell": "C2:C5",
+      "expected": [
+        6.99,
+        12.99,
+        19.99,
+        4.99
+      ],
+      "number_format": "$#,##0.00",
+      "hints": [
+        "Select C2:C5 first, then click the $ button in the toolbar.",
+        "The prices should read $6.99, $12.99, $19.99 and $4.99."
+      ],
+      "highlight": [
+        "C2:C5"
+      ],
+      "answer": "Select C2:C5, then apply the currency format ($#,##0.00)"
+    },
+    {
+      "prompt": "Do the same for the revenue in D2:D6, so it reads like $8,388.00.",
+      "cell": "D2:D6",
+      "expected": [
+        8388.0,
+        32475.0,
+        17991.0,
+        7485.0,
+        66339.0
+      ],
+      "number_format": "$#,##0.00",
+      "hints": [
+        "Select D2:D6, then click the $ button.",
+        "The total should read $66,339.00."
+      ],
+      "highlight": [
+        "D2:D6"
+      ],
+      "answer": "Select D2:D6, then apply the currency format ($#,##0.00)"
+    },
+    {
+      "prompt": "In E2 to E5, work out each plan's share of total revenue: its revenue ÷ the total in D6. Lock D6 so it doesn't move when you copy.",
+      "cell": "E2:E5",
+      "expected": [
+        0.1264414598,
+        0.4895310451,
+        0.2711979379,
+        0.1128295573
+      ],
+      "must_be_formula": true,
+      "formula_contains": [
+        "$D$6"
+      ],
+      "hints": [
+        "E2 is =D2/$D$6, then copy it down to E5.",
+        "Without the $ signs, the copies would point at D7, D8 and so on."
+      ],
+      "highlight": [
+        "D2:D6"
+      ],
+      "answer": "=D2/$D$6 in E2, then copy down to E5"
+    },
+    {
+      "prompt": "The shares are long decimals like 0.1264... Show E2:E5 as percents with 1 decimal place, like 12.6%.",
+      "teach": "A share of 0.126 is the same as **12.6%**. The % button multiplies by 100 for display only. Then use the decimal buttons to get exactly 1 decimal place.",
+      "cell": "E2:E5",
+      "expected": [
+        0.1264414598,
+        0.4895310451,
+        0.2711979379,
+        0.1128295573
+      ],
+      "number_format": "0.0%",
+      "hints": [
+        "Select E2:E5, click %, then add or remove decimals until you see one, like 12.6%.",
+        "Standard should read 49.0%."
+      ],
+      "highlight": [
+        "E2:E5"
+      ],
+      "answer": "Select E2:E5, then apply a percent format with 1 decimal (0.0%)"
+    },
+    {
+      "prompt": "Last one: the launch dates in F2:F5 show as numbers like 43781. Excel stores dates as numbers, counting days from 1900. Format F2:F5 as dates in the style 2019-11-12 (year-month-day).",
+      "teach": "Every date in Excel is secretly a number: the count of days since January 1, 1900. That's why 43781 is really November 12, 2019. Formatting it as a date just changes how it looks. You'll find date styles in the number format menu in the toolbar.",
+      "cell": "F2:F5",
+      "expected": [
+        43781,
+        44256,
+        44727,
+        45170
+      ],
+      "number_format": "yyyy-mm-dd",
+      "hints": [
+        "Select F2:F5, open the number format menu in the toolbar, and pick a date format.",
+        "Choose the one that shows year-month-day, like 2019-11-12."
+      ],
+      "highlight": [
+        "F2:F5"
+      ],
+      "answer": "Select F2:F5, then apply the date format yyyy-mm-dd"
+    }
+  ],
+  "recap": "Number formatting changes how a number looks, not the number itself. Use $ for money, % for shares, the decimal buttons for precision, and date formats for dates, which Excel stores as numbers."
+}

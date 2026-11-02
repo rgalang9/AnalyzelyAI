@@ -1,0 +1,218 @@
+{
+  "id": "xl-14",
+  "level": 3,
+  "title": "Tables",
+  "explanation": "A food truck tracks a day of sales. Right now it's just cells. Turning it into a **Table** gives it a name, built-in filter arrows and striped rows, and lets formulas use column **names** like Sales[Revenue] instead of cell addresses like E2:E9. Analysts use tables because the formulas are easier to read and harder to break.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Food truck",
+        "header": true,
+        "column_widths": [
+          100,
+          90,
+          70,
+          70,
+          90,
+          30,
+          120,
+          90
+        ],
+        "rows": [
+          [
+            "Item",
+            "Category",
+            "Units",
+            "Price",
+            "Revenue",
+            null,
+            "Total revenue",
+            null
+          ],
+          [
+            "Tacos",
+            "Food",
+            120,
+            4.5,
+            null,
+            null,
+            "Average price",
+            null
+          ],
+          [
+            "Burrito",
+            "Food",
+            85,
+            9,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Nachos",
+            "Food",
+            60,
+            7,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Churros",
+            "Dessert",
+            70,
+            3.5,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Horchata",
+            "Drinks",
+            95,
+            3,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Lemonade",
+            "Drinks",
+            110,
+            2.75,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Soda",
+            "Drinks",
+            140,
+            2,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Flan",
+            "Dessert",
+            40,
+            4,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Turn the data into a Table. Select A1:E9, then right-click and choose Insert Table (or use the Table button in the toolbar).",
+      "teach": "In real Excel the shortcut is **Ctrl+T** (⌘+T on Mac), but in a browser that opens a new tab, so here use the menu instead. Include the header row: the headers become the table's **column names**.",
+      "table": {
+        "range": "A1:E9"
+      },
+      "hints": [
+        "Select from A1 to E9, including the headers, then right-click and choose Insert Table.",
+        "The data should get striped rows and filter arrows."
+      ],
+      "answer": "Select A1:E9, then Insert Table"
+    },
+    {
+      "prompt": "The table is called Table1. Give it a better name: right-click any cell inside the table, choose Rename Table, and call it Sales.",
+      "teach": "A good table name makes formulas readable. Names can't have spaces, can't start with a number, and must be unique.",
+      "table": {
+        "range": "A1:E9",
+        "name": "Sales"
+      },
+      "hints": [
+        "Right-click a cell inside the table (not outside it), then Rename Table.",
+        "Type Sales, with a capital S."
+      ],
+      "answer": "Rename the table to Sales"
+    },
+    {
+      "prompt": "In E2, work out Tacos' revenue using column names: type =[@Units]*[@Price]. If it doesn't fill down by itself, copy it down to E9.",
+      "teach": "Inside a table, **[@Units]** means \"the Units value in this same row\". So `=[@Units]*[@Price]` works in every row, and it reads like plain English.",
+      "cell": "E2:E9",
+      "expected": [
+        540.0,
+        765,
+        420,
+        245.0,
+        285,
+        302.5,
+        280,
+        160
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "Type =[@Units]*[@Price] in E2 and press Enter.",
+        "If the other rows stay empty, copy E2 down to E9."
+      ],
+      "highlight": [
+        "C2:D9"
+      ],
+      "answer": "=[@Units]*[@Price] in E2, filled down to E9"
+    },
+    {
+      "prompt": "In H1, add up all the revenue using the table name: =SUM(Sales[Revenue]).",
+      "teach": "**Sales[Revenue]** means \"the whole Revenue column of the Sales table\". If rows are added to the table later, the formula includes them automatically.",
+      "cell": "H1",
+      "expected": 2997.5,
+      "function": "SUM",
+      "formula_contains": [
+        "Sales[Revenue]"
+      ],
+      "hints": [
+        "Table name, then the column name in square brackets.",
+        "=SUM(Sales[Revenue])"
+      ],
+      "highlight": [
+        "E2:E9"
+      ],
+      "answer": "=SUM(Sales[Revenue])"
+    },
+    {
+      "prompt": "In H2, work out the average price using the table name.",
+      "cell": "H2",
+      "expected": 4.46875,
+      "function": "AVERAGE",
+      "formula_contains": [
+        "Sales[Price]"
+      ],
+      "hints": [
+        "Same pattern as H1, with AVERAGE and the Price column.",
+        "=AVERAGE(Sales[Price])"
+      ],
+      "highlight": [
+        "D2:D9"
+      ],
+      "answer": "=AVERAGE(Sales[Price])"
+    },
+    {
+      "prompt": "Last one: tables come with filter arrows built in. Use the arrow on Category to show only Drinks.",
+      "hidden_rows": [
+        2,
+        3,
+        4,
+        5,
+        9
+      ],
+      "hints": [
+        "Click the arrow on B1 and keep only Drinks ticked.",
+        "3 rows should be left: Horchata, Lemonade and Soda."
+      ],
+      "answer": "Filter → Category → only Drinks"
+    }
+  ],
+  "recap": "A Table gives your data a name, filter arrows and striped rows. [@Column] means this row's value, and TableName[Column] means the whole column, so formulas read like plain English."
+}

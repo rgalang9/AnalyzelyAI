@@ -1,0 +1,160 @@
+{
+  "id": "xl-66",
+  "level": 10,
+  "title": "IRR, XNPV and XIRR",
+  "explanation": "NPV needs you to pick a discount rate. **IRR** (internal rate of return) flips the question: what yearly return does this project earn? And real cash doesn't arrive exactly once a year, so **XNPV** and **XIRR** use the actual dates. Investors and private equity firms use these every day.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Returns",
+        "header": true,
+        "column_widths": [
+          150,
+          100,
+          100,
+          100,
+          100,
+          100,
+          100
+        ],
+        "rows": [
+          [
+            "Espresso bar, yearly",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Year",
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            "Cash flow",
+            -50000,
+            12000,
+            15000,
+            18000,
+            18000,
+            15000
+          ],
+          [
+            "IRR",
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Real dates",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Date",
+            46023,
+            46218,
+            46447,
+            46741,
+            46997,
+            47299
+          ],
+          [
+            "Cash flow",
+            -50000,
+            12000,
+            15000,
+            18000,
+            18000,
+            15000
+          ],
+          [
+            "Discount rate",
+            0.1
+          ],
+          [
+            "XNPV",
+            null
+          ],
+          [
+            "XIRR",
+            null
+          ]
+        ],
+        "number_formats": {
+          "B3:G3": "$#,##0",
+          "B4": "0.0%",
+          "B7:G7": "yyyy-mm-dd",
+          "B8:G8": "$#,##0",
+          "B9": "0.0%",
+          "B10": "$#,##0.00",
+          "B11": "0.0%"
+        }
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In B4, find the project's IRR: =IRR(B3:G3).",
+      "teach": "**IRR(cash flows)** finds the discount rate that makes NPV exactly 0. Here the year-0 investment is **included** in the range, unlike NPV. If the IRR beats your required return (say 10%), the project is worth doing.",
+      "cell": "B4",
+      "expected": 0.1608715674755684,
+      "function": "IRR",
+      "hints": [
+        "Include year 0: the whole row B3:G3.",
+        "=IRR(B3:G3)"
+      ],
+      "highlight": [
+        "B3:G3"
+      ],
+      "answer": "=IRR(B3:G3)"
+    },
+    {
+      "prompt": "The same cash flows actually arrive on the dates in row 7. In B10, find the NPV using the real dates: =XNPV(B9, B8:G8, B7:G7).",
+      "teach": "**XNPV(rate, cash flows, dates)** discounts each cash flow by its exact date. Unlike NPV, the first cash flow **is** included, and is treated as today.",
+      "cell": "B10",
+      "expected": 14462.123750665656,
+      "function": "XNPV",
+      "hints": [
+        "Rate, then the cash flows, then the dates.",
+        "=XNPV(B9, B8:G8, B7:G7)"
+      ],
+      "highlight": [
+        "B7:G8"
+      ],
+      "answer": "=XNPV(B9, B8:G8, B7:G7)"
+    },
+    {
+      "prompt": "Last one: in B11, find the IRR using the real dates: =XIRR(B8:G8, B7:G7).",
+      "cell": "B11",
+      "expected": 0.2586167982633051,
+      "function": "XIRR",
+      "hints": [
+        "Cash flows, then dates.",
+        "=XIRR(B8:G8, B7:G7)"
+      ],
+      "highlight": [
+        "B7:G8"
+      ],
+      "answer": "=XIRR(B8:G8, B7:G7)"
+    }
+  ],
+  "recap": "IRR is the return that makes NPV zero, with year 0 included. XNPV and XIRR use real dates instead of assuming one cash flow per year."
+}

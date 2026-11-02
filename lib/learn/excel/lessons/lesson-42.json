@@ -1,0 +1,378 @@
+{
+  "id": "xl-42",
+  "level": 6,
+  "title": "Review: The sneaker store",
+  "explanation": "**Level 6 review!** A sneaker store's sales sheet only has SKUs. The shoe details live on the **Products** sheet, and discount tiers on the **Discounts** sheet. One SKU was typed wrong. Fill in the report with lookups. There's nothing new here, just everything from Level 6.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Sales",
+        "header": true,
+        "column_widths": [
+          70,
+          50,
+          110,
+          100,
+          60,
+          80,
+          80
+        ],
+        "rows": [
+          [
+            "SKU",
+            "Qty",
+            "Shoe",
+            "Brand",
+            "Price",
+            "Revenue",
+            "Discount"
+          ],
+          [
+            "SN03",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN01",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN07",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN06",
+            3,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN09",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN02",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN05",
+            1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "SN04",
+            2,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Nike revenue",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "Price of Samba OG",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      {
+        "name": "Products",
+        "header": true,
+        "column_widths": [
+          60,
+          110,
+          100,
+          60
+        ],
+        "rows": [
+          [
+            "SKU",
+            "Shoe",
+            "Brand",
+            "Price"
+          ],
+          [
+            "SN01",
+            "Air Force 1",
+            "Nike",
+            115
+          ],
+          [
+            "SN02",
+            "Samba OG",
+            "Adidas",
+            100
+          ],
+          [
+            "SN03",
+            "550",
+            "New Balance",
+            120
+          ],
+          [
+            "SN04",
+            "Dunk Low",
+            "Nike",
+            115
+          ],
+          [
+            "SN05",
+            "Gel-Kayano 14",
+            "ASICS",
+            150
+          ],
+          [
+            "SN06",
+            "Old Skool",
+            "Vans",
+            70
+          ],
+          [
+            "SN07",
+            "Ultraboost",
+            "Adidas",
+            190
+          ]
+        ]
+      },
+      {
+        "name": "Discounts",
+        "header": true,
+        "column_widths": [
+          110,
+          80
+        ],
+        "rows": [
+          [
+            "Revenue from",
+            "Discount"
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            150,
+            0.05
+          ],
+          [
+            300,
+            0.1
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In C2:C9, look up each shoe's name from the Products sheet. Show \"Not found\" for SKUs that don't exist.",
+      "sheet": "Sales",
+      "cell": "C2:C9",
+      "expected": [
+        "550",
+        "Air Force 1",
+        "Ultraboost",
+        "Old Skool",
+        "Not found",
+        "Samba OG",
+        "Gel-Kayano 14",
+        "Dunk Low"
+      ],
+      "function": "XLOOKUP",
+      "hints": [
+        "XLOOKUP with Products!$A$2:$A$8 and Products!$B$2:$B$8, and \"Not found\" as the 4th argument.",
+        "=XLOOKUP(A2, Products!$A$2:$A$8, Products!$B$2:$B$8, \"Not found\"), then copy it down."
+      ],
+      "highlight": [
+        "A2:A9"
+      ],
+      "answer": "=XLOOKUP(A2, Products!$A$2:$A$8, Products!$B$2:$B$8, \"Not found\") in C2, then copy down to C9"
+    },
+    {
+      "prompt": "In D2:D9, look up each brand with VLOOKUP (exact match). Wrap it in IFERROR to show \"Not found\".",
+      "sheet": "Sales",
+      "cell": "D2:D9",
+      "expected": [
+        "New Balance",
+        "Nike",
+        "Adidas",
+        "Vans",
+        "Not found",
+        "Adidas",
+        "ASICS",
+        "Nike"
+      ],
+      "function": [
+        "VLOOKUP",
+        "IFERROR"
+      ],
+      "hints": [
+        "Brand is the 3rd column of Products!$A$2:$D$8.",
+        "=IFERROR(VLOOKUP(A2, Products!$A$2:$D$8, 3, FALSE), \"Not found\"), then copy it down."
+      ],
+      "highlight": [
+        "A2:A9"
+      ],
+      "answer": "=IFERROR(VLOOKUP(A2, Products!$A$2:$D$8, 3, FALSE), \"Not found\") in D2, then copy down to D9"
+    },
+    {
+      "prompt": "In E2:E9, look up each price with INDEX and MATCH, showing 0 for SKUs that don't exist.",
+      "sheet": "Sales",
+      "cell": "E2:E9",
+      "expected": [
+        120,
+        115,
+        190,
+        70,
+        0,
+        100,
+        150,
+        115
+      ],
+      "function": [
+        "INDEX",
+        "MATCH"
+      ],
+      "hints": [
+        "INDEX on Products!$D$2:$D$8, MATCH on Products!$A$2:$A$8, all inside IFERROR(..., 0).",
+        "=IFERROR(INDEX(Products!$D$2:$D$8, MATCH(A2, Products!$A$2:$A$8, 0)), 0), then copy it down."
+      ],
+      "highlight": [
+        "A2:A9"
+      ],
+      "answer": "=IFERROR(INDEX(Products!$D$2:$D$8, MATCH(A2, Products!$A$2:$A$8, 0)), 0) in E2, then copy down to E9"
+    },
+    {
+      "prompt": "In F2:F9, work out the revenue: qty × price.",
+      "sheet": "Sales",
+      "cell": "F2:F9",
+      "expected": [
+        240,
+        115,
+        190,
+        210,
+        0,
+        200,
+        150,
+        230
+      ],
+      "must_be_formula": true,
+      "hints": [
+        "=B2*E2",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "B2:E9"
+      ],
+      "answer": "=B2*E2 in F2, then copy down to F9"
+    },
+    {
+      "prompt": "In G2:G9, find each sale's discount tier from the Discounts sheet, based on its revenue: the matching tier or the next smaller one.",
+      "sheet": "Sales",
+      "cell": "G2:G9",
+      "expected": [
+        0.05,
+        0,
+        0.05,
+        0.05,
+        0,
+        0.05,
+        0.05,
+        0.05
+      ],
+      "function": "XLOOKUP",
+      "hints": [
+        "XLOOKUP with match_mode -1: skip if_not_found with an empty comma.",
+        "=XLOOKUP(F2, Discounts!$A$2:$A$4, Discounts!$B$2:$B$4, , -1), then copy it down."
+      ],
+      "highlight": [
+        "F2:F9"
+      ],
+      "answer": "=XLOOKUP(F2, Discounts!$A$2:$A$4, Discounts!$B$2:$B$4, , -1) in G2, then copy down to G9"
+    },
+    {
+      "prompt": "In B11, add up the Nike revenue, using the brands you looked up.",
+      "sheet": "Sales",
+      "cell": "B11",
+      "expected": 345,
+      "function": "SUMIF",
+      "hints": [
+        "SUMIF: check the brands in D2:D9, add up the revenue in F2:F9.",
+        "=SUMIF(D2:D9, \"Nike\", F2:F9)"
+      ],
+      "highlight": [
+        "D2:F9"
+      ],
+      "answer": "=SUMIF(D2:D9, \"Nike\", F2:F9)"
+    },
+    {
+      "prompt": "Last one: in B12, look up the price of Samba OG straight from the Products sheet, by its name.",
+      "sheet": "Sales",
+      "cell": "B12",
+      "expected": 100,
+      "function": "XLOOKUP",
+      "hints": [
+        "Search the shoe names on Products, bring back the prices.",
+        "=XLOOKUP(\"Samba OG\", Products!$B$2:$B$8, Products!$D$2:$D$8)"
+      ],
+      "highlight": [
+        "B12"
+      ],
+      "answer": "=XLOOKUP(\"Samba OG\", Products!$B$2:$B$8, Products!$D$2:$D$8)"
+    }
+  ],
+  "recap": "Level 6 done! You can look things up with VLOOKUP, XLOOKUP and INDEX/MATCH, handle missing matches, find tiers, do two-way lookups, and reach across sheets. Next up: dynamic arrays."
+}

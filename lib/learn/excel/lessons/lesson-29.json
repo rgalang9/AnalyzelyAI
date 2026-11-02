@@ -1,0 +1,171 @@
+{
+  "id": "xl-29",
+  "level": 5,
+  "title": "Nested IF, IFS and SWITCH",
+  "explanation": "IF chooses between **2** answers. Letter grades need more: A for 90+, B for 80+, C for 70+, and F below that. This lesson shows 3 ways to choose between several answers.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Grades",
+        "header": true,
+        "column_widths": [
+          90,
+          70,
+          80,
+          100,
+          100,
+          110
+        ],
+        "rows": [
+          [
+            "Student",
+            "Score",
+            "Section",
+            "Grade (IF)",
+            "Grade (IFS)",
+            "Section name"
+          ],
+          [
+            "Maya",
+            92,
+            "M",
+            null,
+            null,
+            null
+          ],
+          [
+            "Leo",
+            85,
+            "A",
+            null,
+            null,
+            null
+          ],
+          [
+            "Sam",
+            71,
+            "E",
+            null,
+            null,
+            null
+          ],
+          [
+            "Ava",
+            64,
+            "M",
+            null,
+            null,
+            null
+          ],
+          [
+            "Noah",
+            88,
+            "A",
+            null,
+            null,
+            null
+          ],
+          [
+            "Zoe",
+            79,
+            "E",
+            null,
+            null,
+            null
+          ],
+          [
+            "Ben",
+            95,
+            "M",
+            null,
+            null,
+            null
+          ],
+          [
+            "Chloe",
+            58,
+            "A",
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "In D2, give Maya a letter grade by putting IFs inside each other: =IF(B2>=90, \"A\", IF(B2>=80, \"B\", IF(B2>=70, \"C\", \"F\"))). Then copy it down to D9.",
+      "teach": "A **nested IF** puts another IF in the \"if false\" part. Excel checks the tests **in order** and stops at the first TRUE one, so start with the highest grade. Count your closing brackets: one per IF.",
+      "cell": "D2:D9",
+      "expected": [
+        "A",
+        "B",
+        "C",
+        "F",
+        "B",
+        "C",
+        "A",
+        "F"
+      ],
+      "function": "IF",
+      "hints": [
+        "Each new IF goes where the previous one's \"if false\" would go. You need 3 closing brackets at the end.",
+        "=IF(B2>=90, \"A\", IF(B2>=80, \"B\", IF(B2>=70, \"C\", \"F\")))"
+      ],
+      "highlight": [
+        "B2:B9"
+      ],
+      "answer": "=IF(B2>=90, \"A\", IF(B2>=80, \"B\", IF(B2>=70, \"C\", \"F\"))) in D2, then copy down to D9"
+    },
+    {
+      "prompt": "Nested IFs get messy. In E2, do the same with IFS: =IFS(B2>=90, \"A\", B2>=80, \"B\", B2>=70, \"C\", TRUE, \"F\"). Then copy it down to E9.",
+      "teach": "**IFS(test1, answer1, test2, answer2, ...)** lists test-and-answer pairs, checked in order. There's no \"otherwise\" part, so the last test is just **TRUE**, which always matches: it catches everything left over.",
+      "cell": "E2:E9",
+      "expected": [
+        "A",
+        "B",
+        "C",
+        "F",
+        "B",
+        "C",
+        "A",
+        "F"
+      ],
+      "function": "IFS",
+      "hints": [
+        "Pairs of test, answer. End with TRUE, \"F\".",
+        "=IFS(B2>=90, \"A\", B2>=80, \"B\", B2>=70, \"C\", TRUE, \"F\")"
+      ],
+      "highlight": [
+        "B2:B9"
+      ],
+      "answer": "=IFS(B2>=90, \"A\", B2>=80, \"B\", B2>=70, \"C\", TRUE, \"F\") in E2, then copy down to E9"
+    },
+    {
+      "prompt": "Last one: the section codes M, A and E mean Morning, Afternoon and Evening. In F2, use SWITCH to turn the code into its name, then copy it down to F9.",
+      "teach": "**SWITCH(value, match1, result1, match2, result2, ...)** compares one value against a list of exact matches. It's tidier than IFS when you're matching codes rather than ranges of numbers.",
+      "cell": "F2:F9",
+      "expected": [
+        "Morning",
+        "Afternoon",
+        "Evening",
+        "Morning",
+        "Afternoon",
+        "Evening",
+        "Morning",
+        "Afternoon"
+      ],
+      "function": "SWITCH",
+      "hints": [
+        "=SWITCH(C2, \"M\", \"Morning\", \"A\", \"Afternoon\", \"E\", \"Evening\")",
+        "Then copy it down."
+      ],
+      "highlight": [
+        "C2:C9"
+      ],
+      "answer": "=SWITCH(C2, \"M\", \"Morning\", \"A\", \"Afternoon\", \"E\", \"Evening\") in F2, then copy down to F9"
+    }
+  ],
+  "recap": "Nested IFs and IFS check tests in order and stop at the first TRUE, so start with the highest. IFS ends with TRUE as a catch-all. SWITCH matches exact values like codes."
+}

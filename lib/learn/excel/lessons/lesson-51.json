@@ -1,0 +1,349 @@
+{
+  "id": "xl-51",
+  "level": 8,
+  "title": "Slicers",
+  "explanation": "Managers love **slicers**: big filter buttons on a pivot table. Untick a value, and the whole summary updates to leave it out. They make one pivot answer lots of different questions without rebuilding it.",
+  "workbook": {
+    "sheets": [
+      {
+        "name": "Box office",
+        "header": true,
+        "column_widths": [
+          140,
+          90,
+          60,
+          110,
+          60,
+          90,
+          100,
+          30,
+          210,
+          90
+        ],
+        "rows": [
+          [
+            "Movie",
+            "Genre",
+            "Month",
+            "Release date",
+            "Rating",
+            "Gross ($M)",
+            "Budget ($M)",
+            null,
+            "Question",
+            "Answer"
+          ],
+          [
+            "Star Harbor",
+            "Sci-Fi",
+            "Jan",
+            "2026-01-09",
+            "PG-13",
+            182,
+            150,
+            null,
+            "Top PG-13 genre",
+            null
+          ],
+          [
+            "Laugh Track",
+            "Comedy",
+            "Jan",
+            "2026-01-23",
+            "PG-13",
+            64,
+            30,
+            null,
+            "PG-13 Action gross",
+            null
+          ],
+          [
+            "The Quiet Field",
+            "Drama",
+            "Feb",
+            "2026-02-06",
+            "R",
+            38,
+            20,
+            null,
+            "Best month for Horror + Comedy",
+            null
+          ],
+          [
+            "Night Shift",
+            "Horror",
+            "Feb",
+            "2026-02-13",
+            "R",
+            71,
+            15,
+            null,
+            null,
+            null
+          ],
+          [
+            "Paper Dragons",
+            "Animation",
+            "Feb",
+            "2026-02-27",
+            "PG",
+            145,
+            110,
+            null,
+            null,
+            null
+          ],
+          [
+            "Redline",
+            "Action",
+            "Mar",
+            "2026-03-06",
+            "PG-13",
+            210,
+            180,
+            null,
+            null,
+            null
+          ],
+          [
+            "Second Chances",
+            "Drama",
+            "Mar",
+            "2026-03-20",
+            "PG-13",
+            45,
+            25,
+            null,
+            null,
+            null
+          ],
+          [
+            "Moon Bakery",
+            "Animation",
+            "Mar",
+            "2026-03-27",
+            "PG",
+            120,
+            95,
+            null,
+            null,
+            null
+          ],
+          [
+            "Hollow Pines",
+            "Horror",
+            "Apr",
+            "2026-04-03",
+            "R",
+            58,
+            12,
+            null,
+            null,
+            null
+          ],
+          [
+            "Office Party",
+            "Comedy",
+            "Apr",
+            "2026-04-17",
+            "R",
+            52,
+            28,
+            null,
+            null,
+            null
+          ],
+          [
+            "Iron Coast",
+            "Action",
+            "Apr",
+            "2026-04-24",
+            "PG-13",
+            165,
+            160,
+            null,
+            null,
+            null
+          ],
+          [
+            "Signal Lost",
+            "Sci-Fi",
+            "May",
+            "2026-05-08",
+            "PG-13",
+            98,
+            85,
+            null,
+            null,
+            null
+          ],
+          [
+            "Little Giants",
+            "Animation",
+            "May",
+            "2026-05-22",
+            "PG",
+            175,
+            120,
+            null,
+            null,
+            null
+          ],
+          [
+            "Courtroom 9",
+            "Drama",
+            "May",
+            "2026-05-29",
+            "PG-13",
+            33,
+            18,
+            null,
+            null,
+            null
+          ],
+          [
+            "Summer Heist",
+            "Action",
+            "Jun",
+            "2026-06-05",
+            "PG-13",
+            230,
+            200,
+            null,
+            null,
+            null
+          ],
+          [
+            "Beach Week",
+            "Comedy",
+            "Jun",
+            "2026-06-12",
+            "PG-13",
+            88,
+            35,
+            null,
+            null,
+            null
+          ],
+          [
+            "The Attic",
+            "Horror",
+            "Jun",
+            "2026-06-19",
+            "R",
+            66,
+            10,
+            null,
+            null,
+            null
+          ],
+          [
+            "Orbit Kids",
+            "Animation",
+            "Jun",
+            "2026-06-26",
+            "PG",
+            132,
+            100,
+            null,
+            null,
+            null
+          ]
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "prompt": "Build a pivot of total gross by genre. Click any cell inside the data, open the **Insert** tab at the top of the toolbar, and click **Pivot table**. The Insights panel opens on the right. Rows: Genre, Values: Gross ($M), Summarize by: Sum.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Gross ($M)",
+        "agg": "sum"
+      },
+      "hints": [
+        "Insert → Pivot table, then the 3 dropdowns.",
+        "Rows: Genre, Values: Gross ($M), Sum."
+      ],
+      "answer": "Rows: Genre, Values: Gross ($M), Sum"
+    },
+    {
+      "prompt": "Add a slicer for Rating, and show only PG-13 movies: choose Rating from **Add a slicer…**, then untick PG and R.",
+      "teach": "A **slicer** shows a tick box for every value of a field. Everything starts ticked. Untick the values you want to leave out, and the pivot updates instantly.",
+      "pivot": {
+        "rows": "Genre",
+        "values": "Gross ($M)",
+        "agg": "sum",
+        "slicers": {
+          "Rating": [
+            "PG-13"
+          ]
+        }
+      },
+      "hints": [
+        "Use the Add a slicer… dropdown and pick Rating.",
+        "Untick PG and R, so only PG-13 stays ticked."
+      ],
+      "answer": "Slicer on Rating with only PG-13 ticked"
+    },
+    {
+      "prompt": "Among PG-13 movies, which genre made the most? Type it into J2.",
+      "cell": "J2",
+      "expected": "Action",
+      "hints": [
+        "Read the biggest number in the filtered pivot.",
+        "Action again, with 605."
+      ],
+      "highlight": [
+        "J2"
+      ],
+      "answer": "Action"
+    },
+    {
+      "prompt": "What's the total gross of PG-13 Action movies? Type the number into J3.",
+      "cell": "J3",
+      "expected": 605,
+      "hints": [
+        "It's Action's number in the filtered pivot.",
+        "605"
+      ],
+      "highlight": [
+        "J3"
+      ],
+      "answer": "605"
+    },
+    {
+      "prompt": "Remove the Rating slicer. Then change Rows to Month, and add a Genre slicer showing only Horror and Comedy.",
+      "pivot": {
+        "rows": "Month",
+        "values": "Gross ($M)",
+        "agg": "sum",
+        "slicers": {
+          "Genre": [
+            "Horror",
+            "Comedy"
+          ]
+        }
+      },
+      "hints": [
+        "Click Remove on the Rating slicer, change Rows to Month, then add a slicer for Genre.",
+        "In the Genre slicer, keep only Horror and Comedy ticked."
+      ],
+      "answer": "Rows: Month, Gross Sum, slicer on Genre with only Horror and Comedy"
+    },
+    {
+      "prompt": "Last one: which month was best for Horror and Comedy together? Type its 3-letter name into J4.",
+      "cell": "J4",
+      "expected": "Jun",
+      "hints": [
+        "Read the biggest monthly total.",
+        "June: Beach Week (88) + The Attic (66)."
+      ],
+      "highlight": [
+        "J4"
+      ],
+      "answer": "Jun"
+    }
+  ],
+  "recap": "Slicers are tick-box filters on a pivot. Untick values to leave them out, and the summary updates instantly, so one pivot can answer many questions."
+}

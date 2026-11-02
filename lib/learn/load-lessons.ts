@@ -7,9 +7,11 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import {
+  ExcelLessonSchema,
   LessonSchema,
   NotebookLessonSchema,
   PythonLessonSchema,
+  type ExcelLesson,
   type Lesson,
   type LessonSummary,
   type NotebookLesson,
@@ -22,16 +24,19 @@ const learnDir = (language: string) => path.join(process.cwd(), "lib", "learn", 
 // "lesson-03.json" → 3 (files without a number go last)
 const lessonNumber = (file: string) => Number(file.match(/\d+/)?.[0] ?? Infinity);
 
-// Reads every lesson file in a language's lessons folder and checks it against `schema`
-function readLessons<T>(language: string, schema: z.ZodType<T>): T[] {
+// Reads every lesson file in a language's lessons folder and checks it against `schema`.
+// `skipEmpty`: empty files are lessons not written yet, so they're left out instead of breaking the build.
+function readLessons<T>(language: string, schema: z.ZodType<T>, { skipEmpty = false } = {}): T[] {
   const dir = path.join(learnDir(language), "lessons");
   if (!existsSync(dir)) return [];
   const files = readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .sort((a, b) => lessonNumber(a) - lessonNumber(b) || a.localeCompare(b));
 
-  return files.map((file) => {
-    const parsed = schema.safeParse(JSON.parse(readFileSync(path.join(dir, file), "utf8")));
+  return files.flatMap((file) => {
+    const text = readFileSync(path.join(dir, file), "utf8");
+    if (skipEmpty && !text.trim()) return [];
+    const parsed = schema.safeParse(JSON.parse(text));
     if (!parsed.success) {
       throw new Error(`Lesson file ${language}/lessons/${file} doesn't match the lesson format: ${parsed.error.message}`);
     }
@@ -41,6 +46,11 @@ function readLessons<T>(language: string, schema: z.ZodType<T>): T[] {
 
 export function getLessons(language: string): Lesson[] {
   return readLessons(language, LessonSchema);
+}
+
+// Excel lessons (lib/learn/excel/lessons/)
+export function getExcelLessons(): ExcelLesson[] {
+  return readLessons("excel", ExcelLessonSchema, { skipEmpty: true });
 }
 
 // One Python lesson file. A file with a mistake doesn't stop the course: it gets `problem`
@@ -112,6 +122,7 @@ export function getLessonSummaries(language: string): LessonSummary[] {
   if (language === "python") {
     return (PYTHON_VIEW === "notebook" ? getNotebookLessons() : getPythonLessons()).map(pythonSummary);
   }
+  if (language === "excel") return summarize(getExcelLessons());
   return summarize(getLessons(language));
 }
 
