@@ -11,7 +11,7 @@ export const LEARN_LANGUAGES: LearnLanguage[] = [
   { slug: "sql", name: "SQL", released: true },
   { slug: "python", name: "Python", released: true },
   { slug: "excel", name: "Excel", released: true }, // the Excel released switch
-  { slug: "r", name: "R", released: false },
+  { slug: "r", name: "R", released: true },
 ];
 
 // Preview switch: languages listed in NEXT_PUBLIC_LEARN_PREVIEW (in .env.local, e.g. "python")
