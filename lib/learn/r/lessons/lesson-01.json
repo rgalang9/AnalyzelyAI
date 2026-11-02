@@ -1,0 +1,109 @@
+{
+  "id": "r-01",
+  "level": 1,
+  "title": "Vectors: lists of values",
+  "explanation": "Data is never just one number. In R, a list of values is called a **vector**, and almost everything in R works on whole vectors at once. You make one with `c()`, which stands for **combine**.",
+  "datasets": [],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "`c()` combines values into one vector. Every value in a vector must be the same type: all numbers or all text.",
+      "prompt": "Make a vector called scores with the numbers 82, 74, 91 and 65: scores <- c(82, 74, 91, 65).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "scores",
+        "expected": [
+          82,
+          74,
+          91,
+          65
+        ]
+      },
+      "hints": [
+        "Put the numbers inside c( ), separated by commas.",
+        "scores <- c(82, 74, 91, 65)"
+      ],
+      "answer": "scores <- c(82, 74, 91, 65)"
+    },
+    {
+      "teach": "Functions like **mean()**, **sum()**, **max()**, **min()** and **length()** work on a whole vector and give back one answer.",
+      "prompt": "Find the average score with mean(), and store it in avg.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg",
+        "expected": 78
+      },
+      "hints": [
+        "mean() takes the whole vector.",
+        "avg <- mean(scores)"
+      ],
+      "answer": "avg <- mean(scores)"
+    },
+    {
+      "prompt": "Store the highest score in top, using max().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "top",
+        "expected": 91
+      },
+      "hints": [
+        "max() works like mean().",
+        "top <- max(scores)"
+      ],
+      "answer": "top <- max(scores)"
+    },
+    {
+      "prompt": "Store how many scores there are in n, using length().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n",
+        "expected": 4
+      },
+      "hints": [
+        "length() counts the values.",
+        "n <- length(scores)"
+      ],
+      "answer": "n <- length(scores)"
+    },
+    {
+      "teach": "When you do maths with a vector, R does it to **every value**: `scores + 5` gives back a new vector with 5 added to each. This is called **vectorization**, and it's why R is great for data.",
+      "prompt": "Maths works on every value at once. Add 5 bonus points to every score, and store the result in curved.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "curved",
+        "expected": [
+          87,
+          79,
+          96,
+          70
+        ]
+      },
+      "hints": [
+        "No loop needed: scores + 5 adds 5 to each one.",
+        "curved <- scores + 5"
+      ],
+      "answer": "curved <- scores + 5"
+    },
+    {
+      "teach": "To get one value, put its **position** in square brackets: `scores[3]`. Unlike Python, R starts counting at **1**, so `scores[1]` is the first value.",
+      "prompt": "Last one: pick out the 3rd score with square brackets, and store it in third.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "third",
+        "expected": 91
+      },
+      "hints": [
+        "Positions go in square brackets after the name.",
+        "third <- scores[3]"
+      ],
+      "answer": "third <- scores[3]"
+    }
+  ],
+  "recap": "c() combines values into a vector. Functions like mean(), sum(), max() and length() summarise a vector, maths works on every value at once, and [ ] picks values by position, starting at 1."
+}

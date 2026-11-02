@@ -1,0 +1,13 @@
+order_id,drink,size,price,barista
+1,Latte,Large,5.75,Maya
+2,Mocha,Small,4.5,Leo
+3,Latte,Small,4.75,Leo
+4,Cold brew,Large,5.25,Maya
+5,Latte,Large,5.75,Sam
+6,Tea,Small,3.0,Maya
+7,Mocha,Large,5.5,Sam
+8,Latte,Small,4.75,Maya
+9,Cold brew,Small,4.25,Leo
+10,Tea,Large,3.5,Sam
+11,Latte,Large,5.75,Leo
+12,Mocha,Small,4.5,Maya

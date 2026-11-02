@@ -1,0 +1,68 @@
+{
+  "id": "r-36",
+  "level": 6,
+  "title": "Review: The box office charts",
+  "explanation": "**Level 6 review!** The studio wants 3 charts for its board deck, using `box_office`. Each should be clear enough to understand without explanation. There's nothing new here, just everything from Level 6.",
+  "datasets": [
+    "box_office"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Chart 1: total gross by genre, sorted from smallest to largest, as columns, with the title \"Gross by genre\".",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "reorder(genre, total)",
+          "y": "total"
+        },
+        "title": "Gross by genre"
+      },
+      "hints": [
+        "Summarise, pipe into ggplot, reorder, geom_col, labs.",
+        "... |> ggplot(aes(x = reorder(genre, total), y = total)) + geom_col() + labs(title = \"Gross by genre\")"
+      ],
+      "answer": "box_office |> group_by(genre) |> summarize(total = sum(gross)) |> ggplot(aes(x = reorder(genre, total), y = total)) + geom_col() + labs(title = \"Gross by genre\")"
+    },
+    {
+      "prompt": "Chart 2: a scatter of budget (x) vs gross (y), coloured by rating, with a title \"Budget vs gross\".",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "budget",
+          "y": "gross",
+          "colour": "rating"
+        },
+        "title": "Budget vs gross"
+      },
+      "hints": [
+        "color = rating inside aes().",
+        "ggplot(box_office, aes(x = budget, y = gross, color = rating)) + geom_point() + labs(title = \"Budget vs gross\")"
+      ],
+      "answer": "ggplot(box_office, aes(x = budget, y = gross, color = rating)) + geom_point() + labs(title = \"Budget vs gross\")"
+    },
+    {
+      "prompt": "Last one, chart 3: a boxplot of gross (y) by rating (x), titled \"Gross by rating\".",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_boxplot",
+        "aes": {
+          "x": "rating",
+          "y": "gross"
+        },
+        "title": "Gross by rating"
+      },
+      "hints": [
+        "Category on x, gross on y.",
+        "ggplot(box_office, aes(x = rating, y = gross)) + geom_boxplot() + labs(title = \"Gross by rating\")"
+      ],
+      "answer": "ggplot(box_office, aes(x = rating, y = gross)) + geom_boxplot() + labs(title = \"Gross by rating\")"
+    }
+  ],
+  "recap": "Level 6 done! You can build bar, column, line, scatter, histogram and box charts, colour them by group, add trend lines, split them into facets, and finish them with titles, labels and themes. Next up: statistics."
+}

@@ -1,0 +1,99 @@
+{
+  "id": "r-05",
+  "level": 1,
+  "title": "Review: The Sneaker Store",
+  "explanation": "**Level 1 review!** A sneaker store's data is loaded as `sneakers`: each row is one shoe, with its name, brand, category, release year, price and stock. There's nothing new here, just everything from Level 1: variables, vectors, data frames, $, summary functions and a chart.",
+  "datasets": [
+    "sneakers"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Store the number of shoes (rows) in n_shoes.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_shoes",
+        "expected": 12
+      },
+      "hints": [
+        "nrow() counts rows.",
+        "n_shoes <- nrow(sneakers)"
+      ],
+      "answer": "n_shoes <- nrow(sneakers)"
+    },
+    {
+      "prompt": "Store the average price in avg_price.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg_price",
+        "expected": 123.75
+      },
+      "hints": [
+        "mean() on the price column.",
+        "avg_price <- mean(sneakers$price)"
+      ],
+      "answer": "avg_price <- mean(sneakers$price)"
+    },
+    {
+      "prompt": "Store the most expensive price in top_price.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "top_price",
+        "expected": 190
+      },
+      "hints": [
+        "max() on the price column.",
+        "top_price <- max(sneakers$price)"
+      ],
+      "answer": "top_price <- max(sneakers$price)"
+    },
+    {
+      "prompt": "Store the total number of shoes in stock in total_stock.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "total_stock",
+        "expected": 320
+      },
+      "hints": [
+        "sum() on the stock column.",
+        "total_stock <- sum(sneakers$stock)"
+      ],
+      "answer": "total_stock <- sum(sneakers$stock)"
+    },
+    {
+      "prompt": "Store how many shoes cost more than $120 in n_pricey.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_pricey",
+        "expected": 5
+      },
+      "hints": [
+        "Compare with >, then sum() the TRUEs.",
+        "n_pricey <- sum(sneakers$price > 120)"
+      ],
+      "answer": "n_pricey <- sum(sneakers$price > 120)"
+    },
+    {
+      "prompt": "Last one: make a bar chart counting the shoes by brand.",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_bar",
+        "aes": {
+          "x": "brand"
+        }
+      },
+      "hints": [
+        "geom_bar() counts rows for each x.",
+        "ggplot(sneakers, aes(x = brand)) + geom_bar()"
+      ],
+      "answer": "ggplot(sneakers, aes(x = brand)) + geom_bar()"
+    }
+  ],
+  "recap": "Level 1 done! You can store values, work with vectors and data frames, summarise columns, handle NA, and make your first charts. Next up: dplyr, the tidyverse's tool for working with tables."
+}

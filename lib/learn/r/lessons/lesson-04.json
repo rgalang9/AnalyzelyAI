@@ -1,0 +1,102 @@
+{
+  "id": "r-04",
+  "level": 1,
+  "title": "Types and missing values",
+  "explanation": "Every value in R has a **type**: numbers are **numeric**, text is **character**, and TRUE/FALSE is **logical**. Real data also has gaps. R marks a missing value as **NA** (not available), and NA changes how functions behave. Two games in the `games` table have no rating.",
+  "datasets": [
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**class()** tells you the type. Columns of text are \"character\", and columns of numbers are \"numeric\" (or \"integer\" for whole numbers).",
+      "prompt": "Check the type of the title column with class(), and store it in col_type.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "col_type",
+        "expected": "character"
+      },
+      "hints": [
+        "class() tells you a value's type.",
+        "col_type <- class(games$title)"
+      ],
+      "answer": "col_type <- class(games$title)"
+    },
+    {
+      "teach": "`==` compares, and gives back **TRUE** or **FALSE** for every value. A single `=` doesn't compare.",
+      "prompt": "Make a TRUE/FALSE vector of which prices are 0 (free games): free <- games$price == 0.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "free",
+        "expected": [
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true
+        ]
+      },
+      "hints": [
+        "Two equals signs compare: ==",
+        "free <- games$price == 0"
+      ],
+      "answer": "free <- games$price == 0"
+    },
+    {
+      "prompt": "Count the free games: sum() counts TRUEs, because TRUE counts as 1. Store it in n_free.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_free",
+        "expected": 3
+      },
+      "hints": [
+        "sum() of a TRUE/FALSE vector counts the TRUEs.",
+        "n_free <- sum(free)"
+      ],
+      "answer": "n_free <- sum(free)"
+    },
+    {
+      "teach": "If any value is **NA**, the mean is NA too, because R can't know the missing values. R does this on purpose, so you notice the gaps.",
+      "prompt": "Try the average rating: run mean(games$rating) and see what happens.",
+      "starter_code": "",
+      "check": {
+        "type": "output",
+        "expected": "[1] NA"
+      },
+      "hints": [
+        "Just mean(games$rating).",
+        "It gives NA, because 2 ratings are missing. That's expected!"
+      ],
+      "answer": "mean(games$rating)"
+    },
+    {
+      "teach": "**na.rm = TRUE** means \"NA remove: skip the missing values\". Most summary functions accept it: sum(), max(), min() and more.",
+      "prompt": "Last one: tell mean() to skip the missing values with na.rm = TRUE, and store the result in avg_rating.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg_rating",
+        "expected": 9.076923
+      },
+      "hints": [
+        "Add na.rm = TRUE inside mean(), after a comma.",
+        "avg_rating <- mean(games$rating, na.rm = TRUE)"
+      ],
+      "answer": "avg_rating <- mean(games$rating, na.rm = TRUE)"
+    }
+  ],
+  "recap": "Values are numeric, character or logical, and class() tells you which. == compares and gives TRUE/FALSE, and sum() counts TRUEs. NA marks missing data, and na.rm = TRUE skips it."
+}

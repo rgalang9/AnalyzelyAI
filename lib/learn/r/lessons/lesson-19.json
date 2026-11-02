@@ -1,0 +1,333 @@
+{
+  "id": "r-19",
+  "level": 4,
+  "title": "Cleaning text with stringr",
+  "explanation": "These club sign-ups were typed by hand: extra spaces, random capitals, and people who signed up twice. The **stringr** package has functions for fixing text, and they all start with **str_**, so they're easy to find. Then **distinct()** removes duplicate rows.",
+  "datasets": [
+    "club_signups"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**str_trim()** removes spaces at the start and end of text. (**str_squish()** also collapses double spaces in the middle.) Writing the result back into the same column, `name = str_trim(name)`, replaces the messy version.",
+      "prompt": "Remove the extra spaces around the names: mutate(name = str_trim(name)). Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "id",
+          "name",
+          "email",
+          "club",
+          "year",
+          "fee",
+          "signup_date"
+        ],
+        "rows": [
+          [
+            1,
+            "Maya Lee",
+            "maya@wes.edu",
+            "Chess",
+            2027,
+            "$10",
+            "2026-09-03"
+          ],
+          [
+            2,
+            "Leo Park",
+            "leo@wes.edu",
+            "chess",
+            2026,
+            "$10",
+            "2026-09-01"
+          ],
+          [
+            3,
+            "Sam Ortiz",
+            "sam@wes.edu",
+            "Robotics ",
+            2028,
+            "$25",
+            "2026-09-05"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "ava@wes.edu",
+            "Robotics",
+            2027,
+            "$25",
+            "2026-09-02"
+          ],
+          [
+            2,
+            "Leo Park",
+            "leo@wes.edu",
+            "chess",
+            2026,
+            "$10",
+            "2026-09-01"
+          ],
+          [
+            6,
+            "Noah Kim",
+            "noah@wes.edu",
+            "Debate",
+            2029,
+            "$5",
+            "2026-09-08"
+          ],
+          [
+            7,
+            "Zoe Ali",
+            "zoe@wes.edu",
+            "DEBATE",
+            2027,
+            "$5",
+            "2026-09-04"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "ava@wes.edu",
+            "Robotics",
+            2027,
+            "$25",
+            "2026-09-02"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "str_trim"
+        ]
+      },
+      "hints": [
+        "str_trim() goes inside mutate(), on the name column.",
+        "result <- club_signups |> mutate(name = str_trim(name))"
+      ],
+      "answer": "result <- club_signups |> mutate(name = str_trim(name))"
+    },
+    {
+      "teach": "**str_to_title()** Capitalises Each Word. **str_to_lower()** and **str_to_upper()** make everything lowercase or CAPITALS.",
+      "prompt": "The club names have random capitals and spaces (\"chess\", \"Robotics \", \"DEBATE\"). Building on result, fix them with str_to_title(str_trim(club)).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "id",
+          "name",
+          "email",
+          "club",
+          "year",
+          "fee",
+          "signup_date"
+        ],
+        "rows": [
+          [
+            1,
+            "Maya Lee",
+            "maya@wes.edu",
+            "Chess",
+            2027,
+            "$10",
+            "2026-09-03"
+          ],
+          [
+            2,
+            "Leo Park",
+            "leo@wes.edu",
+            "Chess",
+            2026,
+            "$10",
+            "2026-09-01"
+          ],
+          [
+            3,
+            "Sam Ortiz",
+            "sam@wes.edu",
+            "Robotics",
+            2028,
+            "$25",
+            "2026-09-05"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "ava@wes.edu",
+            "Robotics",
+            2027,
+            "$25",
+            "2026-09-02"
+          ],
+          [
+            2,
+            "Leo Park",
+            "leo@wes.edu",
+            "Chess",
+            2026,
+            "$10",
+            "2026-09-01"
+          ],
+          [
+            6,
+            "Noah Kim",
+            "noah@wes.edu",
+            "Debate",
+            2029,
+            "$5",
+            "2026-09-08"
+          ],
+          [
+            7,
+            "Zoe Ali",
+            "zoe@wes.edu",
+            "Debate",
+            2027,
+            "$5",
+            "2026-09-04"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "ava@wes.edu",
+            "Robotics",
+            2027,
+            "$25",
+            "2026-09-02"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "str_to_title"
+        ]
+      },
+      "hints": [
+        "Trim first (inside), then fix the capitals (outside).",
+        "result <- result |> mutate(club = str_to_title(str_trim(club)))"
+      ],
+      "answer": "result <- result |> mutate(club = str_to_title(str_trim(club)))"
+    },
+    {
+      "teach": "**distinct()** keeps only one copy of each identical row. Clean the text first: \"chess\" and \"Chess\" wouldn't count as duplicates until they match.",
+      "prompt": "Leo and Ava each signed up twice. Remove the duplicate rows from result with distinct().",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "id",
+          "name",
+          "email",
+          "club",
+          "year",
+          "fee",
+          "signup_date"
+        ],
+        "rows": [
+          [
+            1,
+            "Maya Lee",
+            "maya@wes.edu",
+            "Chess",
+            2027,
+            "$10",
+            "2026-09-03"
+          ],
+          [
+            2,
+            "Leo Park",
+            "leo@wes.edu",
+            "Chess",
+            2026,
+            "$10",
+            "2026-09-01"
+          ],
+          [
+            3,
+            "Sam Ortiz",
+            "sam@wes.edu",
+            "Robotics",
+            2028,
+            "$25",
+            "2026-09-05"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "ava@wes.edu",
+            "Robotics",
+            2027,
+            "$25",
+            "2026-09-02"
+          ],
+          [
+            6,
+            "Noah Kim",
+            "noah@wes.edu",
+            "Debate",
+            2029,
+            "$5",
+            "2026-09-08"
+          ],
+          [
+            7,
+            "Zoe Ali",
+            "zoe@wes.edu",
+            "Debate",
+            2027,
+            "$5",
+            "2026-09-04"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "distinct"
+        ]
+      },
+      "hints": [
+        "distinct() with nothing inside keeps one copy of each row.",
+        "result <- result |> distinct()"
+      ],
+      "answer": "result <- result |> distinct()"
+    },
+    {
+      "prompt": "Last one: count the sign-ups per club in the cleaned result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "counts",
+        "columns": [
+          "club",
+          "n"
+        ],
+        "rows": [
+          [
+            "Chess",
+            2
+          ],
+          [
+            "Debate",
+            2
+          ],
+          [
+            "Robotics",
+            2
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "count"
+        ]
+      },
+      "hints": [
+        "count() from Level 3.",
+        "counts <- result |> count(club)"
+      ],
+      "answer": "counts <- result |> count(club)"
+    }
+  ],
+  "recap": "stringr's str_trim(), str_squish() and str_to_title() / lower() / upper() clean text. Clean first, then distinct() removes duplicate rows."
+}

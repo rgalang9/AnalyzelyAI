@@ -1,0 +1,93 @@
+{
+  "id": "r-12",
+  "level": 3,
+  "title": "summarize: one-row summaries",
+  "explanation": "**Welcome to Level 3: summarising!** Managers rarely want every row. They want answers like \"what's the average order?\". **summarize()** squashes a whole table into one row of summary numbers, and you name each one. This lesson uses `coffee_orders` from a campus coffee shop.",
+  "datasets": [
+    "coffee_orders"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**summarize(name = calculation)** gives back a one-row table. You choose the column name on the left of =.",
+      "prompt": "Work out the average price, in a column called avg_price: result <- coffee_orders |> summarize(avg_price = mean(price)).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "avg_price"
+        ],
+        "rows": [
+          [
+            4.770833
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "summarize"
+        ]
+      },
+      "hints": [
+        "Inside summarize(), name = calculation.",
+        "result <- coffee_orders |> summarize(avg_price = mean(price))"
+      ],
+      "answer": "result <- coffee_orders |> summarize(avg_price = mean(price))"
+    },
+    {
+      "teach": "**n()** counts the rows. It only works inside dplyr functions like summarize().",
+      "prompt": "Summarise several things at once: total revenue (sum of price) as revenue, and the number of orders as orders, using n().",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "revenue",
+          "orders"
+        ],
+        "rows": [
+          [
+            57.25,
+            12
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "summarize",
+          "n()"
+        ]
+      },
+      "hints": [
+        "Separate the summaries with a comma. n() takes no input.",
+        "result <- coffee_orders |> summarize(revenue = sum(price), orders = n())"
+      ],
+      "answer": "result <- coffee_orders |> summarize(revenue = sum(price), orders = n())"
+    },
+    {
+      "prompt": "Last one: count how many different drinks are on the menu with n_distinct(drink), in a column called drinks.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drinks"
+        ],
+        "rows": [
+          [
+            4
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "n_distinct"
+        ]
+      },
+      "hints": [
+        "n_distinct() counts the different values in a column.",
+        "result <- coffee_orders |> summarize(drinks = n_distinct(drink))"
+      ],
+      "answer": "result <- coffee_orders |> summarize(drinks = n_distinct(drink))"
+    }
+  ],
+  "recap": "summarize(name = calculation, ...) turns a table into one row of summaries. n() counts rows and n_distinct() counts different values."
+}

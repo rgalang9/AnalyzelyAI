@@ -1,0 +1,19 @@
+movie,genre,month,rating,gross,budget
+Star Harbor,Sci-Fi,Jan,PG-13,182,150
+Laugh Track,Comedy,Jan,PG-13,64,30
+The Quiet Field,Drama,Feb,R,38,20
+Night Shift,Horror,Feb,R,71,15
+Paper Dragons,Animation,Feb,PG,145,110
+Redline,Action,Mar,PG-13,210,180
+Second Chances,Drama,Mar,PG-13,45,25
+Moon Bakery,Animation,Mar,PG,120,95
+Hollow Pines,Horror,Apr,R,58,12
+Office Party,Comedy,Apr,R,52,28
+Iron Coast,Action,Apr,PG-13,165,160
+Signal Lost,Sci-Fi,May,PG-13,98,85
+Little Giants,Animation,May,PG,175,120
+Courtroom 9,Drama,May,PG-13,33,18
+Summer Heist,Action,Jun,PG-13,230,200
+Beach Week,Comedy,Jun,PG-13,88,35
+The Attic,Horror,Jun,R,66,10
+Orbit Kids,Animation,Jun,PG,132,100

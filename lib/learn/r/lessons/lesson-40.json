@@ -1,0 +1,128 @@
+{
+  "id": "r-40",
+  "level": 7,
+  "title": "Comparing groups with a t-test",
+  "explanation": "Biology sessions average 80.5 points and Economics only 66.75. But with so few sessions, could that gap just be luck? A **t-test** checks whether the difference between two group averages is bigger than you'd expect by chance. Its **p-value** answers: \"if there were really no difference, how likely is a gap this big?\" A p-value **under 0.05** is the usual bar for calling a difference **statistically significant**.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Keep just the Biology and Economics sessions, and store them in two_subjects.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "two_subjects",
+        "columns": [
+          "session_id",
+          "student",
+          "subject",
+          "minutes",
+          "score"
+        ],
+        "rows": [
+          [
+            2,
+            "Leo",
+            "Biology",
+            30,
+            74
+          ],
+          [
+            3,
+            "Maya",
+            "Biology",
+            60,
+            91
+          ],
+          [
+            6,
+            "Ava",
+            "Economics",
+            40,
+            79
+          ],
+          [
+            7,
+            "Sam",
+            "Economics",
+            35,
+            66
+          ],
+          [
+            8,
+            "Maya",
+            "Economics",
+            25,
+            70
+          ],
+          [
+            10,
+            "Leo",
+            "Economics",
+            15,
+            52
+          ],
+          [
+            11,
+            "Sam",
+            "Biology",
+            45,
+            80
+          ],
+          [
+            12,
+            "Ava",
+            "Biology",
+            30,
+            77
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "filter with %in%.",
+        "two_subjects <- study_log |> filter(subject %in% c(\"Biology\", \"Economics\"))"
+      ],
+      "answer": "two_subjects <- study_log |> filter(subject %in% c(\"Biology\", \"Economics\"))"
+    },
+    {
+      "teach": "**t.test(number ~ group, data = ...)** compares the averages of exactly 2 groups. Run `test` on its own to see the full report, including both averages.",
+      "prompt": "Run the t-test: test <- t.test(score ~ subject, data = two_subjects). Then store its p-value in p: p <- test$p.value.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "p",
+        "expected": 0.094403,
+        "must_use": [
+          "t.test"
+        ]
+      },
+      "hints": [
+        "Same ~ idea as lm(): the number on the left, the 2 groups on the right.",
+        "test <- t.test(score ~ subject, data = two_subjects), then p <- test$p.value"
+      ],
+      "answer": "test <- t.test(score ~ subject, data = two_subjects)\np <- test$p.value"
+    },
+    {
+      "teach": "Here p is about 0.09, above 0.05, so it's **not** significant: with only 4 sessions each, a 14-point gap could plausibly be chance. That doesn't prove there's **no** difference. It means this data isn't enough to be confident. More sessions would tell us more.",
+      "prompt": "Last one: is the difference significant at the usual 0.05 level? Store p < 0.05 in significant (it will be TRUE or FALSE).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "significant",
+        "expected": false
+      },
+      "hints": [
+        "A comparison gives TRUE or FALSE.",
+        "significant <- p < 0.05"
+      ],
+      "answer": "significant <- p < 0.05"
+    }
+  ],
+  "recap": "t.test(number ~ group) checks whether two group averages really differ. A p-value under 0.05 is the usual bar for significance, and small samples often aren't enough to be sure."
+}

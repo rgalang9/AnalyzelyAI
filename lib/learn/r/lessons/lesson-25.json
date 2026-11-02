@@ -1,0 +1,310 @@
+{
+  "id": "r-25",
+  "level": 5,
+  "title": "left_join: combining tables",
+  "explanation": "**Welcome to Level 5: joins!** Real data is split across tables. `games` has a **studio_id**, but the studio's name and country live in `studios`. A **join** matches rows from two tables using a shared column, called the **key**, and puts them side by side. It's the same idea as VLOOKUP in Excel or JOIN in SQL.",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**left_join(x, y, by = \"key\")** keeps **every row of x** (the table on the left of the pipe) and adds the matching columns from y. Every game has a studio here, so you still get 15 rows, now with studio_name, country and founded_year added.",
+      "prompt": "Add each game's studio details: result <- games |> left_join(studios, by = \"studio_id\").",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "game_id",
+          "title",
+          "genre",
+          "release_year",
+          "rating",
+          "price",
+          "studio_id",
+          "studio_name",
+          "country",
+          "founded_year"
+        ],
+        "rows": [
+          [
+            1,
+            "Minecraft",
+            "Sandbox",
+            2011,
+            9,
+            29.99,
+            2,
+            "Mojang",
+            "Sweden",
+            2009
+          ],
+          [
+            2,
+            "Fortnite",
+            "Shooter",
+            2017,
+            8,
+            0,
+            3,
+            "Epic Games",
+            "USA",
+            1991
+          ],
+          [
+            3,
+            "Super Mario Odyssey",
+            "Platformer",
+            2017,
+            9.7,
+            59.99,
+            1,
+            "Nintendo",
+            "Japan",
+            1889
+          ],
+          [
+            4,
+            "Mario Kart 8 Deluxe",
+            "Racing",
+            2017,
+            9.2,
+            59.99,
+            1,
+            "Nintendo",
+            "Japan",
+            1889
+          ],
+          [
+            5,
+            "Zelda: Breath of the Wild",
+            "Adventure",
+            2017,
+            9.7,
+            59.99,
+            1,
+            "Nintendo",
+            "Japan",
+            1889
+          ],
+          [
+            6,
+            "Grand Theft Auto V",
+            "Action",
+            2013,
+            9.6,
+            29.99,
+            4,
+            "Rockstar Games",
+            "USA",
+            1998
+          ],
+          [
+            7,
+            "Red Dead Redemption 2",
+            "Action",
+            2018,
+            9.7,
+            59.99,
+            4,
+            "Rockstar Games",
+            "USA",
+            1998
+          ],
+          [
+            8,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99,
+            6,
+            "FromSoftware",
+            "Japan",
+            1986
+          ],
+          [
+            9,
+            "The Witcher 3",
+            "RPG",
+            2015,
+            9.3,
+            39.99,
+            7,
+            "CD Projekt Red",
+            "Poland",
+            2002
+          ],
+          [
+            10,
+            "Stardew Valley",
+            "Simulation",
+            2016,
+            8.9,
+            14.99,
+            9,
+            "ConcernedApe",
+            "USA",
+            2012
+          ],
+          [
+            11,
+            "Among Us",
+            "Party",
+            2018,
+            8.5,
+            4.99,
+            10,
+            "Innersloth",
+            "USA",
+            2015
+          ],
+          [
+            12,
+            "League of Legends",
+            "Strategy",
+            2009,
+            7.8,
+            0,
+            8,
+            "Riot Games",
+            "USA",
+            2006
+          ],
+          [
+            13,
+            "EA Sports FC 24",
+            "Sports",
+            2023,
+            null,
+            69.99,
+            5,
+            "EA Sports",
+            "USA",
+            1991
+          ],
+          [
+            14,
+            "Animal Crossing: New Horizons",
+            "Simulation",
+            2020,
+            9,
+            59.99,
+            1,
+            "Nintendo",
+            "Japan",
+            1889
+          ],
+          [
+            15,
+            "Valorant",
+            "Shooter",
+            2020,
+            null,
+            0,
+            8,
+            "Riot Games",
+            "USA",
+            2006
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join"
+        ]
+      },
+      "hints": [
+        "by = the shared column, in quotes.",
+        "result <- games |> left_join(studios, by = \"studio_id\")"
+      ],
+      "answer": "result <- games |> left_join(studios, by = \"studio_id\")"
+    },
+    {
+      "prompt": "Last one: show just each game's title and studio name, by adding select() to the chain. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "title",
+          "studio_name"
+        ],
+        "rows": [
+          [
+            "Minecraft",
+            "Mojang"
+          ],
+          [
+            "Fortnite",
+            "Epic Games"
+          ],
+          [
+            "Super Mario Odyssey",
+            "Nintendo"
+          ],
+          [
+            "Mario Kart 8 Deluxe",
+            "Nintendo"
+          ],
+          [
+            "Zelda: Breath of the Wild",
+            "Nintendo"
+          ],
+          [
+            "Grand Theft Auto V",
+            "Rockstar Games"
+          ],
+          [
+            "Red Dead Redemption 2",
+            "Rockstar Games"
+          ],
+          [
+            "Elden Ring",
+            "FromSoftware"
+          ],
+          [
+            "The Witcher 3",
+            "CD Projekt Red"
+          ],
+          [
+            "Stardew Valley",
+            "ConcernedApe"
+          ],
+          [
+            "Among Us",
+            "Innersloth"
+          ],
+          [
+            "League of Legends",
+            "Riot Games"
+          ],
+          [
+            "EA Sports FC 24",
+            "EA Sports"
+          ],
+          [
+            "Animal Crossing: New Horizons",
+            "Nintendo"
+          ],
+          [
+            "Valorant",
+            "Riot Games"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join",
+          "select"
+        ]
+      },
+      "hints": [
+        "Pipe the join into select(title, studio_name).",
+        "result <- games |> left_join(studios, by = \"studio_id\") |> select(title, studio_name)"
+      ],
+      "answer": "result <- games |> left_join(studios, by = \"studio_id\") |> select(title, studio_name)"
+    }
+  ],
+  "recap": "left_join(x, y, by = \"key\") keeps every row of x and adds y's matching columns. Joins are how you combine tables that share a key column."
+}

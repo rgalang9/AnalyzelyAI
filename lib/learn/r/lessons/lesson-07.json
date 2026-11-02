@@ -1,0 +1,334 @@
+{
+  "id": "r-07",
+  "level": 2,
+  "title": "select: picking columns",
+  "explanation": "Real tables have lots of columns you don't need. **select()** keeps only the columns you name, in the order you name them. This lesson uses `players`, a table of gamers with their country, signup date and hours played.",
+  "datasets": [
+    "players"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "Inside dplyr functions, you write column names **without quotes** and **without** `players$`. dplyr knows they're columns of the piped table.",
+      "prompt": "Keep just the username and hours_played columns, and store the result in result: result <- players |> select(username, hours_played).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            "ShadowFox",
+            320
+          ],
+          [
+            "pixelqueen",
+            145
+          ],
+          [
+            "NoScopeNate",
+            610
+          ],
+          [
+            "luna_plays",
+            88
+          ],
+          [
+            "BlockBuilder",
+            275
+          ],
+          [
+            "speedy_g",
+            40
+          ],
+          [
+            "CaptainCrit",
+            198
+          ],
+          [
+            "mochi",
+            12
+          ],
+          [
+            "TurboTaco",
+            133
+          ],
+          [
+            "xXDragonXx",
+            502
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "select"
+        ]
+      },
+      "hints": [
+        "Column names go inside select(), separated by commas. No quotes needed.",
+        "result <- players |> select(username, hours_played)"
+      ],
+      "answer": "result <- players |> select(username, hours_played)"
+    },
+    {
+      "prompt": "Drop the player_id column instead, keeping everything else: a minus sign removes a column. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145
+          ],
+          [
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            "speedy_g",
+            "Brazil",
+            "2024-05-17",
+            40
+          ],
+          [
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ],
+          [
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ],
+          [
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "select"
+        ]
+      },
+      "hints": [
+        "Put a minus sign in front of the column name.",
+        "result <- players |> select(-player_id)"
+      ],
+      "answer": "result <- players |> select(-player_id)"
+    },
+    {
+      "teach": "`username:signup_date` means \"from username to signup_date\", like a range of cells in Excel.",
+      "prompt": "Keep the columns from username to signup_date, using a colon for a range of columns. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username",
+          "country",
+          "signup_date"
+        ],
+        "rows": [
+          [
+            "ShadowFox",
+            "USA",
+            "2021-03-14"
+          ],
+          [
+            "pixelqueen",
+            "Canada",
+            "2022-07-02"
+          ],
+          [
+            "NoScopeNate",
+            "USA",
+            "2020-11-23"
+          ],
+          [
+            "luna_plays",
+            "Japan",
+            "2023-01-09"
+          ],
+          [
+            "BlockBuilder",
+            "UK",
+            "2021-08-30"
+          ],
+          [
+            "speedy_g",
+            "Brazil",
+            "2024-05-17"
+          ],
+          [
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05"
+          ],
+          [
+            "mochi",
+            "Japan",
+            "2024-02-29"
+          ],
+          [
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21"
+          ],
+          [
+            "xXDragonXx",
+            "USA",
+            "2021-03-01"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "select"
+        ]
+      },
+      "hints": [
+        "first_column:last_column keeps everything in between.",
+        "result <- players |> select(username:signup_date)"
+      ],
+      "answer": "result <- players |> select(username:signup_date)"
+    },
+    {
+      "teach": "**rename(new_name = old_name)** changes a column's name and keeps all the columns.",
+      "prompt": "Last one: rename hours_played to hours with rename(new = old), and store the whole table in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours"
+        ],
+        "rows": [
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            2,
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145
+          ],
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            5,
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            6,
+            "speedy_g",
+            "Brazil",
+            "2024-05-17",
+            40
+          ],
+          [
+            7,
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ],
+          [
+            9,
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "rename"
+        ]
+      },
+      "hints": [
+        "The new name goes on the left of =, the old one on the right.",
+        "result <- players |> rename(hours = hours_played)"
+      ],
+      "answer": "result <- players |> rename(hours = hours_played)"
+    }
+  ],
+  "recap": "select() keeps the columns you name, a minus sign drops one, and a colon keeps a range. rename(new = old) renames a column. Column names go without quotes inside dplyr functions."
+}

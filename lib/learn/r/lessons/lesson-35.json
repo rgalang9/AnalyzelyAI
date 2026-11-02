@@ -1,0 +1,51 @@
+{
+  "id": "r-35",
+  "level": 6,
+  "title": "Facets: small multiples",
+  "explanation": "When one chart gets crowded, split it into a grid of small charts, one per group, all with the same axes. These are called **facets** or **small multiples**, and they make comparisons easy.",
+  "datasets": [
+    "study_log",
+    "subscribers"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**facet_wrap(~ column)** makes one panel per value of the column. The **~** is a tilde (top-left of most keyboards), read as \"by\".",
+      "prompt": "Plot minutes vs score, with one small chart per subject: + facet_wrap(~ subject).",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "minutes",
+          "y": "score"
+        },
+        "facets": "subject"
+      },
+      "hints": [
+        "The ~ (tilde) means \"split by\".",
+        "... + geom_point() + facet_wrap(~ subject)"
+      ],
+      "answer": "ggplot(study_log, aes(x = minutes, y = score)) + geom_point() + facet_wrap(~ subject)"
+    },
+    {
+      "prompt": "Last one: one line chart per service: ggplot(subscribers, aes(x = year, y = subscribers)) + geom_line() + facet_wrap(~ service).",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_line",
+        "aes": {
+          "x": "year",
+          "y": "subscribers"
+        },
+        "facets": "service"
+      },
+      "hints": [
+        "Same idea, with geom_line() and service.",
+        "... + geom_line() + facet_wrap(~ service)"
+      ],
+      "answer": "ggplot(subscribers, aes(x = year, y = subscribers)) + geom_line() + facet_wrap(~ service)"
+    }
+  ],
+  "recap": "facet_wrap(~ column) splits a chart into small multiples, one per group, with shared axes for easy comparison."
+}

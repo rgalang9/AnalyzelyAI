@@ -1,0 +1,535 @@
+{
+  "id": "r-26",
+  "level": 5,
+  "title": "Inner vs left joins",
+  "explanation": "What happens to rows with **no match**? That depends on the join. Two studios, Valve and Ubisoft, have no games in our table. **inner_join()** drops rows without a match, and **left_join()** keeps them, with NA in the missing columns.",
+  "datasets": [
+    "games",
+    "studios"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**inner_join()** keeps only rows that match in **both** tables. Nintendo has 4 games, so it appears 4 times: a join repeats a row once per match.",
+      "prompt": "Start from studios and inner_join games. How many rows? Store the table in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "studio_id",
+          "studio_name",
+          "country",
+          "founded_year",
+          "game_id",
+          "title",
+          "genre",
+          "release_year",
+          "rating",
+          "price"
+        ],
+        "rows": [
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            3,
+            "Super Mario Odyssey",
+            "Platformer",
+            2017,
+            9.7,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            4,
+            "Mario Kart 8 Deluxe",
+            "Racing",
+            2017,
+            9.2,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            5,
+            "Zelda: Breath of the Wild",
+            "Adventure",
+            2017,
+            9.7,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            14,
+            "Animal Crossing: New Horizons",
+            "Simulation",
+            2020,
+            9,
+            59.99
+          ],
+          [
+            2,
+            "Mojang",
+            "Sweden",
+            2009,
+            1,
+            "Minecraft",
+            "Sandbox",
+            2011,
+            9,
+            29.99
+          ],
+          [
+            3,
+            "Epic Games",
+            "USA",
+            1991,
+            2,
+            "Fortnite",
+            "Shooter",
+            2017,
+            8,
+            0
+          ],
+          [
+            4,
+            "Rockstar Games",
+            "USA",
+            1998,
+            6,
+            "Grand Theft Auto V",
+            "Action",
+            2013,
+            9.6,
+            29.99
+          ],
+          [
+            4,
+            "Rockstar Games",
+            "USA",
+            1998,
+            7,
+            "Red Dead Redemption 2",
+            "Action",
+            2018,
+            9.7,
+            59.99
+          ],
+          [
+            5,
+            "EA Sports",
+            "USA",
+            1991,
+            13,
+            "EA Sports FC 24",
+            "Sports",
+            2023,
+            null,
+            69.99
+          ],
+          [
+            6,
+            "FromSoftware",
+            "Japan",
+            1986,
+            8,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99
+          ],
+          [
+            7,
+            "CD Projekt Red",
+            "Poland",
+            2002,
+            9,
+            "The Witcher 3",
+            "RPG",
+            2015,
+            9.3,
+            39.99
+          ],
+          [
+            8,
+            "Riot Games",
+            "USA",
+            2006,
+            12,
+            "League of Legends",
+            "Strategy",
+            2009,
+            7.8,
+            0
+          ],
+          [
+            8,
+            "Riot Games",
+            "USA",
+            2006,
+            15,
+            "Valorant",
+            "Shooter",
+            2020,
+            null,
+            0
+          ],
+          [
+            9,
+            "ConcernedApe",
+            "USA",
+            2012,
+            10,
+            "Stardew Valley",
+            "Simulation",
+            2016,
+            8.9,
+            14.99
+          ],
+          [
+            10,
+            "Innersloth",
+            "USA",
+            2015,
+            11,
+            "Among Us",
+            "Party",
+            2018,
+            8.5,
+            4.99
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "inner_join"
+        ]
+      },
+      "hints": [
+        "inner_join() keeps only studios that have a game.",
+        "result <- studios |> inner_join(games, by = \"studio_id\")"
+      ],
+      "answer": "result <- studios |> inner_join(games, by = \"studio_id\")"
+    },
+    {
+      "teach": "Valve and Ubisoft now appear once each, with NA in all the game columns. That's 15 + 2 = 17 rows.",
+      "prompt": "Now use left_join instead, so every studio is kept. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "studio_id",
+          "studio_name",
+          "country",
+          "founded_year",
+          "game_id",
+          "title",
+          "genre",
+          "release_year",
+          "rating",
+          "price"
+        ],
+        "rows": [
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            3,
+            "Super Mario Odyssey",
+            "Platformer",
+            2017,
+            9.7,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            4,
+            "Mario Kart 8 Deluxe",
+            "Racing",
+            2017,
+            9.2,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            5,
+            "Zelda: Breath of the Wild",
+            "Adventure",
+            2017,
+            9.7,
+            59.99
+          ],
+          [
+            1,
+            "Nintendo",
+            "Japan",
+            1889,
+            14,
+            "Animal Crossing: New Horizons",
+            "Simulation",
+            2020,
+            9,
+            59.99
+          ],
+          [
+            2,
+            "Mojang",
+            "Sweden",
+            2009,
+            1,
+            "Minecraft",
+            "Sandbox",
+            2011,
+            9,
+            29.99
+          ],
+          [
+            3,
+            "Epic Games",
+            "USA",
+            1991,
+            2,
+            "Fortnite",
+            "Shooter",
+            2017,
+            8,
+            0
+          ],
+          [
+            4,
+            "Rockstar Games",
+            "USA",
+            1998,
+            6,
+            "Grand Theft Auto V",
+            "Action",
+            2013,
+            9.6,
+            29.99
+          ],
+          [
+            4,
+            "Rockstar Games",
+            "USA",
+            1998,
+            7,
+            "Red Dead Redemption 2",
+            "Action",
+            2018,
+            9.7,
+            59.99
+          ],
+          [
+            5,
+            "EA Sports",
+            "USA",
+            1991,
+            13,
+            "EA Sports FC 24",
+            "Sports",
+            2023,
+            null,
+            69.99
+          ],
+          [
+            6,
+            "FromSoftware",
+            "Japan",
+            1986,
+            8,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99
+          ],
+          [
+            7,
+            "CD Projekt Red",
+            "Poland",
+            2002,
+            9,
+            "The Witcher 3",
+            "RPG",
+            2015,
+            9.3,
+            39.99
+          ],
+          [
+            8,
+            "Riot Games",
+            "USA",
+            2006,
+            12,
+            "League of Legends",
+            "Strategy",
+            2009,
+            7.8,
+            0
+          ],
+          [
+            8,
+            "Riot Games",
+            "USA",
+            2006,
+            15,
+            "Valorant",
+            "Shooter",
+            2020,
+            null,
+            0
+          ],
+          [
+            9,
+            "ConcernedApe",
+            "USA",
+            2012,
+            10,
+            "Stardew Valley",
+            "Simulation",
+            2016,
+            8.9,
+            14.99
+          ],
+          [
+            10,
+            "Innersloth",
+            "USA",
+            2015,
+            11,
+            "Among Us",
+            "Party",
+            2018,
+            8.5,
+            4.99
+          ],
+          [
+            11,
+            "Valve",
+            "USA",
+            1996,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            12,
+            "Ubisoft",
+            "France",
+            1986,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join"
+        ]
+      },
+      "hints": [
+        "Swap inner_join for left_join.",
+        "result <- studios |> left_join(games, by = \"studio_id\")"
+      ],
+      "answer": "result <- studios |> left_join(games, by = \"studio_id\")"
+    },
+    {
+      "teach": "`n()` would count Valve's NA row as 1 game. `sum(!is.na(title))` counts only real titles, so Valve correctly gets 0. **!** means NOT.",
+      "prompt": "Last one: count the games for every studio, including the ones with 0. Group the left join by studio_name, and count the titles that aren't NA: summarize(games = sum(!is.na(title))).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "studio_name",
+          "games"
+        ],
+        "rows": [
+          [
+            "CD Projekt Red",
+            1
+          ],
+          [
+            "ConcernedApe",
+            1
+          ],
+          [
+            "EA Sports",
+            1
+          ],
+          [
+            "Epic Games",
+            1
+          ],
+          [
+            "FromSoftware",
+            1
+          ],
+          [
+            "Innersloth",
+            1
+          ],
+          [
+            "Mojang",
+            1
+          ],
+          [
+            "Nintendo",
+            4
+          ],
+          [
+            "Riot Games",
+            2
+          ],
+          [
+            "Rockstar Games",
+            2
+          ],
+          [
+            "Ubisoft",
+            0
+          ],
+          [
+            "Valve",
+            0
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join",
+          "is.na"
+        ]
+      },
+      "hints": [
+        "! means NOT, so !is.na(title) is TRUE when there is a title.",
+        "result <- studios |> left_join(games, by = \"studio_id\") |> group_by(studio_name) |> summarize(games = sum(!is.na(title)))"
+      ],
+      "answer": "result <- studios |> left_join(games, by = \"studio_id\") |> group_by(studio_name) |> summarize(games = sum(!is.na(title)))"
+    }
+  ],
+  "recap": "inner_join() keeps only matches, and left_join() keeps every row of the left table, with NA where nothing matched. A join repeats a row once for each match."
+}

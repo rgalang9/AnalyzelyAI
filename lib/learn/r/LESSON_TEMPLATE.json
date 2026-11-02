@@ -1,0 +1,55 @@
+{
+  "//": "R lesson format. Save each lesson as lib/learn/r/lessons/lesson-NN.json (lesson-01.json, lesson-02.json, ...); the number in the file name sets the order. Keys starting with // are comments and are ignored, so they can be left out of real lessons. All tasks share one R session, in order: what one task makes, the next can use.",
+
+  "//id": "Unique id, used in the web address: /learn/r/r-01",
+  "id": "r-01",
+  "//level": "Curriculum level",
+  "level": 1,
+  "//title": "Lesson title shown in the lesson list",
+  "title": "Filtering rows with filter()",
+  "//explanation": "Shown before the tasks; the learner presses Got it to start. Line breaks are kept.",
+  "explanation": "filter() keeps the rows that match a condition...",
+
+  "//datasets": "Optional: CSV files in lib/learn/r/datasets/, by name without .csv. Each is loaded as a data frame (a tibble, with readr::read_csv(..., trim_ws = FALSE), so spaces around values like \"Robotics \" are kept and empty cells become NA) before the lesson starts: \"sales\" becomes `sales`. The files are also in R's working folder, so read_csv(\"sales.csv\") works too. dplyr, tidyr, ggplot2, stringr, lubridate and readr are always loaded.",
+  "datasets": ["sales"],
+
+  "//starter_code": "Optional: what the script editor holds when the lesson starts",
+  "starter_code": "# Your script\nhead(sales)\n",
+
+  "tasks": [
+    {
+      "//teach": "Optional: text shown above the prompt, for introducing a new idea mid-lesson. Supports **bold**, `code`, ``` code blocks ``` and blank lines between paragraphs.",
+      "teach": "Use `==` to compare: `filter(sales, city == \"Boston\")`.",
+      "//prompt": "What to do, in plain words (supports the same formatting as teach)",
+      "prompt": "Make `result`: the sales in Boston only.",
+      "//starter_code": "Optional: replaces the script when this task starts. Leave it out to keep the learner's script as it is.",
+      "starter_code": "result <- sales |>\n  ",
+
+      "//check": "How the task is checked, by its RESULT (not by how the code is written), after every run. The task passes as soon as the result is right. One of four types:\n- value: {\"type\": \"value\", \"name\": \"total\", \"expected\": 42} (\"object\" works in place of \"name\") — an object holds this value: a number (within 0.01), text (exact), true/false, null (NA), or a list of them for a vector like [3, 5, 8].\n- data_frame: {\"type\": \"data_frame\", \"name\": \"result\", \"columns\": [...], \"rows\": [[...], ...], \"ignore_order\": false} — an object is a data frame with exactly these columns (any order) and these rows, values in the columns' order (\"object\" works in place of \"name\", and null means NA). Dates are compared as text like \"2020-11-23\" (readr reads such columns as Dates). ignore_order (default false): rows may come in any order.\n- output: {\"type\": \"output\", \"expected\": \"[1] 42\"} — what the run printed in the console (spaces at line ends and blank lines around it don't matter).\n- output_contains: {\"type\": \"output_contains\", \"expected\": \"Minecraft\"} — the run printed this text somewhere (exact, capitals included).\n- plot: {\"type\": \"plot\", \"geom\": \"geom_col\", \"aes\": {\"x\": \"city\", \"y\": \"total\", \"fill\": \"city\"}, \"facets\": \"year\", \"title\": \"Sales by city\"} — the last ggplot made: it has that geom (geom_bar, geom_histogram, geom_col, geom_point, geom_line, geom_boxplot...), and (all optional) those aes mappings (color or colour), facets (one or a list of variables), exact title, and coord_flip (true: the chart uses coord_flip(); false: it doesn't).\nEvery type can add \"must_use\": [\"filter\"] — functions (filter), argument names (na.rm, used as na.rm = TRUE) or operators (\"|>\") that must appear in the code, checked only once the result is right: \"Right result! This task wants you to use filter()...\" (or \"the na.rm argument\", going by how the answer uses it)",
+      "check": {
+        "type": "data_frame",
+        "name": "result",
+        "columns": ["item", "city", "total"],
+        "rows": [
+          ["Tea", "Boston", 120],
+          ["Cake", "Boston", 85]
+        ],
+        "ignore_order": true,
+        "must_use": ["filter"]
+      },
+      "//hints": "Help ladder: a hint after each wrong try. After the last hint, one more miss shows the answer, with a Show answer button that runs it.",
+      "hints": ["Start from sales and pipe it into filter().", "The condition is city == \"Boston\"."],
+      "//answer": "R code that solves the task. Show answer runs it (in the shared session), so later tasks still have what they need. It also runs again if R is restarted.",
+      "answer": "result <- sales |>\n  filter(city == \"Boston\")"
+    },
+    {
+      "prompt": "Draw a column chart of total by item for the Boston sales, with the title Boston sales.",
+      "check": { "type": "plot", "geom": "geom_col", "aes": { "x": "item", "y": "total" }, "title": "Boston sales" },
+      "hints": ["ggplot(result, aes(x = item, y = total)) + geom_col()", "Add + labs(title = \"Boston sales\")."],
+      "answer": "ggplot(result, aes(x = item, y = total)) +\n  geom_col() +\n  labs(title = \"Boston sales\")"
+    }
+  ],
+
+  "//recap": "Shown when the lesson is finished: \"You just learned...\" in one or two sentences",
+  "recap": "You just kept only the rows you need with filter(), and charted them with ggplot()."
+}

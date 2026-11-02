@@ -1,0 +1,414 @@
+{
+  "id": "r-10",
+  "level": 2,
+  "title": "mutate: new columns",
+  "explanation": "**mutate()** adds new columns worked out from existing ones, row by row. This lesson uses `deliveries` from a food app: each order's customer, restaurant, total, tip and delivery minutes. Some tips are missing (NA).",
+  "datasets": [
+    "deliveries"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "Inside mutate(), `new_name = calculation` makes a column. Maths with NA gives NA, so orders with no tip get NA in with_tip.",
+      "prompt": "Add a column with_tip = total + tip. Store the whole table in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes",
+          "with_tip"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32,
+            28.5
+          ],
+          [
+            2,
+            "Ben",
+            "Taco Town",
+            "2026-01-12",
+            15,
+            null,
+            18,
+            null
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45,
+            50
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50,
+            36
+          ],
+          [
+            5,
+            "Emma",
+            "Burger Barn",
+            "2026-02-20",
+            12,
+            null,
+            22,
+            null
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38,
+            65
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27,
+            21
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61,
+            22
+          ],
+          [
+            9,
+            "Isla",
+            "Pizza Palace",
+            "2026-03-28",
+            27,
+            null,
+            35,
+            null
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15,
+            11
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "mutate"
+        ]
+      },
+      "hints": [
+        "The new column's name goes on the left of =.",
+        "result <- deliveries |> mutate(with_tip = total + tip)"
+      ],
+      "answer": "result <- deliveries |> mutate(with_tip = total + tip)"
+    },
+    {
+      "prompt": "Building on result, add per_minute = total ÷ minutes, rounded to 2 decimals with round().",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes",
+          "with_tip",
+          "per_minute"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32,
+            28.5,
+            0.77
+          ],
+          [
+            2,
+            "Ben",
+            "Taco Town",
+            "2026-01-12",
+            15,
+            null,
+            18,
+            null,
+            0.83
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45,
+            50,
+            0.93
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50,
+            36,
+            0.62
+          ],
+          [
+            5,
+            "Emma",
+            "Burger Barn",
+            "2026-02-20",
+            12,
+            null,
+            22,
+            null,
+            0.55
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38,
+            65,
+            1.45
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27,
+            21,
+            0.67
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61,
+            22,
+            0.33
+          ],
+          [
+            9,
+            "Isla",
+            "Pizza Palace",
+            "2026-03-28",
+            27,
+            null,
+            35,
+            null,
+            0.77
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15,
+            11,
+            0.63
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "mutate"
+        ]
+      },
+      "hints": [
+        "Pipe result into another mutate().",
+        "result <- result |> mutate(per_minute = round(total / minutes, 2))"
+      ],
+      "answer": "result <- result |> mutate(per_minute = round(total / minutes, 2))"
+    },
+    {
+      "teach": "**if_else(condition, value_if_true, value_if_false)** works like Excel's IF, on every row at once.",
+      "prompt": "Last one: label each order \"Slow\" if it took more than 40 minutes, otherwise \"Fast\", using if_else(condition, yes, no). Start from deliveries again, and store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes",
+          "speed"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32,
+            "Fast"
+          ],
+          [
+            2,
+            "Ben",
+            "Taco Town",
+            "2026-01-12",
+            15,
+            null,
+            18,
+            "Fast"
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45,
+            "Slow"
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50,
+            "Slow"
+          ],
+          [
+            5,
+            "Emma",
+            "Burger Barn",
+            "2026-02-20",
+            12,
+            null,
+            22,
+            "Fast"
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38,
+            "Fast"
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27,
+            "Fast"
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61,
+            "Slow"
+          ],
+          [
+            9,
+            "Isla",
+            "Pizza Palace",
+            "2026-03-28",
+            27,
+            null,
+            35,
+            "Fast"
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15,
+            "Fast"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "mutate",
+          "if_else"
+        ]
+      },
+      "hints": [
+        "if_else(minutes > 40, \"Slow\", \"Fast\") inside mutate().",
+        "result <- deliveries |> mutate(speed = if_else(minutes > 40, \"Slow\", \"Fast\"))"
+      ],
+      "answer": "result <- deliveries |> mutate(speed = if_else(minutes > 40, \"Slow\", \"Fast\"))"
+    }
+  ],
+  "recap": "mutate() adds columns calculated row by row, and maths with NA gives NA. if_else() labels rows based on a condition."
+}

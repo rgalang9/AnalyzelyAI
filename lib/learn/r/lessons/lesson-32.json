@@ -1,0 +1,66 @@
+{
+  "id": "r-32",
+  "level": 6,
+  "title": "Scatter plots and trend lines",
+  "explanation": "A **scatter plot** shows whether two numbers move together, like study minutes and quiz scores. Adding a **trend line** makes the pattern clear. This uses `study_log` again.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Plot minutes on x and score on y with geom_point().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "minutes",
+          "y": "score"
+        }
+      },
+      "hints": [
+        "One dot per session.",
+        "ggplot(study_log, aes(x = minutes, y = score)) + geom_point()"
+      ],
+      "answer": "ggplot(study_log, aes(x = minutes, y = score)) + geom_point()"
+    },
+    {
+      "prompt": "Colour the dots by subject.",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "minutes",
+          "y": "score",
+          "colour": "subject"
+        }
+      },
+      "hints": [
+        "Add color = subject inside aes().",
+        "ggplot(study_log, aes(x = minutes, y = score, color = subject)) + geom_point()"
+      ],
+      "answer": "ggplot(study_log, aes(x = minutes, y = score, color = subject)) + geom_point()"
+    },
+    {
+      "teach": "**geom_smooth(method = \"lm\")** draws the best straight line through the points, with a grey band showing how uncertain it is. If color were in the main aes(), you'd get one line per subject instead. You'll meet \"lm\" again in Level 7.",
+      "prompt": "Last one: add a straight trend line through all the points: + geom_smooth(method = \"lm\"). Keep it to one line by leaving color out of the main aes().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_smooth",
+        "aes": {
+          "x": "minutes",
+          "y": "score"
+        }
+      },
+      "hints": [
+        "method = \"lm\" means a straight line (a linear model).",
+        "ggplot(study_log, aes(x = minutes, y = score)) + geom_point() + geom_smooth(method = \"lm\")"
+      ],
+      "answer": "ggplot(study_log, aes(x = minutes, y = score)) + geom_point() + geom_smooth(method = \"lm\")"
+    }
+  ],
+  "recap": "geom_point() makes scatter plots, color splits points by group, and geom_smooth(method = \"lm\") adds a straight trend line."
+}

@@ -1,0 +1,178 @@
+{
+  "id": "r-17",
+  "level": 3,
+  "title": "Review: The box office report",
+  "explanation": "**Level 3 review!** A film studio has 18 movies from the first half of the year in `box_office`: genre, release month, rating, gross and budget (in $ millions). Answer the studio head's questions with grouped summaries. There's nothing new here, just everything from Level 3.",
+  "datasets": [
+    "box_office"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "For each genre, count the movies (movies) and add up the gross (total_gross), biggest total first.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "genre",
+          "movies",
+          "total_gross"
+        ],
+        "rows": [
+          [
+            "Action",
+            3,
+            605
+          ],
+          [
+            "Animation",
+            4,
+            572
+          ],
+          [
+            "Sci-Fi",
+            2,
+            280
+          ],
+          [
+            "Comedy",
+            3,
+            204
+          ],
+          [
+            "Horror",
+            3,
+            195
+          ],
+          [
+            "Drama",
+            3,
+            116
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "summarize"
+        ]
+      },
+      "hints": [
+        "group_by, summarize with 2 summaries, then arrange(desc()).",
+        "result <- box_office |> group_by(genre) |> summarize(movies = n(), total_gross = sum(gross)) |> arrange(desc(total_gross))"
+      ],
+      "answer": "result <- box_office |> group_by(genre) |> summarize(movies = n(), total_gross = sum(gross)) |> arrange(desc(total_gross))"
+    },
+    {
+      "prompt": "Add a profit column (gross − budget), then find the average profit per rating, rounded to 1 decimal, in avg_profit.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "rating",
+          "avg_profit"
+        ],
+        "rows": [
+          [
+            "PG",
+            36.8
+          ],
+          [
+            "PG-13",
+            25.8
+          ],
+          [
+            "R",
+            40
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "mutate",
+          "group_by"
+        ]
+      },
+      "hints": [
+        "mutate first, then group_by and summarize.",
+        "result <- box_office |> mutate(profit = gross - budget) |> group_by(rating) |> summarize(avg_profit = round(mean(profit), 1))"
+      ],
+      "answer": "result <- box_office |> mutate(profit = gross - budget) |> group_by(rating) |> summarize(avg_profit = round(mean(profit), 1))"
+    },
+    {
+      "prompt": "Find the single best month by total gross: one row with month and total_gross.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "month",
+          "total_gross"
+        ],
+        "rows": [
+          [
+            "Jun",
+            516
+          ]
+        ],
+        "ignore_order": false
+      },
+      "hints": [
+        "Summarise by month, then keep the top 1 (slice_max, or arrange + head).",
+        "result <- box_office |> group_by(month) |> summarize(total_gross = sum(gross)) |> slice_max(total_gross, n = 1)"
+      ],
+      "answer": "result <- box_office |> group_by(month) |> summarize(total_gross = sum(gross)) |> slice_max(total_gross, n = 1)"
+    },
+    {
+      "prompt": "Last one: for genres with at least 3 movies, find the average gross (avg_gross, rounded to 1 decimal), highest first. Keep the movies column too.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "genre",
+          "movies",
+          "avg_gross"
+        ],
+        "rows": [
+          [
+            "Action",
+            3,
+            201.7
+          ],
+          [
+            "Animation",
+            4,
+            143
+          ],
+          [
+            "Comedy",
+            3,
+            68
+          ],
+          [
+            "Horror",
+            3,
+            65
+          ],
+          [
+            "Drama",
+            3,
+            38.7
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "filter"
+        ]
+      },
+      "hints": [
+        "summarize, then filter on movies, then arrange.",
+        "result <- box_office |> group_by(genre) |> summarize(movies = n(), avg_gross = round(mean(gross), 1)) |> filter(movies >= 3) |> arrange(desc(avg_gross))"
+      ],
+      "answer": "result <- box_office |> group_by(genre) |> summarize(movies = n(), avg_gross = round(mean(gross), 1)) |> filter(movies >= 3) |> arrange(desc(avg_gross))"
+    }
+  ],
+  "recap": "Level 3 done! You can summarise whole tables or each group, count quickly, handle NAs, filter groups after summarising, and use across() for many columns. Next up: cleaning messy data."
+}

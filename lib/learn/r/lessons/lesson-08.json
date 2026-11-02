@@ -1,0 +1,245 @@
+{
+  "id": "r-08",
+  "level": 2,
+  "title": "filter: picking rows",
+  "explanation": "**filter()** keeps only the rows that match a condition, like a filter in Excel. You write the condition with comparisons: `>`, `<`, `>=`, `<=`, `==` (equal) and `!=` (not equal).",
+  "datasets": [
+    "players"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Keep the players with more than 200 hours played. Store the result in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            5,
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "The condition goes inside filter().",
+        "result <- players |> filter(hours_played > 200)"
+      ],
+      "answer": "result <- players |> filter(hours_played > 200)"
+    },
+    {
+      "teach": "`==` compares, while `=` is for naming things inside functions. A filter with one `=` gives an error that suggests `==`.",
+      "prompt": "Keep only the players from Japan. Text goes in quotes, and \"equal\" is two equals signs.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "Use == and put Japan in quotes.",
+        "result <- players |> filter(country == \"Japan\")"
+      ],
+      "answer": "result <- players |> filter(country == \"Japan\")"
+    },
+    {
+      "teach": "A **comma** between conditions means AND. You can also write `&`. For OR, use `|`.",
+      "prompt": "Keep players from the USA with fewer than 400 hours. Separate two conditions with a comma: both must be true.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "filter(condition1, condition2) keeps rows where both are TRUE.",
+        "result <- players |> filter(country == \"USA\", hours_played < 400)"
+      ],
+      "answer": "result <- players |> filter(country == \"USA\", hours_played < 400)"
+    },
+    {
+      "prompt": "Keep players from Japan OR Brazil, using |.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            6,
+            "speedy_g",
+            "Brazil",
+            "2024-05-17",
+            40
+          ],
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "| means OR.",
+        "result <- players |> filter(country == \"Japan\" | country == \"Brazil\")"
+      ],
+      "answer": "result <- players |> filter(country == \"Japan\" | country == \"Brazil\")"
+    },
+    {
+      "teach": "**%in%** asks \"is this value in the list?\". It's a tidy replacement for lots of `|`s.",
+      "prompt": "Last one: the same, but shorter, with %in%: keep players whose country is in c(\"Japan\", \"Mexico\", \"Philippines\").",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            7,
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ],
+          [
+            9,
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter",
+          "%in%"
+        ]
+      },
+      "hints": [
+        "%in% checks against a vector of values.",
+        "result <- players |> filter(country %in% c(\"Japan\", \"Mexico\", \"Philippines\"))"
+      ],
+      "answer": "result <- players |> filter(country %in% c(\"Japan\", \"Mexico\", \"Philippines\"))"
+    }
+  ],
+  "recap": "filter() keeps rows that match a condition. == compares, commas (or &) mean AND, | means OR, and %in% matches any value in a list."
+}

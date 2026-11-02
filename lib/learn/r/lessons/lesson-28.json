@@ -1,0 +1,300 @@
+{
+  "id": "r-28",
+  "level": 5,
+  "title": "Stacking tables and different key names",
+  "explanation": "Two more situations come up all the time. First, data split by time: January–March orders in one file and April in another, with the same columns. **bind_rows()** stacks them. Second, keys with **different names** in each table. **join_by()** lets you match them anyway.",
+  "datasets": [
+    "deliveries",
+    "deliveries_april",
+    "sales",
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**bind_rows()** stacks tables on top of each other, matching columns by name. 10 + 4 = 14 rows.",
+      "prompt": "Stack deliveries and deliveries_april into one table: all_orders <- bind_rows(deliveries, deliveries_april).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "all_orders",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32
+          ],
+          [
+            2,
+            "Ben",
+            "Taco Town",
+            "2026-01-12",
+            15,
+            null,
+            18
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50
+          ],
+          [
+            5,
+            "Emma",
+            "Burger Barn",
+            "2026-02-20",
+            12,
+            null,
+            22
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61
+          ],
+          [
+            9,
+            "Isla",
+            "Pizza Palace",
+            "2026-03-28",
+            27,
+            null,
+            35
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15
+          ],
+          [
+            11,
+            "Kai",
+            "Sushi Spot",
+            "2026-04-05",
+            38,
+            6,
+            40
+          ],
+          [
+            12,
+            "Lena",
+            "Pizza Palace",
+            "2026-04-09",
+            22,
+            null,
+            29
+          ],
+          [
+            13,
+            "Ava",
+            "Taco Town",
+            "2026-04-14",
+            16.5,
+            2.5,
+            20
+          ],
+          [
+            14,
+            "Ben",
+            "Burger Barn",
+            "2026-04-20",
+            14,
+            1,
+            33
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "bind_rows"
+        ]
+      },
+      "hints": [
+        "bind_rows() takes the tables to stack.",
+        "all_orders <- bind_rows(deliveries, deliveries_april)"
+      ],
+      "answer": "all_orders <- bind_rows(deliveries, deliveries_april)"
+    },
+    {
+      "prompt": "Store the total sales per restaurant from all_orders, biggest first, in a column called total.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "restaurant",
+          "total"
+        ],
+        "rows": [
+          [
+            "Sushi Spot",
+            135
+          ],
+          [
+            "Pizza Palace",
+            104.5
+          ],
+          [
+            "Taco Town",
+            59
+          ],
+          [
+            "Burger Barn",
+            46
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "group_by, summarize, arrange.",
+        "result <- all_orders |> group_by(restaurant) |> summarize(total = sum(total)) |> arrange(desc(total))"
+      ],
+      "answer": "result <- all_orders |> group_by(restaurant) |> summarize(total = sum(total)) |> arrange(desc(total))"
+    },
+    {
+      "teach": "**join_by(left_column == right_column)** matches keys with different names. It's common when tables come from different systems.",
+      "prompt": "Last one: in sales the game key is called game_id, but imagine it was called product. Rename it, then join to games where product matches game_id: by = join_by(product == game_id). Keep sale_id, product and title, and store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "sale_id",
+          "product",
+          "title"
+        ],
+        "rows": [
+          [
+            1,
+            8,
+            "Elden Ring"
+          ],
+          [
+            2,
+            7,
+            "Red Dead Redemption 2"
+          ],
+          [
+            3,
+            14,
+            "Animal Crossing: New Horizons"
+          ],
+          [
+            4,
+            6,
+            "Grand Theft Auto V"
+          ],
+          [
+            5,
+            8,
+            "Elden Ring"
+          ],
+          [
+            6,
+            10,
+            "Stardew Valley"
+          ],
+          [
+            7,
+            1,
+            "Minecraft"
+          ],
+          [
+            8,
+            4,
+            "Mario Kart 8 Deluxe"
+          ],
+          [
+            9,
+            11,
+            "Among Us"
+          ],
+          [
+            10,
+            11,
+            "Among Us"
+          ],
+          [
+            11,
+            9,
+            "The Witcher 3"
+          ],
+          [
+            12,
+            8,
+            "Elden Ring"
+          ],
+          [
+            13,
+            13,
+            "EA Sports FC 24"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "join_by"
+        ]
+      },
+      "hints": [
+        "join_by(left_name == right_name) matches columns with different names.",
+        "result <- sales |> rename(product = game_id) |> left_join(games, by = join_by(product == game_id)) |> select(sale_id, product, title)"
+      ],
+      "answer": "result <- sales |> rename(product = game_id) |> left_join(games, by = join_by(product == game_id)) |> select(sale_id, product, title)"
+    }
+  ],
+  "recap": "bind_rows() stacks tables with the same columns. join_by(a == b) joins on keys with different names."
+}

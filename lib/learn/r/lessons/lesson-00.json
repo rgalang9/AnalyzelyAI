@@ -1,0 +1,85 @@
+{
+  "id": "r-00",
+  "level": 1,
+  "title": "Meet R",
+  "explanation": "Welcome to R! R is a programming language built for data analysis and statistics. Researchers, economists and data analysts use it every day, often in a program called **RStudio**.\n\nThis screen works like RStudio:\n- **Script (top):** where you type code.\n- **Console (bottom):** where results and messages appear.\n- **Plots (right):** where charts appear.\n\nType code in the script, then press **Run** (or Ctrl+Enter, ⌘+Enter on Mac) to run it.",
+  "datasets": [],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "R works like a calculator: `+` adds, `-` subtracts, `*` multiplies and `/` divides. In the console, `[1]` before an answer just means it's the first item. You can ignore it for now.",
+      "prompt": "Run your first line of R. Type 2 + 3 in the script and press Run. The answer appears in the console.",
+      "starter_code": "",
+      "check": {
+        "type": "output",
+        "expected": "[1] 5"
+      },
+      "hints": [
+        "Type 2 + 3, then press Run.",
+        "The console shows [1] 5. The [1] just means \"first answer\"."
+      ],
+      "answer": "2 + 3"
+    },
+    {
+      "teach": "A **variable** is a name that stores a value. In R you store things with an arrow, `<-`, read as \"gets\": `price <- 60` means \"price gets 60\". Nothing prints, because storing a value is silent.",
+      "prompt": "Store the number 60 in a variable called price. Type price <- 60 and run it.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "price",
+        "expected": 60
+      },
+      "hints": [
+        "The arrow is a less-than sign then a minus sign: <-",
+        "price <- 60"
+      ],
+      "answer": "price <- 60"
+    },
+    {
+      "teach": "Variables remember their values for the rest of the lesson, so later lines can use them.",
+      "prompt": "Now make a variable called total that stores price times 3.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "total",
+        "expected": 180
+      },
+      "hints": [
+        "Use the price variable, not the number 60.",
+        "total <- price * 3"
+      ],
+      "answer": "total <- price * 3"
+    },
+    {
+      "teach": "Text is called a **character string** in R, and it always goes in quotes: `\"Minecraft\"`. Without quotes, R thinks `Minecraft` is the name of a variable, and gives an error.",
+      "prompt": "Text goes in quotes. Store the text Minecraft in a variable called game.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "game",
+        "expected": "Minecraft"
+      },
+      "hints": [
+        "Text needs quotes around it.",
+        "game <- \"Minecraft\""
+      ],
+      "answer": "game <- \"Minecraft\""
+    },
+    {
+      "teach": "A **function** does a job for you. You write its name, then round brackets with its inputs inside, separated by commas: `round(3.14159, 2)`.",
+      "prompt": "Last one: R has built-in functions. Use round() to round 3.14159 to 2 decimal places, and store it in a variable called pi_short.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "pi_short",
+        "expected": 3.14
+      },
+      "hints": [
+        "round() takes the number, then how many decimals, separated by a comma.",
+        "pi_short <- round(3.14159, 2)"
+      ],
+      "answer": "pi_short <- round(3.14159, 2)"
+    }
+  ],
+  "recap": "R runs code from the script, and results appear in the console. <- stores a value in a variable, text goes in quotes, and functions like round() take inputs in brackets."
+}

@@ -1,0 +1,253 @@
+{
+  "id": "r-18",
+  "level": 4,
+  "title": "Missing values: is.na, drop_na and replace_na",
+  "explanation": "**Welcome to Level 4: cleaning data!** Real data is messy, and cleaning it is most of an analyst's job. First up: **missing values**. In `deliveries`, 3 customers left no tip, so their tip is NA. You have 3 choices: count the gaps, drop those rows, or fill the gaps with a sensible value.",
+  "datasets": [
+    "deliveries"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**is.na()** gives TRUE for missing values and FALSE for the rest. Wrapped in sum(), it counts them. You can't test for NA with `== NA`: that just gives NA again.",
+      "prompt": "Count the missing tips: n_missing <- sum(is.na(deliveries$tip)).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_missing",
+        "expected": 3
+      },
+      "hints": [
+        "is.na() gives TRUE for each NA, and sum() counts the TRUEs.",
+        "n_missing <- sum(is.na(deliveries$tip))"
+      ],
+      "answer": "n_missing <- sum(is.na(deliveries$tip))"
+    },
+    {
+      "teach": "**drop_na(column)** removes rows where that column is NA. With no column named, it drops rows with an NA anywhere.",
+      "prompt": "Drop the orders with no tip, using drop_na(tip). Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "drop_na"
+        ]
+      },
+      "hints": [
+        "drop_na() takes the column to check.",
+        "result <- deliveries |> drop_na(tip)"
+      ],
+      "answer": "result <- deliveries |> drop_na(tip)"
+    },
+    {
+      "teach": "**replace_na(column, value)** swaps NA for the value you choose. Think before you fill: 0 makes sense for a tip, but filling a missing **rating** with 0 would wrongly drag the average down.",
+      "prompt": "A missing tip really means no tip, so fill the gaps with 0 instead: mutate(tip = replace_na(tip, 0)). Start from deliveries and store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "restaurant",
+          "order_date",
+          "total",
+          "tip",
+          "minutes"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "Pizza Palace",
+            "2026-01-05",
+            24.5,
+            4,
+            32
+          ],
+          [
+            2,
+            "Ben",
+            "Taco Town",
+            "2026-01-12",
+            15,
+            0,
+            18
+          ],
+          [
+            3,
+            "Chloe",
+            "Sushi Spot",
+            "2026-02-03",
+            42,
+            8,
+            45
+          ],
+          [
+            4,
+            "Diego",
+            "Pizza Palace",
+            "2026-02-14",
+            31,
+            5,
+            50
+          ],
+          [
+            5,
+            "Emma",
+            "Burger Barn",
+            "2026-02-20",
+            12,
+            0,
+            22
+          ],
+          [
+            6,
+            "Finn",
+            "Sushi Spot",
+            "2026-03-01",
+            55,
+            10,
+            38
+          ],
+          [
+            7,
+            "Grace",
+            "Taco Town",
+            "2026-03-09",
+            18,
+            3,
+            27
+          ],
+          [
+            8,
+            "Hiro",
+            "Burger Barn",
+            "2026-03-15",
+            20,
+            2,
+            61
+          ],
+          [
+            9,
+            "Isla",
+            "Pizza Palace",
+            "2026-03-28",
+            27,
+            0,
+            35
+          ],
+          [
+            10,
+            "Jay",
+            "Taco Town",
+            "2026-04-02",
+            9.5,
+            1.5,
+            15
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "replace_na"
+        ]
+      },
+      "hints": [
+        "replace_na(column, value) goes inside mutate().",
+        "result <- deliveries |> mutate(tip = replace_na(tip, 0))"
+      ],
+      "answer": "result <- deliveries |> mutate(tip = replace_na(tip, 0))"
+    },
+    {
+      "prompt": "Last one: with the gaps filled, store the average tip per order in avg_tip, rounded to 2 decimals.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg_tip",
+        "expected": 3.35
+      },
+      "hints": [
+        "Use the filled result from the last task.",
+        "avg_tip <- round(mean(result$tip), 2)"
+      ],
+      "answer": "avg_tip <- round(mean(result$tip), 2)"
+    }
+  ],
+  "recap": "is.na() finds missing values and sum(is.na()) counts them. drop_na() removes those rows, and replace_na() fills them. Choose based on what the gap really means."
+}

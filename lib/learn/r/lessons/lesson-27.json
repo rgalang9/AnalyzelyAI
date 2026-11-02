@@ -1,0 +1,165 @@
+{
+  "id": "r-27",
+  "level": 5,
+  "title": "anti_join and semi_join: finding what's missing",
+  "explanation": "Sometimes you don't want to combine tables. You want to **filter** one table by whether it has a match in another: which players bought something, and which didn't? **semi_join()** keeps rows that have a match, and **anti_join()** keeps rows that don't. Neither adds any columns.",
+  "datasets": [
+    "games",
+    "studios",
+    "players",
+    "sales"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**anti_join()** is the fastest way to find what's missing: customers who never ordered, products never sold, or IDs that don't match because of a typo.",
+      "prompt": "Find the studios with no games in our table: result <- studios |> anti_join(games, by = \"studio_id\").",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "studio_id",
+          "studio_name",
+          "country",
+          "founded_year"
+        ],
+        "rows": [
+          [
+            11,
+            "Valve",
+            "USA",
+            1996
+          ],
+          [
+            12,
+            "Ubisoft",
+            "France",
+            1986
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "anti_join"
+        ]
+      },
+      "hints": [
+        "anti_join keeps rows of studios with NO match in games.",
+        "result <- studios |> anti_join(games, by = \"studio_id\")"
+      ],
+      "answer": "result <- studios |> anti_join(games, by = \"studio_id\")"
+    },
+    {
+      "teach": "Unlike inner_join, **semi_join()** never repeats a row: a player with 3 purchases still appears once.",
+      "prompt": "Find the players who bought at least one game, using semi_join with sales on player_id.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            2,
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145
+          ],
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            5,
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            7,
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            9,
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "semi_join"
+        ]
+      },
+      "hints": [
+        "semi_join keeps players with a match in sales, once each.",
+        "result <- players |> semi_join(sales, by = \"player_id\")"
+      ],
+      "answer": "result <- players |> semi_join(sales, by = \"player_id\")"
+    },
+    {
+      "prompt": "Last one: find the usernames of players who never bought anything. Store just the username column in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username"
+        ],
+        "rows": [
+          [
+            "speedy_g"
+          ],
+          [
+            "mochi"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "anti_join"
+        ]
+      },
+      "hints": [
+        "anti_join, then select(username).",
+        "result <- players |> anti_join(sales, by = \"player_id\") |> select(username)"
+      ],
+      "answer": "result <- players |> anti_join(sales, by = \"player_id\") |> select(username)"
+    }
+  ],
+  "recap": "semi_join() keeps rows that have a match and anti_join() keeps rows that don't, without adding columns. anti_join() is the go-to for finding what's missing."
+}

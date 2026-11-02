@@ -1,0 +1,136 @@
+{
+  "id": "r-13",
+  "level": 3,
+  "title": "group_by: summaries per group",
+  "explanation": "The real power comes from **group_by()** before summarize(). group_by() splits the table into groups, like one per drink, and summarize() then gives one row **per group**. It's exactly like a pivot table, or GROUP BY in SQL.",
+  "datasets": [
+    "coffee_orders"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "The result has **one row per drink**, sorted A to Z by the group column.",
+      "prompt": "For each drink, count the orders and add up the revenue: result <- coffee_orders |> group_by(drink) |> summarize(orders = n(), revenue = sum(price)).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drink",
+          "orders",
+          "revenue"
+        ],
+        "rows": [
+          [
+            "Cold brew",
+            2,
+            9.5
+          ],
+          [
+            "Latte",
+            5,
+            26.75
+          ],
+          [
+            "Mocha",
+            3,
+            14.5
+          ],
+          [
+            "Tea",
+            2,
+            6.5
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "summarize"
+        ]
+      },
+      "hints": [
+        "group_by(drink), then summarize with two summaries.",
+        "result <- coffee_orders |> group_by(drink) |> summarize(orders = n(), revenue = sum(price))"
+      ],
+      "answer": "result <- coffee_orders |> group_by(drink) |> summarize(orders = n(), revenue = sum(price))"
+    },
+    {
+      "prompt": "For each barista, find the average price of their orders, rounded to 2 decimals, in a column called avg_price.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "barista",
+          "avg_price"
+        ],
+        "rows": [
+          [
+            "Leo",
+            4.81
+          ],
+          [
+            "Maya",
+            4.65
+          ],
+          [
+            "Sam",
+            4.92
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "summarize"
+        ]
+      },
+      "hints": [
+        "group_by(barista), then summarize with round(mean(price), 2).",
+        "result <- coffee_orders |> group_by(barista) |> summarize(avg_price = round(mean(price), 2))"
+      ],
+      "answer": "result <- coffee_orders |> group_by(barista) |> summarize(avg_price = round(mean(price), 2))"
+    },
+    {
+      "prompt": "Last one: rank the drinks by revenue, biggest first. Group, summarise revenue, then arrange.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drink",
+          "revenue"
+        ],
+        "rows": [
+          [
+            "Latte",
+            26.75
+          ],
+          [
+            "Mocha",
+            14.5
+          ],
+          [
+            "Cold brew",
+            9.5
+          ],
+          [
+            "Tea",
+            6.5
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "summarize",
+          "arrange"
+        ]
+      },
+      "hints": [
+        "Add arrange(desc(revenue)) after summarize.",
+        "result <- coffee_orders |> group_by(drink) |> summarize(revenue = sum(price)) |> arrange(desc(revenue))"
+      ],
+      "answer": "result <- coffee_orders |> group_by(drink) |> summarize(revenue = sum(price)) |> arrange(desc(revenue))"
+    }
+  ],
+  "recap": "group_by() then summarize() gives one summary row per group, like a pivot table. Add arrange() after to rank the groups."
+}

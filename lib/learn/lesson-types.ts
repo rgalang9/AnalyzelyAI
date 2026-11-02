@@ -399,3 +399,76 @@ export type ExcelSheet = ExcelLesson["workbook"]["sheets"][number];
 export type ExcelValue = z.infer<typeof ExcelValueSchema>;
 export type ConditionalFormat = z.infer<typeof ConditionalFormatSchema>;
 export type Validation = z.infer<typeof ValidationSchema>;
+
+// ---------- R lessons (lib/learn/r/lessons/) ----------
+// The fields are explained in lib/learn/r/LESSON_TEMPLATE.json.
+
+const RCellSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+const RObjectName = z.string().regex(/^[A-Za-z.][A-Za-z0-9._]*$/, "Use an R object name, like result");
+const mustUse = z.array(z.string().min(1)).default([]);
+
+// How a task is checked: by its result, not by the code's text.
+// "object" is accepted as another way to write "name" ("object": "price").
+const RCheckSchema = z.preprocess(
+  (c) => (c && typeof c === "object" && "object" in c && !("name" in c) ? { ...c, name: (c as { object: unknown }).object } : c),
+  z.discriminatedUnion("type", [
+  // A named object holds this value (a number, text, TRUE/FALSE, NA as null, or a list of them)
+  z.object({ type: z.literal("value"), name: RObjectName, expected: z.union([RCellSchema, z.array(RCellSchema).min(1)]), must_use: mustUse }),
+  // A named object is a data frame with exactly these columns and rows (rows in the columns' order)
+  z.object({
+    type: z.literal("data_frame"),
+    name: RObjectName,
+    columns: z.array(z.string()).min(1),
+    rows: z.array(z.array(RCellSchema)),
+    ignore_order: z.boolean().default(false),
+    must_use: mustUse,
+  }),
+  // What the run printed in the console
+  z.object({ type: z.literal("output"), expected: z.string(), must_use: mustUse }),
+  // The printed output contains this text somewhere
+  z.object({ type: z.literal("output_contains"), expected: z.string().min(1), must_use: mustUse }),
+  // The last ggplot: a geom, and optionally aes mappings, facets and a title
+  z.object({
+    type: z.literal("plot"),
+    geom: z.string().regex(/^geom_[a-z_]+$/, 'Use a geom like "geom_col"'),
+    aes: z.record(z.string(), z.string()).optional(),
+    facets: z.union([z.string(), z.array(z.string())]).optional(),
+    title: z.string().optional(),
+    coord_flip: z.boolean().optional(), // true: the chart uses coord_flip(); false: it doesn't
+    must_use: mustUse,
+  }),
+  ])
+);
+
+const RTaskSchema = z
+  .object({
+    teach: z.string().optional(),
+    prompt: z.string(),
+    starter_code: z.string().optional(), // replaces the script when the task starts
+    check: RCheckSchema,
+    hints: z.array(z.string()).default([]),
+    answer: z.string().min(1),
+  })
+  .superRefine((t, ctx) => {
+    const c = t.check;
+    if (c.type === "data_frame")
+      c.rows.forEach((row, i) => {
+        if (row.length !== c.columns.length)
+          ctx.addIssue({ code: "custom", message: `Task "${t.prompt}": row ${i + 1} has ${row.length} values, but there are ${c.columns.length} columns.` });
+      });
+  });
+
+export const RLessonSchema = z.object({
+  id: z.string(),
+  level: z.number(),
+  title: z.string(),
+  explanation: z.string(),
+  datasets: z.array(z.string().regex(/^[A-Za-z][A-Za-z0-9_]*$/, "A dataset name is its CSV file name without .csv, like sales")).default([]),
+  starter_code: z.string().default(""),
+  tasks: z.array(RTaskSchema).min(1),
+  recap: z.string(),
+});
+
+export type RLesson = z.infer<typeof RLessonSchema>;
+export type RTask = RLesson["tasks"][number];
+export type RCheck = RTask["check"];

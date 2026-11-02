@@ -1,0 +1,78 @@
+{
+  "id": "r-38",
+  "level": 7,
+  "title": "Linear regression with lm()",
+  "explanation": "Correlation says how strong a link is. **Regression** says how big it is: \"each extra minute of study adds how many points?\". **lm()** (linear model) fits the best straight line through the points, the same line geom_smooth(method = \"lm\") drew in Level 6. Economists and analysts use it constantly.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**lm(y ~ x, data = table)** fits a straight line. Read `score ~ minutes` as \"score explained by minutes\". The thing you're predicting goes on the **left** of the ~.",
+      "prompt": "Fit a model of score explained by minutes, then (so the lesson can check it) store its slope: model <- lm(score ~ minutes, data = study_log), then on the next line model_slope <- coef(model)[[\"minutes\"]].",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "model_slope",
+        "expected": 0.841379
+      },
+      "hints": [
+        "The ~ means \"explained by\": the outcome goes on the left.",
+        "model <- lm(score ~ minutes, data = study_log)"
+      ],
+      "answer": "model <- lm(score ~ minutes, data = study_log)\nmodel_slope <- coef(model)[[\"minutes\"]]"
+    },
+    {
+      "teach": "**coef(model)** gives the **intercept** (the predicted score at 0 minutes) and the **slope** (the change in score for each extra minute). Here, every extra minute of study goes with about 0.84 more points.",
+      "prompt": "Pull out the slope: how many points each extra minute adds. Store coef(model)[[\"minutes\"]] in slope.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "slope",
+        "expected": 0.841379,
+        "must_use": [
+          "coef"
+        ]
+      },
+      "hints": [
+        "coef() gives the line's numbers. [[\"minutes\"]] picks the slope.",
+        "slope <- coef(model)[[\"minutes\"]]"
+      ],
+      "answer": "slope <- coef(model)[[\"minutes\"]]"
+    },
+    {
+      "prompt": "Store the intercept in intercept: coef(model)[[\"(Intercept)\"]].",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "intercept",
+        "expected": 44.281609
+      },
+      "hints": [
+        "The intercept's name includes brackets: \"(Intercept)\".",
+        "intercept <- coef(model)[[\"(Intercept)\"]]"
+      ],
+      "answer": "intercept <- coef(model)[[\"(Intercept)\"]]"
+    },
+    {
+      "teach": "**R-squared** goes from 0 to 1: the share of the differences in score that minutes explains. Here it's about 0.88, so minutes explain about 88% of the variation in scores. Run summary(model) on its own to see the full report.",
+      "prompt": "Last one: how well does the line fit? Store the R-squared in r2: summary(model)$r.squared.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "r2",
+        "expected": 0.875009,
+        "must_use": [
+          "summary"
+        ]
+      },
+      "hints": [
+        "summary(model) gives the full results, and $r.squared picks one number.",
+        "r2 <- summary(model)$r.squared"
+      ],
+      "answer": "r2 <- summary(model)$r.squared"
+    }
+  ],
+  "recap": "lm(y ~ x, data = ...) fits a straight line. coef() gives the intercept and slope, and summary(model)$r.squared says how much of y the model explains."
+}

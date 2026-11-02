@@ -1,0 +1,242 @@
+{
+  "id": "r-20",
+  "level": 4,
+  "title": "Finding and fixing text patterns",
+  "explanation": "Sometimes you need to find text that **contains** something, swap part of it, or pull a number out of text like \"$40\". This lesson uses `messy_orders`, a shop's order list with messy cities and prices stored as text, plus the club sign-ups.",
+  "datasets": [
+    "messy_orders",
+    "club_signups"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Clean the city names (trim, then title case) in messy_orders, and store it in result. Building a habit: always clean text before grouping it.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "city",
+          "product",
+          "qty",
+          "price"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "New York",
+            "Hoodie",
+            2,
+            "$40"
+          ],
+          [
+            2,
+            "Ben",
+            "New York",
+            "Cap",
+            1,
+            "$15"
+          ],
+          [
+            3,
+            "Chloe",
+            "Boston",
+            "Mug",
+            null,
+            "$14"
+          ],
+          [
+            4,
+            "Dev",
+            "Boston",
+            "Hoodie",
+            1,
+            "$40"
+          ],
+          [
+            5,
+            "Ella",
+            "Boston",
+            "Socks",
+            3,
+            "$10"
+          ],
+          [
+            6,
+            "Finn",
+            "New York",
+            "Cap",
+            3,
+            "$15"
+          ],
+          [
+            5,
+            "Ella",
+            "Boston",
+            "Socks",
+            3,
+            "$10"
+          ],
+          [
+            8,
+            "Gia",
+            "Providence",
+            "Mug",
+            2,
+            "$14"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "str_to_title"
+        ]
+      },
+      "hints": [
+        "Same as the club names last lesson.",
+        "result <- messy_orders |> mutate(city = str_to_title(str_trim(city)))"
+      ],
+      "answer": "result <- messy_orders |> mutate(city = str_to_title(str_trim(city)))"
+    },
+    {
+      "teach": "**parse_number()** pulls the number out of text, ignoring things like $, % and commas: \"$1,200\" becomes 1200.",
+      "prompt": "The prices are text like \"$40\", so maths won't work on them. Building on result, turn them into numbers with parse_number(price).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "order_id",
+          "customer",
+          "city",
+          "product",
+          "qty",
+          "price"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "New York",
+            "Hoodie",
+            2,
+            40
+          ],
+          [
+            2,
+            "Ben",
+            "New York",
+            "Cap",
+            1,
+            15
+          ],
+          [
+            3,
+            "Chloe",
+            "Boston",
+            "Mug",
+            null,
+            14
+          ],
+          [
+            4,
+            "Dev",
+            "Boston",
+            "Hoodie",
+            1,
+            40
+          ],
+          [
+            5,
+            "Ella",
+            "Boston",
+            "Socks",
+            3,
+            10
+          ],
+          [
+            6,
+            "Finn",
+            "New York",
+            "Cap",
+            3,
+            15
+          ],
+          [
+            5,
+            "Ella",
+            "Boston",
+            "Socks",
+            3,
+            10
+          ],
+          [
+            8,
+            "Gia",
+            "Providence",
+            "Mug",
+            2,
+            14
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "parse_number"
+        ]
+      },
+      "hints": [
+        "parse_number() is from readr, and goes inside mutate().",
+        "result <- result |> mutate(price = parse_number(price))"
+      ],
+      "answer": "result <- result |> mutate(price = parse_number(price))"
+    },
+    {
+      "teach": "**str_detect(text, \"pattern\")** gives TRUE if the text contains the pattern. It works great inside filter(): `filter(str_detect(email, \"wes.edu\"))`.",
+      "prompt": "How many club sign-ups are for chess? The capitals are messy, so make the club names lowercase first, then use str_detect(): n_chess <- sum(str_detect(str_to_lower(club_signups$club), \"chess\")).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_chess",
+        "expected": 3,
+        "must_use": [
+          "str_detect"
+        ]
+      },
+      "hints": [
+        "str_detect(text, pattern) gives TRUE or FALSE for each value. Lowercase the text first so \"Chess\" and \"chess\" both match.",
+        "n_chess <- sum(str_detect(str_to_lower(club_signups$club), \"chess\"))"
+      ],
+      "answer": "n_chess <- sum(str_detect(str_to_lower(club_signups$club), \"chess\"))"
+    },
+    {
+      "teach": "In a pattern, **`.*`** means \"anything, any length\". So `\"@.*\"` matches the @ and everything after it. **str_replace(text, pattern, new)** swaps it for something instead of deleting it.",
+      "prompt": "Last one: get each person's username by removing everything from the @ onwards: usernames <- str_remove(club_signups$email, \"@.*\").",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "usernames",
+        "expected": [
+          "maya",
+          "leo",
+          "sam",
+          "ava",
+          "leo",
+          "noah",
+          "zoe",
+          "ava"
+        ],
+        "must_use": [
+          "str_remove"
+        ]
+      },
+      "hints": [
+        "str_remove(text, pattern) deletes the matching part.",
+        "usernames <- str_remove(club_signups$email, \"@.*\")"
+      ],
+      "answer": "usernames <- str_remove(club_signups$email, \"@.*\")"
+    }
+  ],
+  "recap": "str_detect() finds text containing a pattern, str_remove() and str_replace() delete or swap it, and parse_number() pulls numbers out of text like \"$40\"."
+}

@@ -1,0 +1,395 @@
+{
+  "id": "r-29",
+  "level": 5,
+  "title": "Review: The game store report",
+  "explanation": "**Level 5 review!** The game store wants a report. `sales` lists each sale with just a player_id and a game_id. The details live in `players` and `games`. Join them up to answer the store's questions. There's nothing new here, just everything from Level 5.",
+  "datasets": [
+    "sales",
+    "players",
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Make one full table: sales left-joined to players by player_id, then to games by game_id. Store it in full.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "full",
+        "columns": [
+          "sale_id",
+          "player_id",
+          "game_id",
+          "sale_date",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played",
+          "title",
+          "genre",
+          "release_year",
+          "rating",
+          "price",
+          "studio_id"
+        ],
+        "rows": [
+          [
+            1,
+            1,
+            8,
+            "2024-02-25",
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99,
+            6
+          ],
+          [
+            2,
+            1,
+            7,
+            "2023-11-10",
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320,
+            "Red Dead Redemption 2",
+            "Action",
+            2018,
+            9.7,
+            59.99,
+            4
+          ],
+          [
+            3,
+            2,
+            14,
+            "2022-07-15",
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145,
+            "Animal Crossing: New Horizons",
+            "Simulation",
+            2020,
+            9,
+            59.99,
+            1
+          ],
+          [
+            4,
+            3,
+            6,
+            "2021-01-05",
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610,
+            "Grand Theft Auto V",
+            "Action",
+            2013,
+            9.6,
+            29.99,
+            4
+          ],
+          [
+            5,
+            3,
+            8,
+            "2022-03-01",
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99,
+            6
+          ],
+          [
+            6,
+            4,
+            10,
+            "2023-02-14",
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88,
+            "Stardew Valley",
+            "Simulation",
+            2016,
+            8.9,
+            14.99,
+            9
+          ],
+          [
+            7,
+            5,
+            1,
+            "2021-09-02",
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275,
+            "Minecraft",
+            "Sandbox",
+            2011,
+            9,
+            29.99,
+            2
+          ],
+          [
+            8,
+            7,
+            4,
+            "2023-01-20",
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198,
+            "Mario Kart 8 Deluxe",
+            "Racing",
+            2017,
+            9.2,
+            59.99,
+            1
+          ],
+          [
+            9,
+            7,
+            11,
+            "2023-06-11",
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198,
+            "Among Us",
+            "Party",
+            2018,
+            8.5,
+            4.99,
+            10
+          ],
+          [
+            10,
+            9,
+            11,
+            "2023-07-04",
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133,
+            "Among Us",
+            "Party",
+            2018,
+            8.5,
+            4.99,
+            10
+          ],
+          [
+            11,
+            10,
+            9,
+            "2021-04-18",
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502,
+            "The Witcher 3",
+            "RPG",
+            2015,
+            9.3,
+            39.99,
+            7
+          ],
+          [
+            12,
+            10,
+            8,
+            "2022-02-26",
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502,
+            "Elden Ring",
+            "RPG",
+            2022,
+            9.6,
+            59.99,
+            6
+          ],
+          [
+            13,
+            10,
+            13,
+            "2024-09-29",
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502,
+            "EA Sports FC 24",
+            "Sports",
+            2023,
+            null,
+            69.99,
+            5
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join"
+        ]
+      },
+      "hints": [
+        "Chain two left_joins.",
+        "full <- sales |> left_join(players, by = \"player_id\") |> left_join(games, by = \"game_id\")"
+      ],
+      "answer": "full <- sales |> left_join(players, by = \"player_id\") |> left_join(games, by = \"game_id\")"
+    },
+    {
+      "prompt": "How much did each player spend? Sum the price by username, rounded to 2 decimals, biggest spender first, in a column called spent.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username",
+          "spent"
+        ],
+        "rows": [
+          [
+            "xXDragonXx",
+            169.97
+          ],
+          [
+            "ShadowFox",
+            119.98
+          ],
+          [
+            "NoScopeNate",
+            89.98
+          ],
+          [
+            "CaptainCrit",
+            64.98
+          ],
+          [
+            "pixelqueen",
+            59.99
+          ],
+          [
+            "BlockBuilder",
+            29.99
+          ],
+          [
+            "luna_plays",
+            14.99
+          ],
+          [
+            "TurboTaco",
+            4.99
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "group_by(username) on full, then summarize and arrange.",
+        "result <- full |> group_by(username) |> summarize(spent = round(sum(price), 2)) |> arrange(desc(spent))"
+      ],
+      "answer": "result <- full |> group_by(username) |> summarize(spent = round(sum(price), 2)) |> arrange(desc(spent))"
+    },
+    {
+      "prompt": "For each player country, count the sales (sales) and the money spent (spent, rounded to 2), biggest first.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "country",
+          "sales",
+          "spent"
+        ],
+        "rows": [
+          [
+            "USA",
+            7,
+            379.93
+          ],
+          [
+            "Philippines",
+            2,
+            64.98
+          ],
+          [
+            "Canada",
+            1,
+            59.99
+          ],
+          [
+            "UK",
+            1,
+            29.99
+          ],
+          [
+            "Japan",
+            1,
+            14.99
+          ],
+          [
+            "Mexico",
+            1,
+            4.99
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "Same pattern, grouped by country, with n() for sales.",
+        "result <- full |> group_by(country) |> summarize(sales = n(), spent = round(sum(price), 2)) |> arrange(desc(spent))"
+      ],
+      "answer": "result <- full |> group_by(country) |> summarize(sales = n(), spent = round(sum(price), 2)) |> arrange(desc(spent))"
+    },
+    {
+      "prompt": "Last one: which players never bought a game? Store just their usernames in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "username"
+        ],
+        "rows": [
+          [
+            "speedy_g"
+          ],
+          [
+            "mochi"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "anti_join"
+        ]
+      },
+      "hints": [
+        "anti_join players with sales.",
+        "result <- players |> anti_join(sales, by = \"player_id\") |> select(username)"
+      ],
+      "answer": "result <- players |> anti_join(sales, by = \"player_id\") |> select(username)"
+    }
+  ],
+  "recap": "Level 5 done! You can combine tables with left_join and inner_join, find what's missing with anti_join, filter with semi_join, stack with bind_rows, and join on differently named keys. Next up: charts with ggplot2."
+}

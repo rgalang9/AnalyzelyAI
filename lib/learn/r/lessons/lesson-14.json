@@ -1,0 +1,157 @@
+{
+  "id": "r-14",
+  "level": 3,
+  "title": "count: quick tallies",
+  "explanation": "Counting rows per group is so common that dplyr has a shortcut: **count()**. `count(drink)` does the same as `group_by(drink) |> summarize(n = n())`, in one step.",
+  "datasets": [
+    "coffee_orders"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "count() makes a column called **n** with the number of rows in each group.",
+      "prompt": "Count the orders of each drink: result <- coffee_orders |> count(drink).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drink",
+          "n"
+        ],
+        "rows": [
+          [
+            "Cold brew",
+            2
+          ],
+          [
+            "Latte",
+            5
+          ],
+          [
+            "Mocha",
+            3
+          ],
+          [
+            "Tea",
+            2
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "count"
+        ]
+      },
+      "hints": [
+        "count() takes the column to count by.",
+        "result <- coffee_orders |> count(drink)"
+      ],
+      "answer": "result <- coffee_orders |> count(drink)"
+    },
+    {
+      "prompt": "Count again, but with the most common drink first: add sort = TRUE.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drink",
+          "n"
+        ],
+        "rows": [
+          [
+            "Latte",
+            5
+          ],
+          [
+            "Mocha",
+            3
+          ],
+          [
+            "Cold brew",
+            2
+          ],
+          [
+            "Tea",
+            2
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "count"
+        ]
+      },
+      "hints": [
+        "count(drink, sort = TRUE)",
+        "result <- coffee_orders |> count(drink, sort = TRUE)"
+      ],
+      "answer": "result <- coffee_orders |> count(drink, sort = TRUE)"
+    },
+    {
+      "teach": "With two columns, count() makes one row for every combination that appears, like a two-way pivot table in long form.",
+      "prompt": "Last one: count by drink AND size together.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "drink",
+          "size",
+          "n"
+        ],
+        "rows": [
+          [
+            "Cold brew",
+            "Large",
+            1
+          ],
+          [
+            "Cold brew",
+            "Small",
+            1
+          ],
+          [
+            "Latte",
+            "Large",
+            3
+          ],
+          [
+            "Latte",
+            "Small",
+            2
+          ],
+          [
+            "Mocha",
+            "Large",
+            1
+          ],
+          [
+            "Mocha",
+            "Small",
+            2
+          ],
+          [
+            "Tea",
+            "Large",
+            1
+          ],
+          [
+            "Tea",
+            "Small",
+            1
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "count"
+        ]
+      },
+      "hints": [
+        "Give count() two columns.",
+        "result <- coffee_orders |> count(drink, size)"
+      ],
+      "answer": "result <- coffee_orders |> count(drink, size)"
+    }
+  ],
+  "recap": "count(column) tallies the rows per group in a column called n. Add sort = TRUE for most common first, and give it two columns to count combinations."
+}

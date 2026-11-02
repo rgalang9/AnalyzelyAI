@@ -1,0 +1,149 @@
+{
+  "id": "r-21",
+  "level": 4,
+  "title": "Splitting and joining columns",
+  "explanation": "Sometimes one column holds two things, like a full name, and sometimes two columns belong together, like a city and state. tidyr's **separate_wider_delim()** splits a column, and **unite()** joins columns. This lesson uses `trips`, a log of student travel.",
+  "datasets": [
+    "trips"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**separate_wider_delim()** splits a column wherever the **delimiter** appears (here a space), into the new columns you name. The original column is removed.",
+      "prompt": "Split traveler into first and last at the space: separate_wider_delim(traveler, delim = \" \", names = c(\"first\", \"last\")). Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "trip_id",
+          "first",
+          "last",
+          "city",
+          "state",
+          "depart",
+          "back"
+        ],
+        "rows": [
+          [
+            1,
+            "Maya",
+            "Lee",
+            "Boston",
+            "MA",
+            "2026-03-02",
+            "2026-03-06"
+          ],
+          [
+            2,
+            "Leo",
+            "Park",
+            "Hartford",
+            "CT",
+            "2026-03-10",
+            "2026-03-12"
+          ],
+          [
+            3,
+            "Sam",
+            "Ortiz",
+            "Providence",
+            "RI",
+            "2026-04-01",
+            "2026-04-08"
+          ],
+          [
+            4,
+            "Ava",
+            "Chen",
+            "New Haven",
+            "CT",
+            "2026-04-15",
+            "2026-04-16"
+          ],
+          [
+            5,
+            "Noah",
+            "Kim",
+            "Burlington",
+            "VT",
+            "2026-05-20",
+            "2026-05-27"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "separate_wider_delim"
+        ]
+      },
+      "hints": [
+        "delim is what to split on, and names are the new column names.",
+        "result <- trips |> separate_wider_delim(traveler, delim = \" \", names = c(\"first\", \"last\"))"
+      ],
+      "answer": "result <- trips |> separate_wider_delim(traveler, delim = \" \", names = c(\"first\", \"last\"))"
+    },
+    {
+      "teach": "**unite(new_column, col1, col2, sep = ...)** joins columns with a separator between them, and removes the originals.",
+      "prompt": "Last one: join city and state into one column called location, like \"Boston, MA\": unite(location, city, state, sep = \", \"). Start from trips, and store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "trip_id",
+          "traveler",
+          "location",
+          "depart",
+          "back"
+        ],
+        "rows": [
+          [
+            1,
+            "Maya Lee",
+            "Boston, MA",
+            "2026-03-02",
+            "2026-03-06"
+          ],
+          [
+            2,
+            "Leo Park",
+            "Hartford, CT",
+            "2026-03-10",
+            "2026-03-12"
+          ],
+          [
+            3,
+            "Sam Ortiz",
+            "Providence, RI",
+            "2026-04-01",
+            "2026-04-08"
+          ],
+          [
+            4,
+            "Ava Chen",
+            "New Haven, CT",
+            "2026-04-15",
+            "2026-04-16"
+          ],
+          [
+            5,
+            "Noah Kim",
+            "Burlington, VT",
+            "2026-05-20",
+            "2026-05-27"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "unite"
+        ]
+      },
+      "hints": [
+        "unite(new_name, columns..., sep = \"...\")",
+        "result <- trips |> unite(location, city, state, sep = \", \")"
+      ],
+      "answer": "result <- trips |> unite(location, city, state, sep = \", \")"
+    }
+  ],
+  "recap": "separate_wider_delim() splits one column into several at a delimiter, and unite() joins several columns into one with a separator."
+}

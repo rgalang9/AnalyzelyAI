@@ -1,0 +1,110 @@
+{
+  "id": "r-06",
+  "level": 2,
+  "title": "The pipe |>",
+  "explanation": "**Welcome to Level 2: dplyr!** dplyr is the tidyverse's toolkit for working with tables, and it's built around the **pipe**, `|>`. The pipe takes what's on its left and passes it into the function on its right. So `games |> nrow()` means \"take games, then count its rows\". It lets you write steps in reading order, left to right, instead of nesting brackets inside brackets.",
+  "datasets": [
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "`games |> nrow()` does exactly the same as `nrow(games)`. In RStudio, **Ctrl+Shift+M** (⌘+Shift+M on Mac) types a pipe for you.",
+      "prompt": "Count the rows of games using the pipe, and store it in n: n <- games |> nrow().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n",
+        "expected": 15
+      },
+      "hints": [
+        "The pipe is a vertical bar then a greater-than sign: |>",
+        "n <- games |> nrow()"
+      ],
+      "answer": "n <- games |> nrow()"
+    },
+    {
+      "prompt": "Pipe the price column into mean(), and store it in avg: avg <- games$price |> mean().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg",
+        "expected": 36.658667
+      },
+      "hints": [
+        "Put the column on the left of |>, and mean() on the right.",
+        "avg <- games$price |> mean()"
+      ],
+      "answer": "avg <- games$price |> mean()"
+    },
+    {
+      "teach": "When you pipe into a function that needs more inputs, the piped value goes **first**, and you write the rest inside the brackets: `games |> head(3)` is `head(games, 3)`.",
+      "prompt": "Pipes chain. Take games, then keep the first 3 rows, and store the result in top3: top3 <- games |> head(3).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "top3",
+        "columns": [
+          "game_id",
+          "title",
+          "genre",
+          "release_year",
+          "rating",
+          "price",
+          "studio_id"
+        ],
+        "rows": [
+          [
+            1,
+            "Minecraft",
+            "Sandbox",
+            2011,
+            9,
+            29.99,
+            2
+          ],
+          [
+            2,
+            "Fortnite",
+            "Shooter",
+            2017,
+            8,
+            0,
+            3
+          ],
+          [
+            3,
+            "Super Mario Odyssey",
+            "Platformer",
+            2017,
+            9.7,
+            59.99,
+            1
+          ]
+        ],
+        "ignore_order": false
+      },
+      "hints": [
+        "head() takes how many rows inside its brackets.",
+        "top3 <- games |> head(3)"
+      ],
+      "answer": "top3 <- games |> head(3)"
+    },
+    {
+      "teach": "Read a chain left to right, saying **\"then\"** at every pipe. Long chains go on separate lines, with the pipe at the end of each line.",
+      "prompt": "Last one: chain two steps. Take games, keep the first 5 rows, then count them: n5 <- games |> head(5) |> nrow().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n5",
+        "expected": 5
+      },
+      "hints": [
+        "Two pipes in a row: games |> head(5) |> nrow()",
+        "Read it as: take games, then first 5 rows, then count."
+      ],
+      "answer": "n5 <- games |> head(5) |> nrow()"
+    }
+  ],
+  "recap": "The pipe |> passes the left side into the function on the right, as its first input. Chains read left to right: take this, then do that, then that."
+}

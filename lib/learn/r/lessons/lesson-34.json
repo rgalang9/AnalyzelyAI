@@ -1,0 +1,54 @@
+{
+  "id": "r-34",
+  "level": 6,
+  "title": "Titles, labels and themes",
+  "explanation": "A chart without a clear title and labels gets misread. **labs()** sets the title and axis names, and a **theme** changes the overall look. These finishing touches make a chart ready for a report or presentation.",
+  "datasets": [
+    "box_office"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**labs()** sets the **title**, the **x** and **y** axis names, and even legend titles (like `color = \"Rating\"`). Use plain words and units.",
+      "prompt": "Make a scatter plot of budget (x) vs gross (y), and add a title and axis labels: + labs(title = \"Budget vs gross\", x = \"Budget ($M)\", y = \"Gross ($M)\").",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "budget",
+          "y": "gross"
+        },
+        "title": "Budget vs gross"
+      },
+      "hints": [
+        "labs() is another layer, added with +.",
+        "... + geom_point() + labs(title = \"Budget vs gross\", x = \"Budget ($M)\", y = \"Gross ($M)\")"
+      ],
+      "answer": "ggplot(box_office, aes(x = budget, y = gross)) + geom_point() + labs(title = \"Budget vs gross\", x = \"Budget ($M)\", y = \"Gross ($M)\")"
+    },
+    {
+      "teach": "**Themes** change the background, grid lines and fonts. Try **theme_minimal()**, **theme_classic()** or **theme_bw()**. They don't change the data, only the look.",
+      "prompt": "Last one: give it a cleaner look by adding + theme_minimal() at the end.",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "budget",
+          "y": "gross"
+        },
+        "title": "Budget vs gross",
+        "must_use": [
+          "theme_minimal"
+        ]
+      },
+      "hints": [
+        "Add one more layer.",
+        "... + theme_minimal()"
+      ],
+      "answer": "ggplot(box_office, aes(x = budget, y = gross)) + geom_point() + labs(title = \"Budget vs gross\", x = \"Budget ($M)\", y = \"Gross ($M)\") + theme_minimal()"
+    }
+  ],
+  "recap": "labs() adds a title and clear axis names, and themes like theme_minimal() change the overall look. A finished chart always says what it shows."
+}

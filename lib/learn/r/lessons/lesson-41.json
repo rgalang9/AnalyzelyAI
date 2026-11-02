@@ -1,0 +1,812 @@
+{
+  "id": "r-41",
+  "level": 7,
+  "title": "Final Case Study: The campus coffee cart",
+  "explanation": "**Final case study!** You're the analyst for a campus coffee cart with 3 locations. `case_orders` is 4 months of orders, exported messily: the amounts are text like \"$19.43\", and one order was saved twice. `case_customers` has each customer's campus and whether they're a loyalty member. The owner has 5 questions. No new tools: use everything from the course. Congratulations on making it this far!",
+  "datasets": [
+    "case_orders",
+    "case_customers"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Clean the orders: remove the duplicate row and turn amount into a number. Store it in orders.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "orders",
+        "columns": [
+          "order_id",
+          "customer_id",
+          "order_date",
+          "items",
+          "amount"
+        ],
+        "rows": [
+          [
+            101,
+            12,
+            "2026-01-05",
+            5,
+            19.43
+          ],
+          [
+            102,
+            8,
+            "2026-01-14",
+            2,
+            10.12
+          ],
+          [
+            103,
+            14,
+            "2026-01-11",
+            5,
+            21.03
+          ],
+          [
+            104,
+            16,
+            "2026-01-12",
+            1,
+            5.74
+          ],
+          [
+            105,
+            1,
+            "2026-01-03",
+            2,
+            10.27
+          ],
+          [
+            106,
+            4,
+            "2026-01-18",
+            1,
+            5.43
+          ],
+          [
+            107,
+            11,
+            "2026-01-06",
+            4,
+            17.4
+          ],
+          [
+            108,
+            2,
+            "2026-01-08",
+            4,
+            19.84
+          ],
+          [
+            109,
+            3,
+            "2026-01-26",
+            2,
+            7.07
+          ],
+          [
+            110,
+            3,
+            "2026-02-18",
+            1,
+            4.1
+          ],
+          [
+            111,
+            13,
+            "2026-02-05",
+            2,
+            8.99
+          ],
+          [
+            112,
+            14,
+            "2026-02-15",
+            3,
+            12.85
+          ],
+          [
+            113,
+            13,
+            "2026-02-13",
+            3,
+            15.88
+          ],
+          [
+            114,
+            9,
+            "2026-02-06",
+            1,
+            4.53
+          ],
+          [
+            115,
+            16,
+            "2026-02-18",
+            1,
+            5.49
+          ],
+          [
+            116,
+            8,
+            "2026-02-18",
+            5,
+            22.37
+          ],
+          [
+            117,
+            4,
+            "2026-02-21",
+            2,
+            10.04
+          ],
+          [
+            118,
+            12,
+            "2026-02-20",
+            3,
+            11.26
+          ],
+          [
+            119,
+            10,
+            "2026-03-03",
+            2,
+            8.23
+          ],
+          [
+            120,
+            6,
+            "2026-03-22",
+            4,
+            15.2
+          ],
+          [
+            121,
+            2,
+            "2026-03-08",
+            5,
+            24.69
+          ],
+          [
+            122,
+            14,
+            "2026-03-19",
+            2,
+            10.98
+          ],
+          [
+            123,
+            1,
+            "2026-03-13",
+            3,
+            13.46
+          ],
+          [
+            124,
+            8,
+            "2026-03-03",
+            2,
+            8.42
+          ],
+          [
+            125,
+            15,
+            "2026-03-16",
+            4,
+            17.75
+          ],
+          [
+            126,
+            2,
+            "2026-03-09",
+            3,
+            11.35
+          ],
+          [
+            127,
+            10,
+            "2026-03-06",
+            1,
+            5.37
+          ],
+          [
+            128,
+            13,
+            "2026-04-21",
+            1,
+            6.09
+          ],
+          [
+            129,
+            5,
+            "2026-04-16",
+            2,
+            10.29
+          ],
+          [
+            130,
+            2,
+            "2026-04-21",
+            3,
+            11.77
+          ],
+          [
+            131,
+            16,
+            "2026-04-27",
+            1,
+            6.22
+          ],
+          [
+            132,
+            12,
+            "2026-04-20",
+            2,
+            9.22
+          ],
+          [
+            133,
+            14,
+            "2026-04-28",
+            4,
+            18.02
+          ],
+          [
+            134,
+            16,
+            "2026-04-19",
+            3,
+            11.77
+          ],
+          [
+            135,
+            9,
+            "2026-04-01",
+            2,
+            8.86
+          ],
+          [
+            136,
+            13,
+            "2026-04-01",
+            2,
+            10.95
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "distinct",
+          "parse_number"
+        ]
+      },
+      "hints": [
+        "distinct(), then mutate with parse_number().",
+        "orders <- case_orders |> distinct() |> mutate(amount = parse_number(amount))"
+      ],
+      "answer": "orders <- case_orders |> distinct() |> mutate(amount = parse_number(amount))"
+    },
+    {
+      "prompt": "Join each order to its customer's details, and store it in full.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "full",
+        "columns": [
+          "order_id",
+          "customer_id",
+          "order_date",
+          "items",
+          "amount",
+          "name",
+          "campus",
+          "member"
+        ],
+        "rows": [
+          [
+            101,
+            12,
+            "2026-01-05",
+            5,
+            19.43,
+            "Gia",
+            "West",
+            "no"
+          ],
+          [
+            102,
+            8,
+            "2026-01-14",
+            2,
+            10.12,
+            "Chloe",
+            "North",
+            "yes"
+          ],
+          [
+            103,
+            14,
+            "2026-01-11",
+            5,
+            21.03,
+            "Isla",
+            "North",
+            "yes"
+          ],
+          [
+            104,
+            16,
+            "2026-01-12",
+            1,
+            5.74,
+            "Kai",
+            "North",
+            "yes"
+          ],
+          [
+            105,
+            1,
+            "2026-01-03",
+            2,
+            10.27,
+            "Maya",
+            "North",
+            "yes"
+          ],
+          [
+            106,
+            4,
+            "2026-01-18",
+            1,
+            5.43,
+            "Ava",
+            "South",
+            "yes"
+          ],
+          [
+            107,
+            11,
+            "2026-01-06",
+            4,
+            17.4,
+            "Finn",
+            "North",
+            "yes"
+          ],
+          [
+            108,
+            2,
+            "2026-01-08",
+            4,
+            19.84,
+            "Leo",
+            "South",
+            "yes"
+          ],
+          [
+            109,
+            3,
+            "2026-01-26",
+            2,
+            7.07,
+            "Sam",
+            "West",
+            "no"
+          ],
+          [
+            110,
+            3,
+            "2026-02-18",
+            1,
+            4.1,
+            "Sam",
+            "West",
+            "no"
+          ],
+          [
+            111,
+            13,
+            "2026-02-05",
+            2,
+            8.99,
+            "Hugo",
+            "West",
+            "yes"
+          ],
+          [
+            112,
+            14,
+            "2026-02-15",
+            3,
+            12.85,
+            "Isla",
+            "North",
+            "yes"
+          ],
+          [
+            113,
+            13,
+            "2026-02-13",
+            3,
+            15.88,
+            "Hugo",
+            "West",
+            "yes"
+          ],
+          [
+            114,
+            9,
+            "2026-02-06",
+            1,
+            4.53,
+            "Dev",
+            "South",
+            "no"
+          ],
+          [
+            115,
+            16,
+            "2026-02-18",
+            1,
+            5.49,
+            "Kai",
+            "North",
+            "yes"
+          ],
+          [
+            116,
+            8,
+            "2026-02-18",
+            5,
+            22.37,
+            "Chloe",
+            "North",
+            "yes"
+          ],
+          [
+            117,
+            4,
+            "2026-02-21",
+            2,
+            10.04,
+            "Ava",
+            "South",
+            "yes"
+          ],
+          [
+            118,
+            12,
+            "2026-02-20",
+            3,
+            11.26,
+            "Gia",
+            "West",
+            "no"
+          ],
+          [
+            119,
+            10,
+            "2026-03-03",
+            2,
+            8.23,
+            "Ella",
+            "West",
+            "yes"
+          ],
+          [
+            120,
+            6,
+            "2026-03-22",
+            4,
+            15.2,
+            "Zoe",
+            "South",
+            "no"
+          ],
+          [
+            121,
+            2,
+            "2026-03-08",
+            5,
+            24.69,
+            "Leo",
+            "South",
+            "yes"
+          ],
+          [
+            122,
+            14,
+            "2026-03-19",
+            2,
+            10.98,
+            "Isla",
+            "North",
+            "yes"
+          ],
+          [
+            123,
+            1,
+            "2026-03-13",
+            3,
+            13.46,
+            "Maya",
+            "North",
+            "yes"
+          ],
+          [
+            124,
+            8,
+            "2026-03-03",
+            2,
+            8.42,
+            "Chloe",
+            "North",
+            "yes"
+          ],
+          [
+            125,
+            15,
+            "2026-03-16",
+            4,
+            17.75,
+            "Jay",
+            "North",
+            "no"
+          ],
+          [
+            126,
+            2,
+            "2026-03-09",
+            3,
+            11.35,
+            "Leo",
+            "South",
+            "yes"
+          ],
+          [
+            127,
+            10,
+            "2026-03-06",
+            1,
+            5.37,
+            "Ella",
+            "West",
+            "yes"
+          ],
+          [
+            128,
+            13,
+            "2026-04-21",
+            1,
+            6.09,
+            "Hugo",
+            "West",
+            "yes"
+          ],
+          [
+            129,
+            5,
+            "2026-04-16",
+            2,
+            10.29,
+            "Noah",
+            "West",
+            "yes"
+          ],
+          [
+            130,
+            2,
+            "2026-04-21",
+            3,
+            11.77,
+            "Leo",
+            "South",
+            "yes"
+          ],
+          [
+            131,
+            16,
+            "2026-04-27",
+            1,
+            6.22,
+            "Kai",
+            "North",
+            "yes"
+          ],
+          [
+            132,
+            12,
+            "2026-04-20",
+            2,
+            9.22,
+            "Gia",
+            "West",
+            "no"
+          ],
+          [
+            133,
+            14,
+            "2026-04-28",
+            4,
+            18.02,
+            "Isla",
+            "North",
+            "yes"
+          ],
+          [
+            134,
+            16,
+            "2026-04-19",
+            3,
+            11.77,
+            "Kai",
+            "North",
+            "yes"
+          ],
+          [
+            135,
+            9,
+            "2026-04-01",
+            2,
+            8.86,
+            "Dev",
+            "South",
+            "no"
+          ],
+          [
+            136,
+            13,
+            "2026-04-01",
+            2,
+            10.95,
+            "Hugo",
+            "West",
+            "yes"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "left_join"
+        ]
+      },
+      "hints": [
+        "left_join on customer_id.",
+        "full <- orders |> left_join(case_customers, by = \"customer_id\")"
+      ],
+      "answer": "full <- orders |> left_join(case_customers, by = \"customer_id\")"
+    },
+    {
+      "prompt": "Question 1: for each campus, how many orders (orders) and how much revenue (revenue, rounded to 2)? Biggest revenue first.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "campus",
+          "orders",
+          "revenue"
+        ],
+        "rows": [
+          [
+            "North",
+            15,
+            191.89
+          ],
+          [
+            "West",
+            12,
+            116.88
+          ],
+          [
+            "South",
+            9,
+            111.71
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "group_by(campus), summarize, arrange.",
+        "result <- full |> group_by(campus) |> summarize(orders = n(), revenue = round(sum(amount), 2)) |> arrange(desc(revenue))"
+      ],
+      "answer": "result <- full |> group_by(campus) |> summarize(orders = n(), revenue = round(sum(amount), 2)) |> arrange(desc(revenue))"
+    },
+    {
+      "prompt": "Question 2: do loyalty members spend more per order? Find the average order for members and non-members, rounded to 2, in avg_order.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "member",
+          "avg_order"
+        ],
+        "rows": [
+          [
+            "no",
+            10.82
+          ],
+          [
+            "yes",
+            11.97
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "group_by(member), then the mean amount.",
+        "result <- full |> group_by(member) |> summarize(avg_order = round(mean(amount), 2))"
+      ],
+      "answer": "result <- full |> group_by(member) |> summarize(avg_order = round(mean(amount), 2))"
+    },
+    {
+      "prompt": "Question 3: how much does each extra item add to an order? Fit lm(amount ~ items, data = full) and store the slope in per_item.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "per_item",
+        "expected": 4.069277,
+        "must_use": [
+          "lm"
+        ]
+      },
+      "hints": [
+        "Fit the model, then coef(model)[[\"items\"]].",
+        "model <- lm(amount ~ items, data = full), then per_item <- coef(model)[[\"items\"]]"
+      ],
+      "answer": "model <- lm(amount ~ items, data = full)\nper_item <- coef(model)[[\"items\"]]"
+    },
+    {
+      "prompt": "Question 4: which customers never ordered? Store their names in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "name"
+        ],
+        "rows": [
+          [
+            "Ben"
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "anti_join"
+        ]
+      },
+      "hints": [
+        "anti_join customers with orders.",
+        "result <- case_customers |> anti_join(orders, by = \"customer_id\") |> select(name)"
+      ],
+      "answer": "result <- case_customers |> anti_join(orders, by = \"customer_id\") |> select(name)"
+    },
+    {
+      "prompt": "Last one, question 5: chart the revenue by campus as columns, sorted, titled \"Revenue by campus\".",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "reorder(campus, revenue)",
+          "y": "revenue"
+        },
+        "title": "Revenue by campus"
+      },
+      "hints": [
+        "Summarise, pipe into ggplot, reorder, geom_col, labs.",
+        "... |> ggplot(aes(x = reorder(campus, revenue), y = revenue)) + geom_col() + labs(title = \"Revenue by campus\")"
+      ],
+      "answer": "full |> group_by(campus) |> summarize(revenue = sum(amount)) |> ggplot(aes(x = reorder(campus, revenue), y = revenue)) + geom_col() + labs(title = \"Revenue by campus\")"
+    }
+  ],
+  "recap": "You finished the R course! 🎉 You cleaned messy data, joined tables, summarised by group, fitted a regression, found what was missing and built a chart: the full workflow of a data analyst in R."
+}

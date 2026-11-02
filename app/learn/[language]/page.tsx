@@ -4,6 +4,7 @@ import { findReleasedLanguage, isOpen, LEARN_LANGUAGES } from "@/lib/learn/langu
 import { getLessonSummaries } from "@/lib/learn/load-lessons";
 import LessonList from "../lesson-list";
 import PythonPreload from "../python-preload";
+import RPreload from "../r-preload";
 
 // Build a page for each open language ahead of time
 export function generateStaticParams() {
@@ -37,6 +38,7 @@ async function LessonListPage({ params }: { params: PageProps<"/learn/[language]
         <LessonList language={language} lessons={lessons} />
       )}
       {language === "python" && <PythonPreload />}
+      {language === "r" && <RPreload />}
     </main>
   );
 }

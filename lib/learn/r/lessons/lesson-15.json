@@ -1,0 +1,133 @@
+{
+  "id": "r-15",
+  "level": 3,
+  "title": "Grouped summaries with missing values",
+  "explanation": "Real summaries hit real problems: missing values, and groups too small to trust. This lesson uses `deliveries`, where 3 tips are missing (NA), and shows how to handle both.",
+  "datasets": [
+    "deliveries"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "For each restaurant, count the orders and find the average delivery minutes, rounded to 1 decimal, in columns orders and avg_minutes.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "restaurant",
+          "orders",
+          "avg_minutes"
+        ],
+        "rows": [
+          [
+            "Burger Barn",
+            2,
+            41.5
+          ],
+          [
+            "Pizza Palace",
+            3,
+            39
+          ],
+          [
+            "Sushi Spot",
+            2,
+            41.5
+          ],
+          [
+            "Taco Town",
+            3,
+            20
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by",
+          "summarize"
+        ]
+      },
+      "hints": [
+        "group_by(restaurant), then 2 summaries.",
+        "result <- deliveries |> group_by(restaurant) |> summarize(orders = n(), avg_minutes = round(mean(minutes), 1))"
+      ],
+      "answer": "result <- deliveries |> group_by(restaurant) |> summarize(orders = n(), avg_minutes = round(mean(minutes), 1))"
+    },
+    {
+      "teach": "Remember from Level 1: one NA makes mean() give NA. **na.rm = TRUE** skips them, group by group.",
+      "prompt": "Find each restaurant's average tip, rounded to 2 decimals, in a column called avg_tip. Some tips are NA, so skip them with na.rm = TRUE.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "restaurant",
+          "avg_tip"
+        ],
+        "rows": [
+          [
+            "Burger Barn",
+            2
+          ],
+          [
+            "Pizza Palace",
+            4.5
+          ],
+          [
+            "Sushi Spot",
+            9
+          ],
+          [
+            "Taco Town",
+            2.25
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "na.rm"
+        ]
+      },
+      "hints": [
+        "Without na.rm = TRUE, restaurants with a missing tip would show NA.",
+        "result <- deliveries |> group_by(restaurant) |> summarize(avg_tip = round(mean(tip, na.rm = TRUE), 2))"
+      ],
+      "answer": "result <- deliveries |> group_by(restaurant) |> summarize(avg_tip = round(mean(tip, na.rm = TRUE), 2))"
+    },
+    {
+      "teach": "filter() **after** summarize() filters the groups, like HAVING in SQL.",
+      "prompt": "Last one: averages from 1 or 2 orders aren't reliable. Repeat the first summary, then keep only restaurants with at least 3 orders, using filter() after summarize().",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "restaurant",
+          "orders",
+          "avg_minutes"
+        ],
+        "rows": [
+          [
+            "Pizza Palace",
+            3,
+            39
+          ],
+          [
+            "Taco Town",
+            3,
+            20
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "filter() works on the summary table too.",
+        "... |> filter(orders >= 3)"
+      ],
+      "answer": "result <- deliveries |> group_by(restaurant) |> summarize(orders = n(), avg_minutes = round(mean(minutes), 1)) |> filter(orders >= 3)"
+    }
+  ],
+  "recap": "Use na.rm = TRUE inside summaries when there are NAs. filter() after summarize() keeps only the groups you trust, like SQL's HAVING."
+}

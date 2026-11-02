@@ -1,0 +1,101 @@
+{
+  "id": "r-02",
+  "level": 1,
+  "title": "Data frames: your first table",
+  "explanation": "A **data frame** is R's table: rows and columns, like a spreadsheet. Each column is a vector. This lesson has a data frame called `games` already loaded, with 15 video games.",
+  "datasets": [
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**head()** shows the first 6 rows of a data frame, so you can see what's in it without printing everything.",
+      "prompt": "Look at the first rows of the table: run head(games).",
+      "starter_code": "",
+      "check": {
+        "type": "output_contains",
+        "expected": "Minecraft"
+      },
+      "hints": [
+        "Just head(games), then Run.",
+        "The first 6 rows appear in the console."
+      ],
+      "answer": "head(games)"
+    },
+    {
+      "teach": "**nrow()** counts the rows and **ncol()** counts the columns. **names()** lists the column names.",
+      "prompt": "Store the number of rows in rows, using nrow().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "rows",
+        "expected": 15
+      },
+      "hints": [
+        "nrow() counts rows.",
+        "rows <- nrow(games)"
+      ],
+      "answer": "rows <- nrow(games)"
+    },
+    {
+      "prompt": "Store the number of columns in cols, using ncol().",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "cols",
+        "expected": 7
+      },
+      "hints": [
+        "ncol() counts columns.",
+        "cols <- ncol(games)"
+      ],
+      "answer": "cols <- ncol(games)"
+    },
+    {
+      "teach": "`games$price` picks one column as a vector. The name must match exactly, capitals included.",
+      "prompt": "Pick out the price column with a dollar sign, and store it in prices: prices <- games$price.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "prices",
+        "expected": [
+          29.99,
+          0.0,
+          59.99,
+          59.99,
+          59.99,
+          29.99,
+          59.99,
+          59.99,
+          39.99,
+          14.99,
+          4.99,
+          0.0,
+          69.99,
+          59.99,
+          0.0
+        ]
+      },
+      "hints": [
+        "Data frame name, $, then the column name.",
+        "prices <- games$price"
+      ],
+      "answer": "prices <- games$price"
+    },
+    {
+      "prompt": "Last one: store the average price of all games in avg_price.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "avg_price",
+        "expected": 36.658667
+      },
+      "hints": [
+        "mean() works on a column, because a column is a vector.",
+        "avg_price <- mean(games$price)"
+      ],
+      "answer": "avg_price <- mean(games$price)"
+    }
+  ],
+  "recap": "A data frame is a table. head() shows the first rows, nrow() and ncol() count rows and columns, and $ picks a column as a vector you can use with mean() and friends."
+}

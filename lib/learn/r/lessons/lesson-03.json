@@ -1,0 +1,84 @@
+{
+  "id": "r-03",
+  "level": 1,
+  "title": "Your first chart",
+  "explanation": "Charts make data easy to understand, and R's **ggplot2** package makes great ones. Every ggplot is built in layers:\n1. `ggplot(data, aes(...))` says which data to use and which columns go where. **aes** stands for aesthetics: the x axis, the y axis, colours.\n2. `+ geom_...()` says what to draw: bars, points or lines.\n\nThe chart appears in the Plots pane on the right.",
+  "datasets": [
+    "games"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**geom_bar()** counts the rows for each value of x, then draws one bar per value. Notice the **+** that adds a layer.",
+      "prompt": "Count the games in each genre with a bar chart: ggplot(games, aes(x = genre)) + geom_bar().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_bar",
+        "aes": {
+          "x": "genre"
+        }
+      },
+      "hints": [
+        "Data first, then aes with x = genre, then + geom_bar().",
+        "ggplot(games, aes(x = genre)) + geom_bar()"
+      ],
+      "answer": "ggplot(games, aes(x = genre)) + geom_bar()"
+    },
+    {
+      "teach": "**geom_col()** draws bars whose height is a value you give it (y), instead of counting rows.",
+      "prompt": "Now plot each game's price: a column chart with title on x and price on y, using geom_col().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "title",
+          "y": "price"
+        }
+      },
+      "hints": [
+        "geom_col() needs both x and y in aes().",
+        "ggplot(games, aes(x = title, y = price)) + geom_col()"
+      ],
+      "answer": "ggplot(games, aes(x = title, y = price)) + geom_col()"
+    },
+    {
+      "teach": "Layers stack with **+**. **coord_flip()** swaps the axes, so long labels have room.",
+      "prompt": "The titles overlap. Flip the chart sideways by adding + coord_flip() to the end.",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "title",
+          "y": "price"
+        },
+        "coord_flip": true
+      },
+      "hints": [
+        "Add another layer with +.",
+        "... + geom_col() + coord_flip()"
+      ],
+      "answer": "ggplot(games, aes(x = title, y = price)) + geom_col() + coord_flip()"
+    },
+    {
+      "prompt": "Last one: is a newer game more expensive? Make a scatter plot with release_year on x and price on y, using geom_point().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "release_year",
+          "y": "price"
+        }
+      },
+      "hints": [
+        "geom_point() draws one dot per row.",
+        "ggplot(games, aes(x = release_year, y = price)) + geom_point()"
+      ],
+      "answer": "ggplot(games, aes(x = release_year, y = price)) + geom_point()"
+    }
+  ],
+  "recap": "A ggplot is data + aes() + a geom layer, joined with +. geom_bar() counts rows, geom_col() uses a y value, geom_point() makes a scatter plot, and coord_flip() turns a chart sideways."
+}

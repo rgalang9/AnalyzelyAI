@@ -1,0 +1,95 @@
+{
+  "id": "r-22",
+  "level": 4,
+  "title": "Dates with lubridate",
+  "explanation": "Dates power questions like \"how long was each trip?\" or \"how many trips in April?\". When a CSV has dates like 2026-03-02, readr turns them into real **Date** values. The **lubridate** package then pulls them apart and does date maths. This uses the `trips` log again.",
+  "datasets": [
+    "trips"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "If the type were \"character\", you'd convert it with **ymd()** (year-month-day), or **mdy()** for US-style dates like 03/02/2026.",
+      "prompt": "Check that depart is a real date: store class(trips$depart) in col_type.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "col_type",
+        "expected": "Date"
+      },
+      "hints": [
+        "class() tells you the type.",
+        "col_type <- class(trips$depart)"
+      ],
+      "answer": "col_type <- class(trips$depart)"
+    },
+    {
+      "teach": "Dates subtract just like numbers, giving the days between them. **as.numeric()** turns that into a plain number.",
+      "prompt": "Work out each trip's length in days: back − depart. Store the numbers in trip_days: trip_days <- as.numeric(trips$back - trips$depart).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "trip_days",
+        "expected": [
+          4,
+          2,
+          7,
+          1,
+          7
+        ]
+      },
+      "hints": [
+        "Subtracting dates gives a difference in days. as.numeric() makes it a plain number.",
+        "trip_days <- as.numeric(trips$back - trips$depart)"
+      ],
+      "answer": "trip_days <- as.numeric(trips$back - trips$depart)"
+    },
+    {
+      "teach": "lubridate's **year()**, **month()**, **day()** and **wday()** (day of the week) pull out one part of a date.",
+      "prompt": "Get the month number of each departure with month(). Store it in dep_month.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "dep_month",
+        "expected": [
+          3,
+          3,
+          4,
+          4,
+          5
+        ],
+        "must_use": [
+          "month"
+        ]
+      },
+      "hints": [
+        "month() is from lubridate.",
+        "dep_month <- month(trips$depart)"
+      ],
+      "answer": "dep_month <- month(trips$depart)"
+    },
+    {
+      "teach": "**pull(column)** takes one column out of a table as a vector, like `$` but at the end of a pipe.",
+      "prompt": "Last one: keep only the trips that departed in April (month 4), and store just the traveler names in april_travelers: april_travelers <- trips |> filter(month(depart) == 4) |> pull(traveler).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "april_travelers",
+        "expected": [
+          "Sam Ortiz",
+          "Ava Chen"
+        ],
+        "must_use": [
+          "filter",
+          "month"
+        ]
+      },
+      "hints": [
+        "filter on month(depart) == 4, then pull(traveler) to get the names as a vector.",
+        "april_travelers <- trips |> filter(month(depart) == 4) |> pull(traveler)"
+      ],
+      "answer": "april_travelers <- trips |> filter(month(depart) == 4) |> pull(traveler)"
+    }
+  ],
+  "recap": "readr reads ISO dates as Date values (ymd() converts text if needed). Subtracting dates counts days, month() and friends pull out parts, and pull() takes a column out as a vector."
+}

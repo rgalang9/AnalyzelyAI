@@ -11,11 +11,13 @@ import {
   LessonSchema,
   NotebookLessonSchema,
   PythonLessonSchema,
+  RLessonSchema,
   type ExcelLesson,
   type Lesson,
   type LessonSummary,
   type NotebookLesson,
   type PythonLesson,
+  type RLesson,
 } from "./lesson-types";
 import { PYTHON_VIEW } from "./languages";
 
@@ -51,6 +53,16 @@ export function getLessons(language: string): Lesson[] {
 // Excel lessons (lib/learn/excel/lessons/)
 export function getExcelLessons(): ExcelLesson[] {
   return readLessons("excel", ExcelLessonSchema, { skipEmpty: true });
+}
+
+// R lessons (lib/learn/r/lessons/)
+export function getRLessons(): RLesson[] {
+  return readLessons("r", RLessonSchema, { skipEmpty: true });
+}
+
+// R lessons: the CSV files, by name ("sales" → the text of lib/learn/r/datasets/sales.csv)
+export function getRDatasets(names: string[]): Record<string, string> {
+  return Object.fromEntries(names.map((name) => [name, readFileSync(path.join(learnDir("r"), "datasets", `${name}.csv`), "utf8")]));
 }
 
 // One Python lesson file. A file with a mistake doesn't stop the course: it gets `problem`
@@ -123,6 +135,7 @@ export function getLessonSummaries(language: string): LessonSummary[] {
     return (PYTHON_VIEW === "notebook" ? getNotebookLessons() : getPythonLessons()).map(pythonSummary);
   }
   if (language === "excel") return summarize(getExcelLessons());
+  if (language === "r") return summarize(getRLessons());
   return summarize(getLessons(language));
 }
 

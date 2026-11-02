@@ -10,6 +10,8 @@ import {
   getLessonSummaries,
   getNotebookLessons,
   getPythonLessons,
+  getRDatasets,
+  getRLessons,
   pythonSummary,
   summarize,
 } from "@/lib/learn/load-lessons";
@@ -20,6 +22,7 @@ import TourLessonPlayer from "../../tour-lesson";
 import PythonLessonPlayer from "../../python-lesson";
 import NotebookPlayer from "../../notebook-lesson";
 import ExcelLessonPlayer from "../../excel-lesson";
+import RLessonPlayer from "../../r-lesson";
 
 // Build a page for every lesson of every open language ahead of time
 export function generateStaticParams() {
@@ -51,6 +54,7 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
     );
   }
   if (language === "excel") return <ExcelLessonPage lessonId={lessonId} langName={lang.name} />;
+  if (language === "r") return <RLessonPage lessonId={lessonId} langName={lang.name} />;
 
   const lessons = getLessons(language);
   const index = lessons.findIndex((l) => l.id === lessonId);
@@ -197,6 +201,38 @@ function ExcelLessonPage({ lessonId, langName }: { lessonId: string; langName: s
         <ExcelLessonPlayer
           key={lesson.id} // a fresh workbook for each lesson
           lesson={lesson}
+          lessons={summaries}
+          nextLesson={summaries[index + 1] ?? null}
+        />
+      </LessonGate>
+    </main>
+  );
+}
+
+// R lessons: the task panel beside an RStudio-style script, console and plots
+function RLessonPage({ lessonId, langName }: { lessonId: string; langName: string }) {
+  const lessons = getRLessons();
+  const index = lessons.findIndex((l) => l.id === lessonId);
+  if (index === -1) notFound();
+
+  const lesson = lessons[index];
+  const summaries = summarize(lessons);
+
+  return (
+    <main className="flex w-full flex-1 flex-col px-4 py-6 lg:px-6">
+      <Link href="/learn/r" className="text-sm text-zinc-500 hover:text-foreground">
+        ← All {langName} lessons
+      </Link>
+      <h1 className="mt-3 text-2xl font-bold tracking-tight">
+        <span className="text-zinc-500">Lesson {index}: </span>
+        {lesson.title}
+      </h1>
+
+      <LessonGate language="r" previous={summaries[index - 1] ?? null}>
+        <RLessonPlayer
+          key={lesson.id} // a fresh R session for each lesson
+          lesson={lesson}
+          datasets={getRDatasets(lesson.datasets)}
           lessons={summaries}
           nextLesson={summaries[index + 1] ?? null}
         />

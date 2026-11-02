@@ -12,7 +12,8 @@ import {
   placeholder,
 } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap, indentLess, indentMore } from "@codemirror/commands";
-import { bracketMatching, HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
+import { bracketMatching, HighlightStyle, indentUnit, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
+import { r } from "@codemirror/legacy-modes/mode/r";
 import { sql } from "@codemirror/lang-sql";
 import { python } from "@codemirror/lang-python";
 import { tags } from "@lezer/highlight";
@@ -55,25 +56,46 @@ const pythonTab = [
   },
 ];
 
-// What changes per language: the colors, the empty-editor text, and Tab (Python needs it for indenting)
+// R indents by 2 spaces, like RStudio
+const rTab = [
+  {
+    key: "Tab",
+    run: (view: EditorView) => {
+      if (!view.state.selection.ranges.every((range) => range.empty)) return indentMore(view);
+      view.dispatch(view.state.replaceSelection("  "));
+      return true;
+    },
+    shift: indentLess,
+  },
+];
+
+// What changes per language: the colors, the empty-editor text, and Tab (Python and R use it for indenting)
 const LANGUAGES = {
   sql: { support: () => [sql()], placeholder: "Type your SQL here…", keys: [] },
   python: { support: () => [python(), indentUnit.of("    ")], placeholder: "Type your Python here…", keys: pythonTab },
+  r: { support: () => [StreamLanguage.define(r), indentUnit.of("  ")], placeholder: "Type your R here…", keys: rTab },
 };
 
+// What Ctrl/Cmd+Enter (or a Run button) applies to: the whole text, the selection (from–to, empty
+// when nothing is selected, then `from` is the cursor), and a way to move the cursor afterwards
+export type RunTarget = { doc: string; from: number; to: number; moveCursor: (pos: number) => void };
+
 // Code editor with line numbers and colors. Ctrl/Cmd+Enter runs the code.
+// `controlRef`: lets a Run button outside the editor ask what to run, like Ctrl/Cmd+Enter does.
 export default function CodeEditor({
   language,
   value,
   onChange,
   onRun,
   readOnly,
+  controlRef,
 }: {
   language: keyof typeof LANGUAGES;
   value: string;
   onChange: (value: string) => void;
-  onRun: () => void;
+  onRun: (target: RunTarget) => void;
   readOnly: boolean;
+  controlRef?: React.RefObject<{ runTarget: () => RunTarget | null } | null>;
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -94,7 +116,7 @@ export default function CodeEditor({
         doc: value,
         extensions: [
           Prec.highest(
-            keymap.of([{ key: "Mod-Enter", run: () => (onRunRef.current(), true) }])
+            keymap.of([{ key: "Mod-Enter", run: (v) => (onRunRef.current(runTargetOf(v)), true) }])
           ),
           lineNumbers(),
           highlightActiveLineGutter(),
@@ -116,6 +138,7 @@ export default function CodeEditor({
       }),
     });
     viewRef.current = view;
+    if (controlRef) controlRef.current = { runTarget: () => (viewRef.current ? runTargetOf(viewRef.current) : null) };
     return () => view.destroy();
     // Only on first render: later changes are applied by the effects below
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,4 +162,14 @@ export default function CodeEditor({
   }, [readOnly]);
 
   return <div ref={boxRef} className="h-full min-h-40" />;
+}
+
+function runTargetOf(view: EditorView): RunTarget {
+  const { from, to } = view.state.selection.main;
+  return {
+    doc: view.state.doc.toString(),
+    from,
+    to,
+    moveCursor: (pos) => view.dispatch({ selection: { anchor: Math.min(pos, view.state.doc.length) }, scrollIntoView: true }),
+  };
 }

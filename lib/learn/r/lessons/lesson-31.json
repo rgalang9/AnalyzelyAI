@@ -1,0 +1,70 @@
+{
+  "id": "r-31",
+  "level": 6,
+  "title": "Line charts for change over time",
+  "explanation": "Use a **line chart** whenever the x axis is time. `subscribers` tracks two streaming services, StreamCo and Flixly, from 2021 to 2025 (in millions).",
+  "datasets": [
+    "subscribers"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Plot StreamCo's subscribers over time: filter to StreamCo, then ggplot(aes(x = year, y = subscribers)) + geom_line().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_line",
+        "aes": {
+          "x": "year",
+          "y": "subscribers"
+        },
+        "must_use": [
+          "filter"
+        ]
+      },
+      "hints": [
+        "filter first, then pipe into ggplot.",
+        "... |> ggplot(aes(x = year, y = subscribers)) + geom_line()"
+      ],
+      "answer": "subscribers |> filter(service == \"StreamCo\") |> ggplot(aes(x = year, y = subscribers)) + geom_line()"
+    },
+    {
+      "teach": "You can stack as many layers as you like. Lines show the trend, and points show the actual measurements.",
+      "prompt": "Add dots on each year by adding a second layer: + geom_point().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_point",
+        "aes": {
+          "x": "year",
+          "y": "subscribers"
+        }
+      },
+      "hints": [
+        "Layers stack with +.",
+        "... + geom_line() + geom_point()"
+      ],
+      "answer": "subscribers |> filter(service == \"StreamCo\") |> ggplot(aes(x = year, y = subscribers)) + geom_line() + geom_point()"
+    },
+    {
+      "teach": "**color** (or colour) gives each group its own line and colour. It's for lines and points. **fill** is for areas and bars. StreamCo overtakes Flixly in 2025!",
+      "prompt": "Last one: compare both services. Use the whole table, and give each service its own colour with color = service: ggplot(subscribers, aes(x = year, y = subscribers, color = service)) + geom_line().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_line",
+        "aes": {
+          "x": "year",
+          "y": "subscribers",
+          "colour": "service"
+        }
+      },
+      "hints": [
+        "color = service goes inside aes().",
+        "ggplot(subscribers, aes(x = year, y = subscribers, color = service)) + geom_line()"
+      ],
+      "answer": "ggplot(subscribers, aes(x = year, y = subscribers, color = service)) + geom_line()"
+    }
+  ],
+  "recap": "geom_line() shows change over time, and geom_point() adds the data points. color = group draws one coloured line per group."
+}

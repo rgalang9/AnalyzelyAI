@@ -1,0 +1,64 @@
+{
+  "id": "r-39",
+  "level": 7,
+  "title": "Making predictions",
+  "explanation": "A fitted model can **predict**: what score should a student expect after 30 minutes of study? **predict()** plugs new values into the model's line. Prediction is where regression becomes genuinely useful for decisions.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "model <- lm(score ~ minutes, data = study_log)\n",
+  "tasks": [
+    {
+      "teach": "**predict(model, newdata = ...)** needs a table with the same column names the model used. **tibble()** builds a small table on the spot. It's the same as intercept + slope × 30.",
+      "prompt": "Run the model line in the script first. Then predict the score for 30 minutes: p30 <- predict(model, newdata = tibble(minutes = 30)).",
+      "starter_code": "model <- lm(score ~ minutes, data = study_log)\n",
+      "check": {
+        "type": "value",
+        "object": "p30",
+        "expected": 69.522989,
+        "must_use": [
+          "predict"
+        ]
+      },
+      "hints": [
+        "newdata is a small table with a minutes column.",
+        "p30 <- predict(model, newdata = tibble(minutes = 30))"
+      ],
+      "answer": "model <- lm(score ~ minutes, data = study_log)\np30 <- predict(model, newdata = tibble(minutes = 30))"
+    },
+    {
+      "prompt": "Predict for 30 and 60 minutes at once, with minutes = c(30, 60), and store both in preds.",
+      "check": {
+        "type": "value",
+        "object": "preds",
+        "expected": [
+          69.522989,
+          94.764368
+        ],
+        "must_use": [
+          "predict"
+        ]
+      },
+      "hints": [
+        "Put both values in c().",
+        "preds <- predict(model, newdata = tibble(minutes = c(30, 60)))"
+      ],
+      "answer": "preds <- predict(model, newdata = tibble(minutes = c(30, 60)))"
+    },
+    {
+      "teach": "It matches p30 exactly: a prediction is just the line's equation. Be careful predicting far outside your data, like 300 minutes. The line would promise impossible scores over 100.",
+      "prompt": "Last one: check it by hand. Using the coefficients, store intercept + slope × 30 in by_hand: coef(model)[[1]] + coef(model)[[2]] * 30.",
+      "check": {
+        "type": "value",
+        "object": "by_hand",
+        "expected": 69.522989
+      },
+      "hints": [
+        "coef(model)[[1]] is the intercept and [[2]] is the slope.",
+        "by_hand <- coef(model)[[1]] + coef(model)[[2]] * 30"
+      ],
+      "answer": "by_hand <- coef(model)[[1]] + coef(model)[[2]] * 30"
+    }
+  ],
+  "recap": "predict(model, newdata = tibble(...)) plugs new values into the model. It's just intercept + slope × x, and it's only trustworthy inside the range of your data."
+}

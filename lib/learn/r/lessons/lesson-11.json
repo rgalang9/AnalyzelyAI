@@ -1,0 +1,194 @@
+{
+  "id": "r-11",
+  "level": 2,
+  "title": "Review: The Study Log",
+  "explanation": "**Level 2 review!** A study app logs each session: the student, the subject, minutes studied, and their quiz score after. Answer each question with one pipe chain. There's nothing new here, just everything from Level 2: the pipe, select, filter, arrange and mutate.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Keep only the Biology sessions, with just the student and score columns. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "student",
+          "score"
+        ],
+        "rows": [
+          [
+            "Leo",
+            74
+          ],
+          [
+            "Maya",
+            91
+          ],
+          [
+            "Sam",
+            80
+          ],
+          [
+            "Ava",
+            77
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter",
+          "select"
+        ]
+      },
+      "hints": [
+        "filter first, then select.",
+        "result <- study_log |> filter(subject == \"Biology\") |> select(student, score)"
+      ],
+      "answer": "result <- study_log |> filter(subject == \"Biology\") |> select(student, score)"
+    },
+    {
+      "prompt": "Find the 3 lowest scores: sort by score, smallest first, and keep 3 rows. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "session_id",
+          "student",
+          "subject",
+          "minutes",
+          "score"
+        ],
+        "rows": [
+          [
+            10,
+            "Leo",
+            "Economics",
+            15,
+            52
+          ],
+          [
+            4,
+            "Sam",
+            "Math",
+            20,
+            58
+          ],
+          [
+            7,
+            "Sam",
+            "Economics",
+            35,
+            66
+          ]
+        ],
+        "ignore_order": false
+      },
+      "hints": [
+        "arrange(score), then head(3). (slice_min works too.)",
+        "result <- study_log |> arrange(score) |> head(3)"
+      ],
+      "answer": "result <- study_log |> arrange(score) |> head(3)"
+    },
+    {
+      "prompt": "Math sessions only: add points_per_min (score ÷ minutes, rounded to 2), sort by score largest first, and keep student, score and points_per_min. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "student",
+          "score",
+          "points_per_min"
+        ],
+        "rows": [
+          [
+            "Ava",
+            93,
+            1.69
+          ],
+          [
+            "Leo",
+            88,
+            1.76
+          ],
+          [
+            "Maya",
+            82,
+            1.82
+          ],
+          [
+            "Sam",
+            58,
+            2.9
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "filter",
+          "mutate",
+          "arrange",
+          "select"
+        ]
+      },
+      "hints": [
+        "filter, mutate, arrange, select: 4 steps.",
+        "Put each step on its own line, ending each line with |>."
+      ],
+      "answer": "result <- study_log |> filter(subject == \"Math\") |> mutate(points_per_min = round(score / minutes, 2)) |> arrange(desc(score)) |> select(student, score, points_per_min)"
+    },
+    {
+      "prompt": "Last one: across all subjects, keep sessions with points_per_min above 2, biggest first, showing student, subject and points_per_min. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "student",
+          "subject",
+          "points_per_min"
+        ],
+        "rows": [
+          [
+            "Leo",
+            "Economics",
+            3.47
+          ],
+          [
+            "Sam",
+            "Math",
+            2.9
+          ],
+          [
+            "Maya",
+            "Economics",
+            2.8
+          ],
+          [
+            "Ava",
+            "Biology",
+            2.57
+          ],
+          [
+            "Leo",
+            "Biology",
+            2.47
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "mutate",
+          "filter"
+        ]
+      },
+      "hints": [
+        "You need to make the column with mutate before you can filter on it.",
+        "mutate, filter, arrange, select."
+      ],
+      "answer": "result <- study_log |> mutate(points_per_min = round(score / minutes, 2)) |> filter(points_per_min > 2) |> arrange(desc(points_per_min)) |> select(student, subject, points_per_min)"
+    }
+  ],
+  "recap": "Level 2 done! You can chain select, filter, arrange and mutate with the pipe to answer real questions in one readable recipe. Next up: summarising with group_by."
+}

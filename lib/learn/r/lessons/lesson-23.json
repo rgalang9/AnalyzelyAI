@@ -1,0 +1,184 @@
+{
+  "id": "r-23",
+  "level": 4,
+  "title": "Reshaping: pivot_longer and pivot_wider",
+  "explanation": "`monthly_sales` is in **wide** format: one row per product, with a column for each month. That's easy for people to read, but awkward for R: you can't group_by(month) when month isn't a column. **Tidy** data has one row per observation. **pivot_longer()** turns wide into long, and **pivot_wider()** turns it back.",
+  "datasets": [
+    "monthly_sales"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**pivot_longer()** stacks columns into rows. The old column **names** (Jan, Feb, Mar) go into a new column (`names_to`), and their **values** go into another (`values_to`). 4 products × 3 months = 12 rows.",
+      "prompt": "Make it long: one row per product and month. result <- monthly_sales |> pivot_longer(cols = c(Jan, Feb, Mar), names_to = \"month\", values_to = \"sales\").",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "product",
+          "month",
+          "sales"
+        ],
+        "rows": [
+          [
+            "Hoodie",
+            "Jan",
+            120
+          ],
+          [
+            "Hoodie",
+            "Feb",
+            95
+          ],
+          [
+            "Hoodie",
+            "Mar",
+            140
+          ],
+          [
+            "Cap",
+            "Jan",
+            60
+          ],
+          [
+            "Cap",
+            "Feb",
+            72
+          ],
+          [
+            "Cap",
+            "Mar",
+            55
+          ],
+          [
+            "Mug",
+            "Jan",
+            40
+          ],
+          [
+            "Mug",
+            "Feb",
+            38
+          ],
+          [
+            "Mug",
+            "Mar",
+            52
+          ],
+          [
+            "Tote",
+            "Jan",
+            30
+          ],
+          [
+            "Tote",
+            "Feb",
+            44
+          ],
+          [
+            "Tote",
+            "Mar",
+            36
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "pivot_longer"
+        ]
+      },
+      "hints": [
+        "cols are the columns to stack. names_to and values_to name the 2 new columns, in quotes.",
+        "result <- monthly_sales |> pivot_longer(cols = c(Jan, Feb, Mar), names_to = \"month\", values_to = \"sales\")"
+      ],
+      "answer": "result <- monthly_sales |> pivot_longer(cols = c(Jan, Feb, Mar), names_to = \"month\", values_to = \"sales\")"
+    },
+    {
+      "teach": "The groups come out in A to Z order (Feb, Jan, Mar), not calendar order, because month is text here.",
+      "prompt": "Now that month is a column, total the sales per month with group_by and summarize, in a column called total.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "totals",
+        "columns": [
+          "month",
+          "total"
+        ],
+        "rows": [
+          [
+            "Feb",
+            249
+          ],
+          [
+            "Jan",
+            250
+          ],
+          [
+            "Mar",
+            283
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "group_by(month), then summarize(total = sum(sales)).",
+        "totals <- result |> group_by(month) |> summarize(total = sum(sales))"
+      ],
+      "answer": "totals <- result |> group_by(month) |> summarize(total = sum(sales))"
+    },
+    {
+      "teach": "**pivot_wider()** is the reverse: it spreads one column's values out into new columns. Use it for tables people will read.",
+      "prompt": "Last one: turn the long result back into wide: wide <- result |> pivot_wider(names_from = month, values_from = sales).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "wide",
+        "columns": [
+          "product",
+          "Jan",
+          "Feb",
+          "Mar"
+        ],
+        "rows": [
+          [
+            "Hoodie",
+            120,
+            95,
+            140
+          ],
+          [
+            "Cap",
+            60,
+            72,
+            55
+          ],
+          [
+            "Mug",
+            40,
+            38,
+            52
+          ],
+          [
+            "Tote",
+            30,
+            44,
+            36
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "pivot_wider"
+        ]
+      },
+      "hints": [
+        "names_from: the column whose values become new column names. values_from: the column that fills them.",
+        "wide <- result |> pivot_wider(names_from = month, values_from = sales)"
+      ],
+      "answer": "wide <- result |> pivot_wider(names_from = month, values_from = sales)"
+    }
+  ],
+  "recap": "Tidy data has one row per observation. pivot_longer() stacks columns into rows (names_to, values_to), and pivot_wider() spreads them back out (names_from, values_from)."
+}

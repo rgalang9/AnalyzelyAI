@@ -1,0 +1,49 @@
+{
+  "id": "r-33",
+  "level": 6,
+  "title": "Histograms and boxplots",
+  "explanation": "To see how values are **spread out**, use a **histogram** (how many values fall in each range) or a **boxplot** (the middle, the spread and any unusual values at a glance). These use the `deliveries` minutes.",
+  "datasets": [
+    "deliveries",
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**geom_histogram()** splits the numbers into ranges called **bins** and counts each. **binwidth** sets how wide each bin is. Always pick one yourself: ggplot's default guess is rarely good.",
+      "prompt": "Make a histogram of delivery minutes, with bars 10 minutes wide: ggplot(deliveries, aes(x = minutes)) + geom_histogram(binwidth = 10).",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_histogram",
+        "aes": {
+          "x": "minutes"
+        }
+      },
+      "hints": [
+        "A histogram only needs x.",
+        "ggplot(deliveries, aes(x = minutes)) + geom_histogram(binwidth = 10)"
+      ],
+      "answer": "ggplot(deliveries, aes(x = minutes)) + geom_histogram(binwidth = 10)"
+    },
+    {
+      "teach": "In a **boxplot**, the thick line is the **median** (the middle value), the box holds the middle half of the data, and the whiskers reach out to the rest. Dots beyond them are unusual values (outliers).",
+      "prompt": "Last one: compare scores across subjects with a boxplot: ggplot(study_log, aes(x = subject, y = score)) + geom_boxplot().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_boxplot",
+        "aes": {
+          "x": "subject",
+          "y": "score"
+        }
+      },
+      "hints": [
+        "Category on x, numbers on y.",
+        "ggplot(study_log, aes(x = subject, y = score)) + geom_boxplot()"
+      ],
+      "answer": "ggplot(study_log, aes(x = subject, y = score)) + geom_boxplot()"
+    }
+  ],
+  "recap": "Histograms show how one number is spread out (choose a binwidth). Boxplots compare spreads across groups: the median, the middle half and the outliers."
+}

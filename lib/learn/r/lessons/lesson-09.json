@@ -1,0 +1,301 @@
+{
+  "id": "r-09",
+  "level": 2,
+  "title": "arrange: sorting rows",
+  "explanation": "**arrange()** sorts rows by a column, smallest first. Wrap the column in **desc()** for largest first. Sorting is how you build rankings and top-10 lists.",
+  "datasets": [
+    "players"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Sort players by hours_played, smallest first. Store it in result.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ],
+          [
+            6,
+            "speedy_g",
+            "Brazil",
+            "2024-05-17",
+            40
+          ],
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            9,
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ],
+          [
+            2,
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145
+          ],
+          [
+            7,
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            5,
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ],
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "arrange"
+        ]
+      },
+      "hints": [
+        "arrange() takes the column to sort by.",
+        "result <- players |> arrange(hours_played)"
+      ],
+      "answer": "result <- players |> arrange(hours_played)"
+    },
+    {
+      "prompt": "Now largest first, using desc().",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ],
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ],
+          [
+            5,
+            "BlockBuilder",
+            "UK",
+            "2021-08-30",
+            275
+          ],
+          [
+            7,
+            "CaptainCrit",
+            "Philippines",
+            "2022-12-05",
+            198
+          ],
+          [
+            2,
+            "pixelqueen",
+            "Canada",
+            "2022-07-02",
+            145
+          ],
+          [
+            9,
+            "TurboTaco",
+            "Mexico",
+            "2023-06-21",
+            133
+          ],
+          [
+            4,
+            "luna_plays",
+            "Japan",
+            "2023-01-09",
+            88
+          ],
+          [
+            6,
+            "speedy_g",
+            "Brazil",
+            "2024-05-17",
+            40
+          ],
+          [
+            8,
+            "mochi",
+            "Japan",
+            "2024-02-29",
+            12
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "arrange",
+          "desc"
+        ]
+      },
+      "hints": [
+        "Wrap the column in desc() inside arrange().",
+        "result <- players |> arrange(desc(hours_played))"
+      ],
+      "answer": "result <- players |> arrange(desc(hours_played))"
+    },
+    {
+      "prompt": "Find the top 3 players by hours: sort largest first, then keep the first 3 rows with head(3). Store it in top3.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "top3",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ],
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "arrange"
+        ]
+      },
+      "hints": [
+        "Chain arrange(desc(...)) and head(3) with pipes.",
+        "top3 <- players |> arrange(desc(hours_played)) |> head(3)"
+      ],
+      "answer": "top3 <- players |> arrange(desc(hours_played)) |> head(3)"
+    },
+    {
+      "teach": "**slice_max()** and **slice_min()** keep the rows with the biggest or smallest values. They're handy for top-N lists.",
+      "prompt": "Last one: there's a shortcut. slice_max(hours_played, n = 3) does the same in one step. Store it in top3.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "top3",
+        "columns": [
+          "player_id",
+          "username",
+          "country",
+          "signup_date",
+          "hours_played"
+        ],
+        "rows": [
+          [
+            3,
+            "NoScopeNate",
+            "USA",
+            "2020-11-23",
+            610
+          ],
+          [
+            10,
+            "xXDragonXx",
+            "USA",
+            "2021-03-01",
+            502
+          ],
+          [
+            1,
+            "ShadowFox",
+            "USA",
+            "2021-03-14",
+            320
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "slice_max"
+        ]
+      },
+      "hints": [
+        "slice_max takes the column, then n = how many.",
+        "top3 <- players |> slice_max(hours_played, n = 3)"
+      ],
+      "answer": "top3 <- players |> slice_max(hours_played, n = 3)"
+    }
+  ],
+  "recap": "arrange() sorts smallest first, and desc() flips it. Chain with head() for a top-N, or use slice_max() and slice_min()."
+}

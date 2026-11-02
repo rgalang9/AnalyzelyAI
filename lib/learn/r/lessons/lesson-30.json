@@ -1,0 +1,89 @@
+{
+  "id": "r-30",
+  "level": 6,
+  "title": "ggplot2 basics: bar and column charts",
+  "explanation": "**Welcome to Level 6: charts with ggplot2!** You made your first charts back in Level 1. Now you'll build real, readable charts. Remember the recipe: `ggplot(data, aes(x = ..., y = ...)) + geom_...()`. A very common pattern is to **summarise first** with dplyr, then pipe the summary straight into ggplot.",
+  "datasets": [
+    "box_office"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Count the movies per genre with geom_bar(): ggplot(box_office, aes(x = genre)) + geom_bar().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_bar",
+        "aes": {
+          "x": "genre"
+        }
+      },
+      "hints": [
+        "geom_bar() counts rows, so it only needs x.",
+        "ggplot(box_office, aes(x = genre)) + geom_bar()"
+      ],
+      "answer": "ggplot(box_office, aes(x = genre)) + geom_bar()"
+    },
+    {
+      "teach": "You can pipe a table straight into **ggplot()**. Careful: dplyr steps join with `|>`, but ggplot layers join with **`+`**. Mixing them up is the most common ggplot error.",
+      "prompt": "Now show total gross per genre. Summarise first, then pipe into ggplot with geom_col(): box_office |> group_by(genre) |> summarize(total = sum(gross)) |> ggplot(aes(x = genre, y = total)) + geom_col().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "genre",
+          "y": "total"
+        },
+        "must_use": [
+          "summarize"
+        ]
+      },
+      "hints": [
+        "When you pipe into ggplot, leave the data out of ggplot(): it comes through the pipe.",
+        "Notice the switch from |> to + once you're inside ggplot."
+      ],
+      "answer": "box_office |> group_by(genre) |> summarize(total = sum(gross)) |> ggplot(aes(x = genre, y = total)) + geom_col()"
+    },
+    {
+      "teach": "**reorder(category, value)** sorts the bars from smallest to largest value, so the ranking jumps out.",
+      "prompt": "Bars in A to Z order are hard to read. Sort them by size: change x to reorder(genre, total).",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_col",
+        "aes": {
+          "x": "reorder(genre, total)",
+          "y": "total"
+        },
+        "must_use": [
+          "reorder"
+        ]
+      },
+      "hints": [
+        "reorder(column, value) orders the categories by the value.",
+        "aes(x = reorder(genre, total), y = total)"
+      ],
+      "answer": "box_office |> group_by(genre) |> summarize(total = sum(gross)) |> ggplot(aes(x = reorder(genre, total), y = total)) + geom_col()"
+    },
+    {
+      "teach": "**fill** colours the inside of bars by a column. ggplot adds a legend automatically and stacks the colours in each bar.",
+      "prompt": "Last one: colour each bar by rating, with fill. Count movies per genre again, with fill = rating inside aes(): ggplot(box_office, aes(x = genre, fill = rating)) + geom_bar().",
+      "starter_code": "",
+      "check": {
+        "type": "plot",
+        "geom": "geom_bar",
+        "aes": {
+          "x": "genre",
+          "fill": "rating"
+        }
+      },
+      "hints": [
+        "fill = rating goes inside aes().",
+        "ggplot(box_office, aes(x = genre, fill = rating)) + geom_bar()"
+      ],
+      "answer": "ggplot(box_office, aes(x = genre, fill = rating)) + geom_bar()"
+    }
+  ],
+  "recap": "geom_bar() counts rows, and geom_col() draws values you've summarised. Pipe a dplyr summary into ggplot, switching from |> to +. reorder() sorts bars, and fill colours them by a column."
+}

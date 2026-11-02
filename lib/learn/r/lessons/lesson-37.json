@@ -1,0 +1,64 @@
+{
+  "id": "r-37",
+  "level": 7,
+  "title": "Correlation",
+  "explanation": "**Welcome to Level 7: statistics!** Charts show patterns. Statistics put a **number** on them. **Correlation** measures how closely two numbers move together, from **-1** to **1**:\n- near **1**: they rise together.\n- near **-1**: one rises as the other falls.\n- near **0**: no clear straight-line link.\n\nCorrelation doesn't prove that one **causes** the other.",
+  "datasets": [
+    "study_log",
+    "box_office"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**cor(x, y)** gives the correlation between two numeric vectors. The order doesn't matter: cor(x, y) equals cor(y, x).",
+      "prompt": "Find the correlation between study minutes and score: r <- cor(study_log$minutes, study_log$score).",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "r",
+        "expected": 0.935419,
+        "must_use": [
+          "cor"
+        ]
+      },
+      "hints": [
+        "cor() takes two columns.",
+        "r <- cor(study_log$minutes, study_log$score)"
+      ],
+      "answer": "r <- cor(study_log$minutes, study_log$score)"
+    },
+    {
+      "prompt": "Round it to 2 decimals and store it in r_short.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "r_short",
+        "expected": 0.94
+      },
+      "hints": [
+        "round(r, 2)",
+        "r_short <- round(r, 2)"
+      ],
+      "answer": "r_short <- round(r, 2)"
+    },
+    {
+      "teach": "A strong positive link, but remember: big budgets don't automatically **cause** big gross. Big studios might simply spend more on films they already expect to be hits.",
+      "prompt": "Last one: is a bigger budget linked to bigger gross? Store cor(box_office$budget, box_office$gross) in r_movies.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "r_movies",
+        "expected": 0.969831,
+        "must_use": [
+          "cor"
+        ]
+      },
+      "hints": [
+        "Same function, different columns.",
+        "r_movies <- cor(box_office$budget, box_office$gross)"
+      ],
+      "answer": "r_movies <- cor(box_office$budget, box_office$gross)"
+    }
+  ],
+  "recap": "cor(x, y) measures how two numbers move together, from -1 to 1. Near ±1 is a strong link, near 0 is weak, and correlation is not causation."
+}

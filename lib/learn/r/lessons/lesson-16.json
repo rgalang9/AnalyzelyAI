@@ -1,0 +1,97 @@
+{
+  "id": "r-16",
+  "level": 3,
+  "title": "across: the same summary on many columns",
+  "explanation": "Writing `mean(minutes), mean(score), mean(...)` gets repetitive. **across()** applies the same function to several columns at once. This lesson uses the `study_log` from Level 2.",
+  "datasets": [
+    "study_log"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "teach": "**across(c(col1, col2), function)** runs the function on each column, keeping their names. Pass the function's name **without brackets**: `mean`, not `mean()`.",
+      "prompt": "For each subject, find the average of both minutes and score: result <- study_log |> group_by(subject) |> summarize(across(c(minutes, score), mean)).",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "subject",
+          "minutes",
+          "score"
+        ],
+        "rows": [
+          [
+            "Biology",
+            41.25,
+            80.5
+          ],
+          [
+            "Economics",
+            28.75,
+            66.75
+          ],
+          [
+            "Math",
+            42.5,
+            80.25
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "across"
+        ]
+      },
+      "hints": [
+        "across(columns, function) goes inside summarize().",
+        "result <- study_log |> group_by(subject) |> summarize(across(c(minutes, score), mean))"
+      ],
+      "answer": "result <- study_log |> group_by(subject) |> summarize(across(c(minutes, score), mean))"
+    },
+    {
+      "prompt": "Last one: for each student, find the total minutes and total score with across() and sum.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "student",
+          "minutes",
+          "score"
+        ],
+        "rows": [
+          [
+            "Ava",
+            125,
+            249
+          ],
+          [
+            "Leo",
+            95,
+            214
+          ],
+          [
+            "Maya",
+            130,
+            243
+          ],
+          [
+            "Sam",
+            100,
+            204
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "across"
+        ]
+      },
+      "hints": [
+        "Same as before, but group by student and use sum.",
+        "result <- study_log |> group_by(student) |> summarize(across(c(minutes, score), sum))"
+      ],
+      "answer": "result <- study_log |> group_by(student) |> summarize(across(c(minutes, score), sum))"
+    }
+  ],
+  "recap": "across(c(columns), function) applies one function to several columns inside summarize() or mutate(), keeping the column names."
+}

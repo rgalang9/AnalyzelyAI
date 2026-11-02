@@ -1,0 +1,146 @@
+{
+  "id": "r-24",
+  "level": 4,
+  "title": "Review: Cleaning messy orders",
+  "explanation": "**Level 4 review!** A small shop sent its order list, and it's a mess: city names typed differently, prices as text with $, a missing quantity and a duplicate order. Clean it step by step, then work out the revenue per city. There's nothing new here, just everything from Level 4.",
+  "datasets": [
+    "messy_orders"
+  ],
+  "starter_code": "",
+  "tasks": [
+    {
+      "prompt": "Count the missing values in the qty column, and store it in n_missing.",
+      "starter_code": "",
+      "check": {
+        "type": "value",
+        "object": "n_missing",
+        "expected": 1
+      },
+      "hints": [
+        "sum(is.na(...)) on the qty column.",
+        "n_missing <- sum(is.na(messy_orders$qty))"
+      ],
+      "answer": "n_missing <- sum(is.na(messy_orders$qty))"
+    },
+    {
+      "prompt": "In one chain, make clean: fix the city names (trim + title case), turn price into a number, fill the missing qty with 1, and remove the duplicate order.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "clean",
+        "columns": [
+          "order_id",
+          "customer",
+          "city",
+          "product",
+          "qty",
+          "price"
+        ],
+        "rows": [
+          [
+            1,
+            "Ava",
+            "New York",
+            "Hoodie",
+            2,
+            40
+          ],
+          [
+            2,
+            "Ben",
+            "New York",
+            "Cap",
+            1,
+            15
+          ],
+          [
+            3,
+            "Chloe",
+            "Boston",
+            "Mug",
+            1,
+            14
+          ],
+          [
+            4,
+            "Dev",
+            "Boston",
+            "Hoodie",
+            1,
+            40
+          ],
+          [
+            5,
+            "Ella",
+            "Boston",
+            "Socks",
+            3,
+            10
+          ],
+          [
+            6,
+            "Finn",
+            "New York",
+            "Cap",
+            3,
+            15
+          ],
+          [
+            8,
+            "Gia",
+            "Providence",
+            "Mug",
+            2,
+            14
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "distinct",
+          "replace_na"
+        ]
+      },
+      "hints": [
+        "One mutate() can fix several columns, separated by commas. Then distinct().",
+        "clean <- messy_orders |> mutate(city = str_to_title(str_trim(city)), price = parse_number(price), qty = replace_na(qty, 1)) |> distinct()"
+      ],
+      "answer": "clean <- messy_orders |> mutate(city = str_to_title(str_trim(city)), price = parse_number(price), qty = replace_na(qty, 1)) |> distinct()"
+    },
+    {
+      "prompt": "Last one: add revenue = qty × price to clean, then total it per city, biggest first, in a column called revenue.",
+      "starter_code": "",
+      "check": {
+        "type": "data_frame",
+        "object": "result",
+        "columns": [
+          "city",
+          "revenue"
+        ],
+        "rows": [
+          [
+            "New York",
+            140
+          ],
+          [
+            "Boston",
+            84
+          ],
+          [
+            "Providence",
+            28
+          ]
+        ],
+        "ignore_order": false,
+        "must_use": [
+          "group_by"
+        ]
+      },
+      "hints": [
+        "mutate, group_by, summarize, arrange.",
+        "result <- clean |> mutate(revenue = qty * price) |> group_by(city) |> summarize(revenue = sum(revenue)) |> arrange(desc(revenue))"
+      ],
+      "answer": "result <- clean |> mutate(revenue = qty * price) |> group_by(city) |> summarize(revenue = sum(revenue)) |> arrange(desc(revenue))"
+    }
+  ],
+  "recap": "Level 4 done! You can find and fix missing values, clean text, parse numbers, remove duplicates, split and join columns, work with dates, and reshape tables. Next up: joining tables."
+}
