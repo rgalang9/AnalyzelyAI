@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUp, Check, CircleAlert, Copy, ImageDown } from "lucide-react";
 import type { Dataset } from "@/lib/parse-dataset";
 import type { Analysis, AskRequest } from "@/lib/analysis-schema";
@@ -13,7 +14,11 @@ import {
 } from "@/lib/dataset-stats";
 import { saveAnswer, type Answer } from "@/lib/history";
 import { safeFileName } from "@/lib/download";
+import type { PlanId } from "@/lib/plans";
+import { chunkyPurple } from "../brand";
 import { useDataset } from "../dataset-context";
+import UpgradePopup from "../upgrade-popup";
+import { useUserEmail } from "../use-user-email";
 import AnalysisChart, { saveChartPng } from "./analysis-chart";
 
 // Fixed starter questions above the box (no AI call needed to come up with them)
@@ -28,10 +33,12 @@ const SUGGESTIONS = [
 // listed above the box (and is saved for logged-in users).
 export default function AskQuestion({ dataset }: { dataset: Dataset }) {
   const { analysisId, answers, addAnswer } = useDataset();
+  const { email, loading: checkingLogin } = useUserEmail();
   const [question, setQuestion] = useState("");
   const [pending, setPending] = useState(""); // the question being answered right now
   const [error, setError] = useState("");
   const [saveError, setSaveError] = useState("");
+  const [outOfQuestions, setOutOfQuestions] = useState<{ message: string; planId: PlanId } | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const loading = pending !== "";
 
@@ -72,6 +79,10 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
 
       if (!response.ok) {
         setError(result.error ?? "Something went wrong. Please try again.");
+        // Out of questions: offer a bigger plan, unless they're already on the biggest
+        if (result.limitReached && result.planId !== "premium") {
+          setOutOfQuestions({ message: result.error, planId: result.planId });
+        }
         return;
       }
 
@@ -108,6 +119,9 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
     event.preventDefault();
     void ask(question);
   }
+
+  // AI questions need an account
+  if (!email) return checkingLogin ? null : <SignInToAsk />;
 
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-1 flex-col text-navy">
@@ -205,6 +219,31 @@ export default function AskQuestion({ dataset }: { dataset: Dataset }) {
           </p>
         )}
       </div>
+
+      {outOfQuestions && (
+        <UpgradePopup
+          currentPlan={outOfQuestions.planId}
+          heading="You're out of AI questions"
+          message={outOfQuestions.message}
+          onClose={() => setOutOfQuestions(null)}
+        />
+      )}
+    </section>
+  );
+}
+
+// What guests see instead of the chat. An in-app link, so their file stays open while they sign in.
+function SignInToAsk() {
+  return (
+    <section className="mx-auto flex w-full max-w-4xl flex-col items-center rounded-2xl bg-white px-6 py-10 text-center text-navy shadow-[0_8px_30px_rgba(36,23,79,0.06)]">
+      <Image src="/logo.png" alt="" width={55} height={48} className="h-12 w-auto" />
+      <h2 className="mt-4 font-display text-2xl font-extrabold">Sign in to ask questions</h2>
+      <p className="mt-2 max-w-md text-grey">
+        Create a free account or log in to ask about your data in plain English.
+      </p>
+      <Link href="/login?next=/dataset" className={`${chunkyPurple} mt-6`}>
+        Sign in
+      </Link>
     </section>
   );
 }

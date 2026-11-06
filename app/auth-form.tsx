@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CircleAlert, CircleCheck } from "lucide-react";
+import { safePath } from "@/lib/safe-path";
 import { createClient } from "@/lib/supabase/client";
 import { chunkyPurple } from "./brand";
 
@@ -21,6 +22,8 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  // Sent here from somewhere (e.g. an Upgrade button)? Go back there after logging in.
+  const next = useSearchParams().get("next");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,7 +51,7 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
       return;
     }
 
-    router.push("/upload");
+    router.push(safePath(next));
   }
 
   return (
@@ -70,8 +73,8 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
           </h1>
           <p className="mt-2 text-center text-grey">
             {isSignup
-              ? "Save your analyses and lesson progress."
-              : "Log in to see your saved analyses."}
+              ? "Ask AI questions and save your analyses and lesson progress."
+              : "Log in to ask AI questions and see your saved analyses."}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
@@ -148,7 +151,7 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
           <p className="mt-6 text-center text-sm text-grey">
             {isSignup ? "Already have an account? " : "New here? "}
             <Link
-              href={isSignup ? "/login" : "/signup"}
+              href={`${isSignup ? "/login" : "/signup"}${next ? `?next=${encodeURIComponent(safePath(next))}` : ""}`}
               className="font-bold text-pink hover:underline"
             >
               {isSignup ? "Log in" : "Create a free account"}
@@ -165,8 +168,9 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
             href="/upload"
             className="block rounded-full border-2 border-navy px-6 py-3 text-center font-display font-extrabold text-navy transition-colors hover:bg-purple-light/60"
           >
-            Try it free, no account needed
+            Preview a file, no account needed
           </Link>
+          <p className="mt-3 text-center text-xs text-grey">Asking AI questions needs a free account.</p>
         </div>
       </div>
     </main>

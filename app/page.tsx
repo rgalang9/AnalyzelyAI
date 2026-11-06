@@ -29,8 +29,9 @@ export default function Home() {
 
         <div className="mt-10">
           <Link href={TRY_FREE_HREF} className={chunkyPurple}>
-            Try it free, no account needed
+            Preview a file, no account needed
           </Link>
+          <p className="mt-5 text-sm text-grey">Asking AI questions needs a free account.</p>
         </div>
 
         <ul className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-medium sm:text-base">
@@ -53,7 +54,7 @@ export default function Home() {
           </li>
           <li aria-hidden="true" className="hidden px-6 text-white/40 sm:block">|</li>
           <li>
-            <span className="text-pink">No sign-up</span> needed to try
+            <span className="text-pink">No sign-up</span> needed to preview files
           </li>
           <li aria-hidden="true" className="hidden px-6 text-white/40 sm:block">|</li>
           <li>

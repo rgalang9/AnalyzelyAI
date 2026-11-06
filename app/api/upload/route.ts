@@ -2,7 +2,8 @@
 // We check the file type again here, because browser checks can be bypassed.
 // (Saving the file to storage comes in a later step.)
 
-import { checkFileSize, limitMessage } from "@/lib/plans";
+import { checkFileSize, limitMessage, PLANS } from "@/lib/plans";
+import { getUserPlanId } from "@/lib/user-plan";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
 
@@ -22,10 +23,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const sizeProblem = checkFileSize(file.size);
+  const planId = await getUserPlanId();
+  const sizeProblem = checkFileSize(file.size, PLANS[planId]);
   if (sizeProblem) {
     return Response.json({ error: limitMessage(sizeProblem) }, { status: 400 });
   }
 
-  return Response.json({ name: file.name, size: file.size });
+  return Response.json({ name: file.name, size: file.size, planId });
 }

@@ -6,7 +6,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { CleaningReviewSchema, CleanRequestSchema, type CleanRequest } from "@/lib/cleaning-schema";
 import { aiErrorMessage, MISSING_KEY_MESSAGE } from "@/lib/ai-errors";
+import { claimDailyAiUse, releaseDailyAiUse, type AiClaim } from "@/lib/ai-usage";
 import { toCsv } from "@/lib/csv";
+import { PLANS } from "@/lib/plans";
 
 const SYSTEM_PROMPT = `You are Analyzely's data-cleaning reviewer. Simple code checks scanned a spreadsheet and flagged cells that might be problems. You see a profile of every column (computed from all rows), a few sample rows, and the flagged issues, not the whole file. For each issue, decide whether it is a real problem in context, and the best fix.
 
@@ -54,7 +56,28 @@ export async function POST(request: Request) {
     return Response.json({ error: "Something about that request didn't look right." }, { status: 400 });
   }
 
+  // Count this use first, so the AI is never paid for once today's cap is reached
+  let claim: AiClaim;
+  try {
+    claim = await claimDailyAiUse("clean");
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "We couldn't check your daily limit. Please try again." }, { status: 503 });
+  }
+  const { userId } = claim;
+  if (!userId) {
+    return Response.json({ error: "Sign in to get our AI double-check. For now, these come from basic checks only." }, { status: 401 });
+  }
+  if (!claim.allowed) {
+    const { name, aiDailyUses } = PLANS[claim.planId];
+    return Response.json(
+      { error: `Your ${name} plan includes ${aiDailyUses} AI data checks a day, and you've used them all today, so these come from basic checks only.` },
+      { status: 429 }
+    );
+  }
+
   const client = new Anthropic();
+  let reviewed = false; // anything else gives this use back at the end
 
   try {
     const response = await client.beta.messages.parse({
@@ -75,9 +98,12 @@ export async function POST(request: Request) {
       return Response.json({ error: "The AI couldn't review these issues." }, { status: 502 });
     }
 
+    reviewed = true;
     return Response.json(response.parsed_output);
   } catch (error) {
     console.error("Claude API error:", error);
     return Response.json({ error: aiErrorMessage(error) }, { status: 502 });
+  } finally {
+    if (!reviewed) await releaseDailyAiUse(userId, "clean");
   }
 }

@@ -5,7 +5,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import { aiErrorMessage, MISSING_KEY_MESSAGE } from "@/lib/ai-errors";
+import { claimDailyAiUse, releaseDailyAiUse, type AiClaim } from "@/lib/ai-usage";
 import { toCsv } from "@/lib/csv";
+import { PLANS } from "@/lib/plans";
 
 const TitleRequestSchema = z.object({
   fileName: z.string().max(300),
@@ -34,6 +36,28 @@ export async function POST(request: Request) {
   }
   const { fileName, headers, rows } = parsed.data;
 
+  // Count this use first, so the AI is never paid for once today's cap is reached
+  let claim: AiClaim;
+  try {
+    claim = await claimDailyAiUse("title");
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "We couldn't check your daily limit. Please try again." }, { status: 503 });
+  }
+  const { userId } = claim;
+  if (!userId) {
+    return Response.json({ error: "Sign in to get AI titles." }, { status: 401 });
+  }
+  if (!claim.allowed) {
+    const { name, aiDailyUses } = PLANS[claim.planId];
+    return Response.json(
+      { error: `Your ${name} plan includes ${aiDailyUses} AI titles a day, and you've used them all today.` },
+      { status: 429 }
+    );
+  }
+
+  let titled = false; // anything else gives this use back at the end
+
   try {
     const response = await new Anthropic().beta.messages.parse({
       model: "claude-opus-5-5",
@@ -61,9 +85,12 @@ export async function POST(request: Request) {
       return Response.json({ error: "The AI couldn't come up with a title." }, { status: 502 });
     }
 
+    titled = true;
     return Response.json({ title });
   } catch (error) {
     console.error("Claude API error:", error);
     return Response.json({ error: aiErrorMessage(error) }, { status: 502 });
+  } finally {
+    if (!titled) await releaseDailyAiUse(userId, "title");
   }
 }

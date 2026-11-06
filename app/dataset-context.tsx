@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Dataset } from "@/lib/parse-dataset";
 import { saveCleaning, type Answer } from "@/lib/history";
-import { needsReview, reviewIssues, type Cleaning } from "@/lib/cleaning";
+import { needsReview, reviewIssues, ReviewSkipped, type Cleaning } from "@/lib/cleaning";
 import { findIssues } from "@/lib/data-checks";
 
 // Shared memory for the dataset that's open right now, so the upload screen
@@ -90,10 +90,12 @@ export function DatasetProvider({ children }: { children: React.ReactNode }) {
     try {
       finish({ issues: await reviewIssues(dataset, issues), fixedIds: [], aiReviewed: true });
     } catch (err) {
-      console.error("AI review failed:", err);
+      if (!(err instanceof ReviewSkipped)) console.error("AI review failed:", err);
       finish(
         { issues, fixedIds: [], aiReviewed: false },
-        "Our AI double-check isn't available right now, so these come from basic checks only."
+        err instanceof ReviewSkipped
+          ? err.message
+          : "Our AI double-check isn't available right now, so these come from basic checks only."
       );
     }
   }

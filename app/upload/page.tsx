@@ -9,14 +9,17 @@ import { autoTitleAnalysis, saveNewAnalysis } from "@/lib/history";
 import {
   checkCellCount,
   checkFileSize,
-  getCurrentPlan,
+  limitMessage,
+  PLANS,
   type LimitProblem,
+  type PlanId,
 } from "@/lib/plans";
 import { useDataset } from "../dataset-context";
 import { useUserEmail } from "../use-user-email";
 import { AnalysisCard, useAnalysisList, useOpenAnalysis } from "../analysis-cards";
 import { chunkyPurple } from "../brand";
-import { UpgradeModal } from "./upgrade-modal";
+import UpgradePopup from "../upgrade-popup";
+import { useUserPlan } from "../use-user-plan";
 
 const ALLOWED_EXTENSIONS = [".csv", ".xlsx"];
 
@@ -28,8 +31,8 @@ function hasAllowedExtension(fileName: string) {
 const RECENT_COUNT = 3;
 
 // "free plan up to 3,000 cells and 2 MB", read from the plan limits
-function planLimitsText() {
-  const plan = getCurrentPlan();
+function planLimitsText(planId: PlanId) {
+  const plan = PLANS[planId];
   const mb = plan.maxFileSizeBytes / (1024 * 1024);
   return `${plan.name.toLowerCase()} plan up to ${plan.maxCells.toLocaleString("en-US")} cells and ${mb} MB`;
 }
@@ -38,10 +41,11 @@ export default function UploadPage() {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [limitProblem, setLimitProblem] = useState<LimitProblem | null>(null);
+  const [limitProblem, setLimitProblem] = useState<{ problem: LimitProblem; planId: PlanId } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { openDataset } = useDataset();
+  const { planId, loading: planLoading } = useUserPlan();
 
   // Next.js keeps this page alive in the background after you leave it, so it
   // would come back with the old file and "Uploading…". Reset it when it's hidden,
@@ -57,6 +61,12 @@ export default function UploadPage() {
     };
   }, []);
 
+  // Over the limit: offer a bigger plan, or just say so when they're already on the biggest
+  function showLimit(problem: LimitProblem, plan: PlanId) {
+    if (plan === "premium") setError(limitMessage(problem));
+    else setLimitProblem({ problem, planId: plan });
+  }
+
   // Called when the user chooses a file or drops one on the box: check it, then upload
   async function handlePicked(picked: File) {
     if (uploading) return;
@@ -68,10 +78,11 @@ export default function UploadPage() {
     }
 
     // Too big? Stop here, before uploading or reading it
-    const sizeProblem = checkFileSize(picked.size);
+    // (if their plan hasn't loaded yet, the server still checks the size)
+    const sizeProblem = planLoading ? null : checkFileSize(picked.size, PLANS[planId]);
     if (sizeProblem) {
       setError("");
-      setLimitProblem(sizeProblem);
+      showLimit(sizeProblem, planId);
       return;
     }
 
@@ -104,6 +115,7 @@ export default function UploadPage() {
     const formData = new FormData();
     formData.append("file", file);
 
+    let uploadPlan: PlanId;
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -116,6 +128,7 @@ export default function UploadPage() {
         setUploading(false);
         return;
       }
+      uploadPlan = result.planId; // the server looks up their plan
     } catch {
       setError("Something went wrong while uploading. Please try again.");
       setUploading(false);
@@ -135,10 +148,11 @@ export default function UploadPage() {
 
     // Too many cells? Don't save or open it.
     const cellProblem = checkCellCount(
-      dataset.rows.length * dataset.headers.length
+      dataset.rows.length * dataset.headers.length,
+      PLANS[uploadPlan]
     );
     if (cellProblem) {
-      setLimitProblem(cellProblem);
+      showLimit(cellProblem, uploadPlan);
       setUploading(false);
       return;
     }
@@ -190,7 +204,7 @@ export default function UploadPage() {
             {uploading ? "Uploading…" : "Drag & drop your file here"}
           </h2>
           <p className="mt-2 text-sm text-grey sm:text-base">
-            CSV or Excel (.xlsx) · {planLimitsText()}
+            CSV or Excel (.xlsx) · {planLimitsText(planId)}
           </p>
 
           <input
@@ -224,8 +238,10 @@ export default function UploadPage() {
       </div>
 
       {limitProblem && (
-        <UpgradeModal
-          problem={limitProblem}
+        <UpgradePopup
+          currentPlan={limitProblem.planId}
+          heading="This file's a big one! 📊"
+          message={`${limitProblem.problem.detail}, and the ${limitProblem.problem.planName} limit is ${limitProblem.problem.limit}.`}
           onClose={() => setLimitProblem(null)}
         />
       )}
@@ -248,10 +264,10 @@ function RecentAnalyses() {
           <LockKeyhole aria-hidden="true" className="size-6" />
         </span>
         <div className="flex-1">
-          <h2 className="font-display text-lg font-extrabold">Log in to save your analyses</h2>
+          <h2 className="font-display text-lg font-extrabold">Log in to ask AI questions</h2>
           <p className="mt-1 text-sm text-grey">
-            With a free account, every file and question is saved so you can pick up where you
-            left off.
+            You can upload and preview files without an account. A free account lets you ask AI
+            questions and saves your work.
           </p>
         </div>
         <div className="flex gap-2">

@@ -1,9 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { CodeLine } from "@/lib/learn/lesson-types";
 import type { QueryResult } from "@/lib/learn/sql/runner";
+import { canOpenLevel } from "@/lib/plans";
+import UpgradePopup from "../upgrade-popup";
+import { useUserPlan } from "../use-user-plan";
 import CodeLines from "./code-lines";
 import ResultsGrid, { type GridExtras } from "./results-grid";
 
@@ -108,8 +111,13 @@ export function LessonDone({
 }: {
   recap: string;
   language: string;
-  nextLesson: { id: string; number: number; title: string } | null;
+  nextLesson: { id: string; number: number; title: string; level: number } | null;
 }) {
+  const { planId, loading } = useUserPlan();
+  const [showPlans, setShowPlans] = useState(false);
+  // Still loading the plan? Let the link work: the lesson page checks on the server anyway
+  const needsUpgrade = nextLesson !== null && !loading && !canOpenLevel(planId, nextLesson.level);
+
   return (
     <div className="rounded-2xl border border-green-200 bg-green-50 p-5">
       <p className="text-lg font-semibold">Lesson complete! 🎉</p>
@@ -118,6 +126,11 @@ export function LessonDone({
         {nextLesson && (
           <Link
             href={`/learn/${language}/${nextLesson.id}`}
+            onClick={(event) => {
+              if (!needsUpgrade) return;
+              event.preventDefault();
+              setShowPlans(true);
+            }}
             className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-80"
           >
             Next: Lesson {nextLesson.number} · {nextLesson.title} →
@@ -130,6 +143,7 @@ export function LessonDone({
           All lessons
         </Link>
       </div>
+      {showPlans && <UpgradePopup currentPlan={planId} onClose={() => setShowPlans(false)} />}
     </div>
   );
 }

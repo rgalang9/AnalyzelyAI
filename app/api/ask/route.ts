@@ -5,7 +5,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { AnalysisSchema, AskRequestSchema, type AskRequest } from "@/lib/analysis-schema";
 import { aiErrorMessage, MISSING_KEY_MESSAGE } from "@/lib/ai-errors";
+import { claimAiQuestion, releaseAiQuestion, type AiClaim } from "@/lib/ai-usage";
 import { toCsv } from "@/lib/csv";
+import { PLANS } from "@/lib/plans";
 
 const SYSTEM_PROMPT = `You are Analyzely, a friendly data analyst. People upload a spreadsheet and ask questions about it. Your reply has three parts, and you should adapt each one to the question: if a part doesn't help answer it, leave it out rather than forcing it.
 
@@ -58,7 +60,32 @@ export async function POST(request: Request) {
   }
   const data = parsed.data;
 
+  // Count the question first, so the AI is never paid for once the limit is reached
+  let claim: AiClaim;
+  try {
+    claim = await claimAiQuestion();
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "We couldn't check your AI questions. Please try again." }, { status: 503 });
+  }
+  const { userId } = claim;
+  if (!userId) {
+    return Response.json({ error: "Sign in to ask questions." }, { status: 401 });
+  }
+  if (!claim.allowed) {
+    const { name, aiQuestionsPerMonth } = PLANS[claim.planId];
+    return Response.json(
+      {
+        error: `Your ${name} plan includes ${aiQuestionsPerMonth} AI questions a month, and you've used them all. They reset on the 1st.`,
+        limitReached: true,
+        planId: claim.planId,
+      },
+      { status: 429 }
+    );
+  }
+
   const client = new Anthropic();
+  let answered = false; // anything else gives the question back at the end
 
   try {
     const response = await client.beta.messages.parse({
@@ -97,9 +124,12 @@ export async function POST(request: Request) {
       );
     }
 
+    answered = true;
     return Response.json(response.parsed_output);
   } catch (error) {
     console.error("Claude API error:", error);
     return Response.json({ error: aiErrorMessage(error) }, { status: 502 });
+  } finally {
+    if (!answered) await releaseAiQuestion(userId);
   }
 }

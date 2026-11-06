@@ -111,6 +111,9 @@ function computeFill({ rows }: Dataset, row: number, col: number, method: FillMe
 
 // ---------- Asking the AI to double-check ----------
 
+// The AI review didn't run for a reason worth telling the user: not signed in, or today's cap is used
+export class ReviewSkipped extends Error {}
+
 const MAX_AI_ISSUES = 80;
 const SAMPLE_ROWS = 15;
 const CELL_CHARS = 100;
@@ -176,6 +179,7 @@ export async function reviewIssues(dataset: Dataset, issues: Issue[]): Promise<I
     body: JSON.stringify(body),
   });
   const result = await response.json();
+  if (response.status === 401 || response.status === 429) throw new ReviewSkipped(result.error);
   if (!response.ok) throw new Error(result.error ?? "AI review failed");
 
   return mergeReviews(dataset, issues, result.reviews as IssueReview[]);

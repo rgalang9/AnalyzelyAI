@@ -15,7 +15,10 @@ import {
   pythonSummary,
   summarize,
 } from "@/lib/learn/load-lessons";
+import { canOpenLevel } from "@/lib/plans";
+import { getUserPlanId } from "@/lib/user-plan";
 import LessonGate from "../../lesson-gate";
+import LessonLocked from "../../lesson-locked";
 import LessonSidebar from "../../lesson-sidebar";
 import CodingLessonPlayer from "../../coding-lesson";
 import TourLessonPlayer from "../../tour-lesson";
@@ -46,6 +49,31 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
   const { language, lesson: lessonId } = await params;
   const lang = findReleasedLanguage(language);
   if (!lang) notFound();
+
+  // Lessons past the free Levels: check the plan here on the server, for all four courses.
+  // Reading the login also keeps these lessons out of the pages built ahead of time, so their
+  // content only ever reaches people whose plan includes them.
+  const summaries = getLessonSummaries(language);
+  const index = summaries.findIndex((l) => l.id === lessonId);
+  const summary = summaries[index];
+  if (summary && !canOpenLevel("free", summary.level)) {
+    const planId = await getUserPlanId();
+    if (!canOpenLevel(planId, summary.level)) {
+      return (
+        <main className="flex w-full flex-1 flex-col px-4 py-6 lg:px-6">
+          <Link href={`/learn/${language}`} className="text-sm text-zinc-500 hover:text-foreground">
+            ← All {lang.name} lessons
+          </Link>
+          <h1 className="mt-3 text-2xl font-bold tracking-tight">
+            <span className="text-zinc-500">Lesson {summary.number}: </span>
+            {summary.title}
+          </h1>
+          <LessonLocked language={language} langName={lang.name} />
+        </main>
+      );
+    }
+  }
+
   if (language === "python") {
     return PYTHON_VIEW === "notebook" ? (
       <NotebookLessonPage lessonId={lessonId} langName={lang.name} />
@@ -56,12 +84,9 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
   if (language === "excel") return <ExcelLessonPage lessonId={lessonId} langName={lang.name} />;
   if (language === "r") return <RLessonPage lessonId={lessonId} langName={lang.name} />;
 
-  const lessons = getLessons(language);
-  const index = lessons.findIndex((l) => l.id === lessonId);
   if (index === -1) notFound();
 
-  const lesson = lessons[index];
-  const summaries = summarize(lessons);
+  const lesson = getLessons(language)[index];
   const previous = summaries[index - 1] ?? null;
   const next = summaries[index + 1] ?? null;
   const setupSql = getDatasetSql(language, lesson.tables);

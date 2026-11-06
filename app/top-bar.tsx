@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronDown, FolderOpen, LogOut } from "lucide-react";
+import { ChevronDown, CreditCard, FolderOpen, LogOut } from "lucide-react";
 import { isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
 import { createClient } from "@/lib/supabase/client";
 import { useDataset } from "./dataset-context";
 import { useUserEmail } from "./use-user-email";
 import Logo from "./logo";
+import UpgradePopup from "./upgrade-popup";
 
 const barClass = "sticky top-0 z-40 border-b border-purple-light bg-white";
 
@@ -197,12 +198,43 @@ function useLogOut() {
   };
 }
 
-// "My account" button with a drop-down: who's logged in, My analyses, Log out
+// "My account" button with a drop-down: who's logged in, My analyses, Manage subscription, Log out
 function AccountMenu({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const [portalError, setPortalError] = useState("");
+  const [showPlans, setShowPlans] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const handleLogOut = useLogOut();
   useCloseOnOutside(open, setOpen, boxRef);
+
+  // Opens Stripe's page for cancelling or switching plans. People who've never subscribed
+  // have nothing to manage there, so they see the plans instead.
+  async function handleManageSubscription() {
+    setOpeningPortal(true);
+    setPortalError("");
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ returnTo: window.location.pathname + window.location.search }),
+      });
+      const result = await response.json();
+      if (result.url) {
+        window.location.assign(result.url);
+        return;
+      }
+      if (result.noSubscription) {
+        setOpen(false);
+        setShowPlans(true);
+      } else {
+        setPortalError(result.error ?? "We couldn't open that page. Please try again.");
+      }
+    } catch {
+      setPortalError("We couldn't reach the server. Please try again.");
+    }
+    setOpeningPortal(false);
+  }
 
   return (
     <div ref={boxRef} className="relative">
@@ -231,6 +263,20 @@ function AccountMenu({ email }: { email: string }) {
           </Link>
           <button
             type="button"
+            onClick={() => void handleManageSubscription()}
+            disabled={openingPortal}
+            className={`${menuItemClass} disabled:cursor-wait disabled:opacity-60`}
+          >
+            <CreditCard aria-hidden="true" className="size-4 text-purple" />
+            {openingPortal ? "Opening…" : "Manage subscription"}
+          </button>
+          {portalError && (
+            <p role="alert" className="px-3 py-1 text-xs text-pink">
+              {portalError}
+            </p>
+          )}
+          <button
+            type="button"
             onClick={() => {
               setOpen(false);
               void handleLogOut();
@@ -241,6 +287,15 @@ function AccountMenu({ email }: { email: string }) {
             Log out
           </button>
         </div>
+      )}
+
+      {showPlans && (
+        <UpgradePopup
+          currentPlan="free"
+          heading="Choose a plan"
+          message="Get every lesson, more AI questions and bigger files."
+          onClose={() => setShowPlans(false)}
+        />
       )}
     </div>
   );
