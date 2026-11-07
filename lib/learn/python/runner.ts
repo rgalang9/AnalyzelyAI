@@ -51,6 +51,7 @@ let wantPandas = false;
 let wantCharts = false;
 let nextId = 1;
 let session = 0; // goes up each time a fresh Python starts (notebook variables are gone then)
+let cellLesson: string | null = null;
 const pending = new Map<number, Pending>();
 const tableJobs = new Map<number, TablesJob>();
 const listeners = new Set<(status: PyStatus) => void>();
@@ -142,6 +143,12 @@ export function runPython(request: PyRunRequest): Promise<PyRunResult> {
 // over. `reset` starts a fresh session (and runs `setup`) first.
 export function runCell(request: PyRunRequest & { reset?: boolean }): Promise<PyRunResult> {
   return send("cell", request);
+}
+
+// Which notebook lesson's variables are in the shared session right now
+export const getCellLesson = () => cellLesson;
+export function setCellLesson(lessonId: string) {
+  cellLesson = lessonId;
 }
 
 // Which Python session is running: a different number means Python restarted (Stop, time limit)

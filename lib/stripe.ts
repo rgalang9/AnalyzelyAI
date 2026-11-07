@@ -89,11 +89,13 @@ export async function customerForUser(user: User, savedCustomerId: string | null
     if (existing && !existing.deleted) return savedCustomerId;
   }
 
+  // Before Stripe: if the secret key is missing, stop here rather than make a customer we can't save
+  const supabase = createAdminClient();
   const customer = await getStripe().customers.create({
     email: user.email,
     metadata: { supabase_user_id: user.id },
   });
-  const { error } = await createAdminClient()
+  const { error } = await supabase
     .from("user_plans")
     .upsert({ user_id: user.id, stripe_customer_id: customer.id, updated_at: new Date().toISOString() });
   if (error) throw new Error(`Couldn't save the Stripe customer: ${error.message}`);

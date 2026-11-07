@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { LessonSummary, NotebookCell, NotebookLesson } from "@/lib/learn/lesson-types";
 import {
+  getCellLesson,
   getPythonSession,
   preloadPython,
   runCell,
+  setCellLesson,
   stopPython,
   type PyOutput,
   type PyRunResult,
@@ -106,13 +108,14 @@ export default function NotebookPlayer({
   const update = (i: number, change: Partial<CellState> | ((s: CellState) => Partial<CellState>)) =>
     setCells((all) => all.map((s, n) => (n === i ? { ...s, ...(typeof change === "function" ? change(s) : change) } : s)));
 
-  // Runs a cell in the shared session. After a restart (Stop, time limit) the session is new,
-  // so everything that ran before is run again quietly first, to bring the variables back.
+  // Runs a cell in the shared session. After a restart (Stop, time limit) the session is new, and
+  // after another notebook ran it holds that lesson's variables. Either way, everything that ran
+  // here before is run again quietly first, to bring the variables back.
   async function execute(
     code: string,
     check?: { answer: string; compare: "print" | "table" | "value" | "chart" | "any_text"; variable?: string }
   ) {
-    let reset = sessionSeen.current !== getPythonSession();
+    let reset = sessionSeen.current !== getPythonSession() || getCellLesson() !== lesson.id;
     if (reset && sessionSeen.current !== null) {
       for (const [n, earlier] of history.current.entries()) {
         await runCell({ files, setup: lesson.setup, code: earlier, reset: n === 0 });
@@ -120,6 +123,7 @@ export default function NotebookPlayer({
       reset = history.current.length === 0;
     }
     sessionSeen.current = getPythonSession();
+    setCellLesson(lesson.id);
     const res = await runCell({ files, setup: lesson.setup, code, reset, ...check });
     if (res.kind === "done" && !res.output.error) history.current.push(code);
     return res;

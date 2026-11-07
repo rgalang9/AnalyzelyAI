@@ -82,9 +82,26 @@ export default function CodingLessonPlayer({
       });
     return () => {
       cancelled = true;
-      dbRef.current?.close();
     };
   }, [lesson, setupSql]);
+
+  // Close the task's database only when leaving the lesson. Next.js may keep this page hidden and
+  // bring it back as it was, so the empty ref is what tells us to open a new one on return.
+  useEffect(
+    () => () => {
+      dbRef.current?.close();
+      dbRef.current = null;
+    },
+    []
+  );
+
+  // The learner came back to this lesson and its database was closed: open a fresh copy of the data
+  async function reopenDatabase() {
+    const db = await createDatabase(setupSql);
+    if (dbRef.current) db.close(); // another click got there first, so use that one
+    else dbRef.current = db;
+    return dbRef.current!;
+  }
 
   // Every task starts with a fresh copy of the data, plus the expected result.
   // Tasks with a "check" query (code that changes data): run the answer, then the check.
@@ -131,8 +148,7 @@ export default function CodingLessonPlayer({
   }
 
   async function handleRun() {
-    const db = dbRef.current;
-    if (!started || !db || cooling || running.current) return;
+    if (!started || cooling || running.current) return;
     if (!code.trim()) {
       flow.say("Type a query first, then press Run.");
       return;
@@ -144,7 +160,7 @@ export default function CodingLessonPlayer({
     running.current = true;
     try {
       if (task.check) ({ result: res, peek } = await runWithCheck(code, task.check));
-      else res = runQuery(db, code);
+      else res = runQuery(dbRef.current ?? (await reopenDatabase()), code);
     } catch (err) {
       error = friendlyError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -169,9 +185,13 @@ export default function CodingLessonPlayer({
   }
 
   async function handlePick(option: string) {
-    if (task.type !== "predict" || ts.solved || cooling || !dbRef.current) return;
+    if (task.type !== "predict" || ts.solved || cooling) return;
     if (option === task.answer) {
-      setResult(task.check ? (await runWithCheck(task.code, task.check)).result : runQuery(dbRef.current, task.code));
+      setResult(
+        task.check
+          ? (await runWithCheck(task.code, task.check)).result
+          : runQuery(dbRef.current ?? (await reopenDatabase()), task.code)
+      );
       flow.solve(`Yes! The answer is ${option}. Here's the result so you can see for yourself.`);
     } else {
       flow.missPick(option);

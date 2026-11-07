@@ -40,6 +40,7 @@ let starting: Promise<void> | null = null;
 let status: RStatus = { state: "idle", text: "", pct: 0 };
 const listeners = new Set<(status: RStatus) => void>();
 let queue: Promise<unknown> = Promise.resolve(); // one thing at a time in R
+let lessonSession = 0; // goes up each time a lesson clears R and loads its own data
 
 function setStatus(next: RStatus) {
   status = next;
@@ -47,6 +48,7 @@ function setStatus(next: RStatus) {
 }
 
 export const getRStatus = () => status;
+export const getRSession = () => lessonSession;
 export function subscribeRStatus(listen: (status: RStatus) => void) {
   listeners.add(listen);
   return () => {
@@ -105,11 +107,14 @@ export function restartR(): Promise<void> {
 
 // A fresh session for a lesson: no objects, and the lesson's CSVs loaded as data frames
 // (sales.csv → `sales`). The files stay in R's working folder, so read_csv("sales.csv") works too.
-export function setUpLesson(datasets: Record<string, string>) {
+// Gives back this session's number: if getRSession() differs later, another lesson has taken R over.
+export function setUpLesson(datasets: Record<string, string>): Promise<number> {
+  const session = ++lessonSession;
   return inR(async (r) => {
     for (const [name, text] of Object.entries(datasets)) await r.FS.writeFile(`/home/web_user/${name}.csv`, new TextEncoder().encode(text));
     // The names go into the code itself (webR can't pass an empty list); they're only letters, digits and _
     await r.evalRVoid(`.az$reset(c(${Object.keys(datasets).map((n) => JSON.stringify(n)).join(", ")}))`);
+    return session;
   });
 }
 

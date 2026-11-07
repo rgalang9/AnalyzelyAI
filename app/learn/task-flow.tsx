@@ -39,17 +39,28 @@ export function useTaskFlow<Task extends { hints: string[] }>(lesson: { id: stri
   const [ts, setTs] = useState<TaskState>(FRESH_TASK);
   const [cooling, setCooling] = useState(false); // short pause after a wrong answer
   const timer = useRef<number | undefined>(undefined);
+  const afterPause = useRef<(() => void) | null>(null); // what happens when the current pause ends
 
-  // No hint should pop up after leaving the lesson
-  useEffect(() => () => clearTimeout(timer.current), [lesson]);
+  // No hint should pop up after leaving the lesson. Next.js can hide this page and bring it back,
+  // so a pause that was cut short finishes on return: otherwise Run would stay off until a reload.
+  useEffect(() => {
+    afterPause.current?.();
+    return () => clearTimeout(timer.current);
+  }, [lesson]);
 
   const task = lesson.tasks[taskIndex];
   const isLastTask = taskIndex === lesson.tasks.length - 1;
 
+  // Ends the pause now, with no hint
+  function cancelPause() {
+    clearTimeout(timer.current);
+    afterPause.current = null;
+    setCooling(false);
+  }
+
   // Show task `index` with a clean slate (no tries, hints or feedback yet)
   function goToTask(index: number) {
-    clearTimeout(timer.current);
-    setCooling(false);
+    cancelPause();
     setTaskIndex(index);
     setTs(FRESH_TASK);
   }
@@ -60,8 +71,7 @@ export function useTaskFlow<Task extends { hints: string[] }>(lesson: { id: stri
   }
 
   function solve(text: string) {
-    clearTimeout(timer.current);
-    setCooling(false);
+    cancelPause();
     setTs((s) => ({ ...s, solved: true, feedback: { tone: "good", text } }));
   }
 
@@ -72,8 +82,8 @@ export function useTaskFlow<Task extends { hints: string[] }>(lesson: { id: stri
     const hintCount = task.hints.length;
     setTs((s) => ({ ...s, wrongTries: tries, feedback: { tone: "try", text: `${nudge(tries)} ${reason}` } }));
     setCooling(true);
-    clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => {
+    afterPause.current = () => {
+      afterPause.current = null;
       setCooling(false);
       setTs((s) =>
         tries <= hintCount
@@ -82,7 +92,9 @@ export function useTaskFlow<Task extends { hints: string[] }>(lesson: { id: stri
             ? s // they've seen it already; the "Show the example again" button is there
             : { ...s, solutionOpen: true, solutionSeen: true }
       );
-    }, HINT_PAUSE_MS);
+    };
+    clearTimeout(timer.current);
+    timer.current = window.setTimeout(afterPause.current, HINT_PAUSE_MS);
   }
 
   // Predict tasks: remember a wrong option so it gets crossed out, then go down the help ladder

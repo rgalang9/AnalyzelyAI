@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { LessonSummary, RLesson } from "@/lib/learn/lesson-types";
 import {
+  getRSession,
   getRStatus,
   inspectPlot,
   inspectR,
@@ -53,17 +54,45 @@ export default function RLessonPlayer({
   const consoleEnd = useRef<HTMLDivElement>(null);
   const plotCanvas = useRef<HTMLCanvasElement>(null);
   const taskScript = useRef(lesson.starter_code); // the script as it was when this task began
+  const session = useRef<number | null>(null); // the R session holding this lesson's work
 
-  // R starts (or is already running from an earlier lesson), then this lesson's data loads
+  const write = (more: ConsoleLine[]) => setLines((l) => [...l, ...more]);
+
+  // Fills R for this lesson at the current task: its data, the answers of the tasks already done,
+  // and a saved copy for Reset task. (A task already solved keeps its answer, for the next task.)
+  async function loadSession() {
+    const mine = await setUpLesson(datasets);
+    session.current = mine;
+    for (const t of lesson.tasks.slice(0, taskIndex)) {
+      if (getRSession() !== mine) return; // another lesson took R over
+      await runR(t.answer);
+    }
+    if (getRSession() !== mine) return;
+    await saveSession(`task-${taskIndex}`);
+    if (ts.solved) await runR(task.answer);
+  }
+
+  // R starts (or is already running from an earlier lesson), then this lesson's data loads.
+  // Next.js also runs this when the learner comes back to a hidden lesson. R is shared by every
+  // lesson, so it's only reloaded if another lesson has used it since: otherwise a reload would
+  // wipe the learner's work.
   useEffect(() => {
     let cancelled = false;
     startR()
-      .then(() => setUpLesson(datasets))
+      .then(async () => {
+        if (cancelled || session.current === getRSession()) return;
+        const returning = session.current !== null;
+        setSessionReady(false);
+        await loadSession();
+        if (returning) write([{ kind: "note", text: "— R was set up again. Your earlier tasks were run again. —" }]);
+      })
       .then(() => !cancelled && setSessionReady(true))
       .catch(() => {}); // the failed status shows on screen
     return () => {
       cancelled = true;
     };
+    // Not when the task changes: only coming back or new data can leave R without this lesson's work
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasets]);
 
   useEffect(() => consoleEnd.current?.scrollIntoView({ block: "nearest" }), [lines]);
@@ -76,8 +105,6 @@ export default function RLessonPlayer({
     canvas.height = plot.height;
     canvas.getContext("2d")?.drawImage(plot, 0, 0);
   }, [plot]);
-
-  const write = (more: ConsoleLine[]) => setLines((l) => [...l, ...more]);
 
   // A task begins: its starter code (if it has one) and a saved copy of the session for Reset task
   async function beginTask(index: number) {
@@ -149,15 +176,13 @@ export default function RLessonPlayer({
     goToTask(taskIndex);
   }
 
-  // Stop: R can't be interrupted here, so it's thrown away and started again. The lesson's data
-  // loads again and the answers of the tasks already done run, so this task can carry on.
+  // Stop: R can't be interrupted here, so it's thrown away and started again, then filled again
+  // so this task can carry on.
   async function stopR() {
     setRunning(false);
     setSessionReady(false);
     await restartR();
-    await setUpLesson(datasets);
-    for (const t of lesson.tasks.slice(0, taskIndex)) await runR(t.answer);
-    await saveSession(`task-${taskIndex}`);
+    await loadSession();
     write([{ kind: "note", text: "— R was restarted. Your earlier tasks were run again. —" }]);
     setSessionReady(true);
   }

@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CircleAlert, CircleCheck } from "lucide-react";
+import { startCheckout } from "@/lib/billing";
+import { PLANS, type PlanId } from "@/lib/plans";
 import { safePath } from "@/lib/safe-path";
 import { createClient } from "@/lib/supabase/client";
 import { chunkyPurple } from "./brand";
@@ -22,8 +24,18 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  // Sent here from somewhere (e.g. an Upgrade button)? Go back there after logging in.
-  const next = useSearchParams().get("next");
+  const searchParams = useSearchParams();
+  // Sent here from somewhere? Go back there after logging in.
+  const next = searchParams.get("next");
+  // Sent here by an Upgrade button? Go straight on to Stripe Checkout for that plan.
+  const planParam = searchParams.get("plan");
+  const plan: PlanId | null = planParam === "pro" || planParam === "premium" ? planParam : null;
+
+  // Keeps those two when switching between Log in and Sign up
+  const query = new URLSearchParams();
+  if (next) query.set("next", safePath(next));
+  if (plan) query.set("plan", plan);
+  const queryText = query.size > 0 ? `?${query}` : "";
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,7 +45,12 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
 
     const supabase = createClient();
     const { data, error } = isSignup
-      ? await supabase.auth.signUp({ email, password })
+      ? await supabase.auth.signUp({
+          email,
+          password,
+          // The confirmation link brings them back to log in, with their plan still picked
+          options: queryText ? { emailRedirectTo: `${window.location.origin}/login${queryText}` } : undefined,
+        })
       : await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
@@ -48,6 +65,15 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
         "Almost there! Check your inbox for a confirmation link, then come back and log in."
       );
       setSubmitting(false);
+      return;
+    }
+
+    if (plan) {
+      const problem = await startCheckout(plan, safePath(next));
+      if (problem) {
+        setError(problem);
+        setSubmitting(false);
+      }
       return;
     }
 
@@ -72,9 +98,11 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
             {isSignup ? "Create your free account" : "Welcome back!"}
           </h1>
           <p className="mt-2 text-center text-grey">
-            {isSignup
-              ? "Ask AI questions and save your analyses and lesson progress."
-              : "Log in to ask AI questions and see your saved analyses."}
+            {plan
+              ? `Next, you'll check out for ${PLANS[plan].name}.`
+              : isSignup
+                ? "Ask AI questions and save your analyses and lesson progress."
+                : "Log in to ask AI questions and see your saved analyses."}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
@@ -151,7 +179,7 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
           <p className="mt-6 text-center text-sm text-grey">
             {isSignup ? "Already have an account? " : "New here? "}
             <Link
-              href={`${isSignup ? "/login" : "/signup"}${next ? `?next=${encodeURIComponent(safePath(next))}` : ""}`}
+              href={`${isSignup ? "/login" : "/signup"}${queryText}`}
               className="font-bold text-pink hover:underline"
             >
               {isSignup ? "Log in" : "Create a free account"}

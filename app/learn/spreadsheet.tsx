@@ -302,6 +302,7 @@ export default function Spreadsheet({
   id,
   sheets,
   onReady,
+  onClosed,
   onValues,
   onSelection,
   onBlocked,
@@ -311,6 +312,7 @@ export default function Spreadsheet({
   id: string;
   sheets: ExcelSheet[];
   onReady: (api: SheetApi) => void;
+  onClosed: () => void; // the spreadsheet was shut down: its SheetApi can't be used any more
   onValues: () => void; // a change was committed and formulas have finished calculating
   onSelection: () => void; // the selection changed (after a mouse drag ends)
   onBlocked: (message: string) => void; // the learner tried to change a locked cell
@@ -318,13 +320,15 @@ export default function Spreadsheet({
   onGoalSeek: () => void; // the Goal Seek toolbar button was pressed
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
+  const savedWork = useRef<IWorkbookData | null>(null); // the sheet when this page was last hidden
   // Keep the latest callbacks without rebuilding the spreadsheet
-  const callbacks = useRef({ onReady, onValues, onSelection, onBlocked, onInsights, onGoalSeek });
+  const callbacks = useRef({ onReady, onClosed, onValues, onSelection, onBlocked, onInsights, onGoalSeek });
   useEffect(() => {
-    callbacks.current = { onReady, onValues, onSelection, onBlocked, onInsights, onGoalSeek };
+    callbacks.current = { onReady, onClosed, onValues, onSelection, onBlocked, onInsights, onGoalSeek };
   });
 
-  // Build the spreadsheet once. Univer only runs in the browser, so it loads here.
+  // Build the spreadsheet. Univer only runs in the browser, so it loads here. Next.js also runs
+  // this when the learner comes back to a hidden lesson: the sheet is rebuilt from their saved work.
   useEffect(() => {
     let cancelled = false;
     let cleanup = () => {};
@@ -380,7 +384,7 @@ export default function Spreadsheet({
         ],
       });
       const api = univerAPI as FUniver;
-      let workbook = api.createWorkbook(toWorkbook(id, sheets));
+      let workbook = api.createWorkbook(savedWork.current ?? toWorkbook(id, sheets));
       const sheetFor = (name: string | undefined) => (name ? workbook.getSheetByName(name) : null) ?? workbook.getSheets()[0];
 
       let rules: LockRules | null = null;
@@ -834,6 +838,8 @@ export default function Spreadsheet({
       callbacks.current.onReady(sheetApi);
 
       cleanup = () => {
+        savedWork.current = sheetApi.snapshot() as IWorkbookData;
+        callbacks.current.onClosed();
         clearTimeout(valueTimer);
         clearTimeout(selectionTimer);
         clearTimeout(restoreTimer);
@@ -849,7 +855,7 @@ export default function Spreadsheet({
       cancelled = true;
       cleanup();
     };
-    // Only on first render: a new lesson gets a new Spreadsheet (see `key` on the lesson page)
+    // Not when the lesson changes: a new lesson gets a new Spreadsheet (see `key` on the lesson page)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, CreditCard, FolderOpen, LogOut } from "lucide-react";
+import { openCustomerPortal } from "@/lib/billing";
 import { isOpen, LEARN_LANGUAGES } from "@/lib/learn/languages";
 import { createClient } from "@/lib/supabase/client";
 import { useDataset } from "./dataset-context";
@@ -59,6 +60,9 @@ export default function TopBar() {
             <span className="rounded-full bg-pink px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
               NEW
             </span>
+          </Link>
+          <Link href="/pricing" className={tabClass(pathname === "/pricing")}>
+            Pricing
           </Link>
         </nav>
 
@@ -213,27 +217,13 @@ function AccountMenu({ email }: { email: string }) {
   async function handleManageSubscription() {
     setOpeningPortal(true);
     setPortalError("");
-    try {
-      const response = await fetch("/api/stripe/portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnTo: window.location.pathname + window.location.search }),
-      });
-      const result = await response.json();
-      if (result.url) {
-        window.location.assign(result.url);
-        return;
-      }
-      if (result.noSubscription) {
-        setOpen(false);
-        setShowPlans(true);
-      } else {
-        setPortalError(result.error ?? "We couldn't open that page. Please try again.");
-      }
-    } catch {
-      setPortalError("We couldn't reach the server. Please try again.");
+    const result = await openCustomerPortal();
+    if (result.noSubscription) {
+      setOpen(false);
+      setShowPlans(true);
     }
-    setOpeningPortal(false);
+    if (result.error) setPortalError(result.error);
+    if (result.noSubscription || result.error) setOpeningPortal(false);
   }
 
   return (

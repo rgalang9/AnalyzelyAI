@@ -148,12 +148,8 @@ export default function ExcelLessonPlayer({
     []
   );
 
-  // A task begins: lock everything except its cells, remember the sheet for Reset task, show its tab,
-  // put the keyboard on the grid, and check once (it may be done already)
-  function beginTask(index: number) {
-    const api = sheet.current;
-    if (!api) return;
-    const t = lesson.tasks[index];
+  // Lock everything except the cells this task uses
+  function lockCells(api: SheetApi, t: (typeof lesson.tasks)[number]) {
     const { cells, structure } = taskRules(t);
     const own = t.cell ? cellsIn(t.cell) : [];
     const others = [...cells].filter((c) => !own.includes(c));
@@ -166,6 +162,24 @@ export default function ExcelLessonPlayer({
       message: cells.size === 0 ? nothing : `In this task, only change ${where}.`,
       editMessage: cells.size === 0 ? nothing : `That's the wrong cell, the task is in ${where}.`,
     });
+  }
+
+  // The learner came back and the spreadsheet was rebuilt: put this task's locks and tab back.
+  // Bumping sheetVersion brings back the highlight and notes how the sheet looks now.
+  function sheetRebuilt(api: SheetApi) {
+    if (!started) return;
+    lockCells(api, task);
+    if (task.sheet) api.showSheet(task.sheet);
+    setSheetVersion((v) => v + 1);
+  }
+
+  // A task begins: set its locks, remember the sheet for Reset task, show its tab,
+  // put the keyboard on the grid, and check once (it may be done already)
+  function beginTask(index: number) {
+    const api = sheet.current;
+    if (!api) return;
+    const t = lesson.tasks[index];
+    lockCells(api, t);
     snapshot.current = api.snapshot();
     pressedShortcut.current = false;
     lastSeen.current = "";
@@ -384,9 +398,9 @@ export default function ExcelLessonPlayer({
   }
 
   // Event listeners, timers and the tester call the latest version of these
-  const latest = useRef({ check, onKey, start, next, showAnswer, resetTask, grade, openInsights, refreshTable, openGoalSeek });
+  const latest = useRef({ check, onKey, start, next, showAnswer, resetTask, grade, openInsights, refreshTable, openGoalSeek, sheetRebuilt });
   useEffect(() => {
-    latest.current = { check, onKey, start, next, showAnswer, resetTask, grade, openInsights, refreshTable, openGoalSeek };
+    latest.current = { check, onKey, start, next, showAnswer, resetTask, grade, openInsights, refreshTable, openGoalSeek, sheetRebuilt };
   });
 
   // Keyboard-only tasks: clicks on the grid are blocked until the task is done
@@ -608,6 +622,11 @@ export default function ExcelLessonPlayer({
               onReady={(api) => {
                 sheet.current = api;
                 setReady(true);
+                latest.current.sheetRebuilt(api);
+              }}
+              onClosed={() => {
+                sheet.current = null;
+                setReady(false);
               }}
               onValues={() => {
                 latest.current.refreshTable();

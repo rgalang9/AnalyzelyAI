@@ -68,7 +68,7 @@ async function Lesson({ params }: { params: PageProps<"/learn/[language]/[lesson
             <span className="text-zinc-500">Lesson {summary.number}: </span>
             {summary.title}
           </h1>
-          <LessonLocked language={language} langName={lang.name} />
+          <LessonLocked language={language} lessons={summaries.map(({ id, level }) => ({ id, level }))} />
         </main>
       );
     }

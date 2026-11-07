@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import type { CodeLine } from "@/lib/learn/lesson-types";
 import type { QueryResult } from "@/lib/learn/sql/runner";
 import { canOpenLevel } from "@/lib/plans";
@@ -115,6 +116,7 @@ export function LessonDone({
 }) {
   const { planId, loading } = useUserPlan();
   const [showPlans, setShowPlans] = useState(false);
+  const [closedPlans, setClosedPlans] = useState(false); // they saw the plans and closed them
   // Still loading the plan? Let the link work: the lesson page checks on the server anyway
   const needsUpgrade = nextLesson !== null && !loading && !canOpenLevel(planId, nextLesson.level);
 
@@ -123,7 +125,16 @@ export function LessonDone({
       <p className="text-lg font-semibold">Lesson complete! 🎉</p>
       <p className="mt-2 leading-7">{recap}</p>
       <div className="mt-4 flex flex-wrap gap-2">
-        {nextLesson && (
+        {needsUpgrade && closedPlans ? (
+          <button
+            type="button"
+            onClick={() => setShowPlans(true)}
+            className="flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-80"
+          >
+            <Lock aria-hidden="true" className="size-4" />
+            Locked. Upgrade to continue
+          </button>
+        ) : nextLesson && (
           <Link
             href={`/learn/${language}/${nextLesson.id}`}
             onClick={(event) => {
@@ -143,7 +154,15 @@ export function LessonDone({
           All lessons
         </Link>
       </div>
-      {showPlans && <UpgradePopup currentPlan={planId} onClose={() => setShowPlans(false)} />}
+      {showPlans && (
+        <UpgradePopup
+          currentPlan={planId}
+          onClose={() => {
+            setShowPlans(false);
+            setClosedPlans(true);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,10 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import type { LessonSummary } from "@/lib/learn/lesson-types";
+import { canOpenLevel } from "@/lib/plans";
+import UpgradePopup from "../upgrade-popup";
+import { useUserPlan } from "../use-user-plan";
 import { useLearnProgress } from "./progress-context";
 
 // Every lesson, always in view beside the lesson: done ✓, current (highlighted), open, or locked.
+// Lessons the plan doesn't include open the plans pop-up, so they stay on this lesson.
 // On phones it folds into a "Lessons" box above the lesson.
 export default function LessonSidebar({
   language,
@@ -16,6 +22,8 @@ export default function LessonSidebar({
   currentId: string;
 }) {
   const { completed } = useLearnProgress();
+  const { planId, loading } = useUserPlan();
+  const [showPlans, setShowPlans] = useState(false);
   const doneCount = lessons.filter((l) => completed.has(l.id)).length;
 
   const list = (
@@ -24,16 +32,26 @@ export default function LessonSidebar({
         const done = completed.has(lesson.id);
         const unlocked = i === 0 || completed.has(lessons[i - 1].id);
         const current = lesson.id === currentId;
+        const paywalled = !loading && !current && !canOpenLevel(planId, lesson.level);
         const row = (
           <>
             <span
               className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
-                done ? "bg-green-600 text-white" : current ? "bg-purple text-white" : "bg-zinc-100 text-zinc-500"
+                paywalled
+                  ? "bg-purple-light text-purple"
+                  : done
+                    ? "bg-green-600 text-white"
+                    : current
+                      ? "bg-purple text-white"
+                      : "bg-zinc-100 text-zinc-500"
               }`}
             >
-              {done ? "✓" : unlocked ? lesson.number : "🔒"}
+              {paywalled ? <Lock aria-label="Locked" className="size-3" /> : done ? "✓" : unlocked ? lesson.number : "🔒"}
             </span>
             <span className="min-w-0 truncate">{lesson.title}</span>
+            {paywalled && (
+              <span className="ml-auto rounded-full bg-purple-light px-1.5 text-[10px] font-bold text-purple">Pro</span>
+            )}
           </>
         );
         const rowClass = `flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm ${
@@ -41,7 +59,15 @@ export default function LessonSidebar({
         }`;
         return (
           <li key={lesson.id}>
-            {unlocked && !current ? (
+            {paywalled ? (
+              <button
+                type="button"
+                onClick={() => setShowPlans(true)}
+                className={`${rowClass} w-full text-left hover:bg-zinc-100`}
+              >
+                {row}
+              </button>
+            ) : unlocked && !current ? (
               <Link href={`/learn/${language}/${lesson.id}`} className={`${rowClass} hover:bg-zinc-100`}>
                 {row}
               </Link>
@@ -87,6 +113,7 @@ export default function LessonSidebar({
         {progress}
         {list}
       </div>
+      {showPlans && <UpgradePopup currentPlan={planId} onClose={() => setShowPlans(false)} />}
     </nav>
   );
 }

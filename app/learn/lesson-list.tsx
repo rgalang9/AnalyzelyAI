@@ -1,12 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import type { LessonSummary } from "@/lib/learn/lesson-types";
+import { canOpenLevel } from "@/lib/plans";
+import UpgradePopup from "../upgrade-popup";
+import { useUserPlan } from "../use-user-plan";
 import { useLearnProgress } from "./progress-context";
 
 // Every lesson in order. A lesson unlocks when the one before it is finished.
+// Lessons the plan doesn't include show a Pro tag and open the plans pop-up. That comes first:
+// the order lock doesn't matter until they have the plan.
 export default function LessonList({ language, lessons }: { language: string; lessons: LessonSummary[] }) {
   const { completed } = useLearnProgress();
+  const { planId, loading } = useUserPlan();
+  const [showPlans, setShowPlans] = useState(false);
 
   return (
     <>
@@ -17,18 +26,21 @@ export default function LessonList({ language, lessons }: { language: string; le
         {lessons.map((lesson, i) => {
           const done = completed.has(lesson.id);
           const unlocked = i === 0 || completed.has(lessons[i - 1].id);
+          const paywalled = !loading && !canOpenLevel(planId, lesson.level);
           const content = (
             <>
               <span
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                  done
-                    ? "bg-green-600 text-white"
-                    : unlocked
-                      ? "bg-foreground text-background"
-                      : "bg-zinc-100 text-zinc-400"
+                  paywalled
+                    ? "bg-purple-light text-purple"
+                    : done
+                      ? "bg-green-600 text-white"
+                      : unlocked
+                        ? "bg-foreground text-background"
+                        : "bg-zinc-100 text-zinc-400"
                 }`}
               >
-                {done ? "✓" : unlocked ? lesson.number : "🔒"}
+                {paywalled ? <Lock aria-label="Locked" className="size-4" /> : done ? "✓" : unlocked ? lesson.number : "🔒"}
               </span>
               <span className="min-w-0">
                 <span className="block text-xs text-zinc-500">
@@ -39,13 +51,25 @@ export default function LessonList({ language, lessons }: { language: string; le
                   <span className="block text-xs text-amber-700">⚠ This lesson file has a problem, so it can&rsquo;t open yet.</span>
                 )}
               </span>
-              {!unlocked && <span className="ml-auto text-xs text-zinc-400">Finish the previous lesson to unlock</span>}
+              {paywalled ? (
+                <span className="ml-auto rounded-full bg-purple-light px-2.5 py-0.5 text-xs font-bold text-purple">Pro</span>
+              ) : (
+                !unlocked && <span className="ml-auto text-xs text-zinc-400">Finish the previous lesson to unlock</span>
+              )}
             </>
           );
 
           return (
             <li key={lesson.id}>
-              {unlocked ? (
+              {paywalled ? (
+                <button
+                  type="button"
+                  onClick={() => setShowPlans(true)}
+                  className="flex w-full items-center gap-4 rounded-2xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50"
+                >
+                  {content}
+                </button>
+              ) : unlocked ? (
                 <Link
                   href={`/learn/${language}/${lesson.id}`}
                   className="flex items-center gap-4 rounded-2xl border border-zinc-200 p-4 transition-colors hover:bg-zinc-50"
@@ -64,6 +88,7 @@ export default function LessonList({ language, lessons }: { language: string; le
           );
         })}
       </ol>
+      {showPlans && <UpgradePopup currentPlan={planId} onClose={() => setShowPlans(false)} />}
     </>
   );
 }
