@@ -5,6 +5,7 @@ import { DatasetProvider } from "./dataset-context";
 import { Suspense } from "react";
 import TopBar, { TopBarPlaceholder } from "./top-bar";
 import { LearnProgressProvider } from "./learn/progress-context";
+import SiteFooter from "./site-footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <TopBar />
             </Suspense>
             <Suspense>{children}</Suspense>
+            <SiteFooter />
           </LearnProgressProvider>
         </DatasetProvider>
       </body>

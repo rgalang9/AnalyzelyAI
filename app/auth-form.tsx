@@ -174,6 +174,18 @@ export default function AuthForm({ mode }: { mode: "signup" | "login" }) {
                   ? "Sign up"
                   : "Log in"}
             </button>
+            {isSignup && (
+              <p className="-mt-2 text-center text-xs text-grey">
+                By signing up, you agree to our{" "}
+                <Link href="/terms" className="font-semibold text-purple hover:underline">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="font-semibold text-purple hover:underline">
+                  Privacy Policy
+                </Link>
+              </p>
+            )}
           </form>
 
           <p className="mt-6 text-center text-sm text-grey">

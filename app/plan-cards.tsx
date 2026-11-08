@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Check, CircleAlert } from "lucide-react";
 import { startCheckout } from "@/lib/billing";
 import { planFeatures, PLANS, type PlanId } from "@/lib/plans";
@@ -84,6 +85,21 @@ export default function PlanCards({ currentPlan }: { currentPlan: PlanId | null 
                     {opening === planId ? "Opening…" : `${verb} ${plan.name}`}
                   </button>
                 ) : null}
+                {/* Auto-renewal notice under each Upgrade button */}
+                {!current && planId !== "free" && (
+                  <p className="mt-2 text-center text-xs leading-snug text-grey">
+                    Renews monthly at {price(planId)} until you cancel. Cancel anytime in Manage subscription.{" "}
+                    {/* New tab, so the pop-up and whatever page it's on stay as they were */}
+                    <Link
+                      href="/terms"
+                      target="_blank"
+                      rel="noopener"
+                      className="font-semibold text-purple hover:underline"
+                    >
+                      Terms
+                    </Link>
+                  </p>
+                )}
               </div>
             </section>
           );
