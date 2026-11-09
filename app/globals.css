@@ -38,6 +38,26 @@
   --color-navy: #24174f; /* headings and main text */
   --color-grey: #4a3f6b; /* secondary text */
   --color-white: #ffffff;
+
+  /* "No. 7" badge (Lesson 7 in every course) */
+  --color-gold: #d9a520;
+  --color-gold-light: #fff9eb; /* the badge card's warm background */
+  --color-no7-red: #c8102e;
+
+  --animate-no7-shine: no7-shine 4s ease-in-out infinite; /* soft shine sweeping across */
+  --animate-no7-jump: no7-jump 0.7s ease-out 1; /* one jump in the celebration pop-up */
+
+  @keyframes no7-shine {
+    0%, 65% { transform: translateX(-150%) skewX(-20deg); }
+    100% { transform: translateX(250%) skewX(-20deg); }
+  }
+  @keyframes no7-jump {
+    0% { transform: translateY(0) scale(0.9); }
+    35% { transform: translateY(-22%) scale(1.06); }
+    65% { transform: translateY(0) scale(0.97); }
+    82% { transform: translateY(-5%) scale(1.01); }
+    100% { transform: translateY(0) scale(1); }
+  }
 }
 
 html {

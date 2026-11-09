@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Lock } from "lucide-react";
 import type { CodeLine } from "@/lib/learn/lesson-types";
 import type { QueryResult } from "@/lib/learn/sql/runner";
@@ -9,6 +10,7 @@ import { canOpenLevel } from "@/lib/plans";
 import UpgradePopup from "../upgrade-popup";
 import { useUserPlan } from "../use-user-plan";
 import CodeLines from "./code-lines";
+import No7Celebration, { useNo7Celebration } from "./no7-celebration";
 import ResultsGrid, { type GridExtras } from "./results-grid";
 
 // Small pieces shared by every kind of lesson
@@ -119,6 +121,15 @@ export function LessonDone({
   const [closedPlans, setClosedPlans] = useState(false); // they saw the plans and closed them
   // Still loading the plan? Let the link work: the lesson page checks on the server anyway
   const needsUpgrade = nextLesson !== null && !loading && !canOpenLevel(planId, nextLesson.level);
+  const nextHref = nextLesson ? `/learn/${language}/${nextLesson.id}` : "";
+  const handleNext = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!needsUpgrade) return;
+    event.preventDefault();
+    setShowPlans(true);
+  };
+  // Finished Lesson 7? A one-time celebration on top (visual only; the box below works as usual)
+  const lessonId = usePathname().split("/")[3] ?? "";
+  const no7 = useNo7Celebration(language, lessonId);
 
   return (
     <div className="rounded-2xl border border-green-200 bg-green-50 p-5">
@@ -136,12 +147,8 @@ export function LessonDone({
           </button>
         ) : nextLesson && (
           <Link
-            href={`/learn/${language}/${nextLesson.id}`}
-            onClick={(event) => {
-              if (!needsUpgrade) return;
-              event.preventDefault();
-              setShowPlans(true);
-            }}
+            href={nextHref}
+            onClick={handleNext}
             className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-80"
           >
             Next: Lesson {nextLesson.number} · {nextLesson.title} →
@@ -162,6 +169,9 @@ export function LessonDone({
             setClosedPlans(true);
           }}
         />
+      )}
+      {no7.show && (
+        <No7Celebration next={nextLesson ? { href: nextHref, onClick: handleNext } : null} onClose={no7.close} />
       )}
     </div>
   );
