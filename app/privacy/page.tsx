@@ -64,7 +64,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Cookies",
     body: [
-      "We use only the cookies needed to keep you signed in and to process payments. We do not use advertising cookies.",
+      "We use only the cookies needed to keep you signed in and to process payments. We do not use advertising cookies. We use Vercel Web Analytics, which counts page visits without cookies and doesn't track people across sites.",
     ],
   },
   {

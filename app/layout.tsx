@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import TopBar, { TopBarPlaceholder } from "./top-bar";
 import { LearnProgressProvider } from "./learn/progress-context";
 import SiteFooter from "./site-footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SiteFooter />
           </LearnProgressProvider>
         </DatasetProvider>
+        {/* Vercel Web Analytics: counts page visits, no cookies */}
+        <Analytics />
       </body>
     </html>
   );
